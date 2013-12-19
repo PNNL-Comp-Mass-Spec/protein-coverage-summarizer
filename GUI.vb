@@ -1,0 +1,2085 @@
+Option Strict On
+
+' This program uses clsProteinCoverageSummarizer to read in a file with protein sequences along with
+' an accompanying file with peptide sequences and compute the percent coverage of each of the proteins
+'
+' Written by Matthew Monroe and Nikša Blonder for the Department of Energy (PNNL, Richland, WA)
+' Copyright 2005, Battelle Memorial Institute.  All Rights Reserved.
+'
+' Started June 2005
+
+Public Class GUI
+    Inherits System.Windows.Forms.Form
+
+#Region " Windows Form Designer generated code "
+
+    Public Sub New()
+        MyBase.New()
+
+        'This call is required by the Windows Form Designer.
+        InitializeComponent()
+
+        'Add any initialization after the InitializeComponent() call
+        InitializeControls()
+
+    End Sub
+
+    'Form overrides dispose to clean up the component list.
+    Protected Overloads Overrides Sub Dispose(ByVal disposing As Boolean)
+        If disposing Then
+            If Not (components Is Nothing) Then
+                components.Dispose()
+            End If
+        End If
+        MyBase.Dispose(disposing)
+    End Sub
+
+    'Required by the Windows Form Designer
+    Private components As System.ComponentModel.IContainer
+#Region "Designer generated code "
+
+    'NOTE: The following procedure is required by the Windows Form Designer
+    'It can be modified using the Windows Form Designer.  
+    'Do not modify it using the code editor.
+    Friend WithEvents MainMenuControl As System.Windows.Forms.MainMenu
+    Friend WithEvents mnuFile As System.Windows.Forms.MenuItem
+    Friend WithEvents mnuFileSelectInputFile As System.Windows.Forms.MenuItem
+    Friend WithEvents mnuFileSelectOutputFile As System.Windows.Forms.MenuItem
+    Friend WithEvents mnuFileSep1 As System.Windows.Forms.MenuItem
+    Friend WithEvents mnuFileSaveDefaultOptions As System.Windows.Forms.MenuItem
+    Friend WithEvents mnuFileSep2 As System.Windows.Forms.MenuItem
+    Friend WithEvents mnuFileExit As System.Windows.Forms.MenuItem
+    Friend WithEvents mnuEdit As System.Windows.Forms.MenuItem
+    Friend WithEvents mnuEditResetOptions As System.Windows.Forms.MenuItem
+    Friend WithEvents mnuHelp As System.Windows.Forms.MenuItem
+    Friend WithEvents mnuHelpAbout As System.Windows.Forms.MenuItem
+    Friend WithEvents fraProteinInputFilePath As System.Windows.Forms.GroupBox
+    Friend WithEvents cmdProteinSelectFile As System.Windows.Forms.Button
+    Friend WithEvents fraPeptideInputFilePath As System.Windows.Forms.GroupBox
+    Friend WithEvents cmdPeptideSelectFile As System.Windows.Forms.Button
+    Friend WithEvents txtPeptideInputFilePath As System.Windows.Forms.TextBox
+    Friend WithEvents fraProcessingOptions As System.Windows.Forms.GroupBox
+    Friend WithEvents fraMassCalculationOptions As System.Windows.Forms.GroupBox
+    Friend WithEvents fraDigestionOptions As System.Windows.Forms.GroupBox
+    Friend WithEvents txtMinimumSLiCScore As System.Windows.Forms.TextBox
+    Friend WithEvents fraPeakMatchingOptions As System.Windows.Forms.GroupBox
+    Friend WithEvents fraSqlServerOptions As System.Windows.Forms.GroupBox
+    Friend WithEvents fraUniquenessBinningOptions As System.Windows.Forms.GroupBox
+    Friend WithEvents cmdPastePMThresholdsList As System.Windows.Forms.Button
+    Friend WithEvents cboPMPredefinedThresholds As System.Windows.Forms.ComboBox
+    Friend WithEvents cmdPMThresholdsAutoPopulate As System.Windows.Forms.Button
+    Friend WithEvents cmdClearPMThresholdsList As System.Windows.Forms.Button
+    Friend WithEvents cboMassTolType As System.Windows.Forms.ComboBox
+    Friend WithEvents tbsOptions As System.Windows.Forms.TabControl
+    Friend WithEvents TabPageFileFormatOptions As System.Windows.Forms.TabPage
+    Friend WithEvents TabPagePeakMatchingThresholds As System.Windows.Forms.TabPage
+    Friend WithEvents fraProteinDelimitedFileOptions As System.Windows.Forms.GroupBox
+    Friend WithEvents cboProteinInputFileColumnOrdering As System.Windows.Forms.ComboBox
+    Friend WithEvents lblProteinInputFileColumnOrdering As System.Windows.Forms.Label
+    Friend WithEvents lblProteinInputFileColumnDelimiter As System.Windows.Forms.Label
+    Friend WithEvents cboProteinInputFileColumnDelimiter As System.Windows.Forms.ComboBox
+    Friend WithEvents fraPeptideDelimitedFileOptions As System.Windows.Forms.GroupBox
+    Friend WithEvents txtPeptideInputFileColumnDelimiter As System.Windows.Forms.TextBox
+    Friend WithEvents lblPeptideInputFileColumnDelimiter As System.Windows.Forms.Label
+    Friend WithEvents cboPeptideInputFileColumnDelimiter As System.Windows.Forms.ComboBox
+    Friend WithEvents fraOptions As System.Windows.Forms.GroupBox
+    Friend WithEvents chkSearchAllProteinsForPeptideSequence As System.Windows.Forms.CheckBox
+    Friend WithEvents chkOutputProteinSequence As System.Windows.Forms.CheckBox
+    Friend WithEvents chkTrackPeptideCounts As System.Windows.Forms.CheckBox
+    Friend WithEvents chkRemoveSymbolCharacters As System.Windows.Forms.CheckBox
+    Friend WithEvents cmdStart As System.Windows.Forms.Button
+    Friend WithEvents mnuPeptideInputFile As System.Windows.Forms.MenuItem
+    Friend WithEvents dgResults As System.Windows.Forms.DataGrid
+    Friend WithEvents lblProgress As System.Windows.Forms.Label
+    Friend WithEvents chkAddSpace As System.Windows.Forms.CheckBox
+    Friend WithEvents cboCharactersPerLine As System.Windows.Forms.ComboBox
+    Friend WithEvents rtfRichTextBox As System.Windows.Forms.RichTextBox
+    Friend WithEvents chkPeptideFileSkipFirstLine As System.Windows.Forms.CheckBox
+    Friend WithEvents Label1 As System.Windows.Forms.Label
+    Friend WithEvents chkProteinFileSkipFirstLine As System.Windows.Forms.CheckBox
+    Friend WithEvents cmdAbort As System.Windows.Forms.Button
+    Friend WithEvents cmdExit As System.Windows.Forms.Button
+    Friend WithEvents cboPeptideInputFileColumnOrdering As System.Windows.Forms.ComboBox
+    Friend WithEvents txtProteinInputFileColumnDelimiter As System.Windows.Forms.TextBox
+    Friend WithEvents mnuFileLoadOptions As System.Windows.Forms.MenuItem
+    Friend WithEvents txtCustomProteinSequence As System.Windows.Forms.TextBox
+    Friend WithEvents lblCustomProteinSequence As System.Windows.Forms.Label
+    Friend WithEvents txtRTFCode As System.Windows.Forms.TextBox
+    Friend WithEvents mnuEditShowRTF As System.Windows.Forms.MenuItem
+    Friend WithEvents txtCoverage As System.Windows.Forms.TextBox
+    Friend WithEvents fraOutputFolderPath As System.Windows.Forms.GroupBox
+    Friend WithEvents txtOutputFolderPath As System.Windows.Forms.TextBox
+    Friend WithEvents cmdSelectOutputFolder As System.Windows.Forms.Button
+    Friend WithEvents chkSearchAllProteinsSkipCoverageComputationSteps As System.Windows.Forms.CheckBox
+    Friend WithEvents lblInputFileNotes As System.Windows.Forms.Label
+    Friend WithEvents chkSaveProteinToPeptideMappingFile As System.Windows.Forms.CheckBox
+    Friend WithEvents chkMatchPeptidePrefixAndSuffixToProtein As System.Windows.Forms.CheckBox
+    Friend WithEvents txtProteinInputFilePath As System.Windows.Forms.TextBox
+    Friend WithEvents chkIgnoreILDifferences As System.Windows.Forms.CheckBox
+    <System.Diagnostics.DebuggerStepThrough()> Private Sub InitializeComponent()
+        Me.components = New System.ComponentModel.Container
+        Me.fraProteinInputFilePath = New System.Windows.Forms.GroupBox
+        Me.cmdProteinSelectFile = New System.Windows.Forms.Button
+        Me.txtProteinInputFilePath = New System.Windows.Forms.TextBox
+        Me.MainMenuControl = New System.Windows.Forms.MainMenu(Me.components)
+        Me.mnuFile = New System.Windows.Forms.MenuItem
+        Me.mnuFileSelectInputFile = New System.Windows.Forms.MenuItem
+        Me.mnuPeptideInputFile = New System.Windows.Forms.MenuItem
+        Me.mnuFileSelectOutputFile = New System.Windows.Forms.MenuItem
+        Me.mnuFileSep1 = New System.Windows.Forms.MenuItem
+        Me.mnuFileLoadOptions = New System.Windows.Forms.MenuItem
+        Me.mnuFileSaveDefaultOptions = New System.Windows.Forms.MenuItem
+        Me.mnuFileSep2 = New System.Windows.Forms.MenuItem
+        Me.mnuFileExit = New System.Windows.Forms.MenuItem
+        Me.mnuEdit = New System.Windows.Forms.MenuItem
+        Me.mnuEditShowRTF = New System.Windows.Forms.MenuItem
+        Me.mnuEditResetOptions = New System.Windows.Forms.MenuItem
+        Me.mnuHelp = New System.Windows.Forms.MenuItem
+        Me.mnuHelpAbout = New System.Windows.Forms.MenuItem
+        Me.fraPeptideInputFilePath = New System.Windows.Forms.GroupBox
+        Me.cmdPeptideSelectFile = New System.Windows.Forms.Button
+        Me.txtPeptideInputFilePath = New System.Windows.Forms.TextBox
+        Me.fraProcessingOptions = New System.Windows.Forms.GroupBox
+        Me.fraMassCalculationOptions = New System.Windows.Forms.GroupBox
+        Me.fraDigestionOptions = New System.Windows.Forms.GroupBox
+        Me.txtMinimumSLiCScore = New System.Windows.Forms.TextBox
+        Me.fraPeakMatchingOptions = New System.Windows.Forms.GroupBox
+        Me.fraSqlServerOptions = New System.Windows.Forms.GroupBox
+        Me.fraUniquenessBinningOptions = New System.Windows.Forms.GroupBox
+        Me.cmdPastePMThresholdsList = New System.Windows.Forms.Button
+        Me.cboPMPredefinedThresholds = New System.Windows.Forms.ComboBox
+        Me.cmdPMThresholdsAutoPopulate = New System.Windows.Forms.Button
+        Me.cmdClearPMThresholdsList = New System.Windows.Forms.Button
+        Me.cboMassTolType = New System.Windows.Forms.ComboBox
+        Me.tbsOptions = New System.Windows.Forms.TabControl
+        Me.TabPageFileFormatOptions = New System.Windows.Forms.TabPage
+        Me.cmdExit = New System.Windows.Forms.Button
+        Me.cmdStart = New System.Windows.Forms.Button
+        Me.cmdAbort = New System.Windows.Forms.Button
+        Me.lblProgress = New System.Windows.Forms.Label
+        Me.fraOptions = New System.Windows.Forms.GroupBox
+        Me.chkIgnoreILDifferences = New System.Windows.Forms.CheckBox
+        Me.chkMatchPeptidePrefixAndSuffixToProtein = New System.Windows.Forms.CheckBox
+        Me.chkSearchAllProteinsSkipCoverageComputationSteps = New System.Windows.Forms.CheckBox
+        Me.chkSaveProteinToPeptideMappingFile = New System.Windows.Forms.CheckBox
+        Me.chkSearchAllProteinsForPeptideSequence = New System.Windows.Forms.CheckBox
+        Me.chkOutputProteinSequence = New System.Windows.Forms.CheckBox
+        Me.chkTrackPeptideCounts = New System.Windows.Forms.CheckBox
+        Me.chkRemoveSymbolCharacters = New System.Windows.Forms.CheckBox
+        Me.fraPeptideDelimitedFileOptions = New System.Windows.Forms.GroupBox
+        Me.cboPeptideInputFileColumnOrdering = New System.Windows.Forms.ComboBox
+        Me.Label1 = New System.Windows.Forms.Label
+        Me.chkPeptideFileSkipFirstLine = New System.Windows.Forms.CheckBox
+        Me.txtPeptideInputFileColumnDelimiter = New System.Windows.Forms.TextBox
+        Me.lblPeptideInputFileColumnDelimiter = New System.Windows.Forms.Label
+        Me.cboPeptideInputFileColumnDelimiter = New System.Windows.Forms.ComboBox
+        Me.lblInputFileNotes = New System.Windows.Forms.Label
+        Me.fraProteinDelimitedFileOptions = New System.Windows.Forms.GroupBox
+        Me.chkProteinFileSkipFirstLine = New System.Windows.Forms.CheckBox
+        Me.cboProteinInputFileColumnOrdering = New System.Windows.Forms.ComboBox
+        Me.lblProteinInputFileColumnOrdering = New System.Windows.Forms.Label
+        Me.txtProteinInputFileColumnDelimiter = New System.Windows.Forms.TextBox
+        Me.lblProteinInputFileColumnDelimiter = New System.Windows.Forms.Label
+        Me.cboProteinInputFileColumnDelimiter = New System.Windows.Forms.ComboBox
+        Me.TabPagePeakMatchingThresholds = New System.Windows.Forms.TabPage
+        Me.txtCoverage = New System.Windows.Forms.TextBox
+        Me.txtRTFCode = New System.Windows.Forms.TextBox
+        Me.txtCustomProteinSequence = New System.Windows.Forms.TextBox
+        Me.lblCustomProteinSequence = New System.Windows.Forms.Label
+        Me.chkAddSpace = New System.Windows.Forms.CheckBox
+        Me.cboCharactersPerLine = New System.Windows.Forms.ComboBox
+        Me.rtfRichTextBox = New System.Windows.Forms.RichTextBox
+        Me.dgResults = New System.Windows.Forms.DataGrid
+        Me.fraOutputFolderPath = New System.Windows.Forms.GroupBox
+        Me.cmdSelectOutputFolder = New System.Windows.Forms.Button
+        Me.txtOutputFolderPath = New System.Windows.Forms.TextBox
+        Me.fraProteinInputFilePath.SuspendLayout()
+        Me.fraPeptideInputFilePath.SuspendLayout()
+        Me.tbsOptions.SuspendLayout()
+        Me.TabPageFileFormatOptions.SuspendLayout()
+        Me.fraOptions.SuspendLayout()
+        Me.fraPeptideDelimitedFileOptions.SuspendLayout()
+        Me.fraProteinDelimitedFileOptions.SuspendLayout()
+        Me.TabPagePeakMatchingThresholds.SuspendLayout()
+        CType(Me.dgResults, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.fraOutputFolderPath.SuspendLayout()
+        Me.SuspendLayout()
+        '
+        'fraProteinInputFilePath
+        '
+        Me.fraProteinInputFilePath.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+                    Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.fraProteinInputFilePath.Controls.Add(Me.cmdProteinSelectFile)
+        Me.fraProteinInputFilePath.Controls.Add(Me.txtProteinInputFilePath)
+        Me.fraProteinInputFilePath.Location = New System.Drawing.Point(8, 16)
+        Me.fraProteinInputFilePath.Name = "fraProteinInputFilePath"
+        Me.fraProteinInputFilePath.Size = New System.Drawing.Size(872, 48)
+        Me.fraProteinInputFilePath.TabIndex = 0
+        Me.fraProteinInputFilePath.TabStop = False
+        Me.fraProteinInputFilePath.Text = "Protein Input File Path (Fasta or Tab-delimited)"
+        '
+        'cmdProteinSelectFile
+        '
+        Me.cmdProteinSelectFile.Location = New System.Drawing.Point(8, 16)
+        Me.cmdProteinSelectFile.Name = "cmdProteinSelectFile"
+        Me.cmdProteinSelectFile.Size = New System.Drawing.Size(80, 24)
+        Me.cmdProteinSelectFile.TabIndex = 0
+        Me.cmdProteinSelectFile.Text = "Select file"
+        '
+        'txtProteinInputFilePath
+        '
+        Me.txtProteinInputFilePath.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+                    Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.txtProteinInputFilePath.Location = New System.Drawing.Point(104, 18)
+        Me.txtProteinInputFilePath.Name = "txtProteinInputFilePath"
+        Me.txtProteinInputFilePath.Size = New System.Drawing.Size(752, 20)
+        Me.txtProteinInputFilePath.TabIndex = 1
+        '
+        'MainMenuControl
+        '
+        Me.MainMenuControl.MenuItems.AddRange(New System.Windows.Forms.MenuItem() {Me.mnuFile, Me.mnuEdit, Me.mnuHelp})
+        '
+        'mnuFile
+        '
+        Me.mnuFile.Index = 0
+        Me.mnuFile.MenuItems.AddRange(New System.Windows.Forms.MenuItem() {Me.mnuFileSelectInputFile, Me.mnuPeptideInputFile, Me.mnuFileSelectOutputFile, Me.mnuFileSep1, Me.mnuFileLoadOptions, Me.mnuFileSaveDefaultOptions, Me.mnuFileSep2, Me.mnuFileExit})
+        Me.mnuFile.Text = "&File"
+        '
+        'mnuFileSelectInputFile
+        '
+        Me.mnuFileSelectInputFile.Index = 0
+        Me.mnuFileSelectInputFile.Text = "Select Protein &Input File..."
+        '
+        'mnuPeptideInputFile
+        '
+        Me.mnuPeptideInputFile.Index = 1
+        Me.mnuPeptideInputFile.Text = "Select Peptide I&nput File..."
+        '
+        'mnuFileSelectOutputFile
+        '
+        Me.mnuFileSelectOutputFile.Index = 2
+        Me.mnuFileSelectOutputFile.Text = "Select &Output File..."
+        '
+        'mnuFileSep1
+        '
+        Me.mnuFileSep1.Index = 3
+        Me.mnuFileSep1.Text = "-"
+        '
+        'mnuFileLoadOptions
+        '
+        Me.mnuFileLoadOptions.Index = 4
+        Me.mnuFileLoadOptions.Text = "Load Options ..."
+        '
+        'mnuFileSaveDefaultOptions
+        '
+        Me.mnuFileSaveDefaultOptions.Index = 5
+        Me.mnuFileSaveDefaultOptions.Text = "Save &Default Options"
+        '
+        'mnuFileSep2
+        '
+        Me.mnuFileSep2.Index = 6
+        Me.mnuFileSep2.Text = "-"
+        '
+        'mnuFileExit
+        '
+        Me.mnuFileExit.Index = 7
+        Me.mnuFileExit.Text = "E&xit"
+        '
+        'mnuEdit
+        '
+        Me.mnuEdit.Index = 1
+        Me.mnuEdit.MenuItems.AddRange(New System.Windows.Forms.MenuItem() {Me.mnuEditShowRTF, Me.mnuEditResetOptions})
+        Me.mnuEdit.Text = "&Edit"
+        '
+        'mnuEditShowRTF
+        '
+        Me.mnuEditShowRTF.Index = 0
+        Me.mnuEditShowRTF.Text = "Show RTF Code"
+        '
+        'mnuEditResetOptions
+        '
+        Me.mnuEditResetOptions.Index = 1
+        Me.mnuEditResetOptions.Text = "&Reset options to Defaults"
+        '
+        'mnuHelp
+        '
+        Me.mnuHelp.Index = 2
+        Me.mnuHelp.MenuItems.AddRange(New System.Windows.Forms.MenuItem() {Me.mnuHelpAbout})
+        Me.mnuHelp.Text = "&Help"
+        '
+        'mnuHelpAbout
+        '
+        Me.mnuHelpAbout.Index = 0
+        Me.mnuHelpAbout.Text = "&About"
+        '
+        'fraPeptideInputFilePath
+        '
+        Me.fraPeptideInputFilePath.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+                    Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.fraPeptideInputFilePath.Controls.Add(Me.cmdPeptideSelectFile)
+        Me.fraPeptideInputFilePath.Controls.Add(Me.txtPeptideInputFilePath)
+        Me.fraPeptideInputFilePath.Location = New System.Drawing.Point(8, 72)
+        Me.fraPeptideInputFilePath.Name = "fraPeptideInputFilePath"
+        Me.fraPeptideInputFilePath.Size = New System.Drawing.Size(872, 48)
+        Me.fraPeptideInputFilePath.TabIndex = 1
+        Me.fraPeptideInputFilePath.TabStop = False
+        Me.fraPeptideInputFilePath.Text = "Peptide Input File Path (Tab-delimited)"
+        '
+        'cmdPeptideSelectFile
+        '
+        Me.cmdPeptideSelectFile.Location = New System.Drawing.Point(8, 16)
+        Me.cmdPeptideSelectFile.Name = "cmdPeptideSelectFile"
+        Me.cmdPeptideSelectFile.Size = New System.Drawing.Size(80, 24)
+        Me.cmdPeptideSelectFile.TabIndex = 0
+        Me.cmdPeptideSelectFile.Text = "Select file"
+        '
+        'txtPeptideInputFilePath
+        '
+        Me.txtPeptideInputFilePath.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+                    Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.txtPeptideInputFilePath.Location = New System.Drawing.Point(104, 18)
+        Me.txtPeptideInputFilePath.Name = "txtPeptideInputFilePath"
+        Me.txtPeptideInputFilePath.Size = New System.Drawing.Size(752, 20)
+        Me.txtPeptideInputFilePath.TabIndex = 1
+        '
+        'fraProcessingOptions
+        '
+        Me.fraProcessingOptions.Location = New System.Drawing.Point(8, 8)
+        Me.fraProcessingOptions.Name = "fraProcessingOptions"
+        Me.fraProcessingOptions.Size = New System.Drawing.Size(360, 152)
+        Me.fraProcessingOptions.TabIndex = 0
+        Me.fraProcessingOptions.TabStop = False
+        Me.fraProcessingOptions.Text = "Processing Options"
+        '
+        'fraMassCalculationOptions
+        '
+        Me.fraMassCalculationOptions.Location = New System.Drawing.Point(376, 80)
+        Me.fraMassCalculationOptions.Name = "fraMassCalculationOptions"
+        Me.fraMassCalculationOptions.Size = New System.Drawing.Size(248, 80)
+        Me.fraMassCalculationOptions.TabIndex = 1
+        Me.fraMassCalculationOptions.TabStop = False
+        Me.fraMassCalculationOptions.Text = "Mass Calculation Options"
+        '
+        'fraDigestionOptions
+        '
+        Me.fraDigestionOptions.Location = New System.Drawing.Point(8, 168)
+        Me.fraDigestionOptions.Name = "fraDigestionOptions"
+        Me.fraDigestionOptions.Size = New System.Drawing.Size(616, 112)
+        Me.fraDigestionOptions.TabIndex = 2
+        Me.fraDigestionOptions.TabStop = False
+        Me.fraDigestionOptions.Text = "Digestion Options"
+        '
+        'txtMinimumSLiCScore
+        '
+        Me.txtMinimumSLiCScore.Location = New System.Drawing.Point(144, 104)
+        Me.txtMinimumSLiCScore.Name = "txtMinimumSLiCScore"
+        Me.txtMinimumSLiCScore.Size = New System.Drawing.Size(40, 20)
+        Me.txtMinimumSLiCScore.TabIndex = 5
+        '
+        'fraPeakMatchingOptions
+        '
+        Me.fraPeakMatchingOptions.Location = New System.Drawing.Point(232, 48)
+        Me.fraPeakMatchingOptions.Name = "fraPeakMatchingOptions"
+        Me.fraPeakMatchingOptions.Size = New System.Drawing.Size(392, 136)
+        Me.fraPeakMatchingOptions.TabIndex = 2
+        Me.fraPeakMatchingOptions.TabStop = False
+        '
+        'fraSqlServerOptions
+        '
+        Me.fraSqlServerOptions.Location = New System.Drawing.Point(576, 192)
+        Me.fraSqlServerOptions.Name = "fraSqlServerOptions"
+        Me.fraSqlServerOptions.Size = New System.Drawing.Size(376, 112)
+        Me.fraSqlServerOptions.TabIndex = 4
+        Me.fraSqlServerOptions.TabStop = False
+        Me.fraSqlServerOptions.Visible = False
+        '
+        'fraUniquenessBinningOptions
+        '
+        Me.fraUniquenessBinningOptions.Location = New System.Drawing.Point(8, 144)
+        Me.fraUniquenessBinningOptions.Name = "fraUniquenessBinningOptions"
+        Me.fraUniquenessBinningOptions.Size = New System.Drawing.Size(208, 136)
+        Me.fraUniquenessBinningOptions.TabIndex = 3
+        Me.fraUniquenessBinningOptions.TabStop = False
+        '
+        'cmdPastePMThresholdsList
+        '
+        Me.cmdPastePMThresholdsList.Location = New System.Drawing.Point(456, 96)
+        Me.cmdPastePMThresholdsList.Name = "cmdPastePMThresholdsList"
+        Me.cmdPastePMThresholdsList.Size = New System.Drawing.Size(104, 24)
+        Me.cmdPastePMThresholdsList.TabIndex = 6
+        Me.cmdPastePMThresholdsList.Text = "Paste Values"
+        '
+        'cboPMPredefinedThresholds
+        '
+        Me.cboPMPredefinedThresholds.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+        Me.cboPMPredefinedThresholds.Location = New System.Drawing.Point(336, 256)
+        Me.cboPMPredefinedThresholds.Name = "cboPMPredefinedThresholds"
+        Me.cboPMPredefinedThresholds.Size = New System.Drawing.Size(264, 21)
+        Me.cboPMPredefinedThresholds.TabIndex = 5
+        '
+        'cmdPMThresholdsAutoPopulate
+        '
+        Me.cmdPMThresholdsAutoPopulate.Location = New System.Drawing.Point(336, 224)
+        Me.cmdPMThresholdsAutoPopulate.Name = "cmdPMThresholdsAutoPopulate"
+        Me.cmdPMThresholdsAutoPopulate.Size = New System.Drawing.Size(104, 24)
+        Me.cmdPMThresholdsAutoPopulate.TabIndex = 4
+        Me.cmdPMThresholdsAutoPopulate.Text = "Auto-Populate"
+        '
+        'cmdClearPMThresholdsList
+        '
+        Me.cmdClearPMThresholdsList.Location = New System.Drawing.Point(456, 128)
+        Me.cmdClearPMThresholdsList.Name = "cmdClearPMThresholdsList"
+        Me.cmdClearPMThresholdsList.Size = New System.Drawing.Size(104, 24)
+        Me.cmdClearPMThresholdsList.TabIndex = 7
+        Me.cmdClearPMThresholdsList.Text = "Clear List"
+        '
+        'cboMassTolType
+        '
+        Me.cboMassTolType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+        Me.cboMassTolType.Location = New System.Drawing.Point(144, 224)
+        Me.cboMassTolType.Name = "cboMassTolType"
+        Me.cboMassTolType.Size = New System.Drawing.Size(136, 21)
+        Me.cboMassTolType.TabIndex = 2
+        '
+        'tbsOptions
+        '
+        Me.tbsOptions.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+                    Or System.Windows.Forms.AnchorStyles.Left) _
+                    Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.tbsOptions.Controls.Add(Me.TabPageFileFormatOptions)
+        Me.tbsOptions.Controls.Add(Me.TabPagePeakMatchingThresholds)
+        Me.tbsOptions.Location = New System.Drawing.Point(8, 192)
+        Me.tbsOptions.Name = "tbsOptions"
+        Me.tbsOptions.SelectedIndex = 0
+        Me.tbsOptions.Size = New System.Drawing.Size(872, 400)
+        Me.tbsOptions.TabIndex = 3
+        '
+        'TabPageFileFormatOptions
+        '
+        Me.TabPageFileFormatOptions.Controls.Add(Me.cmdExit)
+        Me.TabPageFileFormatOptions.Controls.Add(Me.cmdStart)
+        Me.TabPageFileFormatOptions.Controls.Add(Me.cmdAbort)
+        Me.TabPageFileFormatOptions.Controls.Add(Me.lblProgress)
+        Me.TabPageFileFormatOptions.Controls.Add(Me.fraOptions)
+        Me.TabPageFileFormatOptions.Controls.Add(Me.fraPeptideDelimitedFileOptions)
+        Me.TabPageFileFormatOptions.Controls.Add(Me.fraProteinDelimitedFileOptions)
+        Me.TabPageFileFormatOptions.Location = New System.Drawing.Point(4, 22)
+        Me.TabPageFileFormatOptions.Name = "TabPageFileFormatOptions"
+        Me.TabPageFileFormatOptions.Size = New System.Drawing.Size(864, 374)
+        Me.TabPageFileFormatOptions.TabIndex = 2
+        Me.TabPageFileFormatOptions.Text = "File Format Options"
+        '
+        'cmdExit
+        '
+        Me.cmdExit.Location = New System.Drawing.Point(552, 160)
+        Me.cmdExit.Name = "cmdExit"
+        Me.cmdExit.Size = New System.Drawing.Size(96, 32)
+        Me.cmdExit.TabIndex = 5
+        Me.cmdExit.Text = "E&xit"
+        '
+        'cmdStart
+        '
+        Me.cmdStart.Location = New System.Drawing.Point(552, 112)
+        Me.cmdStart.Name = "cmdStart"
+        Me.cmdStart.Size = New System.Drawing.Size(96, 32)
+        Me.cmdStart.TabIndex = 4
+        Me.cmdStart.Text = "&Start"
+        '
+        'cmdAbort
+        '
+        Me.cmdAbort.Location = New System.Drawing.Point(552, 112)
+        Me.cmdAbort.Name = "cmdAbort"
+        Me.cmdAbort.Size = New System.Drawing.Size(96, 32)
+        Me.cmdAbort.TabIndex = 4
+        Me.cmdAbort.Text = "Abort"
+        '
+        'lblProgress
+        '
+        Me.lblProgress.Location = New System.Drawing.Point(562, 13)
+        Me.lblProgress.Name = "lblProgress"
+        Me.lblProgress.Size = New System.Drawing.Size(280, 77)
+        Me.lblProgress.TabIndex = 3
+        Me.lblProgress.Text = "Progress ..."
+        '
+        'fraOptions
+        '
+        Me.fraOptions.Controls.Add(Me.chkIgnoreILDifferences)
+        Me.fraOptions.Controls.Add(Me.chkMatchPeptidePrefixAndSuffixToProtein)
+        Me.fraOptions.Controls.Add(Me.chkSearchAllProteinsSkipCoverageComputationSteps)
+        Me.fraOptions.Controls.Add(Me.chkSaveProteinToPeptideMappingFile)
+        Me.fraOptions.Controls.Add(Me.chkSearchAllProteinsForPeptideSequence)
+        Me.fraOptions.Controls.Add(Me.chkOutputProteinSequence)
+        Me.fraOptions.Controls.Add(Me.chkTrackPeptideCounts)
+        Me.fraOptions.Controls.Add(Me.chkRemoveSymbolCharacters)
+        Me.fraOptions.Location = New System.Drawing.Point(8, 218)
+        Me.fraOptions.Name = "fraOptions"
+        Me.fraOptions.Size = New System.Drawing.Size(648, 142)
+        Me.fraOptions.TabIndex = 2
+        Me.fraOptions.TabStop = False
+        Me.fraOptions.Text = "Options"
+        '
+        'chkIgnoreILDifferences
+        '
+        Me.chkIgnoreILDifferences.Location = New System.Drawing.Point(400, 96)
+        Me.chkIgnoreILDifferences.Name = "chkIgnoreILDifferences"
+        Me.chkIgnoreILDifferences.Size = New System.Drawing.Size(224, 16)
+        Me.chkIgnoreILDifferences.TabIndex = 7
+        Me.chkIgnoreILDifferences.Text = "Ignore I/L Differences"
+        '
+        'chkMatchPeptidePrefixAndSuffixToProtein
+        '
+        Me.chkMatchPeptidePrefixAndSuffixToProtein.Location = New System.Drawing.Point(16, 120)
+        Me.chkMatchPeptidePrefixAndSuffixToProtein.Name = "chkMatchPeptidePrefixAndSuffixToProtein"
+        Me.chkMatchPeptidePrefixAndSuffixToProtein.Size = New System.Drawing.Size(328, 16)
+        Me.chkMatchPeptidePrefixAndSuffixToProtein.TabIndex = 6
+        Me.chkMatchPeptidePrefixAndSuffixToProtein.Text = "Match peptide prefix and suffix letters to protein sequence"
+        '
+        'chkSearchAllProteinsSkipCoverageComputationSteps
+        '
+        Me.chkSearchAllProteinsSkipCoverageComputationSteps.Location = New System.Drawing.Point(400, 56)
+        Me.chkSearchAllProteinsSkipCoverageComputationSteps.Name = "chkSearchAllProteinsSkipCoverageComputationSteps"
+        Me.chkSearchAllProteinsSkipCoverageComputationSteps.Size = New System.Drawing.Size(224, 16)
+        Me.chkSearchAllProteinsSkipCoverageComputationSteps.TabIndex = 3
+        Me.chkSearchAllProteinsSkipCoverageComputationSteps.Text = "Skip coverage computation (faster)"
+        '
+        'chkSaveProteinToPeptideMappingFile
+        '
+        Me.chkSaveProteinToPeptideMappingFile.Location = New System.Drawing.Point(400, 40)
+        Me.chkSaveProteinToPeptideMappingFile.Name = "chkSaveProteinToPeptideMappingFile"
+        Me.chkSaveProteinToPeptideMappingFile.Size = New System.Drawing.Size(224, 16)
+        Me.chkSaveProteinToPeptideMappingFile.TabIndex = 2
+        Me.chkSaveProteinToPeptideMappingFile.Text = "Save protein to peptide mapping details"
+        '
+        'chkSearchAllProteinsForPeptideSequence
+        '
+        Me.chkSearchAllProteinsForPeptideSequence.Location = New System.Drawing.Point(16, 40)
+        Me.chkSearchAllProteinsForPeptideSequence.Name = "chkSearchAllProteinsForPeptideSequence"
+        Me.chkSearchAllProteinsForPeptideSequence.Size = New System.Drawing.Size(240, 24)
+        Me.chkSearchAllProteinsForPeptideSequence.TabIndex = 1
+        Me.chkSearchAllProteinsForPeptideSequence.Text = "Search All Proteins For Peptide Sequence"
+        '
+        'chkOutputProteinSequence
+        '
+        Me.chkOutputProteinSequence.Location = New System.Drawing.Point(16, 16)
+        Me.chkOutputProteinSequence.Name = "chkOutputProteinSequence"
+        Me.chkOutputProteinSequence.Size = New System.Drawing.Size(176, 24)
+        Me.chkOutputProteinSequence.TabIndex = 0
+        Me.chkOutputProteinSequence.Text = "Output Protein Sequence"
+        '
+        'chkTrackPeptideCounts
+        '
+        Me.chkTrackPeptideCounts.Location = New System.Drawing.Point(16, 72)
+        Me.chkTrackPeptideCounts.Name = "chkTrackPeptideCounts"
+        Me.chkTrackPeptideCounts.Size = New System.Drawing.Size(264, 16)
+        Me.chkTrackPeptideCounts.TabIndex = 4
+        Me.chkTrackPeptideCounts.Text = "Track Unique And Non-Unique Peptide Counts"
+        '
+        'chkRemoveSymbolCharacters
+        '
+        Me.chkRemoveSymbolCharacters.Location = New System.Drawing.Point(16, 96)
+        Me.chkRemoveSymbolCharacters.Name = "chkRemoveSymbolCharacters"
+        Me.chkRemoveSymbolCharacters.Size = New System.Drawing.Size(368, 16)
+        Me.chkRemoveSymbolCharacters.TabIndex = 5
+        Me.chkRemoveSymbolCharacters.Text = "Remove non-letter characters from protein and peptide sequences"
+        '
+        'fraPeptideDelimitedFileOptions
+        '
+        Me.fraPeptideDelimitedFileOptions.Controls.Add(Me.cboPeptideInputFileColumnOrdering)
+        Me.fraPeptideDelimitedFileOptions.Controls.Add(Me.Label1)
+        Me.fraPeptideDelimitedFileOptions.Controls.Add(Me.chkPeptideFileSkipFirstLine)
+        Me.fraPeptideDelimitedFileOptions.Controls.Add(Me.txtPeptideInputFileColumnDelimiter)
+        Me.fraPeptideDelimitedFileOptions.Controls.Add(Me.lblPeptideInputFileColumnDelimiter)
+        Me.fraPeptideDelimitedFileOptions.Controls.Add(Me.cboPeptideInputFileColumnDelimiter)
+        Me.fraPeptideDelimitedFileOptions.Controls.Add(Me.lblInputFileNotes)
+        Me.fraPeptideDelimitedFileOptions.Location = New System.Drawing.Point(8, 112)
+        Me.fraPeptideDelimitedFileOptions.Name = "fraPeptideDelimitedFileOptions"
+        Me.fraPeptideDelimitedFileOptions.Size = New System.Drawing.Size(536, 104)
+        Me.fraPeptideDelimitedFileOptions.TabIndex = 1
+        Me.fraPeptideDelimitedFileOptions.TabStop = False
+        Me.fraPeptideDelimitedFileOptions.Text = "Peptide Delimited Input File Options"
+        '
+        'cboPeptideInputFileColumnOrdering
+        '
+        Me.cboPeptideInputFileColumnOrdering.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+        Me.cboPeptideInputFileColumnOrdering.DropDownWidth = 70
+        Me.cboPeptideInputFileColumnOrdering.Location = New System.Drawing.Point(88, 24)
+        Me.cboPeptideInputFileColumnOrdering.Name = "cboPeptideInputFileColumnOrdering"
+        Me.cboPeptideInputFileColumnOrdering.Size = New System.Drawing.Size(264, 21)
+        Me.cboPeptideInputFileColumnOrdering.TabIndex = 1
+        '
+        'Label1
+        '
+        Me.Label1.Location = New System.Drawing.Point(8, 24)
+        Me.Label1.Name = "Label1"
+        Me.Label1.Size = New System.Drawing.Size(80, 16)
+        Me.Label1.TabIndex = 0
+        Me.Label1.Text = "Column Order"
+        '
+        'chkPeptideFileSkipFirstLine
+        '
+        Me.chkPeptideFileSkipFirstLine.Location = New System.Drawing.Point(264, 56)
+        Me.chkPeptideFileSkipFirstLine.Name = "chkPeptideFileSkipFirstLine"
+        Me.chkPeptideFileSkipFirstLine.Size = New System.Drawing.Size(240, 24)
+        Me.chkPeptideFileSkipFirstLine.TabIndex = 5
+        Me.chkPeptideFileSkipFirstLine.Text = "Skip first line in peptide input file"
+        '
+        'txtPeptideInputFileColumnDelimiter
+        '
+        Me.txtPeptideInputFileColumnDelimiter.Location = New System.Drawing.Point(192, 56)
+        Me.txtPeptideInputFileColumnDelimiter.MaxLength = 1
+        Me.txtPeptideInputFileColumnDelimiter.Name = "txtPeptideInputFileColumnDelimiter"
+        Me.txtPeptideInputFileColumnDelimiter.Size = New System.Drawing.Size(32, 20)
+        Me.txtPeptideInputFileColumnDelimiter.TabIndex = 4
+        Me.txtPeptideInputFileColumnDelimiter.Text = ";"
+        '
+        'lblPeptideInputFileColumnDelimiter
+        '
+        Me.lblPeptideInputFileColumnDelimiter.Location = New System.Drawing.Point(8, 56)
+        Me.lblPeptideInputFileColumnDelimiter.Name = "lblPeptideInputFileColumnDelimiter"
+        Me.lblPeptideInputFileColumnDelimiter.Size = New System.Drawing.Size(96, 16)
+        Me.lblPeptideInputFileColumnDelimiter.TabIndex = 2
+        Me.lblPeptideInputFileColumnDelimiter.Text = "Column Delimiter"
+        '
+        'cboPeptideInputFileColumnDelimiter
+        '
+        Me.cboPeptideInputFileColumnDelimiter.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+        Me.cboPeptideInputFileColumnDelimiter.DropDownWidth = 70
+        Me.cboPeptideInputFileColumnDelimiter.Location = New System.Drawing.Point(112, 56)
+        Me.cboPeptideInputFileColumnDelimiter.Name = "cboPeptideInputFileColumnDelimiter"
+        Me.cboPeptideInputFileColumnDelimiter.Size = New System.Drawing.Size(70, 21)
+        Me.cboPeptideInputFileColumnDelimiter.TabIndex = 3
+        '
+        'lblInputFileNotes
+        '
+        Me.lblInputFileNotes.Location = New System.Drawing.Point(8, 82)
+        Me.lblInputFileNotes.Name = "lblInputFileNotes"
+        Me.lblInputFileNotes.Size = New System.Drawing.Size(488, 16)
+        Me.lblInputFileNotes.TabIndex = 6
+        Me.lblInputFileNotes.Text = "Note: prefix and suffix residues will be automatically removed from the input pep" & _
+            "tides"
+        '
+        'fraProteinDelimitedFileOptions
+        '
+        Me.fraProteinDelimitedFileOptions.Controls.Add(Me.chkProteinFileSkipFirstLine)
+        Me.fraProteinDelimitedFileOptions.Controls.Add(Me.cboProteinInputFileColumnOrdering)
+        Me.fraProteinDelimitedFileOptions.Controls.Add(Me.lblProteinInputFileColumnOrdering)
+        Me.fraProteinDelimitedFileOptions.Controls.Add(Me.txtProteinInputFileColumnDelimiter)
+        Me.fraProteinDelimitedFileOptions.Controls.Add(Me.lblProteinInputFileColumnDelimiter)
+        Me.fraProteinDelimitedFileOptions.Controls.Add(Me.cboProteinInputFileColumnDelimiter)
+        Me.fraProteinDelimitedFileOptions.Location = New System.Drawing.Point(8, 16)
+        Me.fraProteinDelimitedFileOptions.Name = "fraProteinDelimitedFileOptions"
+        Me.fraProteinDelimitedFileOptions.Size = New System.Drawing.Size(504, 88)
+        Me.fraProteinDelimitedFileOptions.TabIndex = 0
+        Me.fraProteinDelimitedFileOptions.TabStop = False
+        Me.fraProteinDelimitedFileOptions.Text = "Protein Delimited Input File Options"
+        '
+        'chkProteinFileSkipFirstLine
+        '
+        Me.chkProteinFileSkipFirstLine.Location = New System.Drawing.Point(264, 56)
+        Me.chkProteinFileSkipFirstLine.Name = "chkProteinFileSkipFirstLine"
+        Me.chkProteinFileSkipFirstLine.Size = New System.Drawing.Size(216, 24)
+        Me.chkProteinFileSkipFirstLine.TabIndex = 5
+        Me.chkProteinFileSkipFirstLine.Text = "Skip first line in protein input file"
+        '
+        'cboProteinInputFileColumnOrdering
+        '
+        Me.cboProteinInputFileColumnOrdering.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+        Me.cboProteinInputFileColumnOrdering.DropDownWidth = 70
+        Me.cboProteinInputFileColumnOrdering.Location = New System.Drawing.Point(88, 24)
+        Me.cboProteinInputFileColumnOrdering.Name = "cboProteinInputFileColumnOrdering"
+        Me.cboProteinInputFileColumnOrdering.Size = New System.Drawing.Size(392, 21)
+        Me.cboProteinInputFileColumnOrdering.TabIndex = 1
+        '
+        'lblProteinInputFileColumnOrdering
+        '
+        Me.lblProteinInputFileColumnOrdering.Location = New System.Drawing.Point(8, 26)
+        Me.lblProteinInputFileColumnOrdering.Name = "lblProteinInputFileColumnOrdering"
+        Me.lblProteinInputFileColumnOrdering.Size = New System.Drawing.Size(80, 16)
+        Me.lblProteinInputFileColumnOrdering.TabIndex = 0
+        Me.lblProteinInputFileColumnOrdering.Text = "Column Order"
+        '
+        'txtProteinInputFileColumnDelimiter
+        '
+        Me.txtProteinInputFileColumnDelimiter.Location = New System.Drawing.Point(192, 56)
+        Me.txtProteinInputFileColumnDelimiter.MaxLength = 1
+        Me.txtProteinInputFileColumnDelimiter.Name = "txtProteinInputFileColumnDelimiter"
+        Me.txtProteinInputFileColumnDelimiter.Size = New System.Drawing.Size(32, 20)
+        Me.txtProteinInputFileColumnDelimiter.TabIndex = 4
+        Me.txtProteinInputFileColumnDelimiter.Text = ";"
+        '
+        'lblProteinInputFileColumnDelimiter
+        '
+        Me.lblProteinInputFileColumnDelimiter.Location = New System.Drawing.Point(8, 58)
+        Me.lblProteinInputFileColumnDelimiter.Name = "lblProteinInputFileColumnDelimiter"
+        Me.lblProteinInputFileColumnDelimiter.Size = New System.Drawing.Size(96, 16)
+        Me.lblProteinInputFileColumnDelimiter.TabIndex = 2
+        Me.lblProteinInputFileColumnDelimiter.Text = "Column Delimiter"
+        '
+        'cboProteinInputFileColumnDelimiter
+        '
+        Me.cboProteinInputFileColumnDelimiter.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+        Me.cboProteinInputFileColumnDelimiter.DropDownWidth = 70
+        Me.cboProteinInputFileColumnDelimiter.Location = New System.Drawing.Point(112, 56)
+        Me.cboProteinInputFileColumnDelimiter.Name = "cboProteinInputFileColumnDelimiter"
+        Me.cboProteinInputFileColumnDelimiter.Size = New System.Drawing.Size(70, 21)
+        Me.cboProteinInputFileColumnDelimiter.TabIndex = 3
+        '
+        'TabPagePeakMatchingThresholds
+        '
+        Me.TabPagePeakMatchingThresholds.Controls.Add(Me.txtCoverage)
+        Me.TabPagePeakMatchingThresholds.Controls.Add(Me.txtRTFCode)
+        Me.TabPagePeakMatchingThresholds.Controls.Add(Me.txtCustomProteinSequence)
+        Me.TabPagePeakMatchingThresholds.Controls.Add(Me.lblCustomProteinSequence)
+        Me.TabPagePeakMatchingThresholds.Controls.Add(Me.chkAddSpace)
+        Me.TabPagePeakMatchingThresholds.Controls.Add(Me.cboCharactersPerLine)
+        Me.TabPagePeakMatchingThresholds.Controls.Add(Me.rtfRichTextBox)
+        Me.TabPagePeakMatchingThresholds.Controls.Add(Me.dgResults)
+        Me.TabPagePeakMatchingThresholds.Location = New System.Drawing.Point(4, 22)
+        Me.TabPagePeakMatchingThresholds.Name = "TabPagePeakMatchingThresholds"
+        Me.TabPagePeakMatchingThresholds.Size = New System.Drawing.Size(864, 374)
+        Me.TabPagePeakMatchingThresholds.TabIndex = 3
+        Me.TabPagePeakMatchingThresholds.Text = "Results Browser"
+        Me.TabPagePeakMatchingThresholds.Visible = False
+        '
+        'txtCoverage
+        '
+        Me.txtCoverage.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
+        Me.txtCoverage.Location = New System.Drawing.Point(512, 327)
+        Me.txtCoverage.Name = "txtCoverage"
+        Me.txtCoverage.ReadOnly = True
+        Me.txtCoverage.Size = New System.Drawing.Size(216, 20)
+        Me.txtCoverage.TabIndex = 7
+        Me.txtCoverage.Text = "Coverage: 0%  (0 / 0)"
+        '
+        'txtRTFCode
+        '
+        Me.txtRTFCode.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+                    Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
+        Me.txtRTFCode.Location = New System.Drawing.Point(72, 16)
+        Me.txtRTFCode.Multiline = True
+        Me.txtRTFCode.Name = "txtRTFCode"
+        Me.txtRTFCode.ScrollBars = System.Windows.Forms.ScrollBars.Both
+        Me.txtRTFCode.Size = New System.Drawing.Size(432, 231)
+        Me.txtRTFCode.TabIndex = 1
+        Me.txtRTFCode.WordWrap = False
+        '
+        'txtCustomProteinSequence
+        '
+        Me.txtCustomProteinSequence.AcceptsReturn = True
+        Me.txtCustomProteinSequence.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
+        Me.txtCustomProteinSequence.Location = New System.Drawing.Point(88, 328)
+        Me.txtCustomProteinSequence.Multiline = True
+        Me.txtCustomProteinSequence.Name = "txtCustomProteinSequence"
+        Me.txtCustomProteinSequence.ScrollBars = System.Windows.Forms.ScrollBars.Vertical
+        Me.txtCustomProteinSequence.Size = New System.Drawing.Size(416, 39)
+        Me.txtCustomProteinSequence.TabIndex = 6
+        '
+        'lblCustomProteinSequence
+        '
+        Me.lblCustomProteinSequence.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
+        Me.lblCustomProteinSequence.Location = New System.Drawing.Point(4, 328)
+        Me.lblCustomProteinSequence.Name = "lblCustomProteinSequence"
+        Me.lblCustomProteinSequence.Size = New System.Drawing.Size(88, 32)
+        Me.lblCustomProteinSequence.TabIndex = 5
+        Me.lblCustomProteinSequence.Text = "Custom Protein Sequence"
+        '
+        'chkAddSpace
+        '
+        Me.chkAddSpace.Location = New System.Drawing.Point(736, 6)
+        Me.chkAddSpace.Name = "chkAddSpace"
+        Me.chkAddSpace.Size = New System.Drawing.Size(120, 25)
+        Me.chkAddSpace.TabIndex = 3
+        Me.chkAddSpace.Text = "Add space every 10 residues"
+        '
+        'cboCharactersPerLine
+        '
+        Me.cboCharactersPerLine.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+        Me.cboCharactersPerLine.Location = New System.Drawing.Point(512, 10)
+        Me.cboCharactersPerLine.Name = "cboCharactersPerLine"
+        Me.cboCharactersPerLine.Size = New System.Drawing.Size(216, 21)
+        Me.cboCharactersPerLine.TabIndex = 2
+        '
+        'rtfRichTextBox
+        '
+        Me.rtfRichTextBox.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+                    Or System.Windows.Forms.AnchorStyles.Left) _
+                    Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.rtfRichTextBox.Location = New System.Drawing.Point(512, 40)
+        Me.rtfRichTextBox.Name = "rtfRichTextBox"
+        Me.rtfRichTextBox.Size = New System.Drawing.Size(344, 279)
+        Me.rtfRichTextBox.TabIndex = 4
+        Me.rtfRichTextBox.Text = ""
+        Me.rtfRichTextBox.WordWrap = False
+        '
+        'dgResults
+        '
+        Me.dgResults.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+                    Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
+        Me.dgResults.CaptionText = "Results"
+        Me.dgResults.DataMember = ""
+        Me.dgResults.HeaderForeColor = System.Drawing.SystemColors.ControlText
+        Me.dgResults.Location = New System.Drawing.Point(2, 16)
+        Me.dgResults.Name = "dgResults"
+        Me.dgResults.PreferredColumnWidth = 80
+        Me.dgResults.Size = New System.Drawing.Size(504, 304)
+        Me.dgResults.TabIndex = 0
+        '
+        'fraOutputFolderPath
+        '
+        Me.fraOutputFolderPath.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+                    Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.fraOutputFolderPath.Controls.Add(Me.cmdSelectOutputFolder)
+        Me.fraOutputFolderPath.Controls.Add(Me.txtOutputFolderPath)
+        Me.fraOutputFolderPath.Location = New System.Drawing.Point(8, 128)
+        Me.fraOutputFolderPath.Name = "fraOutputFolderPath"
+        Me.fraOutputFolderPath.Size = New System.Drawing.Size(872, 56)
+        Me.fraOutputFolderPath.TabIndex = 2
+        Me.fraOutputFolderPath.TabStop = False
+        Me.fraOutputFolderPath.Text = "Output folder path"
+        '
+        'cmdSelectOutputFolder
+        '
+        Me.cmdSelectOutputFolder.Location = New System.Drawing.Point(8, 16)
+        Me.cmdSelectOutputFolder.Name = "cmdSelectOutputFolder"
+        Me.cmdSelectOutputFolder.Size = New System.Drawing.Size(80, 32)
+        Me.cmdSelectOutputFolder.TabIndex = 0
+        Me.cmdSelectOutputFolder.Text = "Select folder"
+        '
+        'txtOutputFolderPath
+        '
+        Me.txtOutputFolderPath.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+                    Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.txtOutputFolderPath.Location = New System.Drawing.Point(104, 18)
+        Me.txtOutputFolderPath.Name = "txtOutputFolderPath"
+        Me.txtOutputFolderPath.Size = New System.Drawing.Size(752, 20)
+        Me.txtOutputFolderPath.TabIndex = 1
+        '
+        'GUI
+        '
+        Me.AutoScaleBaseSize = New System.Drawing.Size(5, 13)
+        Me.ClientSize = New System.Drawing.Size(896, 601)
+        Me.Controls.Add(Me.fraOutputFolderPath)
+        Me.Controls.Add(Me.tbsOptions)
+        Me.Controls.Add(Me.fraPeptideInputFilePath)
+        Me.Controls.Add(Me.fraProteinInputFilePath)
+        Me.Menu = Me.MainMenuControl
+        Me.Name = "GUI"
+        Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
+        Me.Text = "Protein Coverage Summarizer"
+        Me.fraProteinInputFilePath.ResumeLayout(False)
+        Me.fraProteinInputFilePath.PerformLayout()
+        Me.fraPeptideInputFilePath.ResumeLayout(False)
+        Me.fraPeptideInputFilePath.PerformLayout()
+        Me.tbsOptions.ResumeLayout(False)
+        Me.TabPageFileFormatOptions.ResumeLayout(False)
+        Me.fraOptions.ResumeLayout(False)
+        Me.fraPeptideDelimitedFileOptions.ResumeLayout(False)
+        Me.fraPeptideDelimitedFileOptions.PerformLayout()
+        Me.fraProteinDelimitedFileOptions.ResumeLayout(False)
+        Me.fraProteinDelimitedFileOptions.PerformLayout()
+        Me.TabPagePeakMatchingThresholds.ResumeLayout(False)
+        Me.TabPagePeakMatchingThresholds.PerformLayout()
+        CType(Me.dgResults, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.fraOutputFolderPath.ResumeLayout(False)
+        Me.fraOutputFolderPath.PerformLayout()
+        Me.ResumeLayout(False)
+
+    End Sub
+#End Region
+#End Region
+
+#Region "Constants and Enums"
+    Private Const XML_SETTINGS_FILE_NAME As String = "ProteinCoverageSummarizerSettings.xml"
+    Private Const XML_SECTION_GUI_OPTIONS As String = "GUIOptions"
+
+    Private Const COVERAGE_RESULTS_DATATABLE As String = "T_Coverage_Results"
+    Private Const COL_NAME_PROTEIN_NAME As String = "Protein Name"
+    Private Const COL_NAME_PROTEIN_COVERAGE As String = "Percent Coverage"
+    Private Const COL_NAME_PROTEIN_DESCRIPTION As String = "Protein Description"
+    Private Const COL_NAME_NONUNIQUE_PEPTIDE_COUNT As String = "Non Unique Peptide Count"
+    Private Const COL_NAME_UNIQUE_PEPTIDE_COUNT As String = "Unique Peptide Count"
+    Private Const COL_NAME_PROTEIN_RESIDUE_COUNT As String = "Protein Residue count"
+    Private Const COL_NAME_PROTEIN_SEQUENCE As String = "Protein Sequence"
+
+    Private Const PROTEIN_INPUT_FILE_INDEX_OFFSET As Integer = 1
+
+    Private Enum DelimiterCharConstants
+        Space = 0
+        Tab = 1
+        Comma = 2
+        Other = 3
+    End Enum
+
+    Private Enum eSequenceDisplayConstants
+        UsePrevious = 0
+        UseDatagrid = 1
+        UseCustom = 2
+    End Enum
+#End Region
+
+#Region "Classwide variables"
+    Private mDSCoverageResults As DataSet
+    Private mProteinSequenceColIndex As Integer
+    Private mProteinDescriptionColVisible As Boolean
+
+    Private WithEvents mProteinCoverageSummarizer As clsProteinCoverageSummarizerRunner
+
+    Private mXmlSettingsFilePath As String
+    Private mLastFolderUsed As String
+
+    Private blnShowMessages As Boolean = False
+
+#End Region
+
+#Region "Properties"
+
+#End Region
+
+    Private Sub CloseProgram()
+        Me.Close()
+    End Sub
+
+    Private Sub AutoDefineSearchAllProteins()
+        If cboPeptideInputFileColumnOrdering.SelectedIndex = ProteinFileReader.DelimitedFileReader.eDelimitedFileFormatCode.SequenceOnly Then
+            chkSearchAllProteinsForPeptideSequence.Checked = True
+        Else
+            chkSearchAllProteinsForPeptideSequence.Checked = False
+        End If
+    End Sub
+    Private Function ConfirmInputFilePaths() As Boolean
+        If txtProteinInputFilePath.Text.Length = 0 And txtPeptideInputFilePath.Text.Length = 0 Then
+            Windows.Forms.MessageBox.Show("Please define the input file paths", "Missing Value", MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
+            txtProteinInputFilePath.Focus()
+            Return False
+        ElseIf txtProteinInputFilePath.Text.Length = 0 Then
+            Windows.Forms.MessageBox.Show("Please define Protein input file path", "Missing Value", MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
+            txtProteinInputFilePath.Focus()
+            Return False
+        ElseIf txtPeptideInputFilePath.Text.Length = 0 Then
+            Windows.Forms.MessageBox.Show("Please define Peptide input file path", "Missing Value", MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
+            txtPeptideInputFilePath.Focus()
+            Return False
+        Else
+            Return True
+        End If
+    End Function
+
+    Private Sub CreateSummaryDataTable(ByVal strResultsFilePath As String)
+
+        Dim srInFile As System.IO.StreamReader
+        Dim bytesRead As Long = 0
+
+        Dim intLineCount As Integer
+        Dim intIndex As Integer
+
+        Dim strLineIn As String
+        Dim strSplitLine As String()
+
+        Dim blnProteinDescriptionPresent As Boolean
+
+        Dim objNewRow As DataRow
+
+        Try
+            If strResultsFilePath Is Nothing OrElse strResultsFilePath.Length = 0 Then
+                ' Output file not available
+                Exit Sub
+            End If
+
+            If Not System.IO.File.Exists(strResultsFilePath) Then
+				ShowErrorMessage("Results file not found: " & strResultsFilePath)
+			End If
+
+			' Clear the data source to prevent the datagrid from updating
+			dgResults.DataSource = Nothing
+
+			' Clear the dataset
+			mDSCoverageResults.Tables(COVERAGE_RESULTS_DATATABLE).Clear()
+
+			' Open the file and read in the lines
+			srInFile = New System.IO.StreamReader(strResultsFilePath)
+			intLineCount = 1
+			blnProteinDescriptionPresent = False
+
+			Do While srInFile.Peek <> -1
+				strLineIn = srInFile.ReadLine
+				bytesRead += strLineIn.Length + 2			' Add 2 for CrLf
+
+				If intLineCount = 1 Then
+					' do nothing, skip the first line
+				Else
+					strSplitLine = strLineIn.Split(ControlChars.Tab)
+
+					objNewRow = mDSCoverageResults.Tables(COVERAGE_RESULTS_DATATABLE).NewRow()
+					For intIndex = 0 To strSplitLine.Length - 1
+						If intIndex > ProteinCoverageSummarizer.clsProteinCoverageSummarizer.OUTPUT_FILE_PROTEIN_SEQUENCE_COLUMN_NUMBER - 1 Then Exit For
+
+						Try
+							Select Case System.Type.GetTypeCode(objNewRow(intIndex).GetType)
+								Case TypeCode.String
+									objNewRow(intIndex) = strSplitLine(intIndex)
+								Case TypeCode.Double
+									objNewRow(intIndex) = CDbl(strSplitLine(intIndex))
+								Case TypeCode.Single
+									objNewRow(intIndex) = CSng(strSplitLine(intIndex))
+								Case TypeCode.Byte, TypeCode.Int16, TypeCode.Int32, TypeCode.Int64, TypeCode.UInt16, TypeCode.UInt32, TypeCode.UInt64
+									objNewRow(intIndex) = CInt(strSplitLine(intIndex))
+								Case TypeCode.Boolean
+									objNewRow(intIndex) = CBool(strSplitLine(intIndex))
+								Case Else
+									objNewRow(intIndex) = strSplitLine(intIndex)
+							End Select
+						Catch ex As Exception
+							' Ignore errors while populating the table
+						End Try
+					Next intIndex
+
+					If strSplitLine.Length >= ProteinCoverageSummarizer.clsProteinCoverageSummarizer.OUTPUT_FILE_PROTEIN_DESCRIPTION_COLUMN_NUMBER Then
+						If strSplitLine(ProteinCoverageSummarizer.clsProteinCoverageSummarizer.OUTPUT_FILE_PROTEIN_DESCRIPTION_COLUMN_NUMBER - 1).Length > 0 Then
+							blnProteinDescriptionPresent = True
+						End If
+					End If
+
+					' Add the row to the Customers table.
+					mDSCoverageResults.Tables(COVERAGE_RESULTS_DATATABLE).Rows.Add(objNewRow)
+
+				End If
+				intLineCount += 1
+
+				If intLineCount Mod 25 = 0 Then
+					lblProgress.Text = "Loading results: " & (bytesRead / srInFile.BaseStream.Length * 100).ToString("0.0") & "% complete"
+				End If
+
+			Loop
+
+			srInFile.Close()
+
+			' Re-define the data source
+			' Bind the DataSet to the DataGrid
+			With dgResults
+				.DataSource = mDSCoverageResults
+				.DataMember = COVERAGE_RESULTS_DATATABLE
+			End With
+
+			If blnProteinDescriptionPresent <> mProteinDescriptionColVisible Then
+				mProteinDescriptionColVisible = blnProteinDescriptionPresent
+				UpdateDatagridTableStyle()
+			End If
+
+			' Display the sequence for the first protein
+			If mDSCoverageResults.Tables(COVERAGE_RESULTS_DATATABLE).Rows.Count > 0 Then
+				dgResults.CurrentRowIndex = 0
+				ShowRichTextStart(eSequenceDisplayConstants.UseDatagrid)
+			Else
+				ShowRichText("", rtfRichTextBox)
+			End If
+
+			lblProgress.Text = "Results loaded"
+
+		Catch ex As Exception
+
+		End Try
+
+	End Sub
+
+	Private Sub DefineOutputFolderPath(ByVal strPeptideInputFilePath As String)
+
+		Try
+			If strPeptideInputFilePath.Length > 0 Then
+				txtOutputFolderPath.Text = System.IO.Path.GetDirectoryName(strPeptideInputFilePath)
+			End If
+		Catch ex As Exception
+			System.Windows.Forms.MessageBox.Show("Error defining default output folder path: " & ex.Message, _
+					 "Error", Windows.Forms.MessageBoxButtons.OK, Windows.Forms.MessageBoxIcon.Exclamation)
+		End Try
+
+	End Sub
+
+	Private Sub EnableDisableControls()
+		Dim blnFastaFile As Boolean
+
+		If txtProteinInputFilePath.Text.ToLower.EndsWith(".fasta") Then
+			blnFastaFile = True
+		Else
+			blnFastaFile = False
+		End If
+
+		cboProteinInputFileColumnOrdering.Enabled = Not blnFastaFile
+		cboProteinInputFileColumnDelimiter.Enabled = Not blnFastaFile
+		txtProteinInputFileColumnDelimiter.Enabled = Not blnFastaFile
+
+		chkSearchAllProteinsSkipCoverageComputationSteps.Enabled = chkSearchAllProteinsForPeptideSequence.Checked
+
+	End Sub
+
+	Private Function GetSettingsFilePath() As String
+		Return clsProcessFilesBaseClass.GetSettingsFilePathLocal("ProteinCoverageSummarizer", XML_SETTINGS_FILE_NAME)
+	End Function
+
+	Private Sub IniFileLoadOptions(ByVal blnUpdateIOPaths As Boolean)
+		' Prompts the user to select a file to load the options from
+
+		Dim strFilePath As String
+
+		Dim objOpenFile As New System.Windows.Forms.OpenFileDialog
+
+		strFilePath = mXmlSettingsFilePath
+
+		With objOpenFile
+			.AddExtension = True
+			.CheckFileExists = True
+			.CheckPathExists = True
+			.DefaultExt = ".xml"
+			.DereferenceLinks = True
+			.Multiselect = False
+			.ValidateNames = True
+
+			.Filter = "Settings files (*.xml)|*.xml|All files (*.*)|*.*"
+
+			.FilterIndex = 1
+
+			If strFilePath.Length > 0 Then
+				Try
+					.InitialDirectory = System.IO.Directory.GetParent(strFilePath).ToString
+				Catch
+					.InitialDirectory = clsProcessFilesBaseClass.GetAppFolderPath()
+				End Try
+			Else
+				.InitialDirectory = clsProcessFilesBaseClass.GetAppFolderPath()
+			End If
+
+			If System.IO.File.Exists(strFilePath) Then
+				.FileName = System.IO.Path.GetFileName(strFilePath)
+			End If
+
+			.Title = "Specify file to load options from"
+
+			.ShowDialog()
+			If .FileName.Length > 0 Then
+				mXmlSettingsFilePath = .FileName
+
+				IniFileLoadOptions(mXmlSettingsFilePath, blnUpdateIOPaths)
+			End If
+		End With
+
+	End Sub
+
+	Private Sub IniFileLoadOptions(ByVal strFilePath As String, ByVal blnUpdateIOPaths As Boolean)
+
+		Dim objSettingsFile As XmlSettingsFileAccessor
+
+		Dim objProteinCoverageSummarizer As New clsProteinCoverageSummarizerRunner
+		Dim eColumnOrdering As ProteinFileReader.DelimitedFileReader.eDelimitedFileFormatCode
+
+		Try
+
+			If strFilePath Is Nothing OrElse strFilePath.Length = 0 Then
+				' No parameter file specified; nothing to load
+				Exit Sub
+			End If
+
+			If Not System.IO.File.Exists(strFilePath) Then
+				ShowErrorMessage("Parameter file not Found: " & strFilePath)
+				Exit Sub
+			End If
+
+			objSettingsFile = New XmlSettingsFileAccessor
+
+			If objSettingsFile.LoadSettings(strFilePath) Then
+
+				' Read the GUI-specific options from the XML file
+				If Not objSettingsFile.SectionPresent(XML_SECTION_GUI_OPTIONS) Then
+					If blnShowMessages Then
+						ShowErrorMessage("The node '<section name=""" & XML_SECTION_GUI_OPTIONS & """> was not found in the parameter file: " & strFilePath, "Invalid File")
+					End If
+				Else
+					If blnUpdateIOPaths Then
+						txtProteinInputFilePath.Text = objSettingsFile.GetParam(XML_SECTION_GUI_OPTIONS, "ProteinInputFilePath", txtProteinInputFilePath.Text)
+						txtPeptideInputFilePath.Text = objSettingsFile.GetParam(XML_SECTION_GUI_OPTIONS, "PeptideInputFilePath", txtPeptideInputFilePath.Text)
+						txtOutputFolderPath.Text = objSettingsFile.GetParam(XML_SECTION_GUI_OPTIONS, "OutputFolderPath", txtOutputFolderPath.Text)
+					End If
+
+					cboProteinInputFileColumnDelimiter.SelectedIndex = objSettingsFile.GetParam(XML_SECTION_GUI_OPTIONS, "ProteinInputFileColumnDelimiterIndex", cboProteinInputFileColumnDelimiter.SelectedIndex)
+					txtProteinInputFileColumnDelimiter.Text = objSettingsFile.GetParam(XML_SECTION_GUI_OPTIONS, "ProteinInputFileColumnDelimiter", txtProteinInputFileColumnDelimiter.Text)
+
+					cboPeptideInputFileColumnDelimiter.SelectedIndex = objSettingsFile.GetParam(XML_SECTION_GUI_OPTIONS, "PeptideInputFileColumnDelimiterIndex", cboPeptideInputFileColumnDelimiter.SelectedIndex)
+					txtPeptideInputFileColumnDelimiter.Text = objSettingsFile.GetParam(XML_SECTION_GUI_OPTIONS, "PeptideInputFileColumnDelimiter", txtPeptideInputFileColumnDelimiter.Text)
+
+					cboCharactersPerLine.SelectedIndex = objSettingsFile.GetParam(XML_SECTION_GUI_OPTIONS, "ProteinSequenceCharactersPerLine", cboCharactersPerLine.SelectedIndex)
+					chkAddSpace.Checked = objSettingsFile.GetParam(XML_SECTION_GUI_OPTIONS, "ProteinSequenceAddSpace", chkAddSpace.Checked)
+
+					If Not objSettingsFile.SectionPresent(ProteinCoverageSummarizer.clsProteinCoverageSummarizer.XML_SECTION_PROCESSING_OPTIONS) Then
+						If blnShowMessages Then
+							ShowErrorMessage("The node '<section name=""" & ProteinCoverageSummarizer.clsProteinCoverageSummarizer.XML_SECTION_PROCESSING_OPTIONS & """> was not found in the parameter file: ", "Invalid File")
+						End If
+					Else
+						Try
+							eColumnOrdering = CType(objSettingsFile.GetParam(ProteinCoverageSummarizer.clsProteinCoverageSummarizer.XML_SECTION_PROCESSING_OPTIONS, "DelimitedProteinFileFormatCode", cboProteinInputFileColumnOrdering.SelectedIndex + PROTEIN_INPUT_FILE_INDEX_OFFSET), ProteinFileReader.DelimitedFileReader.eDelimitedFileFormatCode)
+						Catch ex As Exception
+							eColumnOrdering = ProteinFileReader.DelimitedFileReader.eDelimitedFileFormatCode.ProteinName_Sequence
+						End Try
+
+						Try
+							cboProteinInputFileColumnOrdering.SelectedIndex = eColumnOrdering - PROTEIN_INPUT_FILE_INDEX_OFFSET
+						Catch ex As Exception
+							If cboProteinInputFileColumnOrdering.Items.Count > 0 Then
+								cboProteinInputFileColumnOrdering.SelectedIndex = 0
+							End If
+						End Try
+
+						Try
+							eColumnOrdering = CType(objSettingsFile.GetParam(ProteinCoverageSummarizer.clsProteinCoverageSummarizer.XML_SECTION_PROCESSING_OPTIONS, "PeptideFileFormatCode", cboPeptideInputFileColumnOrdering.SelectedIndex), ProteinFileReader.DelimitedFileReader.eDelimitedFileFormatCode)
+						Catch ex As Exception
+							eColumnOrdering = ProteinFileReader.DelimitedFileReader.eDelimitedFileFormatCode.ProteinName_Sequence
+						End Try
+
+						Try
+							cboPeptideInputFileColumnOrdering.SelectedIndex = eColumnOrdering
+						Catch ex As Exception
+							If cboPeptideInputFileColumnOrdering.Items.Count > 0 Then
+								cboPeptideInputFileColumnOrdering.SelectedIndex = 0
+							End If
+						End Try
+
+						' Note: The following settings are read using LoadProcessingClassOptions()
+						'chkPeptideFileSkipFirstLine
+						'chkProteinFileSkipFirstLine
+
+						'chkOutputProteinSequence
+						'chkSearchAllProteinsForPeptideSequence
+						'chkSearchAllProteinsSaveDetails
+						'chkSearchAllProteinsSkipCoverageComputationSteps
+						'chkTrackPeptideCounts
+						'chkRemoveSymbolCharacters
+						'chkMatchPeptidePrefixAndSuffixToProtein
+					End If
+
+				End If
+			End If
+
+		Catch ex As Exception
+			If blnShowMessages Then
+				ShowErrorMessage("Error in IniFileLoadOptions: " & ex.Message)
+			Else
+				Throw New System.Exception("Error in IniFileLoadOptions", ex)
+			End If
+
+		End Try
+
+		Try
+			objProteinCoverageSummarizer.LoadParameterFileSettings(strFilePath)
+		Catch ex As Exception
+			ShowErrorMessage("Error calling LoadParameterFileSettings: " & ex.ToString)
+		End Try
+
+		Try
+			LoadProcessingClassOptions(objProteinCoverageSummarizer)
+
+			objProteinCoverageSummarizer = Nothing
+
+		Catch ex As Exception
+			ShowErrorMessage("Error calling LoadProcessingClassOptions: " & ex.ToString)
+		End Try
+
+
+	End Sub
+
+	Private Sub IniFileSaveOptions(ByVal FileName As String, Optional ByVal blnSaveExtendedOptions As Boolean = False)
+		Dim objSettingsFile As New XmlSettingsFileAccessor
+
+		Const XML_SECTION_PROCESSING_OPTIONS As String = "ProcessingOptions"
+
+		Try
+			objSettingsFile = New XmlSettingsFileAccessor
+		Catch ex As Exception
+			System.Windows.Forms.MessageBox.Show("Error instantiating the XmlSettingsFileAccessor in GUI->IniFileSaveOptions: " _
+			& ControlChars.NewLine & ex.Message, "Error", Windows.Forms.MessageBoxButtons.OK, Windows.Forms.MessageBoxIcon.Exclamation)
+		End Try
+
+
+		With objSettingsFile
+			' Pass True to .LoadSettings() to turn off case sensitive matching
+			Try
+				.LoadSettings(FileName, True)
+			Catch ex As Exception
+				Exit Sub
+			End Try
+
+			Try
+				.SetParam(XML_SECTION_GUI_OPTIONS, "ProteinInputFilePath", txtProteinInputFilePath.Text)
+				.SetParam(XML_SECTION_GUI_OPTIONS, "PeptideInputFilePath", txtPeptideInputFilePath.Text)
+				.SetParam(XML_SECTION_GUI_OPTIONS, "OutputFolderPath", txtOutputFolderPath.Text)
+
+				If blnSaveExtendedOptions Then
+					.SetParam(XML_SECTION_GUI_OPTIONS, "ProteinInputFileColumnDelimiterIndex", cboProteinInputFileColumnDelimiter.SelectedIndex)
+					.SetParam(XML_SECTION_GUI_OPTIONS, "ProteinInputFileColumnDelimiter", txtProteinInputFileColumnDelimiter.Text)
+
+					.SetParam(XML_SECTION_GUI_OPTIONS, "PeptideInputFileColumnDelimiterIndex", cboPeptideInputFileColumnDelimiter.SelectedIndex)
+					.SetParam(XML_SECTION_GUI_OPTIONS, "PeptideInputFileColumnDelimiter", txtPeptideInputFileColumnDelimiter.Text)
+
+					.SetParam(XML_SECTION_GUI_OPTIONS, "ProteinSequenceCharactersPerLine", cboCharactersPerLine.SelectedIndex)
+					.SetParam(XML_SECTION_GUI_OPTIONS, "ProteinSequenceAddSpace", chkAddSpace.Checked)
+
+					.SetParam(XML_SECTION_PROCESSING_OPTIONS, "OutputProteinSequence", chkOutputProteinSequence.Checked)
+					.SetParam(XML_SECTION_PROCESSING_OPTIONS, "SearchAllProteinsForPeptideSequence", chkSearchAllProteinsForPeptideSequence.Checked)
+
+					.SetParam(XML_SECTION_PROCESSING_OPTIONS, "SaveProteinToPeptideMappingFile", chkSaveProteinToPeptideMappingFile.Checked)
+					.SetParam(XML_SECTION_PROCESSING_OPTIONS, "SearchAllProteinsSkipCoverageComputationSteps", chkSearchAllProteinsSkipCoverageComputationSteps.Checked)
+
+					.SetParam(XML_SECTION_PROCESSING_OPTIONS, "TrackPeptideCounts", chkTrackPeptideCounts.Checked)
+					.SetParam(XML_SECTION_PROCESSING_OPTIONS, "RemoveSymbolCharacters", chkRemoveSymbolCharacters.Checked)
+					.SetParam(XML_SECTION_PROCESSING_OPTIONS, "MatchPeptidePrefixAndSuffixToProtein", chkMatchPeptidePrefixAndSuffixToProtein.Checked)
+					.SetParam(XML_SECTION_PROCESSING_OPTIONS, "IgnoreILDifferences", chkIgnoreILDifferences.Checked)
+
+					.SetParam(XML_SECTION_PROCESSING_OPTIONS, "PeptideInputFileDelimiter", LookupColumnDelimiter(cboPeptideInputFileColumnDelimiter, txtPeptideInputFileColumnDelimiter, ControlChars.Tab))
+					.SetParam(XML_SECTION_PROCESSING_OPTIONS, "PeptideFileFormatCode", cboPeptideInputFileColumnOrdering.SelectedIndex)
+					.SetParam(XML_SECTION_PROCESSING_OPTIONS, "PeptideFileSkipFirstLine", chkPeptideFileSkipFirstLine.Checked)
+
+					.SetParam(XML_SECTION_PROCESSING_OPTIONS, "DelimitedProteinFileDelimiter", LookupColumnDelimiter(cboPeptideInputFileColumnDelimiter, txtPeptideInputFileColumnDelimiter, ControlChars.Tab))
+					.SetParam(XML_SECTION_PROCESSING_OPTIONS, "DelimitedProteinFileFormatCode", cboProteinInputFileColumnOrdering.SelectedIndex + PROTEIN_INPUT_FILE_INDEX_OFFSET)
+					.SetParam(XML_SECTION_PROCESSING_OPTIONS, "ProteinFileSkipFirstLine", chkProteinFileSkipFirstLine.Checked)
+				End If
+
+				.SaveSettings()
+			Catch ex As Exception
+				System.Windows.Forms.MessageBox.Show("Error storing parameter in settings file: " & System.IO.Path.GetFileName(FileName), _
+						 "Error", Windows.Forms.MessageBoxButtons.OK, Windows.Forms.MessageBoxIcon.Exclamation)
+			End Try
+		End With
+
+	End Sub
+
+	Private Sub InitializeControls()
+
+		cmdAbort.Visible = False
+		cmdStart.Visible = True
+		txtRTFCode.Visible = False
+
+		mLastFolderUsed = System.Windows.Forms.Application.StartupPath
+
+		lblProgress.Text = String.Empty
+
+		PopulateComboBoxes()
+		InitializeDatagrid()
+
+		ResetToDefaults()
+
+		Try
+			' Try loading from the default xml file
+			IniFileLoadOptions(mXmlSettingsFilePath, True)
+		Catch ex As Exception
+			' Ignore any errors here
+			ShowErrorMessage("Error loading settings from " & mXmlSettingsFilePath & ": " & ex.Message)
+		End Try
+
+	End Sub
+
+	Private Sub InitializeDatagrid()
+
+		Try
+
+			' Make the Peak Matching Thresholds datatable
+			Dim dtCoverageResults As DataTable = New DataTable(COVERAGE_RESULTS_DATATABLE)
+
+			' Add the columns to the datatable
+			ADONetRoutines.AppendColumnStringToTable(dtCoverageResults, COL_NAME_PROTEIN_NAME, String.Empty)
+			ADONetRoutines.AppendColumnSingleToTable(dtCoverageResults, COL_NAME_PROTEIN_COVERAGE)
+			ADONetRoutines.AppendColumnStringToTable(dtCoverageResults, COL_NAME_PROTEIN_DESCRIPTION, String.Empty)
+			ADONetRoutines.AppendColumnIntegerToTable(dtCoverageResults, COL_NAME_NONUNIQUE_PEPTIDE_COUNT)
+			ADONetRoutines.AppendColumnIntegerToTable(dtCoverageResults, COL_NAME_UNIQUE_PEPTIDE_COUNT)
+			ADONetRoutines.AppendColumnIntegerToTable(dtCoverageResults, COL_NAME_PROTEIN_RESIDUE_COUNT)
+			ADONetRoutines.AppendColumnStringToTable(dtCoverageResults, COL_NAME_PROTEIN_SEQUENCE, String.Empty)
+
+			' Note that Protein Sequence should be at ColIndex 6 = clsProteinCoverageSummarizer.OUTPUT_FILE_PROTEIN_SEQUENCE_COLUMN_NUMBER-1
+			mProteinSequenceColIndex = ProteinCoverageSummarizer.clsProteinCoverageSummarizer.OUTPUT_FILE_PROTEIN_SEQUENCE_COLUMN_NUMBER - 1
+
+			' Could define a primary key if we wanted
+			'With dtCoverageResults
+			'    Dim PrimaryKeyColumn As System.Data.DataColumn() = New DataColumn() {.Columns(COL_NAME_PROTEIN_NAME)}
+			'    .PrimaryKey = PrimaryKeyColumn
+			'End With
+
+			' Instantiate the dataset
+			mDSCoverageResults = New DataSet(COVERAGE_RESULTS_DATATABLE)
+
+			' Add the new DataTable to the DataSet.
+			mDSCoverageResults.Tables.Add(dtCoverageResults)
+
+			' Bind the DataSet to the DataGrid
+			With dgResults
+				.DataSource = mDSCoverageResults
+				.DataMember = COVERAGE_RESULTS_DATATABLE
+			End With
+
+			mProteinDescriptionColVisible = False
+
+			' Update the grid's table style
+			UpdateDatagridTableStyle()
+
+		Catch ex As Exception
+			ShowErrorMessage("Error in InitializeDatagrid: " & ex.ToString)
+		End Try
+
+	End Sub
+
+	Private Sub LoadProcessingClassOptions(ByRef objProteinCoverageSummarizer As clsProteinCoverageSummarizerRunner)
+
+		Try
+			With objProteinCoverageSummarizer
+				chkPeptideFileSkipFirstLine.Checked = .PeptideFileSkipFirstLine
+				chkProteinFileSkipFirstLine.Checked = .ProteinDataDelimitedFileSkipFirstLine
+
+				chkOutputProteinSequence.Checked = .OutputProteinSequence
+				chkSearchAllProteinsForPeptideSequence.Checked = .SearchAllProteinsForPeptideSequence
+
+				chkSaveProteinToPeptideMappingFile.Checked = .SaveProteinToPeptideMappingFile
+				chkSearchAllProteinsSkipCoverageComputationSteps.Checked = .SearchAllProteinsSkipCoverageComputationSteps
+
+				chkTrackPeptideCounts.Checked = .TrackPeptideCounts
+				chkRemoveSymbolCharacters.Checked = .RemoveSymbolCharacters
+				chkMatchPeptidePrefixAndSuffixToProtein.Checked = .MatchPeptidePrefixAndSuffixToProtein
+				chkIgnoreILDifferences.Checked = .IgnoreILDifferences
+			End With
+
+		Catch ex As Exception
+			ShowErrorMessage("Error in LoadProcessingClassOptions: " & ex.Message)
+		End Try
+
+	End Sub
+
+	Private Function LookupColumnDelimiter(ByVal DelimiterCombobox As ComboBox, ByVal DelimiterTextbox As TextBox, ByVal strDefaultDelimiter As Char) As Char
+		Try
+			Return LookupColumnDelimiterChar(DelimiterCombobox.SelectedIndex, DelimiterTextbox.Text, strDefaultDelimiter)
+		Catch ex As Exception
+			Return ControlChars.Tab
+		End Try
+	End Function
+
+	Private Function LookupColumnDelimiterChar(ByVal intDelimiterIndex As Integer, ByVal strCustomDelimiter As String, ByVal strDefaultDelimiter As Char) As Char
+
+		Dim strDelimiter As String
+
+		Select Case intDelimiterIndex
+			Case DelimiterCharConstants.Space
+				strDelimiter = " "
+			Case DelimiterCharConstants.Tab
+				strDelimiter = ControlChars.Tab
+			Case DelimiterCharConstants.Comma
+				strDelimiter = ","
+			Case Else
+				' Includes DelimiterCharConstants.Other
+				strDelimiter = String.Copy(strCustomDelimiter)
+		End Select
+
+		If strDelimiter Is Nothing OrElse strDelimiter.Length = 0 Then
+			strDelimiter = String.Copy(strDefaultDelimiter)
+		End If
+
+		Try
+			Return strDelimiter.Chars(0)
+		Catch ex As Exception
+			Return ControlChars.Tab
+		End Try
+
+	End Function
+
+	Private Sub PopulateComboBoxes()
+		With cboProteinInputFileColumnDelimiter
+			With .Items
+				.Clear()
+				.Insert(0, "Space")
+				.Insert(1, "Tab")
+				.Insert(2, "Comma")
+				.Insert(3, "Other")
+			End With
+			.SelectedIndex = 1
+		End With
+
+		With cboPeptideInputFileColumnDelimiter
+			With .Items
+				.Insert(0, "Space")
+				.Insert(1, "Tab")
+				.Insert(2, "Comma")
+				.Insert(3, "Other")
+			End With
+			.SelectedIndex = 1
+		End With
+
+		With cboCharactersPerLine
+			With .Items
+				.Clear()
+				.Insert(0, " 40 Characters per line")
+				.Insert(1, " 50 Characters per line")
+				.Insert(2, " 60 Characters per line")
+			End With
+			.SelectedIndex = 0
+		End With
+
+		With cboProteinInputFileColumnOrdering
+			With .Items
+				.Clear()
+				' Note: Skipping ProteinFileReader.DelimitedFileReader.eDelimitedFileFormatCode.SequenceOnly since a Protein Sequence Only file is inappropriate for this program
+				.Insert(ProteinFileReader.DelimitedFileReader.eDelimitedFileFormatCode.ProteinName_Sequence - PROTEIN_INPUT_FILE_INDEX_OFFSET, "ProteinName and Sequence")
+				.Insert(ProteinFileReader.DelimitedFileReader.eDelimitedFileFormatCode.ProteinName_Description_Sequence - PROTEIN_INPUT_FILE_INDEX_OFFSET, "ProteinName, Descr, Seq")
+				.Insert(ProteinFileReader.DelimitedFileReader.eDelimitedFileFormatCode.UniqueID_Sequence - PROTEIN_INPUT_FILE_INDEX_OFFSET, "UniqueID and Seq")
+				.Insert(ProteinFileReader.DelimitedFileReader.eDelimitedFileFormatCode.ProteinName_PeptideSequence_UniqueID - PROTEIN_INPUT_FILE_INDEX_OFFSET, "ProteinName, Seq, UniqueID")
+				.Insert(ProteinFileReader.DelimitedFileReader.eDelimitedFileFormatCode.ProteinName_PeptideSequence_UniqueID_Mass_NET - PROTEIN_INPUT_FILE_INDEX_OFFSET, "ProteinName, Seq, UniqueID, Mass, Time")
+				.Insert(ProteinFileReader.DelimitedFileReader.eDelimitedFileFormatCode.ProteinName_PeptideSequence_UniqueID_Mass_NET_NETStDev_DiscriminantScore - PROTEIN_INPUT_FILE_INDEX_OFFSET, "ProteinName, Seq, UniqueID, Mass, Time, TimeStDev, DiscriminantScore")
+				.Insert(ProteinFileReader.DelimitedFileReader.eDelimitedFileFormatCode.UniqueID_Sequence_Mass_NET - PROTEIN_INPUT_FILE_INDEX_OFFSET, "UniqueID, Seq, Mass, Time")
+			End With
+			.SelectedIndex = ProteinFileReader.DelimitedFileReader.eDelimitedFileFormatCode.ProteinName_Description_Sequence - PROTEIN_INPUT_FILE_INDEX_OFFSET
+		End With
+
+
+		With cboPeptideInputFileColumnOrdering
+			With .Items
+				.Clear()
+				.Insert(ProteinFileReader.DelimitedFileReader.eDelimitedFileFormatCode.SequenceOnly, "Sequence Only")
+				.Insert(ProteinFileReader.DelimitedFileReader.eDelimitedFileFormatCode.ProteinName_Sequence, "ProteinName and Sequence")
+			End With
+			.SelectedIndex = ProteinFileReader.DelimitedFileReader.eDelimitedFileFormatCode.ProteinName_Sequence
+		End With
+	End Sub
+
+	Private Sub ResetToDefaults()
+
+		cboProteinInputFileColumnOrdering.SelectedIndex = ProteinFileReader.DelimitedFileReader.eDelimitedFileFormatCode.ProteinName_Sequence - PROTEIN_INPUT_FILE_INDEX_OFFSET
+		cboProteinInputFileColumnDelimiter.SelectedIndex = 1
+		txtProteinInputFileColumnDelimiter.Text = ";"
+		chkProteinFileSkipFirstLine.Checked = False
+
+		cboPeptideInputFileColumnOrdering.SelectedIndex = ProteinFileReader.DelimitedFileReader.eDelimitedFileFormatCode.ProteinName_Sequence
+		cboPeptideInputFileColumnDelimiter.SelectedIndex = 1
+		txtPeptideInputFileColumnDelimiter.Text = ";"
+		chkPeptideFileSkipFirstLine.Checked = False
+
+		chkOutputProteinSequence.Checked = True
+		chkSearchAllProteinsForPeptideSequence.Checked = False
+
+		chkSaveProteinToPeptideMappingFile.Checked = True
+		chkSearchAllProteinsSkipCoverageComputationSteps.Checked = False
+
+		chkTrackPeptideCounts.Checked = True
+		chkRemoveSymbolCharacters.Checked = True
+		chkMatchPeptidePrefixAndSuffixToProtein.Checked = False
+
+		cboCharactersPerLine.SelectedIndex = 0
+		chkAddSpace.Checked = True
+
+		mXmlSettingsFilePath = GetSettingsFilePath()
+		clsProcessFilesBaseClass.CreateSettingsFileIfMissing(mXmlSettingsFilePath)
+
+	End Sub
+
+	Private Sub SelectOutputFolder()
+
+		Dim objFolderBrowserDialog As New PRISM.Files.FolderBrowser
+
+		With objFolderBrowserDialog
+			' No need to set the Browse Flags; default values are already set
+
+			If txtOutputFolderPath.TextLength > 0 Then
+				.FolderPath = txtOutputFolderPath.Text
+			Else
+				.FolderPath = mLastFolderUsed
+			End If
+
+			If .BrowseForFolder() Then
+				txtOutputFolderPath.Text = .FolderPath
+				mLastFolderUsed = .FolderPath
+			End If
+		End With
+	End Sub
+
+	Private Sub SelectProteinInputFile()
+		Dim eResult As System.Windows.Forms.DialogResult
+		Dim dlgOpenFileDialog As System.Windows.Forms.OpenFileDialog
+
+		dlgOpenFileDialog = New System.Windows.Forms.OpenFileDialog
+		With dlgOpenFileDialog
+			.InitialDirectory = mLastFolderUsed
+			.Filter = "Fasta Files (*.fasta)|*.fasta|Text Files(*.txt)|*.txt|All Files (*.*)|*.*"
+			.FilterIndex = 3
+			eResult = .ShowDialog()
+			If eResult = DialogResult.OK Then
+				txtProteinInputFilePath.Text = .FileName
+				mLastFolderUsed = System.IO.Path.GetDirectoryName(.FileName)
+			End If
+		End With
+	End Sub
+
+	Private Sub SelectPeptideInputFile()
+		Dim eResult As System.Windows.Forms.DialogResult
+		Dim dlgOpenFileDialog As System.Windows.Forms.OpenFileDialog
+
+		dlgOpenFileDialog = New System.Windows.Forms.OpenFileDialog
+		With dlgOpenFileDialog
+			.InitialDirectory = mLastFolderUsed
+			.Filter = "Text Files(*.txt)|*.txt|All Files (*.*)|*.*"
+			.FilterIndex = 1
+			eResult = .ShowDialog()
+			If eResult = DialogResult.OK Then
+				txtPeptideInputFilePath.Text = .FileName
+				mLastFolderUsed = System.IO.Path.GetDirectoryName(.FileName)
+			End If
+		End With
+	End Sub
+
+	Private Function SetOptionsFromGUI(ByVal objProteinCoverageSummarizer As clsProteinCoverageSummarizerRunner) As Boolean
+		Try
+			With objProteinCoverageSummarizer
+
+				.ProteinInputFilePath = txtProteinInputFilePath.Text
+
+				.ProteinDataDelimitedFileFormatCode = CType(cboProteinInputFileColumnOrdering.SelectedIndex + PROTEIN_INPUT_FILE_INDEX_OFFSET, ProteinFileReader.DelimitedFileReader.eDelimitedFileFormatCode)
+				.ProteinDataDelimitedFileDelimiter = LookupColumnDelimiter(cboProteinInputFileColumnDelimiter, txtProteinInputFileColumnDelimiter, ControlChars.Tab)
+				.ProteinDataDelimitedFileSkipFirstLine = chkProteinFileSkipFirstLine.Checked
+				.ProteinDataRemoveSymbolCharacters = chkRemoveSymbolCharacters.Checked
+				.ProteinDataIgnoreILDifferences = chkIgnoreILDifferences.Checked
+
+				'peptide file options
+				.PeptideFileFormatCode = CType(cboPeptideInputFileColumnOrdering.SelectedIndex, ProteinCoverageSummarizer.clsProteinCoverageSummarizer.ePeptideFileColumnOrderingCode)
+				.PeptideInputFileDelimiter = LookupColumnDelimiter(cboPeptideInputFileColumnDelimiter, txtPeptideInputFileColumnDelimiter, ControlChars.Tab)
+				.PeptideFileSkipFirstLine = chkPeptideFileSkipFirstLine.Checked
+
+				'processing options
+				.OutputProteinSequence = chkOutputProteinSequence.Checked
+				.SearchAllProteinsForPeptideSequence = chkSearchAllProteinsForPeptideSequence.Checked
+
+				.SaveProteinToPeptideMappingFile = chkSaveProteinToPeptideMappingFile.Checked
+
+				If chkSaveProteinToPeptideMappingFile.Checked Then
+					.SearchAllProteinsSkipCoverageComputationSteps = chkSearchAllProteinsSkipCoverageComputationSteps.Checked
+				Else
+					.SearchAllProteinsSkipCoverageComputationSteps = False
+				End If
+
+				.TrackPeptideCounts = chkTrackPeptideCounts.Checked
+				.RemoveSymbolCharacters = chkRemoveSymbolCharacters.Checked
+				.MatchPeptidePrefixAndSuffixToProtein = chkMatchPeptidePrefixAndSuffixToProtein.Checked
+				.IgnoreILDifferences = chkIgnoreILDifferences.Checked
+
+			End With
+		Catch ex As Exception
+			Return False
+		End Try
+
+		Return True
+
+	End Function
+
+	Private Sub ShowAboutBox()
+		Dim strMessage As String
+
+		strMessage = "This program reads in a .fasta or .txt file containing protein names and sequences (and optionally descriptions)." & ControlChars.NewLine
+		strMessage &= "The program also reads in a .txt file containing peptide sequences and protein names (though protein name is optional) then uses this information to compute the sequence coverage percent for each protein." & ControlChars.NewLine & ControlChars.NewLine
+
+		strMessage &= "Program written by Matthew Monroe and Nikša Blonder for the Department of Energy (PNNL, Richland, WA) in 2005" & ControlChars.NewLine & ControlChars.NewLine
+
+		strMessage &= "This is version " & System.Windows.Forms.Application.ProductVersion & " (" & PROGRAM_DATE & ")" & ControlChars.NewLine & ControlChars.NewLine
+
+		strMessage &= "E-mail: matthew.monroe@pnl.gov or matt@alchemistmatt.com" & ControlChars.NewLine
+		strMessage &= "Website: http://ncrr.pnl.gov/ or http://www.sysbio.org/resources/staff/" & ControlChars.NewLine & ControlChars.NewLine
+
+		strMessage &= "Licensed under the Apache License, Version 2.0; you may not use this file except in compliance with the License.  "
+		strMessage &= "You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0" & ControlChars.NewLine & ControlChars.NewLine
+
+		strMessage &= "Notice: This computer software was prepared by Battelle Memorial Institute, "
+		strMessage &= "hereinafter the Contractor, under Contract No. DE-AC05-76RL0 1830 with the "
+		strMessage &= "Department of Energy (DOE).  All rights in the computer software are reserved "
+		strMessage &= "by DOE on behalf of the United States Government and the Contractor as "
+		strMessage &= "provided in the Contract.  NEITHER THE GOVERNMENT NOR THE CONTRACTOR MAKES ANY "
+		strMessage &= "WARRANTY, EXPRESS OR IMPLIED, OR ASSUMES ANY LIABILITY FOR THE USE OF THIS "
+		strMessage &= "SOFTWARE.  This notice including this sentence must appear on any copies of "
+		strMessage &= "this computer software." & ControlChars.NewLine
+
+		System.Windows.Forms.MessageBox.Show(strMessage, "About", System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Information)
+
+	End Sub
+
+	Private Sub ShowRichTextStart()
+		ShowRichTextStart(eSequenceDisplayConstants.UsePrevious)
+	End Sub
+
+	Private Sub ShowRichTextStart(ByVal eSequenceDisplayMode As eSequenceDisplayConstants)
+		Static blnLastSequenceWasDatagrid As Boolean
+		Dim blnUseDatagrid As Boolean
+
+		Select Case eSequenceDisplayMode
+			Case eSequenceDisplayConstants.UseDatagrid
+				blnUseDatagrid = True
+			Case eSequenceDisplayConstants.UseCustom
+				blnUseDatagrid = False
+			Case Else
+				' Includes Use Previous
+				blnUseDatagrid = blnLastSequenceWasDatagrid
+		End Select
+
+		blnLastSequenceWasDatagrid = blnUseDatagrid
+		If blnUseDatagrid Then
+			Try
+				If dgResults.CurrentRowIndex >= 0 Then
+					If Not dgResults.Item(dgResults.CurrentRowIndex, mProteinSequenceColIndex) Is Nothing Then
+						ShowRichText(CStr(dgResults.Item(dgResults.CurrentRowIndex, mProteinSequenceColIndex)), rtfRichTextBox)
+					End If
+				End If
+			Catch ex As Exception
+				' Ignore errors here
+			End Try
+		Else
+			ShowRichText(txtCustomProteinSequence.Text, rtfRichTextBox)
+		End If
+
+	End Sub
+
+	Protected Sub ShowErrorMessage(ByVal strMessage As String)
+		ShowErrorMessage(strMessage, "Error")
+	End Sub
+
+	Protected Sub ShowErrorMessage(ByVal strMessage As String, ByVal strCaption As String)
+		System.Windows.Forms.MessageBox.Show(strMessage, strCaption, MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
+	End Sub
+
+	Private Sub ShowRichText(ByVal strSequenceToShow As String, ByVal objRichTextBox As System.Windows.Forms.RichTextBox)
+
+		Dim intIndex As Integer
+		Dim intModValue As Integer
+
+		Dim intCharCount As Integer
+		Dim intUppercaseCount As Integer
+		Dim sngCoveragePercent As Single
+
+		Dim strRtf As String
+		Dim reReplaceSymbols As System.Text.RegularExpressions.Regex
+
+		' Define a RegEx to replace all of the non-letter characters
+		reReplaceSymbols = New System.Text.RegularExpressions.Regex("[ \t\r\n]", System.Text.RegularExpressions.RegexOptions.Compiled)
+
+		Dim blnInUpperRegion As Boolean
+
+		Try
+			' Lookup the number of characters per line
+			Select Case cboCharactersPerLine.SelectedIndex
+				Case 0
+					intModValue = 40
+				Case 1
+					intModValue = 50
+				Case 2
+					intModValue = 60
+				Case Else
+					intModValue = 40
+			End Select
+
+			' Remove any spaces, tabs, CR, or LF characters in strSequenceToShow
+			strSequenceToShow = reReplaceSymbols.Replace(strSequenceToShow, String.Empty)
+
+			' Define the base RTF text
+			strRtf = "{\rtf1\ansi\ansicpg1252\deff0\deflang1033{\fonttbl{\f0\fnil\fcharset0 Courier New;}}" & _
+			   "{\colortbl\red0\green0\blue0;\red255\green0\blue0;}" & _
+			   "\viewkind4\uc1\pard\f0\fs20 "
+
+			blnInUpperRegion = False
+			intCharCount = 0
+			intUppercaseCount = 0
+			If strSequenceToShow Is Nothing Then strSequenceToShow = String.Empty
+
+			For intIndex = 0 To strSequenceToShow.Length - 1
+
+				If intIndex > 0 Then
+					If intIndex Mod intModValue = 0 Then
+						' Add a new line
+						strRtf &= "\par "
+					Else
+						If chkAddSpace.Checked = True AndAlso intIndex Mod 10 = 0 Then
+							' Add a space every 10 residues
+							strRtf &= " "
+						End If
+					End If
+				End If
+
+				If Char.IsUpper(strSequenceToShow.Chars(intIndex)) Then
+					intCharCount += 1
+					intUppercaseCount += 1
+					If Not blnInUpperRegion Then
+						strRtf &= "{\cf1 {\b "
+						blnInUpperRegion = True
+					End If
+				Else
+					If Char.IsLower(strSequenceToShow.Chars(intIndex)) Then
+						intCharCount += 1
+					End If
+
+					If blnInUpperRegion Then
+						strRtf &= "}}"
+						blnInUpperRegion = False
+					End If
+				End If
+
+				strRtf &= strSequenceToShow.Chars(intIndex)
+
+			Next intIndex
+
+			' Add a final paragraph mark
+			strRtf &= "\par}"
+
+			objRichTextBox.Rtf = strRtf
+
+			txtRTFCode.Text = objRichTextBox.Rtf
+
+			If intCharCount > 0 Then
+				sngCoveragePercent = CSng(intUppercaseCount / intCharCount * 100)
+			Else
+				sngCoveragePercent = 0
+			End If
+			txtCoverage.Text = "Coverage: " & Math.Round(sngCoveragePercent, 3) & "%  (" & intUppercaseCount & " / " & intCharCount & ")"
+
+		Catch ex As Exception
+			ShowErrorMessage("Error in ShowRichText: " & ex.Message)
+		End Try
+
+	End Sub
+
+	Private Sub Start()
+		Dim blnSuccess As Boolean
+
+		Try
+			Windows.Forms.Cursor.Current = System.Windows.Forms.Cursors.WaitCursor
+
+			cmdAbort.Visible = True
+			cmdStart.Visible = False
+
+			mProteinCoverageSummarizer = New clsProteinCoverageSummarizerRunner
+			With mProteinCoverageSummarizer
+				.ShowMessages = True
+				.CallingAppHandlesEvents = True
+			End With
+
+			blnSuccess = SetOptionsFromGUI(mProteinCoverageSummarizer)
+			If blnSuccess Then
+				blnSuccess = mProteinCoverageSummarizer.ProcessFile(txtPeptideInputFilePath.Text, txtOutputFolderPath.Text)
+
+				If blnSuccess And Not (mProteinCoverageSummarizer.SearchAllProteinsForPeptideSequence And mProteinCoverageSummarizer.SearchAllProteinsSkipCoverageComputationSteps) Then
+					CreateSummaryDataTable(mProteinCoverageSummarizer.ResultsFilePath)
+				End If
+			Else
+				ShowErrorMessage("Error initializing Protein File Parser General Options.")
+			End If
+
+			Windows.Forms.Cursor.Current = System.Windows.Forms.Cursors.Default
+
+		Catch ex As Exception
+			ShowErrorMessage("Error in Start: " & ex.Message)
+		Finally
+			cmdAbort.Visible = False
+			cmdStart.Visible = True
+		End Try
+
+	End Sub
+
+    Private Sub ToggleRTFCodeVisible()
+        mnuEditShowRTF.Checked = Not mnuEditShowRTF.Checked
+        txtRTFCode.Visible = mnuEditShowRTF.Checked
+    End Sub
+
+    Private Sub UpdateDatagridTableStyle()
+
+        ' Define the coverage results table style 
+        Dim tsResults As New System.Windows.Forms.DataGridTableStyle
+
+        ' Setting the MappingName of the table style to COVERAGE_RESULTS_DATATABLE will cause this style to be used with that table
+        With tsResults
+            .MappingName = COVERAGE_RESULTS_DATATABLE
+            .AllowSorting = True
+            .ColumnHeadersVisible = True
+            .RowHeadersVisible = True
+            .ReadOnly = True
+        End With
+
+        ADONetRoutines.AppendColumnToTableStyle(tsResults, COL_NAME_PROTEIN_NAME, COL_NAME_PROTEIN_NAME, 100)
+        ADONetRoutines.AppendColumnToTableStyle(tsResults, COL_NAME_PROTEIN_COVERAGE, COL_NAME_PROTEIN_COVERAGE, 95)
+
+        If mProteinDescriptionColVisible Then
+            ADONetRoutines.AppendColumnToTableStyle(tsResults, COL_NAME_PROTEIN_DESCRIPTION, COL_NAME_PROTEIN_DESCRIPTION, 100)
+        Else
+            ADONetRoutines.AppendColumnToTableStyle(tsResults, COL_NAME_PROTEIN_DESCRIPTION, COL_NAME_PROTEIN_DESCRIPTION, 0)
+        End If
+
+        ADONetRoutines.AppendColumnToTableStyle(tsResults, COL_NAME_NONUNIQUE_PEPTIDE_COUNT, COL_NAME_NONUNIQUE_PEPTIDE_COUNT, 90)
+        ADONetRoutines.AppendColumnToTableStyle(tsResults, COL_NAME_UNIQUE_PEPTIDE_COUNT, COL_NAME_UNIQUE_PEPTIDE_COUNT, 65)
+        ADONetRoutines.AppendColumnToTableStyle(tsResults, COL_NAME_PROTEIN_RESIDUE_COUNT, COL_NAME_PROTEIN_RESIDUE_COUNT, 90)
+        ADONetRoutines.AppendColumnToTableStyle(tsResults, COL_NAME_PROTEIN_SEQUENCE, COL_NAME_PROTEIN_SEQUENCE, 0)
+
+        ' Add the DataGridTableStyle to the datagrid's TableStyles collection
+        With dgResults
+            .TableStyles.Clear()
+
+            If Not .TableStyles.Contains(tsResults) Then
+                .TableStyles.Add(tsResults)
+            End If
+            .ReadOnly = True
+
+            .Refresh()
+        End With
+
+    End Sub
+
+    Private Sub ValidateTextbox(ByRef ThisTextBox As TextBox, ByVal strDefaultText As String)
+        If ThisTextBox.TextLength = 0 Then
+            ThisTextBox.Text = strDefaultText
+        End If
+    End Sub
+
+#Region "Command Handlers"
+
+    Private Sub chkSearchAllProteinsForPeptideSequence_CheckedChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles chkSearchAllProteinsForPeptideSequence.CheckedChanged
+        EnableDisableControls()
+    End Sub
+
+    Private Sub cmdAbort_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles cmdAbort.Click
+        mProteinCoverageSummarizer.AbortProcessing = True
+    End Sub
+
+    Private Sub cmdExit_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles cmdExit.Click
+        Me.Close()
+    End Sub
+
+    Private Sub cmdSelectOutputFolder_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles cmdSelectOutputFolder.Click
+        SelectOutputFolder()
+    End Sub
+
+    Private Sub cmdPeptideSelectFile_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles cmdPeptideSelectFile.Click
+        SelectPeptideInputFile()
+    End Sub
+
+    Private Sub cmdProteinSelectFile_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles cmdProteinSelectFile.Click
+        SelectProteinInputFile()
+    End Sub
+
+    Private Sub cmdStart_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles cmdStart.Click
+        If ConfirmInputFilePaths() Then
+            Start()
+        End If
+    End Sub
+
+    Private Sub chkAddSpace_CheckStateChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles chkAddSpace.CheckedChanged
+        ShowRichTextStart()
+    End Sub
+
+    Private Sub cboCharactersPerLine_SelectedIndexChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles cboCharactersPerLine.SelectedIndexChanged
+        ShowRichTextStart()
+    End Sub
+
+    Private Sub dgResults_CurrentCellChanged(ByVal sender As Object, ByVal e As System.EventArgs) Handles dgResults.CurrentCellChanged
+        ShowRichTextStart(eSequenceDisplayConstants.UseDatagrid)
+    End Sub
+
+#End Region
+
+#Region "Textbox handlers"
+    Private Sub txtCoverage_KeyPress(ByVal sender As Object, ByVal e As System.Windows.Forms.KeyPressEventArgs) Handles txtCoverage.KeyPress
+        SharedVBNetRoutines.VBNetRoutines.TextBoxKeyPressHandler(txtCoverage, e, False, False, False, False, False, False, False, False, False, False, True)
+    End Sub
+
+    Private Sub txtCustomProteinSequence_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles txtCustomProteinSequence.Click
+        If txtCustomProteinSequence.TextLength > 0 Then ShowRichTextStart(eSequenceDisplayConstants.UseCustom)
+    End Sub
+
+    Private Sub txtCustomProteinSequence_KeyPress(ByVal sender As Object, ByVal e As System.Windows.Forms.KeyPressEventArgs) Handles txtCustomProteinSequence.KeyPress
+        SharedVBNetRoutines.VBNetRoutines.TextBoxKeyPressHandler(txtCustomProteinSequence, e, False, False, False, True, False, False, False, False, True, True, True)
+    End Sub
+
+    Private Sub txtCustomProteinSequence_TextChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles txtCustomProteinSequence.TextChanged
+        ShowRichTextStart(eSequenceDisplayConstants.UseCustom)
+    End Sub
+
+    Private Sub txtOutputFolderPath_KeyPress(ByVal sender As System.Object, ByVal e As System.Windows.Forms.KeyPressEventArgs) Handles txtOutputFolderPath.KeyPress
+        SharedVBNetRoutines.VBNetRoutines.TextBoxKeyPressHandlerCheckControlChars(txtOutputFolderPath, e)
+    End Sub
+
+    Private Sub txtPeptideInputFilePath_KeyPress(ByVal sender As Object, ByVal e As System.Windows.Forms.KeyPressEventArgs) Handles txtPeptideInputFilePath.KeyPress
+        SharedVBNetRoutines.VBNetRoutines.TextBoxKeyPressHandlerCheckControlChars(txtPeptideInputFilePath, e)
+    End Sub
+
+    Private Sub txtPeptideInputFilePath_TextChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles txtPeptideInputFilePath.TextChanged
+        ' Auto-define the output file path
+        DefineOutputFolderPath(txtPeptideInputFilePath.Text)
+    End Sub
+
+    Private Sub txtProteinInputFilePath_KeyPress(ByVal sender As System.Object, ByVal e As System.Windows.Forms.KeyPressEventArgs) Handles txtProteinInputFilePath.KeyPress
+        SharedVBNetRoutines.VBNetRoutines.TextBoxKeyPressHandlerCheckControlChars(txtProteinInputFilePath, e)
+    End Sub
+
+    Private Sub txtProteinInputFilePath_TextChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles txtProteinInputFilePath.TextChanged
+        EnableDisableControls()
+    End Sub
+
+#End Region
+
+#Region "Menu Handlers"
+    Private Sub mnuFileExit_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles mnuFileExit.Click
+        CloseProgram()
+    End Sub
+
+    Private Sub mnuFileSelectInputFile_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles mnuFileSelectInputFile.Click
+        SelectProteinInputFile()
+    End Sub
+
+    Private Sub mnuFileLoadOptions_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles mnuFileLoadOptions.Click
+        IniFileLoadOptions(False)
+    End Sub
+
+    Private Sub mnuPeptideInputFile_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles mnuPeptideInputFile.Click
+        SelectPeptideInputFile()
+    End Sub
+
+    Private Sub mnuFileSelectOutputFile_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles mnuFileSelectOutputFile.Click
+        SelectPeptideInputFile()
+    End Sub
+
+    Private Sub mnuEditShowRTF_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles mnuEditShowRTF.Click
+        ToggleRTFCodeVisible()
+    End Sub
+
+    Private Sub mnuHelpAbout_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles mnuHelpAbout.Click
+        ShowAboutBox()
+    End Sub
+
+    Private Sub mnuEditResetOptions_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles mnuEditResetOptions.Click
+        ResetToDefaults()
+    End Sub
+
+    Private Sub mnuFileSaveDefaultOptions_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles mnuFileSaveDefaultOptions.Click
+		IniFileSaveOptions(GetSettingsFilePath(), True)
+    End Sub
+#End Region
+
+    Private Sub GUI_Closing(ByVal sender As Object, ByVal e As System.ComponentModel.CancelEventArgs) Handles MyBase.Closing
+		IniFileSaveOptions(GetSettingsFilePath())
+    End Sub
+
+    Private Sub chkSearchAllProteinsSaveDetails_CheckedChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles chkSaveProteinToPeptideMappingFile.CheckedChanged
+        EnableDisableControls()
+    End Sub
+
+    Private Sub cboPeptideInputFileColumnOrdering_SelectedIndexChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles cboPeptideInputFileColumnOrdering.SelectedIndexChanged
+        AutoDefineSearchAllProteins()
+    End Sub
+
+    Private Sub mProteinCoverageSummarizer_ProgressChanged(ByVal taskDescription As String, ByVal percentComplete As Single) Handles mProteinCoverageSummarizer.ProgressChanged
+        lblProgress.Text = taskDescription
+        If percentComplete > 0 Then lblProgress.Text &= ControlChars.NewLine & percentComplete.ToString("0.0") & "% complete"
+
+        Windows.Forms.Application.DoEvents()
+    End Sub
+
+    Private Sub mProteinCoverageSummarizer_ProgressComplete() Handles mProteinCoverageSummarizer.ProgressComplete
+        lblProgress.Text = "Processing complete."
+
+        Windows.Forms.Application.DoEvents()
+    End Sub
+
+    Private Sub mProteinCoverageSummarizer_ProgressReset() Handles mProteinCoverageSummarizer.ProgressReset
+        lblProgress.Text = mProteinCoverageSummarizer.ProgressStepDescription
+        Windows.Forms.Application.DoEvents()
+    End Sub
+
+End Class
