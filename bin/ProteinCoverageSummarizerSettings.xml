@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sections>
+  <section name="GUIOptions">
+    <item key="ProteinInputFilePath" value="C:\Program Files (x86)\ProteinCoverageSummarizer\BSA_P171_QID1638_TestProteins.fasta" />
+    <item key="PeptideInputFilePath" value="C:\Program Files (x86)\ProteinCoverageSummarizer\BSA_P171_QID1638_TestPeptides.txt" />
+    <item key="OutputFolderPath" value="C:\temp" />
+  </section>
+</sections>

@@ -1,0 +1,116 @@
+Protein Coverage Summarizer Change Log
+
+Version 1.3.5053; November 1, 2013
+	- Added clsProcessFilesOrFoldersBase
+
+Version 1.3.4798; February 19, 2013
+	- Now saving the ProteinCoverageSummarizer settings file in the user's AppData folder (e.g. C:\Users\username\AppData\Roaming\ProteinCoverageSummarizer)
+
+Version 1.3.4681; October 25, 2012
+	- New versions of ProteinCoverageSummarizer.dll, PRISM.dll, and SharedVBNetRoutines.dll
+
+Version 1.3.4603; August 8, 2012
+	- Updated to .NET 4
+
+Version 1.3.4486; April 13, 2012
+	- Updated installer to Visual Studio 2010
+
+Version 1.3.4309; October 19, 2011
+	- New version of PeptideToProteinMapEngine.dll
+
+Version 1.3.4241; August 12, 2011
+	- Updated to Visual Studio 2010
+
+Version 1.3.4226; July 28, 2011
+	- New version of ProteinCoverageSummarizer.dll
+		- Added Exception handling to the Finalize sub in clsProteinFileDataCache
+
+Version 1.3.4053; February 5, 2011
+	- New version of PRISM.Dll, ProteinCoverageSummarizer.dll, and System.Data.SQLite.dll
+
+Version 1.3.3873; August 9, 2010
+	- New version of ProteinCoverageSummarizer.dll, ProteinFileReader.dll, System.Data.SQLite.dll, and Prism.dll
+
+Version 1.2.3365; March 19, 2009
+	- Updated version of ProteinCoverageSummarizer.dll
+		- Now just reports one progress percent complete value (no longer need to monitor/report subtask progress)
+
+Version 1.2.3355; March 10, 2009
+	- Updated version of ProteinCoverageSummarizer.dll
+
+Version 1.2.3355; March 9, 2009
+	- Updated version of ProteinCoverageSummarizer.dll that uses a SQLite Datbase to cache the protein information to avoid caching protein information in memory
+
+Version 1.2.3198; October 3, 2008
+	- New version of ProteinCoverageSummarizer.dll that includes additional status messages
+
+Version 1.2.3196; October 1, 2008
+	- Updated project to Visual Studio .NET 2008
+	- Updated to use ProteinCoverageSummarizer.dll
+	- Renamed the .Exe from ProteinCoverageSummarizer.exe to ProteinCoverageSummarizerGUI.exe
+
+Version 1.2.3064; May 22, 2008
+	- Added option to ignore I/L differences when comparing peptides to protein sequences
+		- A side-effect of this is that the protein sequences shown in the GUI (and in the _coverage.txt file) will have all of the L residues replaced with I residues)
+		- In contrast, the _ProteinToPeptideMapping.txt file will show the original L residues, if present
+	- Fixed bug that ignored the Output Folder Path option
+
+Version 1.2.2805; September 6, 2007
+	- Updated program to use the leader sequence method even when "Search all proteins for peptide sequence" is disabled
+		- This provides the speed advantages regardless of whether the protein name is defined in the peptide input file
+
+Version 1.2.2804; September 5, 2007
+	- Added option MatchPeptidePrefixAndSuffixToProtein
+	- Implemented a new algorithm that drastically increases the speed when "Search all proteins for peptide sequence" is enabled
+		- The new algorithm creates a hash table using the first n letters of each peptide (where n is the shortest peptide sequence in the input file)
+		- Once the hashtable is made, we step through each of the protein sequences, seeing if each length of "n" letters is defined in the hashtable
+		- If it is defined, then we can check the peptides that start with that sequence of letters against the protein to determine if a match exists
+	- Fixed bug that caused creation of the _coverage.txt file to be very slow when Track Unique and Non-Unique Peptide Counts was enabled
+		- The problem was due to slow enumeration of a hash table for every protein in the input file
+
+Version 1.1.2748; July 11, 2007
+	- Now allowing creation of the _ProteinToPeptideMapping.txt file even if "Search all Proteins for Peptide Sequence" is disabled
+	- The _ProteinToPeptideMapping.txt file now includes columns ResidueStart and ResidueEnd
+
+Version 1.1.2517; November 22, 2006
+	- Updated to new version of SharedVBNetRoutines.dll
+		- Fixed bug that would not allow one to type a \ character in the file or folder path textboxes
+
+Version 1.1.2495; October 31, 2006
+	- Updated to automatically enable "Search All Proteins for Peptide Sequence" if the input file mode is "Sequence Only"
+		- Applies when the user specifies the Column Order as "Sequence Only"
+		- Also applies if the Column Order is "ProteinName and Sequence" and yet the input file only has one column of data, in which case the program assumes "Sequence Only" anyway and notifies the user
+
+Version 1.1.2258; March 8, 2006
+	- Added an explanatory note to the main window stating that prefix and suffix residues will be automatically removed rom the input sequences
+
+Version 1.1.2210; January 19, 2006
+	- Updated progress indicator to list number of peptides processed
+
+Version 1.1.2104.28917; October 5, 2005
+	- Updated to use new version of SharedVBNetRoutines.dll and updated the copyright statements
+
+Version 1.1.2067.34728; August 29, 2005
+	- Altered the method used to look for prefix and suffix residues to only examine the 2nd character and the 2nd to the last character for a period
+	- Previously, was searching the entire string which is slightly less efficient
+
+Version 1.1.2063.30375; August 25, 2005
+	- Updated the Select File and Select Folder buttons to display the most recently used folder rather than always going to the folder that the .Exe is located in
+	- Updated bug that ignored the setting for "Skip coverage computation"
+	- Updated the progress bars to show more informative information
+
+Version 1.1.2062.31808; August 24, 2005
+	- Fixed bug that prevented progress bar from updating
+	- Updated logic to stop processing immediately if user clicks abort or presses Escape with the progress window highlighted
+
+Version 1.1.2055.17201; August 17, 2005
+	- Updated to use new version of SharedVBNetRoutines.dll
+
+Version 1.1.2032.31445; July 25, 2005
+	- Improved execution speed when searching all proteins to determine the mapping between protein names and peptides sequences (enable option "Skip Coverage Computation")
+
+Version 1.0.2029.29511; July 22, 2005
+	- Added option to save a text file showing the mapping between protein names and peptide sequences when searching all proteins for each peptide sequence
+
+Version 1.0.2026; July 19, 2005
+	- Initial release version
