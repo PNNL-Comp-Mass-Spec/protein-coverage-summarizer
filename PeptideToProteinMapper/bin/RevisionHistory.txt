@@ -1,0 +1,77 @@
+Peptide to Protein Mapper Change Log
+
+Version 1.1.4798; February 19, 2013
+	- New version of clsProcessFilesBaseClass and clsParseCommandLine
+
+Version 1.1.4714; November 27, 2012
+	- Now looking for the "Peptide" column when processing MSGFDB or MSGF+ results
+		- Previously was always using column #8
+
+Version 1.1.4681; October 25, 2012
+	- Updated PeptideToProteinMapEngine.dll to explicitly reference System.Data.SQLite.dll (it is used by ProteinCoverageSummarizer.dll)
+
+Version 1.1.4680; October 24, 2012
+	- Now tracking errors and warnings reported by PHRPReader
+
+Version 1.1.4678; October 22, 2012
+	- Added support for PHRP result files
+		- Includes Sequest _syn.txt, X!Tandem _xt.txt, and MSGFDB _msgfdb_syn.txt files
+
+Version 1.1.4602; August 7, 2012
+	- Added switch /A
+		- Creates a duplicate of the input file, but with a new column titled Protein_Name
+
+Version 1.1.4309; October 19, 2011
+	- New version of PeptideToProteinMapEngine.dll that copies errors from ProteinCoverageSummarizer.dll to the StatusMessage property
+
+Version 1.1.4241; August 12, 2011
+	- Updated to Visual Studio 2010
+	- New version of PeptideToProteinMapEngine.dll that supports MSGF-DB results
+
+Version 1.1.4226; July 28, 2011
+	- New version of ProteinCoverageSummarizer.dll
+	- New version of clsParseCommandLine and clsProcessFilesBaseClass
+	- Fixed spelling error in modMain
+
+Version 1.1.4052; February 4, 2011
+	- New version of PeptideToProteinMapEngine.dll and System.Data.SQLite.dll
+
+Version 1.1.3854; July 21, 2010
+	- New version of ProteinCoverageSummarizer.dll, ProteinFileReader.dll, and System.Data.SQLite.dll
+
+Version 1.1.3365; March 19, 2009
+	- Updated the progress complete event messages to more accurately represent the percentage complete in processing
+		- To aid in this, clsProteinFileDataCache now reports percent complete when caching proteins in a .Fasta file (using event ProteinCachedWithProgress)
+
+Version 1.1.3356; March 10, 2009
+	- Minor update to the protein info caching logic
+
+Version 1.1.3355; March 9, 2009
+	- Now using a SQLite database to cache the protein information to avoid caching protein information in memory
+		- Allows for the use of very large .Fasta files
+
+Version 1.0.3264; December 8, 2008
+	- Changed the capitalization of the program to PeptideToProteinMapper.exe
+
+Version 1.0.3201; October 6, 2008
+	- Renamed inspect peptide to protein map file to end in _inspect_PepToProtMap.txt
+
+Version 1.0.3199; October 4, 2008
+	- Renamed inspect peptide to protein map file to end in _inspect_PeptideToProteinMapping.txt
+
+Version 1.0.3198; October 3, 2008
+	- Removed redundant property from PeptideToProteinMapEngine.dll
+	- Added property LogFolderPath to PeptideToProteinMapEngine.dll
+
+Version 1.0.3197; October 2, 2008
+	- Split out the processing code to a separate DLL, PeptideToProteinMapEngine.dll
+	- Added support for logging to a file (using switch /L)
+
+Version 1.0.3196; October 1, 2008
+	- Initial release
+	- Supports reading three file types (specify type using the /F switch)
+		- /F:1 means text files with peptide sequence in the first column
+		- /F:2 means text files with protein name in the first column and peptide sequence in the second (will ignore the protein name and instead search all proteins for each peptide)
+		- /F:3 means Inspect results files (tab-delimited), where the peptide sequence is in the third column (typical column header is "Annotation")
+	- When parsing Inspect results files, it is advisable to provide the Inspect parameter file name so that the modification information can be extracted from the file
+	- If the parameter file is not available, then this software will automatically search for the modification text "phos", since this is the standard text used for phosphopeptide searches
