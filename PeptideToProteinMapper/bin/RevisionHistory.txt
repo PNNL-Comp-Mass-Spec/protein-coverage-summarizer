@@ -1,5 +1,8 @@
 Peptide to Protein Mapper Change Log
 
+Version 1.1.5142; January 29, 2014
+	- Added a 64-bit version
+
 Version 1.1.4798; February 19, 2013
 	- New version of clsProcessFilesBaseClass and clsParseCommandLine
 
