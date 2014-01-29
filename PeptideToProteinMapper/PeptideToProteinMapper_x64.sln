@@ -1,0 +1,24 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "PeptideToProteinMapper_x64", "PeptideToProteinMapper_x64.vbproj", "{90820292-FF2E-411E-AAC9-367C02F79A17}"
+EndProject
+Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "PeptideToProteinMapEngine_x64", "PeptideToProteinMapEngine\PeptideToProteinMapEngine_x64.vbproj", "{F6468856-2855-443C-8236-20CB59FD2C6A}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x64 = Debug|x64
+		Release|x64 = Release|x64
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{90820292-FF2E-411E-AAC9-367C02F79A17}.Debug|x64.ActiveCfg = Debug|x64
+		{90820292-FF2E-411E-AAC9-367C02F79A17}.Debug|x64.Build.0 = Debug|x64
+		{90820292-FF2E-411E-AAC9-367C02F79A17}.Release|x64.ActiveCfg = Release|x64
+		{F6468856-2855-443C-8236-20CB59FD2C6A}.Debug|x64.ActiveCfg = Debug|x64
+		{F6468856-2855-443C-8236-20CB59FD2C6A}.Debug|x64.Build.0 = Debug|x64
+		{F6468856-2855-443C-8236-20CB59FD2C6A}.Release|x64.ActiveCfg = Release|x64
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

@@ -1,0 +1,20 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "ProteinCoverageSummarizerGUI_x64", "ProteinCoverageSummarizerGUI_x64.vbproj", "{2FCC0BA9-9F66-4826-83BD-8750392D6BFF}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x64 = Debug|x64
+		Release|x64 = Release|x64
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{2FCC0BA9-9F66-4826-83BD-8750392D6BFF}.Debug|x64.ActiveCfg = Debug|x64
+		{2FCC0BA9-9F66-4826-83BD-8750392D6BFF}.Debug|x64.Build.0 = Debug|x64
+		{2FCC0BA9-9F66-4826-83BD-8750392D6BFF}.Release|x64.ActiveCfg = Release|x64
+		{2FCC0BA9-9F66-4826-83BD-8750392D6BFF}.Release|x64.Build.0 = Release|x64
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
