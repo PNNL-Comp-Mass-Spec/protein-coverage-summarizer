@@ -1,5 +1,8 @@
 Peptide to Protein Mapper Change Log
 
+Version 1.1.5234; May 1, 2014
+	- New version of PHRPReader that supports tracking just one protein for each PSM
+
 Version 1.1.5142; January 29, 2014
 	- Added a 64-bit version
 

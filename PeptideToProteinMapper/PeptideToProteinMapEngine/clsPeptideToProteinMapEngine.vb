@@ -25,7 +25,7 @@ Option Strict On
 ' SOFTWARE.  This notice including this sentence must appear on any copies of 
 ' this computer software.
 
-' Last updated November 27, 2012
+' Last updated May 1, 2014
 
 Public Class clsPeptideToProteinMapEngine
 	Inherits clsProcessFilesBaseClass
@@ -962,6 +962,7 @@ Public Class clsPeptideToProteinMapEngine
 
 			End If
 
+			Console.WriteLine()
 			ShowMessage("Pre-processing PHRP data file: " & System.IO.Path.GetFileName(strInputFilePath))
 
 			' Initialize the peptide list
@@ -971,8 +972,16 @@ Public Class clsPeptideToProteinMapEngine
 				mUniquePeptideList.Clear()
 			End If
 
+			Dim oStartupOptions = New PHRPReader.clsPHRPStartupOptions()
+			With oStartupOptions
+				.LoadModsAndSeqInfo = False
+				.LoadMSGFResults = False
+				.LoadScanStatsData = False
+				.MaxProteinsPerPSM = 1
+			End With
+
 			' Open the PHRP data file and construct a unique list of peptides in the file (including any modification symbols)
-			Using objReader As New PHRPReader.clsPHRPReader(strInputFilePath, PHRPReader.clsPHRPReader.ePeptideHitResultType.Unknown, blnLoadModsAndSeqInfo:=False, blnLoadMSGFResults:=False, blnLoadScanStats:=False)
+			Using objReader As New PHRPReader.clsPHRPReader(strInputFilePath, PHRPReader.clsPHRPReader.ePeptideHitResultType.Unknown, oStartupOptions)
 				objReader.EchoMessagesToConsole = True
 				objReader.SkipDuplicatePSMs = False
 

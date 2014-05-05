@@ -102,7 +102,7 @@ Public Class clsProteinCoverageSummarizer
 	'  where the number is the protein ID and the peptide is the peptide sequence
 	' The value for each entry is the number of times the peptide is present in the given protein
 	' This hashtable is only populated if mTrackPeptideCounts is true
-	Private mProteinPeptideStats As System.Collections.Hashtable
+	Private mProteinPeptideStats As Hashtable
 
 	Private mProteinInputFilePath As String
 	Private mResultsFilePath As String				' This value is populated by function ProcessFile()
@@ -143,7 +143,7 @@ Public Class clsProteinCoverageSummarizer
 	Private mCachedProteinInfoCount As Integer
 	Private mCachedProteinInfo() As clsProteinFileDataCache.udtProteinInfoType
 
-	Private mPeptideToProteinMapResults As System.Collections.Generic.Dictionary(Of String, System.Collections.Generic.List(Of String))
+	Private mPeptideToProteinMapResults As Generic.Dictionary(Of String, Generic.List(Of String))
 
 	' mPercentCompleteStartLevels is an array that lists the percent complete value to report 
 	'  at the start of each of the various processing steps performed in this procedure
@@ -527,7 +527,7 @@ Public Class clsProteinCoverageSummarizer
 		Dim NonUniquePeptideCount As Integer
 		Dim UniquePeptideCount As Integer
 
-		Dim myEnumerator As System.Collections.IDictionaryEnumerator
+		Dim myEnumerator As IDictionaryEnumerator
 
 		' The data in mProteinPeptideStats is copied into these two arrays for fast lookup 
 		' This is necessary since use of the enumerator returned by mProteinPeptideStats.GetEnumerator 
@@ -754,10 +754,10 @@ Public Class clsProteinCoverageSummarizer
 	 ByVal chPrefixResidue As Char, ByVal chSuffixResidue As Char, _
 	 ByVal strProteinNameForPeptide As String)
 
-		Static htPeptideList As System.Collections.Hashtable
+		Static htPeptideList As Hashtable
 
 		If htPeptideList Is Nothing Then
-			htPeptideList = New System.Collections.Hashtable
+			htPeptideList = New Hashtable
 		End If
 		htPeptideList.Clear()
 
@@ -775,7 +775,7 @@ Public Class clsProteinCoverageSummarizer
 	''' <param name="htPeptideList">Hash table containing the peptides to search; peptides must be in the format Prefix.Peptide.Suffix where Prefix and Suffix are single characters; peptides are assumed to only contain letters (no symbols)</param>
 	''' <param name="strProteinNameForPeptides">The protein to search; only used if mSearchAllProteinsForPeptideSequence=False</param>
 	''' <remarks></remarks>
-	Private Sub FindSequenceMatchForPeptideList(ByRef htPeptideList As System.Collections.Hashtable, _
+	Private Sub FindSequenceMatchForPeptideList(ByRef htPeptideList As Hashtable, _
 	  ByVal strProteinNameForPeptides As String)
 
 		Dim intProteinIndex As Integer
@@ -796,7 +796,7 @@ Public Class clsProteinCoverageSummarizer
 		Dim strPeptideSequenceForKeySource As String
 		Dim strPeptideSequenceForKey As String
 
-		Dim objPeptideListEnum As System.Collections.IDictionaryEnumerator
+		Dim objPeptideListEnum As IDictionaryEnumerator
 
 		Dim strPeptideSequenceClean As String
 		Dim strPeptideSequenceToSearchOn As String
@@ -1337,7 +1337,7 @@ Public Class clsProteinCoverageSummarizer
 
 		Dim intTerminatorSize As Integer
 
-		Dim htShortPeptideCache As System.Collections.Hashtable
+		Dim htShortPeptideCache As Hashtable
 
 		Try
 			' Initialize chSepChars
@@ -1345,16 +1345,16 @@ Public Class clsProteinCoverageSummarizer
 			chSepChars(0) = mPeptideInputFileDelimiter
 
 			' Initialize some hash tables
-			htShortPeptideCache = New System.Collections.Hashtable
+			htShortPeptideCache = New Hashtable
 
 			If mProteinPeptideStats Is Nothing Then
-				mProteinPeptideStats = New System.Collections.Hashtable
+				mProteinPeptideStats = New Hashtable
 			Else
 				mProteinPeptideStats.Clear()
 			End If
 
 			If mPeptideToProteinMapResults Is Nothing Then
-				mPeptideToProteinMapResults = New System.Collections.Generic.Dictionary(Of String, System.Collections.Generic.List(Of String))
+				mPeptideToProteinMapResults = New Generic.Dictionary(Of String, Generic.List(Of String))
 			Else
 				mPeptideToProteinMapResults.Clear()
 			End If
@@ -1589,6 +1589,8 @@ Public Class clsProteinCoverageSummarizer
 		Dim blnSuccess As Boolean = False
 
 		Try
+			mProgressStepDescription = "Reading protein input file"
+
 			With mProteinDataCache
 
 				' Protein file options
@@ -1631,9 +1633,9 @@ Public Class clsProteinCoverageSummarizer
 	End Function
 
 	Public Function ProcessFile(ByVal strInputFilePath As String, _
-		ByVal strOutputFolderPath As String, _
-		ByVal strParameterFilePath As String, _
-		ByVal blnResetErrorCode As Boolean) As Boolean
+	 ByVal strOutputFolderPath As String, _
+	 ByVal strParameterFilePath As String, _
+	 ByVal blnResetErrorCode As Boolean) As Boolean
 
 		Dim strProteinToPeptideMappingFilePath As String = String.Empty
 
@@ -1641,10 +1643,10 @@ Public Class clsProteinCoverageSummarizer
 	End Function
 
 	Public Function ProcessFile(ByVal strInputFilePath As String, _
-		ByVal strOutputFolderPath As String, _
-		ByVal strParameterFilePath As String, _
-		ByVal blnResetErrorCode As Boolean, _
-		ByRef strProteinToPeptideMappingFilePath As String) As Boolean
+	 ByVal strOutputFolderPath As String, _
+	 ByVal strParameterFilePath As String, _
+	 ByVal blnResetErrorCode As Boolean, _
+	 ByRef strProteinToPeptideMappingFilePath As String) As Boolean
 
 		Dim blnSuccess As Boolean
 
@@ -1740,8 +1742,8 @@ Public Class clsProteinCoverageSummarizer
 	''' <returns>The number of records read</returns>
 	''' <remarks></remarks>
 	Private Function ReadProteinInfoChunk(ByVal intStartIndex As Integer, ByVal intProteinCountToRead As Integer, _
-			   ByRef blnProteinUpdated() As Boolean, _
-			   ByVal blnForceReload As Boolean) As Integer
+		 ByRef blnProteinUpdated() As Boolean, _
+		 ByVal blnForceReload As Boolean) As Integer
 
 		' We use a SQLLite database to store the protein sequences (to avoid running out of memory when parsing large protein lists)
 		' However, we will store the most recently loaded peptides in mCachedProteinInfoCount() and 
@@ -1768,8 +1770,8 @@ Public Class clsProteinCoverageSummarizer
 
 		Dim strSqlCommand As String
 		strSqlCommand = " SELECT UniqueSequenceID, Name, Description, Sequence, PercentCoverage" & _
-			" FROM udtProteinInfoType" & _
-			" WHERE UniqueSequenceID BETWEEN " & CStr(intStartIndex) & " AND " & CStr(intStartIndex + PROTEIN_CHUNK_COUNT - 1)
+		 " FROM udtProteinInfoType" & _
+		 " WHERE UniqueSequenceID BETWEEN " & CStr(intStartIndex) & " AND " & CStr(intStartIndex + PROTEIN_CHUNK_COUNT - 1)
 
 		Dim SQLreader As System.Data.SQLite.SQLiteDataReader
 		SQLreader = mProteinDataCache.GetSQLiteDataReader(strSqlCommand)
@@ -1815,7 +1817,7 @@ Public Class clsProteinCoverageSummarizer
 		Dim bytesRead As Long = 0
 		Dim blnValidLine As Boolean
 
-		Dim lstProteins As System.Collections.Generic.List(Of String) = Nothing
+		Dim lstProteins As Generic.List(Of String) = Nothing
 
 		Try
 			strDataPlusAllProteinsFile = System.IO.Path.Combine(GetOutputFolderPath(strOutputFolderPath, strPeptideInputFilePath), System.IO.Path.GetFileNameWithoutExtension(strPeptideInputFilePath) & FILENAME_SUFFIX_SOURCE_PLUS_ALL_PROTEINS)
@@ -1951,7 +1953,7 @@ Public Class clsProteinCoverageSummarizer
 			If intProteinProcessIterationsExpected < 1 Then intProteinProcessIterationsExpected = 1
 
 			UpdateProgress(strProgressMessageBase, 0, _
-				  eProteinCoverageProcessingSteps.SearchProteinsUsingLeaderSequences)
+			   eProteinCoverageProcessingSteps.SearchProteinsUsingLeaderSequences)
 
 			intStartIndex = 0
 			Do
@@ -2131,7 +2133,7 @@ Public Class clsProteinCoverageSummarizer
 
 	End Sub
 
-	Private Sub SearchProteinsUsingCachedPeptides(ByRef htShortPeptideCache As System.Collections.Hashtable)
+	Private Sub SearchProteinsUsingCachedPeptides(ByRef htShortPeptideCache As Hashtable)
 
 		Dim strProgressMessageBase As String
 
@@ -2152,11 +2154,11 @@ Public Class clsProteinCoverageSummarizer
 	Private Sub StorePeptideToProteinMatch(ByVal strCleanPeptideSequence As String, ByVal strProteinName As String)
 
 		' Store the mapping between peptide sequence and protein name
-		Dim lstProteins As System.Collections.Generic.List(Of String) = Nothing
+		Dim lstProteins As Generic.List(Of String) = Nothing
 		If mPeptideToProteinMapResults.TryGetValue(strCleanPeptideSequence, lstProteins) Then
 			lstProteins.Add(strProteinName)
 		Else
-			lstProteins = New System.Collections.Generic.List(Of String)
+			lstProteins = New Generic.List(Of String)
 			lstProteins.Add(strProteinName)
 			mPeptideToProteinMapResults.Add(strCleanPeptideSequence, lstProteins)
 		End If

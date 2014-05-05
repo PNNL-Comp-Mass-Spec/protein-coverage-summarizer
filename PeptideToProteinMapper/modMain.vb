@@ -35,7 +35,7 @@ Imports PeptideToProteinMapEngine.clsPeptideToProteinMapEngine
 
 Public Module modMain
 
-	Public Const PROGRAM_DATE As String = "November 27, 2012"
+	Public Const PROGRAM_DATE As String = "May 1, 2014"
 
 	Private mPeptideInputFilePath As String
 	Private mProteinInputFilePath As String
@@ -64,7 +64,7 @@ Public Module modMain
 
 	Private WithEvents mPeptideToProteinMapEngine As PeptideToProteinMapEngine.clsPeptideToProteinMapEngine
 	Private mLastProgressReportTime As System.DateTime
-	Private mLastProgressReportValue As Integer
+	Private mLastPercentDisplayed As System.DateTime
 
 	Private Sub CreateVerboseLogFile()
 		Dim strLogFilePath As String
@@ -190,16 +190,18 @@ Public Module modMain
 
 	End Function
 
-    Private Sub DisplayProgressPercent(ByVal intPercentComplete As Integer, ByVal blnAddCarriageReturn As Boolean)
-        If blnAddCarriageReturn Then
-            Console.WriteLine()
-        End If
-        If intPercentComplete > 100 Then intPercentComplete = 100
-        Console.Write("Processing: " & intPercentComplete.ToString() & "% ")
-        If blnAddCarriageReturn Then
-            Console.WriteLine()
-        End If
-    End Sub
+	Private Sub DisplayProgressPercent(ByVal taskDescription As String, ByVal intPercentComplete As Integer, ByVal blnAddCarriageReturn As Boolean)
+		If blnAddCarriageReturn Then
+			Console.WriteLine()
+		End If
+		If intPercentComplete > 100 Then intPercentComplete = 100
+		If String.IsNullOrEmpty(taskDescription) Then taskDescription = "Processing"
+
+		Console.Write(taskDescription & ": " & intPercentComplete.ToString() & "% ")
+		If blnAddCarriageReturn Then
+			Console.WriteLine()
+		End If
+	End Sub
 
 	Private Function GetAppVersion() As String
 		Return PeptideToProteinMapEngine.clsProcessFilesBaseClass.GetAppVersion(PROGRAM_DATE)
@@ -379,16 +381,13 @@ Public Module modMain
 	End Sub
 
 	Private Sub mPeptideToProteinMapEngine_ProgressChanged(ByVal taskDescription As String, ByVal percentComplete As Single) Handles mPeptideToProteinMapEngine.ProgressChanged
-		Const PERCENT_REPORT_INTERVAL As Integer = 25
 		Const PROGRESS_DOT_INTERVAL_MSEC As Integer = 250
 
-		If percentComplete >= mLastProgressReportValue Then
-			If mLastProgressReportValue > 0 Then
-				Console.WriteLine()
-			End If
-			DisplayProgressPercent(mLastProgressReportValue, False)
-			mLastProgressReportValue += PERCENT_REPORT_INTERVAL
-			mLastProgressReportTime = DateTime.UtcNow
+		If DateTime.UtcNow.Subtract(mLastPercentDisplayed).TotalSeconds >= 15 Then
+			Console.WriteLine()
+
+			DisplayProgressPercent(taskDescription, CInt(percentComplete), False)
+			mLastPercentDisplayed = DateTime.UtcNow
 		Else
 			If DateTime.UtcNow.Subtract(mLastProgressReportTime).TotalMilliseconds > PROGRESS_DOT_INTERVAL_MSEC Then
 				mLastProgressReportTime = DateTime.UtcNow
@@ -416,6 +415,6 @@ Public Module modMain
 
 	Private Sub mPeptideToProteinMapEngine_ProgressReset() Handles mPeptideToProteinMapEngine.ProgressReset
 		mLastProgressReportTime = DateTime.UtcNow
-		mLastProgressReportValue = 0
+		mLastPercentDisplayed = DateTime.UtcNow
 	End Sub
 End Module

@@ -564,6 +564,13 @@ PHRPReader
 	<param name="blnLoadMSGFResults">If True, then looks for and auto-loads the MSGF results from the _msg.txt file</param>
 	<param name="blnLoadScanStats">If True, then looks for and auto-loads the MASIC scan stats files (used to determine collision mode and to refine the precursor m/z values)</param>
 	<remarks></remarks>
+</member><member name="M:PHRPReader.clsPHRPReader.#ctor(System.String,PHRPReader.clsPHRPStartupOptions)">
+	<summary>
+ Constructor that auto-determines the PeptideHit result type based on the filename
+ </summary>
+	<param name="strInputFilePath">Input file to read</param>
+	<param name="oStartupOptions">Startup options</param>
+	<remarks></remarks>
 </member><member name="M:PHRPReader.clsPHRPReader.#ctor(System.String,PHRPReader.clsPHRPReader.ePeptideHitResultType,System.Boolean,System.Boolean)">
 	<summary>
  Constructor where the PeptideHit result type is explicitly set
@@ -578,10 +585,18 @@ PHRPReader
  Constructor where the PeptideHit result type is explicitly set
  </summary>
 	<param name="strInputFilePath">Input file to read</param>
- ''' <param name="eResultType">Source file PeptideHit result type</param>
+	<param name="eResultType">Source file PeptideHit result type</param>
 	<param name="blnLoadModsAndSeqInfo">If True, then looks for and auto-loads the modification definitions from the _moddefs.txt file</param>
 	<param name="blnLoadMSGFResults">If True, then looks for and auto-loads the MSGF results from the _msg.txt file</param>
 	<param name="blnLoadScanStats">If True, then looks for and auto-loads the MASIC scan stats files (used to determine collision mode and to refine the precursor m/z values)</param>
+	<remarks></remarks>
+</member><member name="M:PHRPReader.clsPHRPReader.#ctor(System.String,PHRPReader.clsPHRPReader.ePeptideHitResultType,PHRPReader.clsPHRPStartupOptions)">
+	<summary>
+ Constructor where the PeptideHit result type is explicitly set
+ </summary>
+	<param name="strInputFilePath">Input file to read</param>
+	<param name="eResultType">Source file PeptideHit result type</param>
+	<param name="oStartupOptions">Startup options</param>
 	<remarks></remarks>
 </member><member name="M:PHRPReader.clsPHRPReader.AutoSwitchToFHTIfRequired(System.String,System.String)">
 	<summary>
@@ -600,6 +615,14 @@ PHRPReader
 	<summary>
  Clear any cached warning messages
  </summary>
+	<remarks></remarks>
+</member><member name="M:PHRPReader.clsPHRPReader.InitializeClass(System.String,PHRPReader.clsPHRPReader.ePeptideHitResultType,PHRPReader.clsPHRPStartupOptions)">
+	<summary>
+ Initialize the class
+ </summary>
+	<param name="strInputFilePath">Input file to read</param>
+	<param name="eResultType">Source file PeptideHit result type</param>
+	<param name="oStartupOptions">Startup options</param>
 	<remarks></remarks>
 </member><member name="M:PHRPReader.clsPHRPReader.AutoDetermineBestInputFile(System.String)">
 	<summary>
@@ -891,6 +914,13 @@ PHRPReader
 	<param name="lstSeqToProteinMap"></param>
 	<returns></returns>
 	<remarks></remarks>
+</member><member name="P:PHRPReader.clsPHRPStartupOptions.MaxProteinsPerPSM">
+	<summary>
+ Maximum number of proteins to associate with each PSM
+ </summary>
+	<value></value>
+	<returns></returns>
+	<remarks>0 means to load all proteins</remarks>
 </member><member name="M:PHRPReader.clsPHRPParserXTandem.#ctor(System.String,System.String)">
 	<summary>
  Constructor; assumes blnLoadModsAndSeqInfo=True
@@ -905,6 +935,14 @@ PHRPReader
 	<param name="strDatasetName">Dataset name</param>
 	<param name="strInputFilePath">Input file path</param>
 	<param name="blnLoadModsAndSeqInfo">If True, then load the ModSummary file and SeqInfo files</param>
+	<remarks></remarks>
+</member><member name="M:PHRPReader.clsPHRPParserXTandem.#ctor(System.String,System.String,PHRPReader.clsPHRPStartupOptions)">
+	<summary>
+ Constructor
+ </summary>
+	<param name="strDatasetName">Dataset name</param>
+	<param name="strInputFilePath">Input file path</param>
+	<param name="startupOptions">Startup Options, in particular LoadModsAndSeqInfo and mMaxProteinsPerPSM</param>
 	<remarks></remarks>
 </member><member name="M:PHRPReader.clsPHRPParserXTandem.DeterminePrecursorMassTolerance(PHRPReader.clsSearchEngineParameters@,System.Double@)">
 	<summary>
@@ -945,6 +983,14 @@ PHRPReader
 	<param name="strDatasetName">Dataset name</param>
 	<param name="strInputFilePath">Input file path</param>
 	<param name="blnLoadModsAndSeqInfo">If True, then load the ModSummary file and SeqInfo files</param>
+	<remarks></remarks>
+</member><member name="M:PHRPReader.clsPHRPParserSequest.#ctor(System.String,System.String,PHRPReader.clsPHRPStartupOptions)">
+	<summary>
+ Constructor
+ </summary>
+	<param name="strDatasetName">Dataset name</param>
+	<param name="strInputFilePath">Input file path</param>
+	<param name="startupOptions">Startup Options, in particular LoadModsAndSeqInfo and mMaxProteinsPerPSM</param>
 	<remarks></remarks>
 </member><member name="M:PHRPReader.clsPHRPParserSequest.DeterminePrecursorMassTolerance(PHRPReader.clsSearchEngineParameters@,System.Double@)">
 	<summary>
@@ -1021,6 +1067,13 @@ PHRPReader
 	<value></value>
 	<returns></returns>
 	<remarks></remarks>
+</member><member name="P:PHRPReader.clsPHRPParser.MaxProteinsPerPSM">
+	<summary>
+ Maximum number of proteins to associate with each PSM
+ </summary>
+	<value></value>
+	<returns></returns>
+	<remarks>0 means to load all proteins</remarks>
 </member><member name="P:PHRPReader.clsPHRPParser.PeptideHitResultType">
 	<summary>
  Peptide hit result type; Sequest, XTandem, Inspect, or MSGFDB
@@ -1058,13 +1111,33 @@ PHRPReader
 	<remarks></remarks>
 </member><member name="M:PHRPReader.clsPHRPParser.#ctor(System.String,System.String,PHRPReader.clsPHRPReader.ePeptideHitResultType,System.Boolean)">
 	<summary>
- Initialize the parser for the given dataset and input file
+ Initialize the parser for the given dataset, input file, and result type
  </summary>
 	<param name="strDatasetName">Dataset Name</param>
 	<param name="strInputFilePath">Input file path</param>
 	<param name="ePeptideHitResultType">Peptide Hit Results file type</param>
 	<param name="blnLoadModsAndSeqInfo">Controls whether or not the _SeqInfo.txt and _SeqToProteinMap.txt files should be read</param>
 	<remarks>If strInputFilePath is an empty string, then the functions that solely depend on dataset name will be callable, but data related functions will not be callable</remarks>
+</member><member name="M:PHRPReader.clsPHRPParser.#ctor(System.String,System.String,PHRPReader.clsPHRPReader.ePeptideHitResultType,PHRPReader.clsPHRPStartupOptions)">
+	<summary>
+ Initialize the parser for the given dataset, input file, and result type
+ </summary>
+	<param name="strDatasetName">Dataset name</param>
+	<param name="strInputFilePath">Input file path</param>
+	<param name="startupOptions">Startup Options, in particular LoadModsAndSeqInfo and mMaxProteinsPerPSM</param>
+	<remarks>If strInputFilePath is an empty string, then the functions that solely depend on dataset name will be callable, but data related functions will not be callable</remarks>
+</member><member name="M:PHRPReader.clsPHRPParser.InitializeParser(System.String,System.String,PHRPReader.clsPHRPReader.ePeptideHitResultType,PHRPReader.clsPHRPStartupOptions)">
+	<summary>
+ Initialize the parser for the given dataset and input file
+ </summary>
+	<param name="strDatasetName">Dataset Name</param>
+	<param name="strInputFilePath">Input file path</param>
+	<param name="ePeptideHitResultType">Peptide Hit Results file type</param>
+	<param name="startupOptions">Startup options</param>
+	<remarks>If strInputFilePath is an empty string, then the functions that solely depend on dataset name will be callable, but data related functions will not be callable
+ startupOptions.LoadModsAndSeqInfo controls whether or not the _SeqInfo.txt and _SeqToProteinMap.txt files should be read
+ Setting startupOptions.MaxProteinsPerPSM to a non-zero value will limit the number of proteins that are tracked
+ </remarks>
 </member><member name="M:PHRPReader.clsPHRPParser.GetParser(System.String)">
 	<summary>
  Returns the appropriate PHRPParser class based on the input file name; assumes blnLoadModsAndSeqInfo=True
@@ -1192,6 +1265,14 @@ PHRPReader
 	<param name="strInputFilePath">Input file path</param>
 	<param name="blnLoadModsAndSeqInfo">If True, then load the ModSummary file and SeqInfo files</param>
 	<remarks></remarks>
+</member><member name="M:PHRPReader.clsPHRPParserInspect.#ctor(System.String,System.String,PHRPReader.clsPHRPStartupOptions)">
+	<summary>
+ Constructor
+ </summary>
+	<param name="strDatasetName">Dataset name</param>
+	<param name="strInputFilePath">Input file path</param>
+	<param name="startupOptions">Startup Options, in particular LoadModsAndSeqInfo and mMaxProteinsPerPSM</param>
+	<remarks></remarks>
 </member><member name="M:PHRPReader.clsPHRPParserInspect.DeterminePrecursorMassTolerance(PHRPReader.clsSearchEngineParameters@,System.Double@)">
 	<summary>
  Determines the precursor mass tolerance
@@ -1230,6 +1311,14 @@ PHRPReader
 	<param name="strDatasetName">Dataset name</param>
 	<param name="strInputFilePath">Input file path</param>
 	<param name="blnLoadModsAndSeqInfo">If True, then load the ModSummary file and SeqInfo files</param>
+	<remarks></remarks>
+</member><member name="M:PHRPReader.clsPHRPParserMSGFDB.#ctor(System.String,System.String,PHRPReader.clsPHRPStartupOptions)">
+	<summary>
+ Constructor
+ </summary>
+	<param name="strDatasetName">Dataset name</param>
+	<param name="strInputFilePath">Input file path</param>
+	<param name="startupOptions">Startup Options, in particular LoadModsAndSeqInfo and mMaxProteinsPerPSM</param>
 	<remarks></remarks>
 </member><member name="M:PHRPReader.clsPHRPParserMSGFDB.DeterminePrecursorMassTolerance(PHRPReader.clsSearchEngineParameters@,System.Double@)">
 	<summary>
@@ -1275,6 +1364,14 @@ PHRPReader
 	<param name="strInputFilePath">Input file path</param>
 	<param name="blnLoadModsAndSeqInfo">If True, then load the ModSummary file and SeqInfo files</param>
 	<remarks></remarks>
+</member><member name="M:PHRPReader.clsPHRPParserMODa.#ctor(System.String,System.String,PHRPReader.clsPHRPStartupOptions)">
+	<summary>
+ Constructor
+ </summary>
+	<param name="strDatasetName">Dataset name</param>
+	<param name="strInputFilePath">Input file path</param>
+	<param name="startupOptions">Startup Options, in particular LoadModsAndSeqInfo and mMaxProteinsPerPSM</param>
+	<remarks></remarks>
 </member><member name="M:PHRPReader.clsPHRPParserMODa.DeterminePrecursorMassTolerance(PHRPReader.clsSearchEngineParameters@,System.Double@)">
 	<summary>
  Determines the precursor mass tolerance
@@ -1313,6 +1410,14 @@ PHRPReader
 	<param name="strDatasetName">Dataset name</param>
 	<param name="strInputFilePath">Input file path</param>
 	<param name="blnLoadModsAndSeqInfo">If True, then load the ModSummary file and SeqInfo files</param>
+	<remarks></remarks>
+</member><member name="M:PHRPReader.clsPHRPParserMSAlign.#ctor(System.String,System.String,PHRPReader.clsPHRPStartupOptions)">
+	<summary>
+ Constructor
+ </summary>
+	<param name="strDatasetName">Dataset name</param>
+	<param name="strInputFilePath">Input file path</param>
+	<param name="startupOptions">Startup Options, in particular LoadModsAndSeqInfo and mMaxProteinsPerPSM</param>
 	<remarks></remarks>
 </member><member name="M:PHRPReader.clsPHRPParserMSAlign.DeterminePrecursorMassTolerance(PHRPReader.clsSearchEngineParameters@,System.Double@)">
 	<summary>
