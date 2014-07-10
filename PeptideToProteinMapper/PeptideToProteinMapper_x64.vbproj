@@ -54,9 +54,9 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
-    <Reference Include="System.Data.SQLite, Version=1.0.66.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=AMD64">
+    <Reference Include="System.Data.SQLite, Version=1.0.51.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=x86">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Lib\x64\System.Data.SQLite.DLL</HintPath>
+      <HintPath>..\Lib\System.Data.SQLite.dll</HintPath>
     </Reference>
     <Reference Include="System.Deployment" />
     <Reference Include="System.Xml" />
@@ -112,12 +112,20 @@
     <None Include="My Project\VisualBasic" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\ProteinCoverageSummarizer\ProteinCoverageSummarizer_x64.vbproj">
+      <Project>{AF5E35D8-1C45-41F9-82FE-56D4CAD8856C}</Project>
+      <Name>ProteinCoverageSummarizer_x64</Name>
+    </ProjectReference>
     <ProjectReference Include="PeptideToProteinMapEngine\PeptideToProteinMapEngine_x64.vbproj">
       <Project>{F6468856-2855-443C-8236-20CB59FD2C6A}</Project>
       <Name>PeptideToProteinMapEngine_x64</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>
+    </PostBuildEvent>
+  </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

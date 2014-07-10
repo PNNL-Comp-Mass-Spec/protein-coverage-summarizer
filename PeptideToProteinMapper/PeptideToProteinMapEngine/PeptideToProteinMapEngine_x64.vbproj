@@ -46,16 +46,12 @@
     <Reference Include="PHRPReader">
       <HintPath>Lib\PHRPReader.dll</HintPath>
     </Reference>
-    <Reference Include="ProteinFileReader, Version=1.2.4834.35436, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="ProteinFileReader">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\Lib\ProteinFileReader.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
-    <Reference Include="System.Data.SQLite, Version=1.0.66.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=AMD64">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\Lib\x64\System.Data.SQLite.DLL</HintPath>
-    </Reference>
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>

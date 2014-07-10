@@ -5,6 +5,8 @@ Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "PeptideToProteinMapper_x64"
 EndProject
 Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "PeptideToProteinMapEngine_x64", "PeptideToProteinMapEngine\PeptideToProteinMapEngine_x64.vbproj", "{F6468856-2855-443C-8236-20CB59FD2C6A}"
 EndProject
+Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "ProteinCoverageSummarizer_x64", "..\ProteinCoverageSummarizer\ProteinCoverageSummarizer_x64.vbproj", "{AF5E35D8-1C45-41F9-82FE-56D4CAD8856C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -17,6 +19,10 @@ Global
 		{F6468856-2855-443C-8236-20CB59FD2C6A}.Debug|x64.ActiveCfg = Debug|x64
 		{F6468856-2855-443C-8236-20CB59FD2C6A}.Debug|x64.Build.0 = Debug|x64
 		{F6468856-2855-443C-8236-20CB59FD2C6A}.Release|x64.ActiveCfg = Release|x64
+		{AF5E35D8-1C45-41F9-82FE-56D4CAD8856C}.Debug|x64.ActiveCfg = Debug|x64
+		{AF5E35D8-1C45-41F9-82FE-56D4CAD8856C}.Debug|x64.Build.0 = Debug|x64
+		{AF5E35D8-1C45-41F9-82FE-56D4CAD8856C}.Release|x64.ActiveCfg = Release|x64
+		{AF5E35D8-1C45-41F9-82FE-56D4CAD8856C}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -926,8 +926,7 @@ Public Class clsProteinCoverageSummarizer
 			End If
 
 			' Store the updated protein sequences in the Sql Lite database
-			Dim SQLconnect As System.Data.SQLite.SQLiteConnection
-			SQLconnect = mProteinDataCache.ConnectToSqlLiteDB(True)
+			Dim SQLconnect = mProteinDataCache.ConnectToSqlLiteDB(True)
 
 			Using dbTrans As System.Data.SQLite.SQLiteTransaction = SQLconnect.BeginTransaction()
 				Using cmd As System.Data.SQLite.SQLiteCommand = SQLconnect.CreateCommand()
@@ -1124,8 +1123,7 @@ Public Class clsProteinCoverageSummarizer
 			End If
 
 			' Store the updated protein coverage values in the Sql Lite database
-			Dim SQLconnect As System.Data.SQLite.SQLiteConnection
-			SQLconnect = mProteinDataCache.ConnectToSqlLiteDB(True)
+			Dim SQLconnect = mProteinDataCache.ConnectToSqlLiteDB(True)
 
 			Using dbTrans As System.Data.SQLite.SQLiteTransaction = SQLconnect.BeginTransaction()
 				Using cmd As System.Data.SQLite.SQLiteCommand = SQLconnect.CreateCommand()

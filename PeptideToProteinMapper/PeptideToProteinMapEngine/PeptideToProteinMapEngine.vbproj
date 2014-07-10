@@ -2,7 +2,7 @@
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
     <ProductVersion>9.0.30729</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{AFA3FE41-2306-4799-8A39-846B7DDFDF3C}</ProjectGuid>
@@ -26,7 +26,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DefineDebug>true</DefineDebug>
     <DefineTrace>true</DefineTrace>
-    <OutputPath>bin\</OutputPath>
+    <OutputPath>bin\x86\</OutputPath>
     <DocumentationFile>PeptideToProteinMapEngine.xml</DocumentationFile>
     <NoWarn>42016,41999,42017,42018,42019,42032,42036,42020,42021,42022,42353,42354,42355</NoWarn>
     <DebugType>full</DebugType>
@@ -36,7 +36,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
     <DefineTrace>true</DefineTrace>
-    <OutputPath>bin\Release\</OutputPath>
+    <OutputPath>bin\x86\Release\</OutputPath>
     <DocumentationFile>PeptideToProteinMapEngine.xml</DocumentationFile>
     <Optimize>true</Optimize>
     <NoWarn>42016,41999,42017,42018,42019,42032,42036,42020,42021,42022,42353,42354,42355</NoWarn>
@@ -49,19 +49,12 @@
     <Reference Include="PHRPReader">
       <HintPath>Lib\PHRPReader.dll</HintPath>
     </Reference>
-    <Reference Include="ProteinCoverageSummarizer, Version=1.1.4680.25478, Culture=neutral, processorArchitecture=x86">
+    <Reference Include="ProteinFileReader">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\ProteinCoverageSummarizer\bin\ProteinCoverageSummarizer.dll</HintPath>
-    </Reference>
-    <Reference Include="ProteinFileReader, Version=1.1.3847.22126, Culture=neutral, processorArchitecture=x86">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\lib\ProteinFileReader.dll</HintPath>
+      <HintPath>..\..\Lib\ProteinFileReader.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
-    <Reference Include="System.Data.SQLite">
-      <HintPath>..\..\Lib\x86\System.Data.SQLite.dll</HintPath>
-    </Reference>
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
@@ -112,6 +105,12 @@
       <CustomToolNamespace>My</CustomToolNamespace>
       <LastGenOutput>Settings.Designer.vb</LastGenOutput>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\ProteinCoverageSummarizer\ProteinCoverageSummarizer.vbproj">
+      <Project>{27958CB4-6AE4-4F9B-8FA9-381DEF2646BF}</Project>
+      <Name>ProteinCoverageSummarizer</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

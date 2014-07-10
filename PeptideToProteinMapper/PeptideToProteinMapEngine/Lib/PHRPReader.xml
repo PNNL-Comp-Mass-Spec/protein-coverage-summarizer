@@ -366,12 +366,12 @@ PHRPReader
 	<param name="intValueIfMissing">Value to return if the score is not defined</param>
 	<returns>Score if defined, otherwise intValueIfMissing</returns>
 	<remarks></remarks>
-</member><member name="M:PHRPReader.clsPSM.SetPeptide(System.String)">
+</member><member name="M:PHRPReader.clsPSM.SetPeptide(System.String,System.Boolean)">
 	<summary>
- Update the peptide sequence (auto-determines the clean sequence)
+ Update the peptide sequence, auto-determining the clean sequence if blnUpdateCleanSequence is true
  </summary>
 	<param name="strPeptide">Peptide sequence (can optionally contain modification symbols; can optionally contain prefix and suffix residues)</param>
-	<remarks>Does not update the cleavage state info</remarks>
+	<remarks>Does not update the cleavage state info.  If blnUpdateCleanSequence is false, then call UpdateCleanSequence at a later time to populate mPeptideCleanSequence</remarks>
 </member><member name="M:PHRPReader.clsPSM.SetPeptide(System.String,PHRPReader.clsPeptideCleavageStateCalculator)">
 	<summary>
  Update the peptide sequence (auto-determines the clean sequence); also auto-update the the cleavage state info
@@ -400,6 +400,11 @@ PHRPReader
  </summary>
 	<param name="objCleavageStateCalculator"></param>
 	<remarks></remarks>
+</member><member name="F:PHRPReader.clsPHRPReader.mFastReadMode">
+	<summary>
+ When set to true, then calls to MoveNext will read the next data line, but will skip several additional processing steps for performance reasons
+ </summary>
+	<remarks>If the peptide is a peptide of interest, then call FinalizeCurrentPSM</remarks>
 </member><member name="P:PHRPReader.clsPHRPReader.CanRead">
 	<summary>
  Returns True if the input file was successfully opened and data remains to be read
@@ -449,6 +454,14 @@ PHRPReader
 	<value></value>
 	<returns></returns>
 	<remarks></remarks>
+</member><member name="P:PHRPReader.clsPHRPReader.FastReadMode">
+	<summary>
+ Used to enable fast read mode when calling MoveNext
+ When FastReadMode is True, you should call FinalizeCurrentPSM after calling MoveNext to populate the remaining fields if the peptide is a peptide of interest
+ </summary>
+	<value></value>
+	<returns></returns>
+	<remarks>Once FastReadMode is enabled it cannot be turned off (this is a safety measure due to how data is cached)</remarks>
 </member><member name="P:PHRPReader.clsPHRPReader.LoadModsAndSeqInfo">
 	<summary>
  If True, then looks for and loads the modification definitions from the _ModSummary.txt file associated with the input file
@@ -837,6 +850,12 @@ PHRPReader
  Reads the next line from a synopsis file or first hits file
  </summary>
 	<returns>True if a line was read, false if not more data is available</returns>
+	<remarks>When FastReadMode is True, you should call FinalizeCurrentPSM to populate the remaining fields if the peptide is a peptide of interest</remarks>
+</member><member name="M:PHRPReader.clsPHRPReader.FinalizeCurrentPSM">
+	<summary>
+ When FastReadMode is True, you first call MoveNext to read the peptide scores, then if the peptide
+ is a peptide of interest, you call this function to finalize any processing steps that were skipped
+ </summary>
 	<remarks></remarks>
 </member><member name="M:PHRPReader.clsPHRPReader.ReadModSummaryFile(System.String,System.Collections.Generic.SortedDictionary{System.Char,PHRPReader.clsModificationDefinition}@,System.Collections.Generic.SortedDictionary{System.String,System.Collections.Generic.List{PHRPReader.clsModificationDefinition}}@)">
 	<summary>
@@ -961,14 +980,16 @@ PHRPReader
 	<param name="objSearchEngineParams"></param>
 	<returns></returns>
 	<remarks></remarks>
-</member><member name="M:PHRPReader.clsPHRPParserXTandem.ParsePHRPDataLine(System.String,System.Int32,PHRPReader.clsPSM@)">
+</member><member name="M:PHRPReader.clsPHRPParserXTandem.ParsePHRPDataLine(System.String,System.Int32,PHRPReader.clsPSM@,System.Boolean)">
 	<summary>
  Parse the data line read from a PHRP results file
  </summary>
 	<param name="strLine">Data line</param>
 	<param name="intLinesRead">Number of lines read so far (used for error reporting)</param>
 	<param name="objPSM">clsPSM object (output)</param>
+	<param name="fastReadMode">When set to true, then reads the next data line, but doesn't perform text parsing required to determine cleavage state</param>
 	<returns>True if success, false if an error</returns>
+	<remarks>When fastReadMode is True, you should call FinalizePSM to populate the remaining fields</remarks>
 </member><member name="M:PHRPReader.clsPHRPParserSequest.#ctor(System.String,System.String)">
 	<summary>
  Constructor; assumes blnLoadModsAndSeqInfo=True
@@ -1008,14 +1029,16 @@ PHRPReader
 	<param name="objSearchEngineParams"></param>
 	<returns></returns>
 	<remarks></remarks>
-</member><member name="M:PHRPReader.clsPHRPParserSequest.ParsePHRPDataLine(System.String,System.Int32,PHRPReader.clsPSM@)">
+</member><member name="M:PHRPReader.clsPHRPParserSequest.ParsePHRPDataLine(System.String,System.Int32,PHRPReader.clsPSM@,System.Boolean)">
 	<summary>
  Parse the data line read from a PHRP results file
  </summary>
 	<param name="strLine">Data line</param>
 	<param name="intLinesRead">Number of lines read so far (used for error reporting)</param>
 	<param name="objPSM">clsPSM object (output)</param>
+	<param name="fastReadMode">When set to true, then reads the next data line, but doesn't perform text parsing required to determine cleavage state</param>
 	<returns>True if success, false if an error</returns>
+	<remarks>When fastReadMode is True, you should call FinalizePSM to populate the remaining fields</remarks>
 </member><member name="P:PHRPReader.clsScanStatsReader.ErrorMessage">
 	<summary>
  Error message
@@ -1176,6 +1199,16 @@ PHRPReader
 	<param name="intLinesRead">Number of lines read so far (used for error reporting)</param>
 	<param name="objPSM">clsPSM object (output)</param>
 	<returns>True if success, false if an error</returns>
+</member><member name="M:PHRPReader.clsPHRPParser.ParsePHRPDataLine(System.String,System.Int32,PHRPReader.clsPSM@,System.Boolean)">
+	<summary>
+ Parse the data line read from a PHRP results file
+ </summary>
+	<param name="strLine">Data line</param>
+	<param name="intLinesRead">Number of lines read so far (used for error reporting)</param>
+	<param name="objPSM">clsPSM object (output)</param>
+	<param name="fastReadMode">When set to true, then reads the next data line, but doesn't perform text parsing required to determine cleavage state</param>
+	<returns>True if success, false if an error</returns>
+	<remarks>When fastReadMode is True, you should call FinalizePSM to populate the remaining fields if the peptide is a peptide of interest</remarks>
 </member><member name="M:PHRPReader.clsPHRPParser.LoadSearchEngineParameters(System.String,PHRPReader.clsSearchEngineParameters@)">
 	<summary>
  Parses the specified parameter file
@@ -1289,14 +1322,16 @@ PHRPReader
 	<param name="objSearchEngineParams"></param>
 	<returns></returns>
 	<remarks></remarks>
-</member><member name="M:PHRPReader.clsPHRPParserInspect.ParsePHRPDataLine(System.String,System.Int32,PHRPReader.clsPSM@)">
+</member><member name="M:PHRPReader.clsPHRPParserInspect.ParsePHRPDataLine(System.String,System.Int32,PHRPReader.clsPSM@,System.Boolean)">
 	<summary>
  Parse the data line read from a PHRP results file
  </summary>
 	<param name="strLine">Data line</param>
 	<param name="intLinesRead">Number of lines read so far (used for error reporting)</param>
 	<param name="objPSM">clsPSM object (output)</param>
+	<param name="fastReadMode">When set to true, then reads the next data line, but doesn't perform text parsing required to determine cleavage state</param>
 	<returns>True if success, false if an error</returns>
+	<remarks>When fastReadMode is True, you should call FinalizePSM to populate the remaining fields</remarks>
 </member><member name="M:PHRPReader.clsPHRPParserMSGFDB.#ctor(System.String,System.String)">
 	<summary>
  Constructor; assumes blnLoadModsAndSeqInfo=True
@@ -1336,14 +1371,16 @@ PHRPReader
 	<param name="objSearchEngineParams"></param>
 	<returns></returns>
 	<remarks></remarks>
-</member><member name="M:PHRPReader.clsPHRPParserMSGFDB.ParsePHRPDataLine(System.String,System.Int32,PHRPReader.clsPSM@)">
+</member><member name="M:PHRPReader.clsPHRPParserMSGFDB.ParsePHRPDataLine(System.String,System.Int32,PHRPReader.clsPSM@,System.Boolean)">
 	<summary>
  Parse the data line read from a PHRP results file
  </summary>
 	<param name="strLine">Data line</param>
 	<param name="intLinesRead">Number of lines read so far (used for error reporting)</param>
 	<param name="objPSM">clsPSM object (output)</param>
+	<param name="fastReadMode">When set to true, then reads the next data line, but doesn't perform text parsing required to determine cleavage state</param>
 	<returns>True if success, false if an error</returns>
+	<remarks>When fastReadMode is True, you should call FinalizePSM to populate the remaining fields</remarks>
 </member><member name="F:PHRPReader.clsPepToProteinMapInfo.mProteinMapInfo">
 	<summary>
  Dictionary of protein names and residue start/end positions
@@ -1388,14 +1425,16 @@ PHRPReader
 	<param name="objSearchEngineParams"></param>
 	<returns></returns>
 	<remarks></remarks>
-</member><member name="M:PHRPReader.clsPHRPParserMODa.ParsePHRPDataLine(System.String,System.Int32,PHRPReader.clsPSM@)">
+</member><member name="M:PHRPReader.clsPHRPParserMODa.ParsePHRPDataLine(System.String,System.Int32,PHRPReader.clsPSM@,System.Boolean)">
 	<summary>
  Parse the data line read from a PHRP results file
  </summary>
 	<param name="strLine">Data line</param>
 	<param name="intLinesRead">Number of lines read so far (used for error reporting)</param>
 	<param name="objPSM">clsPSM object (output)</param>
+	<param name="fastReadMode">When set to true, then reads the next data line, but doesn't perform text parsing required to determine cleavage state</param>
 	<returns>True if success, false if an error</returns>
+	<remarks>When fastReadMode is True, you should call FinalizePSM to populate the remaining fields</remarks>
 </member><member name="M:PHRPReader.clsPHRPParserMSAlign.#ctor(System.String,System.String)">
 	<summary>
  Constructor; assumes blnLoadModsAndSeqInfo=True
@@ -1435,14 +1474,16 @@ PHRPReader
 	<param name="objSearchEngineParams"></param>
 	<returns></returns>
 	<remarks></remarks>
-</member><member name="M:PHRPReader.clsPHRPParserMSAlign.ParsePHRPDataLine(System.String,System.Int32,PHRPReader.clsPSM@)">
+</member><member name="M:PHRPReader.clsPHRPParserMSAlign.ParsePHRPDataLine(System.String,System.Int32,PHRPReader.clsPSM@,System.Boolean)">
 	<summary>
  Parse the data line read from a PHRP results file
  </summary>
 	<param name="strLine">Data line</param>
 	<param name="intLinesRead">Number of lines read so far (used for error reporting)</param>
 	<param name="objPSM">clsPSM object (output)</param>
+	<param name="fastReadMode">When set to true, then reads the next data line, but doesn't perform text parsing required to determine cleavage state</param>
 	<returns>True if success, false if an error</returns>
+	<remarks>When fastReadMode is True, you should call FinalizePSM to populate the remaining fields</remarks>
 </member><member name="M:PHRPReader.clsPeptideCleavageStateCalculator.#ctor">
 	<summary>
  Constructor

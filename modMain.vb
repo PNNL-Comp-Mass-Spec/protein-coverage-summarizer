@@ -29,7 +29,7 @@ Option Strict On
 
 Public Module modMain
 
-	Public Const PROGRAM_DATE As String = "November 1, 2013"
+	Public Const PROGRAM_DATE As String = "July 9, 2014"
 
 	Private mPeptideInputFilePath As String
 	Private mProteinInputFilePath As String

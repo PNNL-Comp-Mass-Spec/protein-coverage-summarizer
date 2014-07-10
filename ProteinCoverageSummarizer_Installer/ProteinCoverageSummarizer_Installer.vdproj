@@ -27,8 +27,20 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_4DAD7EFF19D4789D06E5529E86584F92"
+        "MsmKey" = "8:_4F00E64E56419A5AEC568049F87BE182"
         "OwnerKey" = "8:_2B5FAB2644124616B5E53F04FB4BA154"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_4F00E64E56419A5AEC568049F87BE182"
+        "OwnerKey" = "8:_A2CDF3C1FB71B535B319214567E7A009"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_6FC39607CF4A4820B707DD9AFBC219C5"
+        "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -39,18 +51,6 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_94EA703BF66042459E0EF4EC713FAB37"
-        "OwnerKey" = "8:_2B5FAB2644124616B5E53F04FB4BA154"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_94EA703BF66042459E0EF4EC713FAB37"
-        "OwnerKey" = "8:_4DAD7EFF19D4789D06E5529E86584F92"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
         "MsmKey" = "8:_9720991892DA291F0C92302734532D74"
         "OwnerKey" = "8:_2B5FAB2644124616B5E53F04FB4BA154"
         "MsmSig" = "8:_UNDEFINED"
@@ -58,7 +58,13 @@
         "Entry"
         {
         "MsmKey" = "8:_9720991892DA291F0C92302734532D74"
-        "OwnerKey" = "8:_4DAD7EFF19D4789D06E5529E86584F92"
+        "OwnerKey" = "8:_A2CDF3C1FB71B535B319214567E7A009"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_A2CDF3C1FB71B535B319214567E7A009"
+        "OwnerKey" = "8:_2B5FAB2644124616B5E53F04FB4BA154"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -118,13 +124,19 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_3AE1FC31D202EA6317B3D11D1669F4CE"
+        "OwnerKey" = "8:_2B5FAB2644124616B5E53F04FB4BA154"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_9720991892DA291F0C92302734532D74"
+        "OwnerKey" = "8:_A2CDF3C1FB71B535B319214567E7A009"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_4F00E64E56419A5AEC568049F87BE182"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -136,19 +148,13 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_94EA703BF66042459E0EF4EC713FAB37"
+        "OwnerKey" = "8:_9720991892DA291F0C92302734532D74"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_4DAD7EFF19D4789D06E5529E86584F92"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_2B5FAB2644124616B5E53F04FB4BA154"
+        "OwnerKey" = "8:_3AE1FC31D202EA6317B3D11D1669F4CE"
         "MsmSig" = "8:_UNDEFINED"
         }
     }
@@ -264,6 +270,11 @@
             "AssemblyAsmDisplayName" = "8:PRISM, Version=2.2.5142.35689, Culture=neutral, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
+                    "_3AE1FC31D202EA6317B3D11D1669F4CE"
+                    {
+                    "Name" = "8:PRISM.dll"
+                    "Attributes" = "3:512"
+                    }
                 }
             "SourcePath" = "8:PRISM.dll"
             "TargetName" = "8:"
@@ -283,15 +294,20 @@
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_4DAD7EFF19D4789D06E5529E86584F92"
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_4F00E64E56419A5AEC568049F87BE182"
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:ProteinCoverageSummarizer, Version=1.1.5142.27189, Culture=neutral, processorArchitecture=x86"
+            "AssemblyAsmDisplayName" = "8:System.Data.SQLite, Version=1.0.93.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
+                    "_4F00E64E56419A5AEC568049F87BE182"
+                    {
+                    "Name" = "8:System.Data.SQLite.dll"
+                    "Attributes" = "3:512"
+                    }
                 }
-            "SourcePath" = "8:ProteinCoverageSummarizer.dll"
+            "SourcePath" = "8:System.Data.SQLite.dll"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_514A9ACE2BC64AB6A6D307EB791CD88E"
@@ -307,6 +323,26 @@
             "Register" = "3:1"
             "Exclude" = "11:FALSE"
             "IsDependency" = "11:TRUE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_6FC39607CF4A4820B707DD9AFBC219C5"
+            {
+            "SourcePath" = "8:..\\Lib\\x86\\SQLite.Interop.dll"
+            "TargetName" = "8:SQLite.Interop.dll"
+            "Tag" = "8:"
+            "Folder" = "8:_514A9ACE2BC64AB6A6D307EB791CD88E"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_929B40C0DA7241C4A647C70796A6F51F"
@@ -329,15 +365,20 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_94EA703BF66042459E0EF4EC713FAB37"
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_9720991892DA291F0C92302734532D74"
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:System.Data.SQLite, Version=1.0.66.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=x86"
+            "AssemblyAsmDisplayName" = "8:ProteinFileReader, Version=1.2.4834.35436, Culture=neutral, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
+                    "_9720991892DA291F0C92302734532D74"
+                    {
+                    "Name" = "8:ProteinFileReader.dll"
+                    "Attributes" = "3:512"
+                    }
                 }
-            "SourcePath" = "8:System.Data.SQLite.dll"
+            "SourcePath" = "8:ProteinFileReader.dll"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_514A9ACE2BC64AB6A6D307EB791CD88E"
@@ -355,15 +396,20 @@
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_9720991892DA291F0C92302734532D74"
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_A2CDF3C1FB71B535B319214567E7A009"
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:ProteinFileReader, Version=1.2.4834.35436, Culture=neutral, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:ProteinCoverageSummarizer, Version=1.1.5303.28024, Culture=neutral, processorArchitecture=x86"
                 "ScatterAssemblies"
                 {
+                    "_A2CDF3C1FB71B535B319214567E7A009"
+                    {
+                    "Name" = "8:ProteinCoverageSummarizer.dll"
+                    "Attributes" = "3:512"
+                    }
                 }
-            "SourcePath" = "8:ProteinFileReader.dll"
+            "SourcePath" = "8:ProteinCoverageSummarizer.dll"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_514A9ACE2BC64AB6A6D307EB791CD88E"
@@ -488,6 +534,11 @@
             "AssemblyAsmDisplayName" = "8:SharedVBNetRoutines, Version=1.0.4624.25782, Culture=neutral, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
+                    "_D0CB3BBACF4D3992E3BF1A89DA113E8D"
+                    {
+                    "Name" = "8:SharedVBNetRoutines.dll"
+                    "Attributes" = "3:512"
+                    }
                 }
             "SourcePath" = "8:SharedVBNetRoutines.dll"
             "TargetName" = "8:"
@@ -634,15 +685,15 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:ProteinCoverageSummarizer"
-        "ProductCode" = "8:{E1EF9D25-84C1-45CA-A776-14FB16ECC6DD}"
-        "PackageCode" = "8:{34B73D44-85C7-41F3-A73B-84A2013252D8}"
+        "ProductCode" = "8:{7464DF0B-B747-43A6-8AB0-950DA1B8145C}"
+        "PackageCode" = "8:{C7E8340E-AA76-46FC-81B2-2BA1C5159434}"
         "UpgradeCode" = "8:{CA900CF0-3F0F-4887-959D-A5D3CA34C256}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:FALSE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:FALSE"
-        "ProductVersion" = "8:1.3.3"
+        "ProductVersion" = "8:1.3.4"
         "Manufacturer" = "8:PNNL"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:"

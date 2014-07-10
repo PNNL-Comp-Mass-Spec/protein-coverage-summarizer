@@ -203,8 +203,7 @@ Public Class clsProteinFileDataCache
 			Return Nothing
 		End If
 
-		Dim SQLconnect As New SQLite.SQLiteConnection
-		SQLconnect.ConnectionString = mSqlLiteDBConnectionString
+		Dim SQLconnect As SQLite.SQLiteConnection = New SQLite.SQLiteConnection(mSqlLiteDBConnectionString, True)
 		SQLconnect.Open()
 
 		' Turn off Journaling and set Synchronous mode to 0
@@ -403,8 +402,7 @@ Public Class clsProteinFileDataCache
 			Return Nothing
 		End If
 
-		Dim SQLconnect As SQLite.SQLiteConnection
-		SQLconnect = ConnectToSqlLiteDB(False)
+		Dim SQLconnect = ConnectToSqlLiteDB(False)
 
 		Dim SQLcommand As SQLite.SQLiteCommand
 		SQLcommand = SQLconnect.CreateCommand
@@ -505,8 +503,7 @@ Public Class clsProteinFileDataCache
 		Dim SQLTransaction As SQLite.SQLiteTransaction
 
 		' Create the SQL Lite DB
-		Dim SQLconnect As SQLite.SQLiteConnection
-		SQLconnect = ConnectToSqlLiteDB(True)
+		Dim SQLconnect = ConnectToSqlLiteDB(True)
 
 		' SQL query to Create the Table
 		SQLcommand = SQLconnect.CreateCommand
