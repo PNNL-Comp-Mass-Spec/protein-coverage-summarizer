@@ -78,9 +78,21 @@
             This base class provides datatype conversion services for the SQLite provider.
             </summary>
         </member>
+        <member name="F:System.Data.SQLite.SQLiteConvert.FallbackDefaultDbType">
+            <summary>
+            The fallback default database type when one cannot be obtained from an
+            existing connection instance.
+            </summary>
+        </member>
         <member name="F:System.Data.SQLite.SQLiteConvert.FullFormat">
             <summary>
             The format string for DateTime values when using the InvariantCulture or CurrentCulture formats.
+            </summary>
+        </member>
+        <member name="F:System.Data.SQLite.SQLiteConvert.FallbackDefaultTypeName">
+            <summary>
+            The fallback default database type name when one cannot be obtained from
+            an existing connection instance.
             </summary>
         </member>
         <member name="F:System.Data.SQLite.SQLiteConvert.UnixEpoch">
@@ -356,6 +368,19 @@
             Julian day double, an integer number of seconds since the Unix epoch, a culture-independent formatted date and time
             string, a formatted date and time string in the current culture, or an ISO8601-format date/time string.</returns>
         </member>
+        <member name="M:System.Data.SQLite.SQLiteConvert.ToString(System.DateTime,System.Data.SQLite.SQLiteDateFormats,System.DateTimeKind,System.String)">
+            <summary>
+            Converts a string into a DateTime, using the DateTimeFormat, DateTimeKind,
+            and DateTimeFormatString specified for the connection when it was opened.
+            </summary>
+            <param name="dateValue">The DateTime value to convert</param>
+            <param name="format">The SQLiteDateFormats to use.</param>
+            <param name="kind">The DateTimeKind to use.</param>
+            <param name="formatString">The DateTime format string to use.</param>
+            <returns>Either a string containing the long integer number of 100-nanosecond units since System.DateTime.MinValue, a
+            Julian day double, an integer number of seconds since the Unix epoch, a culture-independent formatted date and time
+            string, a formatted date and time string in the current culture, or an ISO8601-format date/time string.</returns>
+        </member>
         <member name="M:System.Data.SQLite.SQLiteConvert.ToDateTime(System.IntPtr,System.Int32)">
             <summary>
             Internal function to convert a UTF-8 encoded IntPtr of the specified length to a DateTime.
@@ -441,6 +466,28 @@
             object instance is also null.
             </returns>
         </member>
+        <member name="M:System.Data.SQLite.SQLiteConvert.ToBoolean(System.Object,System.IFormatProvider,System.Boolean)">
+            <summary>
+            Attempts to convert an arbitrary object to the Boolean data type.
+            Null object values are converted to false.  Throws an exception
+            upon failure.
+            </summary>
+            <param name="obj">
+            The object value to convert.
+            </param>
+            <param name="provider">
+            The format provider to use.
+            </param>
+            <param name="viaFramework">
+            If non-zero, a string value will be converted using the
+            <see cref="M:System.Convert.ToBoolean(System.Object,System.IFormatProvider)"/>
+            method; otherwise, the <see cref="M:System.Data.SQLite.SQLiteConvert.ToBoolean(System.String)"/>
+            method will be used.
+            </param>
+            <returns>
+            The converted boolean value.
+            </returns>
+        </member>
         <member name="M:System.Data.SQLite.SQLiteConvert.ToBoolean(System.Object)">
             <summary>
             Convert a value to true or false.
@@ -480,6 +527,15 @@
             <param name="typ">The DbType to get the size of</param>
             <returns></returns>
         </member>
+        <member name="M:System.Data.SQLite.SQLiteConvert.GetDefaultTypeName">
+            <summary>
+            Determines the default database type name to be used when a
+            per-connection value is not available.
+            </summary>
+            <returns>
+            The default database type name to use.
+            </returns>
+        </member>
         <member name="M:System.Data.SQLite.SQLiteConvert.DbTypeToTypeName(System.Data.SQLite.SQLiteConnection,System.Data.DbType,System.Data.SQLite.SQLiteConnectionFlags)">
             <summary>
             Determines the type name for the given database value type.
@@ -511,6 +567,83 @@
             <returns>
             A map containing the database column types recognized by this
             provider.
+            </returns>
+        </member>
+        <member name="M:System.Data.SQLite.SQLiteConvert.IsStringDbType(System.Data.DbType)">
+            <summary>
+            Determines if a database type is considered to be a string.
+            </summary>
+            <param name="type">
+            The database type to check.
+            </param>
+            <returns>
+            Non-zero if the database type is considered to be a string, zero
+            otherwise.
+            </returns>
+        </member>
+        <member name="M:System.Data.SQLite.SQLiteConvert.GetDefaultDbType">
+            <summary>
+            Determines the default <see cref="T:System.Data.DbType"/> value to be used when a
+            per-connection value is not available.
+            </summary>
+            <returns>
+            The default <see cref="T:System.Data.DbType"/> value to use.
+            </returns>
+        </member>
+        <member name="M:System.Data.SQLite.SQLiteConvert.LooksLikeNull(System.String)">
+            <summary>
+            Determines if the specified textual value appears to be a
+            <see cref="T:System.DBNull"/> value.
+            </summary>
+            <param name="text">
+            The textual value to inspect.
+            </param>
+            <returns>
+            Non-zero if the text looks like a <see cref="T:System.DBNull"/> value,
+            zero otherwise.
+            </returns>
+        </member>
+        <member name="M:System.Data.SQLite.SQLiteConvert.LooksLikeInt64(System.String)">
+            <summary>
+            Determines if the specified textual value appears to be an
+            <see cref="T:System.Int64"/> value.
+            </summary>
+            <param name="text">
+            The textual value to inspect.
+            </param>
+            <returns>
+            Non-zero if the text looks like an <see cref="T:System.Int64"/> value,
+            zero otherwise.
+            </returns>
+        </member>
+        <member name="M:System.Data.SQLite.SQLiteConvert.LooksLikeDouble(System.String)">
+            <summary>
+            Determines if the specified textual value appears to be a
+            <see cref="T:System.Double"/> value.
+            </summary>
+            <param name="text">
+            The textual value to inspect.
+            </param>
+            <returns>
+            Non-zero if the text looks like a <see cref="T:System.Double"/> value,
+            zero otherwise.
+            </returns>
+        </member>
+        <member name="M:System.Data.SQLite.SQLiteConvert.LooksLikeDateTime(System.Data.SQLite.SQLiteConvert,System.String)">
+            <summary>
+            Determines if the specified textual value appears to be a
+            <see cref="T:System.DateTime"/> value.
+            </summary>
+            <param name="convert">
+            The <see cref="T:System.Data.SQLite.SQLiteConvert"/> object instance configured with
+            the chosen <see cref="T:System.DateTime"/> format.
+            </param>
+            <param name="text">
+            The textual value to inspect.
+            </param>
+            <returns>
+            Non-zero if the text looks like a <see cref="T:System.DateTime"/> in the
+            configured format, zero otherwise.
             </returns>
         </member>
         <member name="M:System.Data.SQLite.SQLiteConvert.TypeNameToDbType(System.Data.SQLite.SQLiteConnection,System.String,System.Data.SQLite.SQLiteConnectionFlags)">
@@ -1352,6 +1485,19 @@
             Disposes and finalizes the backup.
             </summary>
         </member>
+        <member name="T:System.Data.SQLite.ISQLiteSchemaExtensions">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:System.Data.SQLite.ISQLiteSchemaExtensions.BuildTempSchema(System.Data.SQLite.SQLiteConnection)">
+            <summary>
+            Creates temporary tables on the connection so schema information can be queried.
+            </summary>
+            <param name="connection">
+            The connection upon which to build the schema tables.
+            </param>
+        </member>
         <member name="T:System.Data.SQLite.SQLiteConnectionFlags">
             <summary>
             The extra behavioral flags that can be applied to a connection.
@@ -1509,6 +1655,48 @@
             is not recommended.
             </summary>
         </member>
+        <member name="F:System.Data.SQLite.SQLiteConnectionFlags.StickyHasRows">
+            <summary>
+            When the <see cref="P:System.Data.SQLite.SQLiteDataReader.HasRows"/> property is used, it
+            should return non-zero if there were ever any rows in the associated
+            result sets.
+            </summary>
+        </member>
+        <member name="F:System.Data.SQLite.SQLiteConnectionFlags.StrictEnlistment">
+            <summary>
+            Enable "strict" transaction enlistment semantics.  Setting this flag
+            will cause an exception to be thrown if an attempt is made to enlist
+            in a transaction with an unavailable or unsupported isolation level.
+            In the future, more extensive checks may be enabled by this flag as
+            well.
+            </summary>
+        </member>
+        <member name="F:System.Data.SQLite.SQLiteConnectionFlags.MapIsolationLevels">
+            <summary>
+            Enable mapping of unsupported transaction isolation levels to the
+            closest supported transaction isolation level.
+            </summary>
+        </member>
+        <member name="F:System.Data.SQLite.SQLiteConnectionFlags.DetectTextAffinity">
+            <summary>
+            When returning column values, attempt to detect the affinity of
+            textual values by checking if they fully conform to those of the
+            <see cref="F:System.Data.SQLite.TypeAffinity.Null"/>,
+            <see cref="F:System.Data.SQLite.TypeAffinity.Int64"/>,
+            <see cref="F:System.Data.SQLite.TypeAffinity.Double"/>,
+            or <see cref="F:System.Data.SQLite.TypeAffinity.DateTime"/> types.
+            </summary>
+        </member>
+        <member name="F:System.Data.SQLite.SQLiteConnectionFlags.DetectStringType">
+            <summary>
+            When returning column values, attempt to detect the type of
+            string values by checking if they fully conform to those of
+            the <see cref="F:System.Data.SQLite.TypeAffinity.Null"/>,
+            <see cref="F:System.Data.SQLite.TypeAffinity.Int64"/>,
+            <see cref="F:System.Data.SQLite.TypeAffinity.Double"/>,
+            or <see cref="F:System.Data.SQLite.TypeAffinity.DateTime"/> types.
+            </summary>
+        </member>
         <member name="F:System.Data.SQLite.SQLiteConnectionFlags.BindAndGetAllAsText">
             <summary>
             When binding parameter values or returning column values, always
@@ -1547,6 +1735,11 @@
         <member name="F:System.Data.SQLite.SQLiteConnectionFlags.Default">
             <summary>
             The default extra flags for new connections.
+            </summary>
+        </member>
+        <member name="F:System.Data.SQLite.SQLiteConnectionFlags.DefaultAndLogAll">
+            <summary>
+            The default extra flags for new connections with all logging enabled.
             </summary>
         </member>
         <member name="T:System.Data.SQLite.SQLiteCommand">
@@ -2322,6 +2515,11 @@
             for this class.
             </summary>
         </member>
+        <member name="F:System.Data.SQLite.SQLiteConnection._sharedFlags">
+            <summary>
+            The extra connection flags to be used for all opened connections.
+            </summary>
+        </member>
         <member name="F:System.Data.SQLite.SQLiteConnection._connectionState">
             <summary>
             State of the current connection
@@ -2384,6 +2582,20 @@
             The extra behavioral flags for this connection, if any.  See the
             <see cref="T:System.Data.SQLite.SQLiteConnectionFlags"/> enumeration for a list of
             possible values.
+            </summary>
+        </member>
+        <member name="F:System.Data.SQLite.SQLiteConnection._defaultDbType">
+            <summary>
+            The default databse type for this connection.  This value will only
+            be used if the <see cref="F:System.Data.SQLite.SQLiteConnectionFlags.UseConnectionTypes"/>
+            flag is set.
+            </summary>
+        </member>
+        <member name="F:System.Data.SQLite.SQLiteConnection._defaultTypeName">
+            <summary>
+            The default databse type name for this connection.  This value will only
+            be used if the <see cref="F:System.Data.SQLite.SQLiteConnectionFlags.UseConnectionTypes"/>
+            flag is set.
             </summary>
         </member>
         <member name="F:System.Data.SQLite.SQLiteConnection._defaultTimeout">
@@ -2843,6 +3055,21 @@
             zero.
             </returns>
         </member>
+        <member name="M:System.Data.SQLite.SQLiteConnection.GetEffectiveIsolationLevel(System.Data.IsolationLevel)">
+            <summary>
+            Determines the transaction isolation level that should be used by
+            the caller, primarily based upon the one specified by the caller.
+            If mapping of transaction isolation levels is enabled, the returned
+            transaction isolation level may be significantly different than the
+            originally specified one.
+            </summary>
+            <param name="isolationLevel">
+            The originally specified transaction isolation level.
+            </param>
+            <returns>
+            The transaction isolation level that should be used.
+            </returns>
+        </member>
         <member name="M:System.Data.SQLite.SQLiteConnection.Open">
             <summary>
             Opens the connection using the parameters found in the <see cref="P:System.Data.SQLite.SQLiteConnection.ConnectionString"/>.
@@ -3010,6 +3237,18 @@
             up with the final number of milliseconds to wait.  A negative value will cause the
             current interval to be queried and replace that negative value.</param>
             <returns>Zero for success, non-zero for error.</returns>
+        </member>
+        <member name="M:System.Data.SQLite.SQLiteConnection.SetChunkSize(System.Int32)">
+            <summary>
+            Sets the chunk size for the primary file associated with this database
+            connection.
+            </summary>
+            <param name="size">
+            The new chunk size for the main database, in bytes.
+            </param>
+            <returns>
+            Zero for success, non-zero for error.
+            </returns>
         </member>
         <member name="M:System.Data.SQLite.SQLiteConnection.UnwrapString(System.String)">
             <summary>
@@ -3438,6 +3677,20 @@
             possible values.
             </summary>
         </member>
+        <member name="P:System.Data.SQLite.SQLiteConnection.DefaultDbType">
+            <summary>
+            Gets/sets the default database type for this connection.  This value
+            will only be used if the <see cref="F:System.Data.SQLite.SQLiteConnectionFlags.UseConnectionTypes"/>
+            flag is set.
+            </summary>
+        </member>
+        <member name="P:System.Data.SQLite.SQLiteConnection.DefaultTypeName">
+            <summary>
+            Gets/sets the default database type name for this connection.  This value
+            will only be used if the <see cref="F:System.Data.SQLite.SQLiteConnectionFlags.UseConnectionTypes"/>
+            flag is set.
+            </summary>
+        </member>
         <member name="P:System.Data.SQLite.SQLiteConnection.OwnHandle">
             <summary>
             Returns non-zero if the underlying native connection handle is
@@ -3539,6 +3792,11 @@
             identifier for the source checkout used to build the managed
             components currently executing.  If the necessary information
             cannot be obtained for any reason, a null value may be returned.
+            </summary>
+        </member>
+        <member name="P:System.Data.SQLite.SQLiteConnection.SharedFlags">
+            <summary>
+            The extra connection flags to be used for all opened connections.
             </summary>
         </member>
         <member name="P:System.Data.SQLite.SQLiteConnection.State">
@@ -4259,6 +4517,16 @@
             Sets the default isolation level for transactions on the connection.
             </summary>
         </member>
+        <member name="P:System.Data.SQLite.SQLiteConnectionStringBuilder.DefaultDbType">
+            <summary>
+            Gets/sets the default database type for the connection.
+            </summary>
+        </member>
+        <member name="P:System.Data.SQLite.SQLiteConnectionStringBuilder.DefaultTypeName">
+            <summary>
+            Gets/sets the default type name for the connection.
+            </summary>
+        </member>
         <member name="P:System.Data.SQLite.SQLiteConnectionStringBuilder.ForeignKeys">
             <summary>
             If enabled, use foreign key constraints
@@ -4278,6 +4546,11 @@
             <summary>
             If enabled, attempt to resolve the provided data source file name to a
             full path before opening.
+            </summary>
+        </member>
+        <member name="P:System.Data.SQLite.SQLiteConnectionStringBuilder.NoSharedFlags">
+            <summary>
+            If enabled, skip using the configured shared connection flags.
             </summary>
         </member>
         <member name="T:System.Data.SQLite.TypeAffinity">
@@ -4399,6 +4672,21 @@
         <member name="F:System.Data.SQLite.SQLiteConnectionEventType.Closed">
             <summary>
             The connection was closed.
+            </summary>
+        </member>
+        <member name="F:System.Data.SQLite.SQLiteConnectionEventType.DisposingCommand">
+            <summary>
+            A command is being disposed.
+            </summary>
+        </member>
+        <member name="F:System.Data.SQLite.SQLiteConnectionEventType.DisposingDataReader">
+            <summary>
+            A data reader is being disposed.
+            </summary>
+        </member>
+        <member name="F:System.Data.SQLite.SQLiteConnectionEventType.ClosingDataReader">
+            <summary>
+            A data reader is being closed.
             </summary>
         </member>
         <member name="T:System.Data.SQLite.SQLiteDateFormats">
@@ -4848,6 +5136,22 @@
             The affinity of a column, used for expressions or when Type is DbType.Object
             </summary>
         </member>
+        <member name="M:System.Data.SQLite.SQLiteType.#ctor">
+            <summary>
+            Constructs a default instance of this type.
+            </summary>
+        </member>
+        <member name="M:System.Data.SQLite.SQLiteType.#ctor(System.Data.SQLite.TypeAffinity,System.Data.DbType)">
+            <summary>
+            Constructs an instance of this type with the specified field values.
+            </summary>
+            <param name="affinity">
+            The type affinity to use for the new instance.
+            </param>
+            <param name="type">
+            The database type to use for the new instance.
+            </param>
+        </member>
         <member name="T:System.Data.SQLite.SQLiteDataAdapter">
             <summary>
             SQLite implementation of DbDataAdapter.
@@ -4991,6 +5295,12 @@
         <member name="F:System.Data.SQLite.SQLiteDataReader._fieldCount">
             <summary>
             Count of fields (columns) in the row-returning statement currently being processed
+            </summary>
+        </member>
+        <member name="F:System.Data.SQLite.SQLiteDataReader._stepCount">
+            <summary>
+            The number of calls to Step() that have returned true (i.e. the number of rows that
+            have been read in the current result set).
             </summary>
         </member>
         <member name="F:System.Data.SQLite.SQLiteDataReader._fieldIndexes">
@@ -5293,10 +5603,25 @@
             The connection flags value.
             </returns>
         </member>
-        <member name="M:System.Data.SQLite.SQLiteDataReader.GetSQLiteType(System.Int32)">
+        <member name="M:System.Data.SQLite.SQLiteDataReader.GetSQLiteType(System.Data.SQLite.SQLiteType,System.String)">
+            <summary>
+            Retrieves the SQLiteType for a given column and row value.
+            </summary>
+            <param name="oldType">
+            The original SQLiteType structure, based only on the column.
+            </param>
+            <param name="text">
+            The textual value of the column for a given row.
+            </param>
+            <returns>
+            The SQLiteType structure.
+            </returns>
+        </member>
+        <member name="M:System.Data.SQLite.SQLiteDataReader.GetSQLiteType(System.Data.SQLite.SQLiteConnectionFlags,System.Int32)">
             <summary>
             Retrieves the SQLiteType for a given column, and caches it to avoid repetetive interop calls.
             </summary>
+            <param name="flags">The flags associated with the parent connection object.</param>
             <param name="i">The index of the column to retrieve</param>
             <returns>A SQLiteType structure</returns>
         </member>
@@ -5314,6 +5639,11 @@
         <member name="P:System.Data.SQLite.SQLiteDataReader.FieldCount">
             <summary>
             Returns the number of columns in the current resultset
+            </summary>
+        </member>
+        <member name="P:System.Data.SQLite.SQLiteDataReader.StepCount">
+            <summary>
+            Returns the number of rows seen so far in the current result set.
             </summary>
         </member>
         <member name="P:System.Data.SQLite.SQLiteDataReader.VisibleFieldCount">
@@ -7010,16 +7340,6 @@
              Bind all parameters, making sure the caller didn't miss any
             </summary>
         </member>
-        <member name="M:System.Data.SQLite.SQLiteStatement.ToBoolean(System.Object,System.IFormatProvider)">
-            <summary>
-            Attempts to convert an arbitrary object to the Boolean data type.
-            Null object values are converted to false.  Throws a SQLiteException
-            upon failure.
-            </summary>
-            <param name="obj">The object value to convert.</param>
-            <param name="provider">The format provider to use.</param>
-            <returns>The converted boolean value.</returns>
-        </member>
         <member name="M:System.Data.SQLite.SQLiteStatement.BindParameter(System.Int32,System.Data.SQLite.SQLiteParameter)">
             <summary>
             Perform the bind operation for an individual parameter
@@ -7073,62 +7393,6 @@
             <summary>
             Gets the isolation level of the transaction.  SQLite only supports Serializable transactions.
             </summary>
-        </member>
-        <member name="T:System.Data.SQLite.SR">
-            <summary>
-              A strongly-typed resource class, for looking up localized strings, etc.
-            </summary>
-        </member>
-        <member name="P:System.Data.SQLite.SR.ResourceManager">
-            <summary>
-              Returns the cached ResourceManager instance used by this class.
-            </summary>
-        </member>
-        <member name="P:System.Data.SQLite.SR.Culture">
-            <summary>
-              Overrides the current thread's CurrentUICulture property for all
-              resource lookups using this strongly typed resource class.
-            </summary>
-        </member>
-        <member name="P:System.Data.SQLite.SR.DataTypes">
-             <summary>
-               Looks up a localized string similar to &lt;?xml version=&quot;1.0&quot; standalone=&quot;yes&quot;?&gt;
-            &lt;DocumentElement&gt;
-              &lt;DataTypes&gt;
-                &lt;TypeName&gt;smallint&lt;/TypeName&gt;
-                &lt;ProviderDbType&gt;10&lt;/ProviderDbType&gt;
-                &lt;ColumnSize&gt;5&lt;/ColumnSize&gt;
-                &lt;DataType&gt;System.Int16&lt;/DataType&gt;
-                &lt;CreateFormat&gt;smallint&lt;/CreateFormat&gt;
-                &lt;IsAutoIncrementable&gt;false&lt;/IsAutoIncrementable&gt;
-                &lt;IsCaseSensitive&gt;false&lt;/IsCaseSensitive&gt;
-                &lt;IsFixedLength&gt;true&lt;/IsFixedLength&gt;
-                &lt;IsFixedPrecisionScale&gt;true&lt;/IsFixedPrecisionScale&gt;
-                &lt;IsLong&gt;false&lt;/IsLong&gt;
-                &lt;IsNullable&gt;true&lt;/ [rest of string was truncated]&quot;;.
-             </summary>
-        </member>
-        <member name="P:System.Data.SQLite.SR.Keywords">
-            <summary>
-              Looks up a localized string similar to ALL,ALTER,AND,AS,AUTOINCREMENT,BETWEEN,BY,CASE,CHECK,COLLATE,COMMIT,CONSTRAINT,CREATE,CROSS,DEFAULT,DEFERRABLE,DELETE,DISTINCT,DROP,ELSE,ESCAPE,EXCEPT,FOREIGN,FROM,FULL,GROUP,HAVING,IN,INDEX,INNER,INSERT,INTERSECT,INTO,IS,ISNULL,JOIN,LEFT,LIMIT,NATURAL,NOT,NOTNULL,NULL,ON,OR,ORDER,OUTER,PRIMARY,REFERENCES,RIGHT,ROLLBACK,SELECT,SET,TABLE,THEN,TO,TRANSACTION,UNION,UNIQUE,UPDATE,USING,VALUES,WHEN,WHERE.
-            </summary>
-        </member>
-        <member name="P:System.Data.SQLite.SR.MetaDataCollections">
-             <summary>
-               Looks up a localized string similar to &lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot; ?&gt;
-            &lt;DocumentElement&gt;
-              &lt;MetaDataCollections&gt;
-                &lt;CollectionName&gt;MetaDataCollections&lt;/CollectionName&gt;
-                &lt;NumberOfRestrictions&gt;0&lt;/NumberOfRestrictions&gt;
-                &lt;NumberOfIdentifierParts&gt;0&lt;/NumberOfIdentifierParts&gt;
-              &lt;/MetaDataCollections&gt;
-              &lt;MetaDataCollections&gt;
-                &lt;CollectionName&gt;DataSourceInformation&lt;/CollectionName&gt;
-                &lt;NumberOfRestrictions&gt;0&lt;/NumberOfRestrictions&gt;
-                &lt;NumberOfIdentifierParts&gt;0&lt;/NumberOfIdentifierParts&gt;
-              &lt;/MetaDataCollections&gt;
-              &lt;MetaDataC [rest of string was truncated]&quot;;.
-             </summary>
         </member>
         <member name="F:System.Data.SQLite.UnsafeNativeMethods.DllFileExtension">
             <summary>
@@ -7340,6 +7604,62 @@
             Non-zero if the native module was loaded successfully; otherwise,
             zero.
             </returns>
+        </member>
+        <member name="T:System.Data.SQLite.SR">
+            <summary>
+              A strongly-typed resource class, for looking up localized strings, etc.
+            </summary>
+        </member>
+        <member name="P:System.Data.SQLite.SR.ResourceManager">
+            <summary>
+              Returns the cached ResourceManager instance used by this class.
+            </summary>
+        </member>
+        <member name="P:System.Data.SQLite.SR.Culture">
+            <summary>
+              Overrides the current thread's CurrentUICulture property for all
+              resource lookups using this strongly typed resource class.
+            </summary>
+        </member>
+        <member name="P:System.Data.SQLite.SR.DataTypes">
+             <summary>
+               Looks up a localized string similar to &lt;?xml version=&quot;1.0&quot; standalone=&quot;yes&quot;?&gt;
+            &lt;DocumentElement&gt;
+              &lt;DataTypes&gt;
+                &lt;TypeName&gt;smallint&lt;/TypeName&gt;
+                &lt;ProviderDbType&gt;10&lt;/ProviderDbType&gt;
+                &lt;ColumnSize&gt;5&lt;/ColumnSize&gt;
+                &lt;DataType&gt;System.Int16&lt;/DataType&gt;
+                &lt;CreateFormat&gt;smallint&lt;/CreateFormat&gt;
+                &lt;IsAutoIncrementable&gt;false&lt;/IsAutoIncrementable&gt;
+                &lt;IsCaseSensitive&gt;false&lt;/IsCaseSensitive&gt;
+                &lt;IsFixedLength&gt;true&lt;/IsFixedLength&gt;
+                &lt;IsFixedPrecisionScale&gt;true&lt;/IsFixedPrecisionScale&gt;
+                &lt;IsLong&gt;false&lt;/IsLong&gt;
+                &lt;IsNullable&gt;true&lt;/ [rest of string was truncated]&quot;;.
+             </summary>
+        </member>
+        <member name="P:System.Data.SQLite.SR.Keywords">
+            <summary>
+              Looks up a localized string similar to ALL,ALTER,AND,AS,AUTOINCREMENT,BETWEEN,BY,CASE,CHECK,COLLATE,COMMIT,CONSTRAINT,CREATE,CROSS,DEFAULT,DEFERRABLE,DELETE,DISTINCT,DROP,ELSE,ESCAPE,EXCEPT,FOREIGN,FROM,FULL,GROUP,HAVING,IN,INDEX,INNER,INSERT,INTERSECT,INTO,IS,ISNULL,JOIN,LEFT,LIMIT,NATURAL,NOT,NOTNULL,NULL,ON,OR,ORDER,OUTER,PRIMARY,REFERENCES,RIGHT,ROLLBACK,SELECT,SET,TABLE,THEN,TO,TRANSACTION,UNION,UNIQUE,UPDATE,USING,VALUES,WHEN,WHERE.
+            </summary>
+        </member>
+        <member name="P:System.Data.SQLite.SR.MetaDataCollections">
+             <summary>
+               Looks up a localized string similar to &lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot; ?&gt;
+            &lt;DocumentElement&gt;
+              &lt;MetaDataCollections&gt;
+                &lt;CollectionName&gt;MetaDataCollections&lt;/CollectionName&gt;
+                &lt;NumberOfRestrictions&gt;0&lt;/NumberOfRestrictions&gt;
+                &lt;NumberOfIdentifierParts&gt;0&lt;/NumberOfIdentifierParts&gt;
+              &lt;/MetaDataCollections&gt;
+              &lt;MetaDataCollections&gt;
+                &lt;CollectionName&gt;DataSourceInformation&lt;/CollectionName&gt;
+                &lt;NumberOfRestrictions&gt;0&lt;/NumberOfRestrictions&gt;
+                &lt;NumberOfIdentifierParts&gt;0&lt;/NumberOfIdentifierParts&gt;
+              &lt;/MetaDataCollections&gt;
+              &lt;MetaDataC [rest of string was truncated]&quot;;.
+             </summary>
         </member>
         <member name="T:System.Data.SQLite.SQLiteContext">
             <summary>
