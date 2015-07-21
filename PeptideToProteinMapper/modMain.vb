@@ -14,8 +14,8 @@
 ' Written by Matthew Monroe for the Department of Energy (PNNL, Richland, WA)
 ' Program started September 27, 2008
 '
-' E-mail: matthew.monroe@pnl.gov or matt@alchemistmatt.com
-' Website: http://ncrr.pnl.gov/ or http://www.sysbio.org/resources/staff/
+' E-mail: matthew.monroe@pnnl.gov or matt@alchemistmatt.com
+' Website: http://omics.pnl.gov/ or http://www.sysbio.org/resources/staff/ or http://panomics.pnnl.gov/
 ' -------------------------------------------------------------------------------
 ' 
 ' Licensed under the Apache License, Version 2.0; you may not use this file except
@@ -358,7 +358,7 @@ Public Module modMain
 			Console.WriteLine()
 
 			Console.WriteLine("E-mail: matthew.monroe@pnnl.gov or matt@alchemistmatt.com")
-			Console.WriteLine("Website: http://panomics.pnnl.gov/ or http://omics.pnl.gov")
+			Console.WriteLine("Website: http://omics.pnl.gov/ or http://panomics.pnnl.gov/")
 			Console.WriteLine()
 
 			' Delay for 750 msec in case the user double clicked this file from within Windows Explorer (or started the program via a shortcut)

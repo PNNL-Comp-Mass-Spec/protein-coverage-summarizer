@@ -10,8 +10,8 @@ Option Strict On
 ' Written by Matthew Monroe and Nikša Blonder for the Department of Energy (PNNL, Richland, WA)
 ' Program started June 14, 2005
 '
-' E-mail: matthew.monroe@pnl.gov or matt@alchemistmatt.com
-' Website: http://ncrr.pnl.gov/ or http://www.sysbio.org/resources/staff/
+' E-mail: matthew.monroe@pnnl.gov or matt@alchemistmatt.com
+' Website: http://omics.pnl.gov/ or http://www.sysbio.org/resources/staff/ or http://panomics.pnnl.gov/
 ' -------------------------------------------------------------------------------
 ' 
 ' Licensed under the Apache License, Version 2.0; you may not use this file except
@@ -29,7 +29,7 @@ Option Strict On
 
 Public Module modMain
 
-	Public Const PROGRAM_DATE As String = "July 9, 2014"
+    Public Const PROGRAM_DATE As String = "July 20, 2015"
 
 	Private mPeptideInputFilePath As String
 	Private mProteinInputFilePath As String
@@ -271,6 +271,9 @@ Public Module modMain
 	Private Sub ShowGUI()
 		Dim objFormMain As GUI
 
+        System.Windows.Forms.Application.EnableVisualStyles()
+        System.Windows.Forms.Application.DoEvents()
+
 		Try
 			objFormMain = New GUI
 
@@ -310,7 +313,7 @@ Public Module modMain
 			strSyntax &= Environment.NewLine
 
 			strSyntax &= Environment.NewLine & "E-mail: matthew.monroe@pnnl.gov or matt@alchemistmatt.com"
-			strSyntax &= Environment.NewLine & "Website: http://panomics.pnnl.gov/ or http://omics.pnl.gov"
+			strSyntax &= Environment.NewLine & "Website: http://omics.pnl.gov/ or http://panomics.pnnl.gov/"
 			strSyntax &= Environment.NewLine
 
 			If mQuietMode Then
