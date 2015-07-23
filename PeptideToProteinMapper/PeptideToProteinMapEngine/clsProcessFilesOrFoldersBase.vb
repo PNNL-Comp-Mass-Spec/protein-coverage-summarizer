@@ -42,12 +42,12 @@ Public MustInherit Class clsProcessFilesOrFoldersBase
 	Protected mLogFolderPath As String			' If blank, then mOutputFolderPath will be used; if mOutputFolderPath is also blank, then the log is created in the same folder as the executing assembly
 
 	Public Event ProgressReset()
-	Public Event ProgressChanged(ByVal taskDescription As String, ByVal percentComplete As Single)	   ' PercentComplete ranges from 0 to 100, but can contain decimal percentage values
+	Public Event ProgressChanged(taskDescription As String, percentComplete As Single)	   ' PercentComplete ranges from 0 to 100, but can contain decimal percentage values
 	Public Event ProgressComplete()
 
-	Public Event ErrorEvent(ByVal strMessage As String)
-	Public Event WarningEvent(ByVal strMessage As String)
-	Public Event MessageEvent(ByVal strMessage As String)
+	Public Event ErrorEvent(strMessage As String)
+	Public Event WarningEvent(strMessage As String)
+	Public Event MessageEvent(strMessage As String)
 
 	Protected mProgressStepDescription As String
 	Protected mProgressPercentComplete As Single		' Ranges from 0 to 100, but can contain decimal percentage values
@@ -68,7 +68,7 @@ Public MustInherit Class clsProcessFilesOrFoldersBase
 		Get
 			Return mAbortProcessing
 		End Get
-		Set(ByVal Value As Boolean)
+		Set(Value As Boolean)
 			mAbortProcessing = Value
 		End Set
 	End Property
@@ -89,7 +89,7 @@ Public MustInherit Class clsProcessFilesOrFoldersBase
 		Get
 			Return mLogFilePath
 		End Get
-		Set(ByVal value As String)
+		Set(value As String)
 			If value Is Nothing Then value = String.Empty
 			mLogFilePath = value
 		End Set
@@ -99,7 +99,7 @@ Public MustInherit Class clsProcessFilesOrFoldersBase
 		Get
 			Return mLogFolderPath
 		End Get
-		Set(ByVal value As String)
+		Set(value As String)
 			mLogFolderPath = value
 		End Set
 	End Property
@@ -108,7 +108,7 @@ Public MustInherit Class clsProcessFilesOrFoldersBase
 		Get
 			Return mLogMessagesToFile
 		End Get
-		Set(ByVal value As Boolean)
+		Set(value As Boolean)
 			mLogMessagesToFile = value
 		End Set
 	End Property
@@ -130,7 +130,7 @@ Public MustInherit Class clsProcessFilesOrFoldersBase
 		Get
 			Return mShowMessages
 		End Get
-		Set(ByVal Value As Boolean)
+		Set(Value As Boolean)
 			mShowMessages = Value
 		End Set
 	End Property
@@ -177,7 +177,7 @@ Public MustInherit Class clsProcessFilesOrFoldersBase
 	''' <param name="strSettingsFileName">Settings file name</param>
 	''' <returns></returns>
 	''' <remarks></remarks>
-	Public Shared Function CreateSettingsFileIfMissing(ByVal strApplicationName As String, ByVal strSettingsFileName As String) As Boolean
+	Public Shared Function CreateSettingsFileIfMissing(strApplicationName As String, strSettingsFileName As String) As Boolean
 		Dim strSettingsFilePathLocal As String = GetSettingsFilePathLocal(strApplicationName, strSettingsFileName)
 
 		Return CreateSettingsFileIfMissing(strSettingsFilePathLocal)
@@ -190,7 +190,7 @@ Public MustInherit Class clsProcessFilesOrFoldersBase
 	''' <param name="strSettingsFilePathLocal">Full path to the local settings file, for example C:\Users\username\AppData\Roaming\AppName\SettingsFileName.xml</param>
 	''' <returns></returns>
 	''' <remarks></remarks>
-	Public Shared Function CreateSettingsFileIfMissing(ByVal strSettingsFilePathLocal As String) As Boolean
+	Public Shared Function CreateSettingsFileIfMissing(strSettingsFilePathLocal As String) As Boolean
 
 		Try
 			If Not File.Exists(strSettingsFilePathLocal) Then
@@ -225,7 +225,7 @@ Public MustInherit Class clsProcessFilesOrFoldersBase
 	''' </summary>
 	''' <param name="intMaxWaitTimeMSec"></param>
 	''' <remarks></remarks>
-	Public Shared Sub GarbageCollectNow(ByVal intMaxWaitTimeMSec As Integer)
+	Public Shared Sub GarbageCollectNow(intMaxWaitTimeMSec As Integer)
 		Const THREAD_SLEEP_TIME_MSEC As Integer = 100
 
 		Dim intTotalThreadWaitTimeMsec As Integer
@@ -266,7 +266,7 @@ Public MustInherit Class clsProcessFilesOrFoldersBase
 	''' <param name="strAppName"></param>
 	''' <returns></returns>
 	''' <remarks>For example, C:\Users\username\AppData\Roaming\AppName</remarks>
-	Public Shared Function GetAppDataFolderPath(ByVal strAppName As String) As String
+	Public Shared Function GetAppDataFolderPath(strAppName As String) As String
 		Dim strAppDataFolder As String
 
 		If String.IsNullOrWhiteSpace(strAppName) Then
@@ -313,7 +313,7 @@ Public MustInherit Class clsProcessFilesOrFoldersBase
 	''' <param name="strProgramDate"></param>
 	''' <returns></returns>
 	''' <remarks></remarks>
-	Public Shared Function GetAppVersion(ByVal strProgramDate As String) As String
+	Public Shared Function GetAppVersion(strProgramDate As String) As String
 		Return Assembly.GetExecutingAssembly().GetName().Version.ToString() & " (" & strProgramDate & ")"
 	End Function
 
@@ -340,11 +340,11 @@ Public MustInherit Class clsProcessFilesOrFoldersBase
 	''' <param name="strSettingsFileName"></param>
 	''' <returns></returns>
 	''' <remarks>For example, C:\Users\username\AppData\Roaming\AppName\SettingsFileName.xml</remarks>
-	Public Shared Function GetSettingsFilePathLocal(ByVal strApplicationName As String, ByVal strSettingsFileName As String) As String
+	Public Shared Function GetSettingsFilePathLocal(strApplicationName As String, strSettingsFileName As String) As String
 		Return Path.Combine(GetAppDataFolderPath(strApplicationName), strSettingsFileName)
 	End Function
 
-	Protected Sub HandleException(ByVal strBaseMessage As String, ByVal ex As Exception)
+	Protected Sub HandleException(strBaseMessage As String, ex As Exception)
 		If String.IsNullOrWhiteSpace(strBaseMessage) Then
 			strBaseMessage = "Error"
 		End If
@@ -359,15 +359,15 @@ Public MustInherit Class clsProcessFilesOrFoldersBase
 
 	End Sub
 
-	Protected Sub LogMessage(ByVal strMessage As String)
+	Protected Sub LogMessage(strMessage As String)
 		LogMessage(strMessage, eMessageTypeConstants.Normal)
 	End Sub
 
-	Protected Sub LogMessage(ByVal strMessage As String, ByVal eMessageType As eMessageTypeConstants)
+	Protected Sub LogMessage(strMessage As String, eMessageType As eMessageTypeConstants)
 		LogMessage(strMessage, eMessageType, intDuplicateHoldoffHours:=0)
 	End Sub
 
-	Protected Sub LogMessage(ByVal strMessage As String, ByVal eMessageType As eMessageTypeConstants, ByVal intDuplicateHoldoffHours As Integer)
+	Protected Sub LogMessage(strMessage As String, eMessageType As eMessageTypeConstants, intDuplicateHoldoffHours As Integer)
 		' Note that CleanupPaths() will update mOutputFolderPath, which is used here if mLogFolderPath is blank
 		' Thus, be sure to call CleanupPaths (or update mLogFolderPath) before the first call to LogMessage
 
@@ -494,7 +494,7 @@ Public MustInherit Class clsProcessFilesOrFoldersBase
 
 	End Sub
 
-	Private Sub RaiseMessageEvent(ByVal strMessage As String, ByVal eMessageType As eMessageTypeConstants)
+	Private Sub RaiseMessageEvent(strMessage As String, eMessageType As eMessageTypeConstants)
 		Static strLastMessage As String = String.Empty
 		Static dtLastReportTime As DateTime
 
@@ -529,24 +529,24 @@ Public MustInherit Class clsProcessFilesOrFoldersBase
 		RaiseEvent ProgressReset()
 	End Sub
 
-	Protected Sub ResetProgress(ByVal strProgressStepDescription As String)
+	Protected Sub ResetProgress(strProgressStepDescription As String)
 		UpdateProgress(strProgressStepDescription, 0)
 		RaiseEvent ProgressReset()
 	End Sub
 
-	Protected Sub ShowErrorMessage(ByVal strMessage As String)
+	Protected Sub ShowErrorMessage(strMessage As String)
 		ShowErrorMessage(strMessage, blnAllowLogToFile:=True)
 	End Sub
 
-	Protected Sub ShowErrorMessage(ByVal strMessage As String, ByVal blnAllowLogToFile As Boolean)
+	Protected Sub ShowErrorMessage(strMessage As String, blnAllowLogToFile As Boolean)
 		ShowErrorMessage(strMessage, blnAllowLogToFile, intDuplicateHoldoffHours:=0)
 	End Sub
 
-	Protected Sub ShowErrorMessage(ByVal strMessage As String, ByVal intDuplicateHoldoffHours As Integer)
+	Protected Sub ShowErrorMessage(strMessage As String, intDuplicateHoldoffHours As Integer)
 		ShowErrorMessage(strMessage, blnAllowLogToFile:=True, intDuplicateHoldoffHours:=intDuplicateHoldoffHours)
 	End Sub
 
-	Protected Sub ShowErrorMessage(ByVal strMessage As String, ByVal blnAllowLogToFile As Boolean, ByVal intDuplicateHoldoffHours As Integer)
+	Protected Sub ShowErrorMessage(strMessage As String, blnAllowLogToFile As Boolean, intDuplicateHoldoffHours As Integer)
 		Const strSeparator As String = "------------------------------------------------------------------------------"
 
 		Console.WriteLine()
@@ -564,38 +564,38 @@ Public MustInherit Class clsProcessFilesOrFoldersBase
 
 	End Sub
 
-	Protected Sub ShowMessage(ByVal strMessage As String)
+	Protected Sub ShowMessage(strMessage As String)
 		ShowMessage(strMessage, blnAllowLogToFile:=True, blnPrecedeWithNewline:=False, intDuplicateHoldoffHours:=0)
 	End Sub
 
-	Protected Sub ShowMessage(ByVal strMessage As String, ByVal intDuplicateHoldoffHours As Integer)
+	Protected Sub ShowMessage(strMessage As String, intDuplicateHoldoffHours As Integer)
 		ShowMessage(strMessage, blnAllowLogToFile:=True, blnPrecedeWithNewline:=False, intDuplicateHoldoffHours:=intDuplicateHoldoffHours)
 	End Sub
 
-	Protected Sub ShowMessage(ByVal strMessage As String, ByVal blnAllowLogToFile As Boolean)
+	Protected Sub ShowMessage(strMessage As String, blnAllowLogToFile As Boolean)
 		ShowMessage(strMessage, blnAllowLogToFile, blnPrecedeWithNewline:=False, intDuplicateHoldoffHours:=0)
 	End Sub
 
-	Protected Sub ShowMessage(ByVal strMessage As String, ByVal blnAllowLogToFile As Boolean, ByVal blnPrecedeWithNewline As Boolean)
+	Protected Sub ShowMessage(strMessage As String, blnAllowLogToFile As Boolean, blnPrecedeWithNewline As Boolean)
 		ShowMessage(strMessage, blnAllowLogToFile, blnPrecedeWithNewline, intDuplicateHoldoffHours:=0)
 	End Sub
 
 								   
 	Protected Sub ShowMessage(
-	  ByVal strMessage As String, 
-	  ByVal blnAllowLogToFile As Boolean, 
-	  ByVal blnPrecedeWithNewline As Boolean, 
-	  ByVal intDuplicateHoldoffHours As Integer)
+	  strMessage As String, 
+	  blnAllowLogToFile As Boolean, 
+	  blnPrecedeWithNewline As Boolean, 
+	  intDuplicateHoldoffHours As Integer)
 
 		ShowMessage(strMessage, blnAllowLogToFile, blnPrecedeWithNewline, intDuplicateHoldoffHours, eMessageTypeConstants.Normal)
 	End Sub
 
 	Protected Sub ShowMessage(
-	  ByVal strMessage As String, 
-	  ByVal blnAllowLogToFile As Boolean, 
-	  ByVal blnPrecedeWithNewline As Boolean, 
-	  ByVal intDuplicateHoldoffHours As Integer,
-	  ByVal eMessageType as eMessageTypeConstants)
+	  strMessage As String, 
+	  blnAllowLogToFile As Boolean, 
+	  blnPrecedeWithNewline As Boolean, 
+	  intDuplicateHoldoffHours As Integer,
+	  eMessageType as eMessageTypeConstants)
 
 		If blnPrecedeWithNewline Then
 			Console.WriteLine()
@@ -655,7 +655,7 @@ Public MustInherit Class clsProcessFilesOrFoldersBase
 	End Sub
 
 
-	Private Sub UpdateLogDataCache(ByVal strLogFilePath As String, ByVal dtDateThresholdToStore As DateTime)
+	Private Sub UpdateLogDataCache(strLogFilePath As String, dtDateThresholdToStore As DateTime)
 		Static dtLastErrorShown As DateTime = DateTime.UtcNow.AddSeconds(-60)
 
 		Dim reParseLine As Regex = New Regex("^([^\t]+)\t([^\t]+)\t(.+)", RegexOptions.Compiled)
@@ -706,15 +706,15 @@ Public MustInherit Class clsProcessFilesOrFoldersBase
 
 	End Sub
 
-	Protected Sub UpdateProgress(ByVal strProgressStepDescription As String)
+	Protected Sub UpdateProgress(strProgressStepDescription As String)
 		UpdateProgress(strProgressStepDescription, mProgressPercentComplete)
 	End Sub
 
-	Protected Sub UpdateProgress(ByVal sngPercentComplete As Single)
+	Protected Sub UpdateProgress(sngPercentComplete As Single)
 		UpdateProgress(ProgressStepDescription, sngPercentComplete)
 	End Sub
 
-	Protected Sub UpdateProgress(ByVal strProgressStepDescription As String, ByVal sngPercentComplete As Single)
+	Protected Sub UpdateProgress(strProgressStepDescription As String, sngPercentComplete As Single)
 		Dim blnDescriptionChanged = Not String.Equals(strProgressStepDescription, mProgressStepDescription)
 
 		mProgressStepDescription = String.Copy(strProgressStepDescription)

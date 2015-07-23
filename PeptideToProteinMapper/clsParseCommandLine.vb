@@ -64,7 +64,7 @@ Public Class clsParseCommandLine
 		Get
 			Return mDebugMode
 		End Get
-		Set(ByVal value As Boolean)
+		Set(value As Boolean)
 			mDebugMode = value
 		End Set
 	End Property
@@ -74,7 +74,7 @@ Public Class clsParseCommandLine
 	''' </summary>
 	''' <param name="objParameterList">Parameter list</param>
 	''' <returns>True if any of the parameters are not present in strParameterList()</returns>
-	Public Function InvalidParametersPresent(ByVal objParameterList As List(Of String)) As Boolean
+	Public Function InvalidParametersPresent(objParameterList As List(Of String)) As Boolean
 		Const blnCaseSensitive As Boolean = False
 		Return InvalidParametersPresent(objParameterList, blnCaseSensitive)
 	End Function
@@ -84,7 +84,7 @@ Public Class clsParseCommandLine
 	''' </summary>
 	''' <param name="strParameterList">Parameter list</param>
 	''' <returns>True if any of the parameters are not present in strParameterList()</returns>
-	Public Function InvalidParametersPresent(ByVal strParameterList() As String) As Boolean
+	Public Function InvalidParametersPresent(strParameterList() As String) As Boolean
 		Const blnCaseSensitive As Boolean = False
 		Return InvalidParametersPresent(strParameterList, blnCaseSensitive)
 	End Function
@@ -95,7 +95,7 @@ Public Class clsParseCommandLine
 	''' <param name="strParameterList">Parameter list</param>
 	''' <param name="blnCaseSensitive">True to perform case-sensitive matching of the parameter name</param>
 	''' <returns>True if any of the parameters are not present in strParameterList()</returns>
-	Public Function InvalidParametersPresent(ByVal strParameterList() As String, ByVal blnCaseSensitive As Boolean) As Boolean
+	Public Function InvalidParametersPresent(strParameterList() As String, blnCaseSensitive As Boolean) As Boolean
 		If InvalidParameters(strParameterList.ToList()).Count > 0 Then
 			Return True
 		Else
@@ -103,7 +103,7 @@ Public Class clsParseCommandLine
 		End If
 	End Function
 
-	Public Function InvalidParametersPresent(ByVal lstValidParameters As List(Of String), ByVal blnCaseSensitive As Boolean) As Boolean
+	Public Function InvalidParametersPresent(lstValidParameters As List(Of String), blnCaseSensitive As Boolean) As Boolean
 
 		If InvalidParameters(lstValidParameters, blnCaseSensitive).Count > 0 Then
 			Return True
@@ -113,12 +113,12 @@ Public Class clsParseCommandLine
 
 	End Function
 
-	Public Function InvalidParameters(ByVal lstValidParameters As List(Of String)) As List(Of String)
+	Public Function InvalidParameters(lstValidParameters As List(Of String)) As List(Of String)
 		Const blnCaseSensitive As Boolean = False
 		Return InvalidParameters(lstValidParameters, blnCaseSensitive)
 	End Function
 
-	Public Function InvalidParameters(ByVal lstValidParameters As List(Of String), ByVal blnCaseSensitive As Boolean) As List(Of String)
+	Public Function InvalidParameters(lstValidParameters As List(Of String), blnCaseSensitive As Boolean) As List(Of String)
 		Dim lstInvalidParameters As List(Of String) = New List(Of String)
 
 		Try
@@ -173,7 +173,7 @@ Public Class clsParseCommandLine
 	''' </summary>
 	''' <returns>Returns True if any command line parameters were found; otherwise false</returns>
 	''' <remarks>If /? or /help is found, then returns False and sets mShowHelp to True</remarks>
-	Public Function ParseCommandLine(ByVal strSwitchStartChar As Char) As Boolean
+	Public Function ParseCommandLine(strSwitchStartChar As Char) As Boolean
 		Return ParseCommandLine(strSwitchStartChar, DEFAULT_SWITCH_PARAM_CHAR)
 	End Function
 
@@ -184,7 +184,7 @@ Public Class clsParseCommandLine
 	''' <param name="chSwitchParameterChar"></param>
 	''' <returns>Returns True if any command line parameters were found; otherwise false</returns>
 	''' <remarks>If /? or /help is found, then returns False and sets mShowHelp to True</remarks>
-	Public Function ParseCommandLine(ByVal chSwitchStartChar As Char, ByVal chSwitchParameterChar As Char) As Boolean
+	Public Function ParseCommandLine(chSwitchStartChar As Char, chSwitchParameterChar As Char) As Boolean
 		' Returns True if any command line parameters were found
 		' Otherwise, returns false
 		'
@@ -336,7 +336,7 @@ Public Class clsParseCommandLine
 
 	End Function
 
-	Public Shared Sub PauseAtConsole(ByVal intMillisecondsToPause As Integer, ByVal intMillisecondsBetweenDots As Integer)
+	Public Shared Sub PauseAtConsole(intMillisecondsToPause As Integer, intMillisecondsBetweenDots As Integer)
 
 		Dim intIteration As Integer
 		Dim intTotalIterations As Integer
@@ -370,7 +370,7 @@ Public Class clsParseCommandLine
 	''' </summary>
 	''' <param name="intParameterIndex">Parameter index</param>
 	''' <returns>The value of the parameter at the given index; empty string if no value or invalid index</returns>
-	Public Function RetrieveNonSwitchParameter(ByVal intParameterIndex As Integer) As String
+	Public Function RetrieveNonSwitchParameter(intParameterIndex As Integer) As String
 		Dim strValue As String = String.Empty
 
 		If intParameterIndex < mNonSwitchParameters.Count Then
@@ -392,7 +392,7 @@ Public Class clsParseCommandLine
 	''' <param name="strKey">Parameter name (output)</param>
 	''' <param name="strValue">Value associated with the parameter; empty string if no value (output)</param>
 	''' <returns></returns>
-	Public Function RetrieveParameter(ByVal intParameterIndex As Integer, ByRef strKey As String, ByRef strValue As String) As Boolean
+	Public Function RetrieveParameter(intParameterIndex As Integer, ByRef strKey As String, ByRef strValue As String) As Boolean
 
 		Dim intIndex As Integer
 
@@ -429,7 +429,7 @@ Public Class clsParseCommandLine
 	''' <param name="strKey">Parameter name</param>
 	''' <param name="strValue">Value associated with the parameter; empty string if no value (output)</param>
 	''' <returns>True if present, otherwise false</returns>
-	Public Function RetrieveValueForParameter(ByVal strKey As String, ByRef strValue As String) As Boolean
+	Public Function RetrieveValueForParameter(strKey As String, ByRef strValue As String) As Boolean
 		Return RetrieveValueForParameter(strKey, strValue, False)
 	End Function
 
@@ -440,7 +440,7 @@ Public Class clsParseCommandLine
 	''' <param name="strValue">Value associated with the parameter; empty string if no value (output)</param>
 	''' <param name="blnCaseSensitive">True to perform case-sensitive matching of the parameter name</param>
 	''' <returns>True if present, otherwise false</returns>
-	Public Function RetrieveValueForParameter(ByVal strKey As String, ByRef strValue As String, ByVal blnCaseSensitive As Boolean) As Boolean
+	Public Function RetrieveValueForParameter(strKey As String, ByRef strValue As String, blnCaseSensitive As Boolean) As Boolean
 
 		Try
 			strValue = String.Empty
@@ -469,7 +469,7 @@ Public Class clsParseCommandLine
 
 	End Function
 
-	Protected Function SplitCommandLineParams(ByVal strCmdLine As String) As String()
+	Protected Function SplitCommandLineParams(strCmdLine As String) As String()
 		Dim strParameters As New List(Of String)
 		Dim strParameter As String
 

@@ -28,7 +28,7 @@ Public Class ADONetRoutines
 
     Public Const DEFAULT_CONNECTION_STRING_NO_PROVIDER As String = "Data Source=pogo;Initial Catalog=MTS_Master;User ID=mtuser;Password=mt4fun"
 
-    Public Shared Function AppendColumnToTable(ByRef dtDataTable As DataTable, ByVal strColumnName As String, ByVal objColumnType As System.Type, ByVal dblDefaultValue As Double, ByVal blnReadOnly As Boolean, ByVal blnUnique As Boolean) As Boolean
+    Public Shared Function AppendColumnToTable(ByRef dtDataTable As DataTable, strColumnName As String, objColumnType As System.Type, dblDefaultValue As Double, blnReadOnly As Boolean, blnUnique As Boolean) As Boolean
         Dim objNewCol As DataColumn
 
         Try
@@ -48,7 +48,7 @@ Public Class ADONetRoutines
 
     End Function
 
-    Public Shared Sub AppendColumnDateToTable(ByRef dtDataTable As DataTable, ByVal strColumnName As String, ByVal dtDefaultDate As DateTime, Optional ByVal blnReadOnly As Boolean = False, Optional ByVal blnUnique As Boolean = False)
+    Public Shared Sub AppendColumnDateToTable(ByRef dtDataTable As DataTable, strColumnName As String, dtDefaultDate As DateTime, Optional blnReadOnly As Boolean = False, Optional blnUnique As Boolean = False)
 
         Dim blnSuccess As Boolean
 
@@ -62,15 +62,15 @@ Public Class ADONetRoutines
 
     End Sub
 
-    Public Shared Function AppendColumnDoubleToTable(ByRef dtDataTable As DataTable, ByVal strColumnName As String, Optional ByVal dblDefaultValue As Double = 0, Optional ByVal blnReadOnly As Boolean = False, Optional ByVal blnUnique As Boolean = False) As Boolean
+    Public Shared Function AppendColumnDoubleToTable(ByRef dtDataTable As DataTable, strColumnName As String, Optional dblDefaultValue As Double = 0, Optional blnReadOnly As Boolean = False, Optional blnUnique As Boolean = False) As Boolean
         Return AppendColumnToTable(dtDataTable, strColumnName, System.Type.GetType("System.Double"), dblDefaultValue, blnReadOnly, blnUnique)
     End Function
 
-    Public Shared Function AppendColumnSingleToTable(ByRef dtDataTable As DataTable, ByVal strColumnName As String, Optional ByVal sngDefaultValue As Single = 0, Optional ByVal blnReadOnly As Boolean = False, Optional ByVal blnUnique As Boolean = False) As Boolean
+    Public Shared Function AppendColumnSingleToTable(ByRef dtDataTable As DataTable, strColumnName As String, Optional sngDefaultValue As Single = 0, Optional blnReadOnly As Boolean = False, Optional blnUnique As Boolean = False) As Boolean
         Return AppendColumnToTable(dtDataTable, strColumnName, System.Type.GetType("System.Double"), sngDefaultValue, blnReadOnly, blnUnique)
     End Function
 
-    Public Shared Sub AppendColumnIntegerToTable(ByRef dtDataTable As DataTable, ByVal strColumnName As String, Optional ByVal intDefaultValue As Integer = 0, Optional ByVal blnAutoIncrement As Boolean = False, Optional ByVal blnReadOnly As Boolean = False, Optional ByVal blnUnique As Boolean = False)
+    Public Shared Sub AppendColumnIntegerToTable(ByRef dtDataTable As DataTable, strColumnName As String, Optional intDefaultValue As Integer = 0, Optional blnAutoIncrement As Boolean = False, Optional blnReadOnly As Boolean = False, Optional blnUnique As Boolean = False)
 
         Dim blnSuccess As Boolean
 
@@ -86,7 +86,7 @@ Public Class ADONetRoutines
 
     End Sub
 
-    Public Shared Sub AppendColumnLongToTable(ByRef dtDataTable As DataTable, ByVal strColumnName As String, Optional ByVal lngDefaultValue As Long = 0, Optional ByVal blnAutoIncrement As Boolean = False, Optional ByVal blnReadOnly As Boolean = False, Optional ByVal blnUnique As Boolean = False)
+    Public Shared Sub AppendColumnLongToTable(ByRef dtDataTable As DataTable, strColumnName As String, Optional lngDefaultValue As Long = 0, Optional blnAutoIncrement As Boolean = False, Optional blnReadOnly As Boolean = False, Optional blnUnique As Boolean = False)
 
         Dim blnSuccess As Boolean
 
@@ -102,7 +102,7 @@ Public Class ADONetRoutines
 
     End Sub
 
-    Public Shared Sub AppendColumnStringToTable(ByRef dtDataTable As DataTable, ByVal strColumnName As String, Optional ByVal strDefaultValue As String = Nothing, Optional ByVal blnReadOnly As Boolean = False, Optional ByVal blnUnique As Boolean = False)
+    Public Shared Sub AppendColumnStringToTable(ByRef dtDataTable As DataTable, strColumnName As String, Optional strDefaultValue As String = Nothing, Optional blnReadOnly As Boolean = False, Optional blnUnique As Boolean = False)
 
         Dim myDataColumn As New DataColumn
 
@@ -121,7 +121,7 @@ Public Class ADONetRoutines
     End Sub
 
 
-    Public Shared Sub AppendColumnToTableStyle(ByRef tsTableStyle As System.Windows.Forms.DataGridTableStyle, ByVal strMappingName As String, ByVal strHeaderText As String, Optional ByVal intWidth As Integer = 75, Optional ByVal blnIsReadOnly As Boolean = False, Optional ByVal blnIsDateTime As Boolean = False, Optional ByVal intDecimalPlaces As Integer = -1)
+    Public Shared Sub AppendColumnToTableStyle(ByRef tsTableStyle As System.Windows.Forms.DataGridTableStyle, strMappingName As String, strHeaderText As String, Optional intWidth As Integer = 75, Optional blnIsReadOnly As Boolean = False, Optional blnIsDateTime As Boolean = False, Optional intDecimalPlaces As Integer = -1)
         ' If intDecimalPlaces is >=0, then a format string is constructed to show the specified number of decimal places
         Dim TextCol As New Windows.Forms.DataGridTextBoxColumn
         Dim i As Integer
@@ -145,7 +145,7 @@ Public Class ADONetRoutines
 
     End Sub
 
-    Public Shared Sub AppendBoolColumnToTableStyle(ByRef tsTableStyle As System.Windows.Forms.DataGridTableStyle, ByVal strMappingName As String, ByVal strHeaderText As String, Optional ByVal intWidth As Integer = 75, Optional ByVal blnIsReadOnly As Boolean = False, Optional ByVal blnSourceIsTrueFalse As Boolean = True)
+    Public Shared Sub AppendBoolColumnToTableStyle(ByRef tsTableStyle As System.Windows.Forms.DataGridTableStyle, strMappingName As String, strHeaderText As String, Optional intWidth As Integer = 75, Optional blnIsReadOnly As Boolean = False, Optional blnSourceIsTrueFalse As Boolean = True)
         ' If intDecimalPlaces is >=0, then a format string is constructed to show the specified number of decimal places
         Dim BoolCol As New Windows.Forms.DataGridBoolColumn
 
@@ -169,11 +169,11 @@ Public Class ADONetRoutines
 
     End Sub
 
-    Public Shared Function ConstructConnectionStringForSqlClient(ByVal strServerName As String, ByVal strDBName As String, ByVal strUserName As String, ByVal strPassword As String) As String
+    Public Shared Function ConstructConnectionStringForSqlClient(strServerName As String, strDBName As String, strUserName As String, strPassword As String) As String
         Return ConstructConnectionString(strServerName, strDBName, strUserName, strPassword, DEFAULT_CONNECTION_STRING_NO_PROVIDER)
     End Function
 
-    Public Shared Function ConstructConnectionStringForSqlClientIntegratedSecurity(ByVal strServerName As String, ByVal strDBName As String) As String
+    Public Shared Function ConstructConnectionStringForSqlClientIntegratedSecurity(strServerName As String, strDBName As String) As String
         Dim strNewConnectionString As String
 
         strNewConnectionString = ConstructConnectionString(strServerName, strDBName, "dummyuser", "dummypw", DEFAULT_CONNECTION_STRING_NO_PROVIDER)
@@ -183,7 +183,7 @@ Public Class ADONetRoutines
 
     End Function
 
-    Public Shared Function ConstructConnectionString(ByVal strServerName As String, ByVal strDBName As String, ByVal strUserName As String, ByVal strPassword As String, ByVal strModelConnectionString As String) As String
+    Public Shared Function ConstructConnectionString(strServerName As String, strDBName As String, strUserName As String, strPassword As String, strModelConnectionString As String) As String
 
         ' Typical ADODB connection string format:
         '  Provider=sqloledb;Data Source=pogo;Initial Catalog=MT_Deinococcus_P20;User ID=mtuser;Password=mt4fun
@@ -246,7 +246,7 @@ Public Class ADONetRoutines
 
     End Sub
 
-    Public Shared Function ConnectionStringRemoveProvider(ByVal strConnectionString As String) As String
+    Public Shared Function ConnectionStringRemoveProvider(strConnectionString As String) As String
 
         Dim strConnStrParts() As String
         Dim strNewConnStr As String

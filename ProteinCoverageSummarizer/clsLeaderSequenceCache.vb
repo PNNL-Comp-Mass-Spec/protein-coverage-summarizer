@@ -1,5 +1,7 @@
 Option Strict On
 
+Imports System.IO
+
 ' This class tracks the first n letters of each peptide sent to it, while also
 ' tracking the peptides and the location of those peptides in the leader sequence hash table
 '
@@ -67,7 +69,7 @@ Public Class clsLeaderSequenceCache
     Private mIgnoreILDifferences As Boolean
 
     Public Event ProgressReset()
-    Public Event ProgressChanged(ByVal taskDescription As String, ByVal percentComplete As Single)     ' PercentComplete ranges from 0 to 100, but can contain decimal percentage values
+    Public Event ProgressChanged(taskDescription As String, percentComplete As Single)     ' PercentComplete ranges from 0 to 100, but can contain decimal percentage values
     Public Event ProgressComplete()
 
     Protected mProgressStepDescription As String
@@ -92,7 +94,7 @@ Public Class clsLeaderSequenceCache
         Get
             Return mIgnoreILDifferences
         End Get
-        Set(ByVal Value As Boolean)
+        Set(Value As Boolean)
             mIgnoreILDifferences = Value
         End Set
     End Property
@@ -101,7 +103,7 @@ Public Class clsLeaderSequenceCache
         Get
             Return mLeaderSequenceMinimumLength
         End Get
-        Set(ByVal Value As Integer)
+        Set(Value As Integer)
             mLeaderSequenceMinimumLength = Value
         End Set
     End Property
@@ -125,11 +127,11 @@ Public Class clsLeaderSequenceCache
         mAbortProcessing = True
     End Sub
 
-    Public Function CachePeptide(ByVal strPeptideSequence As String, ByVal chPrefixResidue As Char, ByVal chSuffixResidue As Char) As Boolean
+    Public Function CachePeptide(strPeptideSequence As String, chPrefixResidue As Char, chSuffixResidue As Char) As Boolean
         Return CachePeptide(strPeptideSequence, Nothing, chPrefixResidue, chSuffixResidue)
     End Function
 
-    Public Function CachePeptide(ByVal strPeptideSequence As String, ByVal strProteinName As String, ByVal chPrefixResidue As Char, ByVal chSuffixResidue As Char) As Boolean
+    Public Function CachePeptide(strPeptideSequence As String, strProteinName As String, chPrefixResidue As Char, chSuffixResidue As Char) As Boolean
         ' Caches the peptide and updates mLeaderSequenceHashTable
 
         Dim blnSuccess As Boolean
@@ -213,16 +215,16 @@ Public Class clsLeaderSequenceCache
 
     End Function
 
-    Public Function DetermineShortestPeptideLengthInFile(ByVal strInputFilePath As String, ByVal intTerminatorSize As Integer, _
-                            ByVal blnPeptideFileSkipFirstLine As Boolean, ByVal chPeptideInputFileDelimiter As Char, _
-                            ByVal intColumnNumWithPeptideSequence As Integer) As Boolean
+    Public Function DetermineShortestPeptideLengthInFile(strInputFilePath As String, intTerminatorSize As Integer, _
+                            blnPeptideFileSkipFirstLine As Boolean, chPeptideInputFileDelimiter As Char, _
+                            intColumnNumWithPeptideSequence As Integer) As Boolean
 
         ' Parses strInputFilePath examining column intColumnNumWithPeptideSequence to determine the minimum peptide sequence length present
         ' Updates mLeaderSequenceMinimumLength if successful, though the minimum length is not allowed to be less than MINIMUM_LEADER_SEQUENCE_LENGTH
 
         ' intColumnNumWithPeptideSequence should be 1 if the peptide sequence is in the first column, 2 if in the second, etc.
 
-        Dim srInFile As System.IO.StreamReader
+        Dim srInFile As StreamReader
 
         Dim strLineIn As String
         Dim strSplitLine() As String
@@ -245,7 +247,7 @@ Public Class clsLeaderSequenceCache
             blnSuccess = False
 
             ' Open the file and read in the lines
-            srInFile = New System.IO.StreamReader(New System.IO.FileStream(strInputFilePath, IO.FileMode.Open, IO.FileAccess.Read, IO.FileShare.Read))
+            srInFile = New StreamReader(New FileStream(strInputFilePath, IO.FileMode.Open, IO.FileAccess.Read, IO.FileShare.Read))
 
             intValidPeptideCount = 0
             intLeaderSequenceMinimumLength = 0
@@ -366,7 +368,7 @@ Public Class clsLeaderSequenceCache
 
     End Function
 
-    Public Function GetNextPeptideWithLeaderSequence(ByVal intCachedPeptideMatchIndexCurrent As Integer) As Integer
+    Public Function GetNextPeptideWithLeaderSequence(intCachedPeptideMatchIndexCurrent As Integer) As Integer
         If intCachedPeptideMatchIndexCurrent < mCachedPeptideCount - 1 Then
             If mCachedPeptideToHashIndexPointer(intCachedPeptideMatchIndexCurrent + 1) = mCachedPeptideToHashIndexPointer(intCachedPeptideMatchIndexCurrent) Then
                 Return intCachedPeptideMatchIndexCurrent + 1
@@ -414,20 +416,20 @@ Public Class clsLeaderSequenceCache
         RaiseEvent ProgressReset()
     End Sub
 
-    Protected Sub ResetProgress(ByVal strProgressStepDescription As String)
+    Protected Sub ResetProgress(strProgressStepDescription As String)
         UpdateProgress(strProgressStepDescription, 0)
         RaiseEvent ProgressReset()
     End Sub
 
-    Protected Sub UpdateProgress(ByVal strProgressStepDescription As String)
+    Protected Sub UpdateProgress(strProgressStepDescription As String)
         UpdateProgress(strProgressStepDescription, mProgressPercentComplete)
     End Sub
 
-    Protected Sub UpdateProgress(ByVal sngPercentComplete As Single)
+    Protected Sub UpdateProgress(sngPercentComplete As Single)
         UpdateProgress(Me.ProgressStepDescription, sngPercentComplete)
     End Sub
 
-    Protected Sub UpdateProgress(ByVal strProgressStepDescription As String, ByVal sngPercentComplete As Single)
+    Protected Sub UpdateProgress(strProgressStepDescription As String, sngPercentComplete As Single)
         mProgressStepDescription = String.Copy(strProgressStepDescription)
         If sngPercentComplete < 0 Then
             sngPercentComplete = 0

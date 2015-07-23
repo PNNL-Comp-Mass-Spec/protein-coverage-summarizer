@@ -29,7 +29,7 @@ Option Strict On
 
 Public Module modMain
 
-    Public Const PROGRAM_DATE As String = "July 20, 2015"
+    Public Const PROGRAM_DATE As String = "July 22, 2015"
 
 	Private mPeptideInputFilePath As String
 	Private mProteinInputFilePath As String
@@ -109,236 +109,236 @@ Public Module modMain
 
 	End Function
 
-	Private Sub DisplayProgressPercent(ByVal intPercentComplete As Integer, ByVal blnAddCarriageReturn As Boolean)
-		If blnAddCarriageReturn Then
-			Console.WriteLine()
-		End If
-		If intPercentComplete > 100 Then intPercentComplete = 100
-		Console.Write("Processing: " & intPercentComplete.ToString() & "% ")
-		If blnAddCarriageReturn Then
-			Console.WriteLine()
-		End If
-	End Sub
+    Private Sub DisplayProgressPercent(intPercentComplete As Integer, blnAddCarriageReturn As Boolean)
+        If blnAddCarriageReturn Then
+            Console.WriteLine()
+        End If
+        If intPercentComplete > 100 Then intPercentComplete = 100
+        Console.Write("Processing: " & intPercentComplete.ToString() & "% ")
+        If blnAddCarriageReturn Then
+            Console.WriteLine()
+        End If
+    End Sub
 
-	Private Function GetAppVersion() As String
-		Return clsProcessFilesBaseClass.GetAppVersion(PROGRAM_DATE)
-	End Function
+    Private Function GetAppVersion() As String
+        Return clsProcessFilesBaseClass.GetAppVersion(PROGRAM_DATE)
+    End Function
 
-	''Private Function GetFilePath(ByVal mInputFolderOrFilePath As String) As String
-	''    Dim ioFileInfo As System.IO.FileInfo
-	''    Dim ioFolderInfo As System.IO.DirectoryInfo
-	''    Dim strInputFolderPath As String
-	''    Dim ioPath As System.IO.Path
-	''    Dim strCleanPath As String
-	''    Dim WILDCARD_CHARS As Char() = {"*"c, "?"c}
-	''    Dim strInputFolderOrFilePath As String
+    ''Private Function GetFilePath(mInputFolderOrFilePath As String) As String
+    ''    Dim ioFileInfo As System.IO.FileInfo
+    ''    Dim ioFolderInfo As System.IO.DirectoryInfo
+    ''    Dim strInputFolderPath As String
+    ''    Dim ioPath As System.IO.Path
+    ''    Dim strCleanPath As String
+    ''    Dim WILDCARD_CHARS As Char() = {"*"c, "?"c}
+    ''    Dim strInputFolderOrFilePath As String
 
-	''    strInputFolderOrFilePath = String.Copy(mInputFolderOrFilePath)
+    ''    strInputFolderOrFilePath = String.Copy(mInputFolderOrFilePath)
 
-	''    'check for wild cards
-	''    If (mInputFolderOrFilePath.IndexOf("*") >= 0 Or mInputFolderOrFilePath.IndexOf("?") >= 0) Then
-	''        'if mInputFolderOrFilePath contains a wildcard
-	''        ' Copy the path into strCleanPath and replace any * or ? characters with _
-	''        strCleanPath = mInputFolderOrFilePath.Replace("*", "_")
-	''        strCleanPath = strCleanPath.Replace("?", "_")
+    ''    'check for wild cards
+    ''    If (mInputFolderOrFilePath.IndexOf("*") >= 0 Or mInputFolderOrFilePath.IndexOf("?") >= 0) Then
+    ''        'if mInputFolderOrFilePath contains a wildcard
+    ''        ' Copy the path into strCleanPath and replace any * or ? characters with _
+    ''        strCleanPath = mInputFolderOrFilePath.Replace("*", "_")
+    ''        strCleanPath = strCleanPath.Replace("?", "_")
 
-	''        ioFileInfo = New System.IO.FileInfo(strCleanPath)
-	''        If ioFileInfo.Directory.Exists Then
-	''            strInputFolderPath = ioFileInfo.DirectoryName
-	''        Else
-	''            ' Use the current working directory
-	''            strInputFolderPath = ioPath.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location)
-	''        End If
+    ''        ioFileInfo = New System.IO.FileInfo(strCleanPath)
+    ''        If ioFileInfo.Directory.Exists Then
+    ''            strInputFolderPath = ioFileInfo.DirectoryName
+    ''        Else
+    ''            ' Use the current working directory
+    ''            strInputFolderPath = ioPath.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location)
+    ''        End If
 
-	''        strInputFolderOrFilePath = System.IO.Path.Combine(System.IO.Path.GetFullPath(strInputFolderPath), strInputFolderOrFilePath)
+    ''        strInputFolderOrFilePath = System.IO.Path.Combine(System.IO.Path.GetFullPath(strInputFolderPath), strInputFolderOrFilePath)
 
-	''    Else
-	''        'user did not provide wildcards at the command line for the input folder
-	''        ioFileInfo = New System.IO.FileInfo(mInputFolderOrFilePath)
-	''        ioFolderInfo = New System.IO.DirectoryInfo(mInputFolderOrFilePath)
+    ''    Else
+    ''        'user did not provide wildcards at the command line for the input folder
+    ''        ioFileInfo = New System.IO.FileInfo(mInputFolderOrFilePath)
+    ''        ioFolderInfo = New System.IO.DirectoryInfo(mInputFolderOrFilePath)
 
-	''        If ioFolderInfo.Exists Then
-	''            'case that we are provided with directory name/path only
-	''            strInputFolderPath = ioFolderInfo.Name
-	''            strInputFolderPath = ioFileInfo.DirectoryName & strInputFolderPath
+    ''        If ioFolderInfo.Exists Then
+    ''            'case that we are provided with directory name/path only
+    ''            strInputFolderPath = ioFolderInfo.Name
+    ''            strInputFolderPath = ioFileInfo.DirectoryName & strInputFolderPath
 
-	''        ElseIf ioFileInfo.Directory.Exists Then
-	''            'case that we are provided with directory path and a file name
-	''            strInputFolderPath = ioFileInfo.DirectoryName
+    ''        ElseIf ioFileInfo.Directory.Exists Then
+    ''            'case that we are provided with directory path and a file name
+    ''            strInputFolderPath = ioFileInfo.DirectoryName
 
-	''        Else
-	''            ' Use the current working directory
-	''            strInputFolderPath = ioPath.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location)
-	''        End If
+    ''        Else
+    ''            ' Use the current working directory
+    ''            strInputFolderPath = ioPath.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location)
+    ''        End If
 
-	''        strInputFolderOrFilePath = System.IO.Path.Combine(System.IO.Path.GetFullPath(strInputFolderPath), strInputFolderOrFilePath)
-
-
-	''        If System.IO.Directory.Exists(mInputFolderOrFilePath) Then
-	''            strInputFolderOrFilePath = System.IO.Path.Combine(System.IO.Path.GetFullPath(mInputFolderOrFilePath), strInputFolderOrFilePath)
-	''        ElseIf mInputFolderOrFilePath.IndexOfAny(WILDCARD_CHARS) >= 0 Then
-	''            ' Wildcards are present; just log in the application folder path
-	''            strInputFolderOrFilePath = System.IO.Path.Combine(ioPath.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location), strInputFolderOrFilePath)
-	''        Else
-	''            ' Path must be to a file
-	''            Dim InputFolderPath As String
-	''            ioFileInfo = New System.IO.FileInfo(mInputFolderOrFilePath)
-	''            strInputFolderOrFilePath = System.IO.Path.Combine(ioFileInfo.DirectoryName, strInputFolderOrFilePath)
-	''        End If
-
-	''    End If
-
-	''    Return strInputFolderOrFilePath
-
-	''End Function
+    ''        strInputFolderOrFilePath = System.IO.Path.Combine(System.IO.Path.GetFullPath(strInputFolderPath), strInputFolderOrFilePath)
 
 
-	Private Function SetOptionsUsingCommandLineParameters(ByVal objParseCommandLine As clsParseCommandLine) As Boolean
-		' Returns True if no problems; otherwise, returns false
-		' /I:PeptideInputFilePath /R: ProteinInputFilePath /O:OutputFolderPath /P:ParameterFilePath
+    ''        If System.IO.Directory.Exists(mInputFolderOrFilePath) Then
+    ''            strInputFolderOrFilePath = System.IO.Path.Combine(System.IO.Path.GetFullPath(mInputFolderOrFilePath), strInputFolderOrFilePath)
+    ''        ElseIf mInputFolderOrFilePath.IndexOfAny(WILDCARD_CHARS) >= 0 Then
+    ''            ' Wildcards are present; just log in the application folder path
+    ''            strInputFolderOrFilePath = System.IO.Path.Combine(ioPath.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location), strInputFolderOrFilePath)
+    ''        Else
+    ''            ' Path must be to a file
+    ''            Dim InputFolderPath As String
+    ''            ioFileInfo = New System.IO.FileInfo(mInputFolderOrFilePath)
+    ''            strInputFolderOrFilePath = System.IO.Path.Combine(ioFileInfo.DirectoryName, strInputFolderOrFilePath)
+    ''        End If
 
-		Dim strValue As String = String.Empty
-		Dim lstValidParameters As Generic.List(Of String) = New Generic.List(Of String) From {"I", "O", "R", "P", "G", "H", "M", "K", "Q"}
+    ''    End If
 
-		Try
-			' Make sure no invalid parameters are present 
-			If objParseCommandLine.InvalidParametersPresent(lstValidParameters) Then
-				ShowErrorMessage("Invalid commmand line parameters",
-				  (From item In objParseCommandLine.InvalidParameters(lstValidParameters) Select "/" + item).ToList())
-				Return False
-			Else
-				With objParseCommandLine
-					' Query objParseCommandLine to see if various parameters are present
-					If .RetrieveValueForParameter("I", strValue) Then
-						mPeptideInputFilePath = strValue
-					ElseIf .NonSwitchParameterCount > 0 Then
-						mPeptideInputFilePath = .RetrieveNonSwitchParameter(0)
-					End If
+    ''    Return strInputFolderOrFilePath
 
-					If .RetrieveValueForParameter("O", strValue) Then mOutputFolderPath = strValue
-					If .RetrieveValueForParameter("R", strValue) Then mProteinInputFilePath = strValue
-					If .RetrieveValueForParameter("P", strValue) Then mParameterFilePath = strValue
-					If .RetrieveValueForParameter("G", strValue) Then mIgnoreILDifferences = True
-					If .RetrieveValueForParameter("H", strValue) Then mOutputProteinSequence = False
-					If .RetrieveValueForParameter("M", strValue) Then mSaveProteinToPeptideMappingFile = True
-					If .RetrieveValueForParameter("K", strValue) Then mSkipCoverageComputationSteps = True
+    ''End Function
 
-					If .RetrieveValueForParameter("Q", strValue) Then mQuietMode = True
-				End With
 
-				Return True
-			End If
+    Private Function SetOptionsUsingCommandLineParameters(objParseCommandLine As clsParseCommandLine) As Boolean
+        ' Returns True if no problems; otherwise, returns false
+        ' /I:PeptideInputFilePath /R: ProteinInputFilePath /O:OutputFolderPath /P:ParameterFilePath
 
-		Catch ex As Exception
-			ShowErrorMessage("Error parsing the command line parameters: " & System.Environment.NewLine & ex.Message)
-		End Try
+        Dim strValue As String = String.Empty
+        Dim lstValidParameters As Generic.List(Of String) = New Generic.List(Of String) From {"I", "O", "R", "P", "G", "H", "M", "K", "Q"}
 
-		Return False
+        Try
+            ' Make sure no invalid parameters are present 
+            If objParseCommandLine.InvalidParametersPresent(lstValidParameters) Then
+                ShowErrorMessage("Invalid commmand line parameters",
+                  (From item In objParseCommandLine.InvalidParameters(lstValidParameters) Select "/" + item).ToList())
+                Return False
+            Else
+                With objParseCommandLine
+                    ' Query objParseCommandLine to see if various parameters are present
+                    If .RetrieveValueForParameter("I", strValue) Then
+                        mPeptideInputFilePath = strValue
+                    ElseIf .NonSwitchParameterCount > 0 Then
+                        mPeptideInputFilePath = .RetrieveNonSwitchParameter(0)
+                    End If
 
-	End Function
+                    If .RetrieveValueForParameter("O", strValue) Then mOutputFolderPath = strValue
+                    If .RetrieveValueForParameter("R", strValue) Then mProteinInputFilePath = strValue
+                    If .RetrieveValueForParameter("P", strValue) Then mParameterFilePath = strValue
+                    If .RetrieveValueForParameter("G", strValue) Then mIgnoreILDifferences = True
+                    If .RetrieveValueForParameter("H", strValue) Then mOutputProteinSequence = False
+                    If .RetrieveValueForParameter("M", strValue) Then mSaveProteinToPeptideMappingFile = True
+                    If .RetrieveValueForParameter("K", strValue) Then mSkipCoverageComputationSteps = True
 
-	Private Sub ShowErrorMessage(ByVal strMessage As String)
-		Dim strSeparator As String = "------------------------------------------------------------------------------"
+                    If .RetrieveValueForParameter("Q", strValue) Then mQuietMode = True
+                End With
 
-		Console.WriteLine()
-		Console.WriteLine(strSeparator)
-		Console.WriteLine(strMessage)
-		Console.WriteLine(strSeparator)
-		Console.WriteLine()
+                Return True
+            End If
 
-		WriteToErrorStream(strMessage)
-	End Sub
+        Catch ex As Exception
+            ShowErrorMessage("Error parsing the command line parameters: " & System.Environment.NewLine & ex.Message)
+        End Try
 
-	Private Sub ShowErrorMessage(ByVal strTitle As String, ByVal items As List(Of String))
-		Dim strSeparator As String = "------------------------------------------------------------------------------"
-		Dim strMessage As String
+        Return False
 
-		Console.WriteLine()
-		Console.WriteLine(strSeparator)
-		Console.WriteLine(strTitle)
-		strMessage = strTitle & ":"
+    End Function
 
-		For Each item As String In items
-			Console.WriteLine("   " + item)
-			strMessage &= " " & item
-		Next
-		Console.WriteLine(strSeparator)
-		Console.WriteLine()
+    Private Sub ShowErrorMessage(strMessage As String)
+        Dim strSeparator As String = "------------------------------------------------------------------------------"
 
-		WriteToErrorStream(strMessage)
-	End Sub
+        Console.WriteLine()
+        Console.WriteLine(strSeparator)
+        Console.WriteLine(strMessage)
+        Console.WriteLine(strSeparator)
+        Console.WriteLine()
 
-	Private Sub ShowGUI()
-		Dim objFormMain As GUI
+        WriteToErrorStream(strMessage)
+    End Sub
+
+    Private Sub ShowErrorMessage(strTitle As String, items As List(Of String))
+        Dim strSeparator As String = "------------------------------------------------------------------------------"
+        Dim strMessage As String
+
+        Console.WriteLine()
+        Console.WriteLine(strSeparator)
+        Console.WriteLine(strTitle)
+        strMessage = strTitle & ":"
+
+        For Each item As String In items
+            Console.WriteLine("   " + item)
+            strMessage &= " " & item
+        Next
+        Console.WriteLine(strSeparator)
+        Console.WriteLine()
+
+        WriteToErrorStream(strMessage)
+    End Sub
+
+    Private Sub ShowGUI()
+        Dim objFormMain As GUI
 
         System.Windows.Forms.Application.EnableVisualStyles()
         System.Windows.Forms.Application.DoEvents()
 
-		Try
-			objFormMain = New GUI
+        Try
+            objFormMain = New GUI
 
-			objFormMain.ShowDialog()
-		Catch ex As Exception
-			MsgBox("Error in ShowGUI: " & ex.Message, MsgBoxStyle.Exclamation Or MsgBoxStyle.OkOnly, "Error")
-		Finally
-			objFormMain = Nothing
-		End Try
+            objFormMain.ShowDialog()
+        Catch ex As Exception
+            MsgBox("Error in ShowGUI: " & ex.Message, MsgBoxStyle.Exclamation Or MsgBoxStyle.OkOnly, "Error")
+        Finally
+            objFormMain = Nothing
+        End Try
 
-	End Sub
+    End Sub
 
-	Private Sub ShowProgramHelp()
+    Private Sub ShowProgramHelp()
 
-		Dim strSyntax As String
+        Dim strSyntax As String
 
-		Try
-			strSyntax = String.Empty
-			strSyntax &= Environment.NewLine & "This program reads in a .fasta or .txt file containing protein names and sequences (and optionally descriptions)"
-			strSyntax &= Environment.NewLine & "The program also reads in a .txt file containing peptide sequences and protein names (though protein name is optional) then uses this information to compute the sequence coverage percent for each protein."
-			strSyntax &= Environment.NewLine
-			strSyntax &= Environment.NewLine & "Program syntax:" & System.Environment.NewLine & IO.Path.GetFileName(clsProcessFilesBaseClass.GetAppPath())
-			strSyntax &= Environment.NewLine & " /I:PeptideInputFilePath /R:ProteinInputFilePath [/O:OutputFolderName] [/P:ParameterFilePath] [/G] [/H] [/M] [/K] [/Q]"
-			strSyntax &= Environment.NewLine
-			strSyntax &= Environment.NewLine & "The input file path can contain the wildcard character *.  If a wildcard is present, then the same protein input file path will be used for each of the peptide input files matched."
-			strSyntax &= Environment.NewLine & "The output folder name is optional.  If omitted, the output files will be created in the same folder as the input file.  If included, then a subfolder is created with the name OutputFolderName."
-			strSyntax &= Environment.NewLine
-			strSyntax &= Environment.NewLine & "The parameter file path is optional.  If included, it should point to a valid XML parameter file."
-			strSyntax &= Environment.NewLine
-			strSyntax &= Environment.NewLine & "Use /G to ignore I/L differences when finding peptides in proteins or computing coverage."
-			strSyntax &= Environment.NewLine & "Use /H to suppress (hide) the protein sequence in the _coverage.txt file."
-			strSyntax &= Environment.NewLine & "Use /M to enable the creation of a protein to peptide mapping file."
-			strSyntax &= Environment.NewLine
+        Try
+            strSyntax = String.Empty
+            strSyntax &= Environment.NewLine & "This program reads in a .fasta or .txt file containing protein names and sequences (and optionally descriptions)"
+            strSyntax &= Environment.NewLine & "The program also reads in a .txt file containing peptide sequences and protein names (though protein name is optional) then uses this information to compute the sequence coverage percent for each protein."
+            strSyntax &= Environment.NewLine
+            strSyntax &= Environment.NewLine & "Program syntax:" & System.Environment.NewLine & IO.Path.GetFileName(clsProcessFilesBaseClass.GetAppPath())
+            strSyntax &= Environment.NewLine & " /I:PeptideInputFilePath /R:ProteinInputFilePath [/O:OutputFolderName] [/P:ParameterFilePath] [/G] [/H] [/M] [/K] [/Q]"
+            strSyntax &= Environment.NewLine
+            strSyntax &= Environment.NewLine & "The input file path can contain the wildcard character *.  If a wildcard is present, then the same protein input file path will be used for each of the peptide input files matched."
+            strSyntax &= Environment.NewLine & "The output folder name is optional.  If omitted, the output files will be created in the same folder as the input file.  If included, then a subfolder is created with the name OutputFolderName."
+            strSyntax &= Environment.NewLine
+            strSyntax &= Environment.NewLine & "The parameter file path is optional.  If included, it should point to a valid XML parameter file."
+            strSyntax &= Environment.NewLine
+            strSyntax &= Environment.NewLine & "Use /G to ignore I/L differences when finding peptides in proteins or computing coverage."
+            strSyntax &= Environment.NewLine & "Use /H to suppress (hide) the protein sequence in the _coverage.txt file."
+            strSyntax &= Environment.NewLine & "Use /M to enable the creation of a protein to peptide mapping file."
+            strSyntax &= Environment.NewLine
 
-			strSyntax &= Environment.NewLine & "Program written by Matthew Monroe and Nikša Blonder for the Department of Energy (PNNL, Richland, WA) in 2005"
-			strSyntax &= Environment.NewLine & "Version: " & GetAppVersion()
-			strSyntax &= Environment.NewLine
+            strSyntax &= Environment.NewLine & "Program written by Matthew Monroe and Nikša Blonder for the Department of Energy (PNNL, Richland, WA) in 2005"
+            strSyntax &= Environment.NewLine & "Version: " & GetAppVersion()
+            strSyntax &= Environment.NewLine
 
-			strSyntax &= Environment.NewLine & "E-mail: matthew.monroe@pnnl.gov or matt@alchemistmatt.com"
-			strSyntax &= Environment.NewLine & "Website: http://omics.pnl.gov/ or http://panomics.pnnl.gov/"
-			strSyntax &= Environment.NewLine
+            strSyntax &= Environment.NewLine & "E-mail: matthew.monroe@pnnl.gov or matt@alchemistmatt.com"
+            strSyntax &= Environment.NewLine & "Website: http://omics.pnl.gov/ or http://panomics.pnnl.gov/"
+            strSyntax &= Environment.NewLine
 
-			If mQuietMode Then
-				Console.WriteLine(strSyntax)
-			Else
-				System.Windows.Forms.MessageBox.Show(strSyntax, "Syntax", MessageBoxButtons.OK, MessageBoxIcon.Information)
-			End If
+            If mQuietMode Then
+                Console.WriteLine(strSyntax)
+            Else
+                System.Windows.Forms.MessageBox.Show(strSyntax, "Syntax", MessageBoxButtons.OK, MessageBoxIcon.Information)
+            End If
 
-		Catch ex As Exception
-			ShowErrorMessage("Error displaying the program syntax: " & ex.Message)
-		End Try
+        Catch ex As Exception
+            ShowErrorMessage("Error displaying the program syntax: " & ex.Message)
+        End Try
 
-	End Sub
+    End Sub
 
-	Private Sub WriteToErrorStream(strErrorMessage As String)
-		Try
-			Using swErrorStream As System.IO.StreamWriter = New System.IO.StreamWriter(Console.OpenStandardError())
-				swErrorStream.WriteLine(strErrorMessage)
-			End Using
-		Catch ex As Exception
-			' Ignore errors here
-		End Try
-	End Sub
+    Private Sub WriteToErrorStream(strErrorMessage As String)
+        Try
+            Using swErrorStream As System.IO.StreamWriter = New System.IO.StreamWriter(Console.OpenStandardError())
+                swErrorStream.WriteLine(strErrorMessage)
+            End Using
+        Catch ex As Exception
+            ' Ignore errors here
+        End Try
+    End Sub
 
-    Private Sub mProteinCoverageRunner_ProgressChanged(ByVal taskDescription As String, ByVal percentComplete As Single) Handles mProteinCoverageRunner.ProgressChanged
+    Private Sub mProteinCoverageRunner_ProgressChanged(taskDescription As String, percentComplete As Single) Handles mProteinCoverageRunner.ProgressChanged
         Const PERCENT_REPORT_INTERVAL As Integer = 25
         Const PROGRESS_DOT_INTERVAL_MSEC As Integer = 250
 

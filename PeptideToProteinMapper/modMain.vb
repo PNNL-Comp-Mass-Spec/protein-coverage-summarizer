@@ -35,7 +35,7 @@ Imports PeptideToProteinMapEngine.clsPeptideToProteinMapEngine
 
 Public Module modMain
 
-	Public Const PROGRAM_DATE As String = "July 9, 2014"
+    Public Const PROGRAM_DATE As String = "July 22, 2015"
 
 	Private mPeptideInputFilePath As String
 	Private mProteinInputFilePath As String
@@ -190,228 +190,228 @@ Public Module modMain
 
 	End Function
 
-	Private Sub DisplayProgressPercent(ByVal taskDescription As String, ByVal intPercentComplete As Integer, ByVal blnAddCarriageReturn As Boolean)
-		If blnAddCarriageReturn Then
-			Console.WriteLine()
-		End If
-		If intPercentComplete > 100 Then intPercentComplete = 100
-		If String.IsNullOrEmpty(taskDescription) Then taskDescription = "Processing"
+    Private Sub DisplayProgressPercent(taskDescription As String, intPercentComplete As Integer, blnAddCarriageReturn As Boolean)
+        If blnAddCarriageReturn Then
+            Console.WriteLine()
+        End If
+        If intPercentComplete > 100 Then intPercentComplete = 100
+        If String.IsNullOrEmpty(taskDescription) Then taskDescription = "Processing"
 
-		Console.Write(taskDescription & ": " & intPercentComplete.ToString() & "% ")
-		If blnAddCarriageReturn Then
-			Console.WriteLine()
-		End If
-	End Sub
+        Console.Write(taskDescription & ": " & intPercentComplete.ToString() & "% ")
+        If blnAddCarriageReturn Then
+            Console.WriteLine()
+        End If
+    End Sub
 
-	Private Function GetAppVersion() As String
-		Return PeptideToProteinMapEngine.clsProcessFilesBaseClass.GetAppVersion(PROGRAM_DATE)
-	End Function
+    Private Function GetAppVersion() As String
+        Return PeptideToProteinMapEngine.clsProcessFilesBaseClass.GetAppVersion(PROGRAM_DATE)
+    End Function
 
-	Private Function SetOptionsUsingCommandLineParameters(ByVal objParseCommandLine As clsParseCommandLine) As Boolean
-		' Returns True if no problems; otherwise, returns false
-		' /I:PeptideInputFilePath /R: ProteinInputFilePath /O:OutputFolderPath /P:ParameterFilePath
+    Private Function SetOptionsUsingCommandLineParameters(objParseCommandLine As clsParseCommandLine) As Boolean
+        ' Returns True if no problems; otherwise, returns false
+        ' /I:PeptideInputFilePath /R: ProteinInputFilePath /O:OutputFolderPath /P:ParameterFilePath
 
-		Dim strValue As String = String.Empty
-		Dim lstValidParameters As Generic.List(Of String) = New Generic.List(Of String) From {"I", "O", "R", "P", "F", "N", "G", "H", "K", "A", "L", "LogFolder", "Q", "VerboseLog"}
-		Dim intValue As Integer
+        Dim strValue As String = String.Empty
+        Dim lstValidParameters As Generic.List(Of String) = New Generic.List(Of String) From {"I", "O", "R", "P", "F", "N", "G", "H", "K", "A", "L", "LogFolder", "Q", "VerboseLog"}
+        Dim intValue As Integer
 
-		Try
-			' Make sure no invalid parameters are present 
-			If objParseCommandLine.InvalidParametersPresent(lstValidParameters) Then
-				ShowErrorMessage("Invalid commmand line parameters",
-				  (From item In objParseCommandLine.InvalidParameters(lstValidParameters) Select "/" + item).ToList())
-				Return False
-			Else
-				With objParseCommandLine
-					' Query objParseCommandLine to see if various parameters are present
-					If .RetrieveValueForParameter("I", strValue) Then
-						mPeptideInputFilePath = strValue
-					ElseIf .NonSwitchParameterCount > 0 Then
-						mPeptideInputFilePath = .RetrieveNonSwitchParameter(0)
-					End If
+        Try
+            ' Make sure no invalid parameters are present 
+            If objParseCommandLine.InvalidParametersPresent(lstValidParameters) Then
+                ShowErrorMessage("Invalid commmand line parameters",
+                  (From item In objParseCommandLine.InvalidParameters(lstValidParameters) Select "/" + item).ToList())
+                Return False
+            Else
+                With objParseCommandLine
+                    ' Query objParseCommandLine to see if various parameters are present
+                    If .RetrieveValueForParameter("I", strValue) Then
+                        mPeptideInputFilePath = strValue
+                    ElseIf .NonSwitchParameterCount > 0 Then
+                        mPeptideInputFilePath = .RetrieveNonSwitchParameter(0)
+                    End If
 
 
-					If .RetrieveValueForParameter("O", strValue) Then mOutputFolderPath = strValue
-					If .RetrieveValueForParameter("R", strValue) Then mProteinInputFilePath = strValue
-					If .RetrieveValueForParameter("P", strValue) Then mParameterFilePath = strValue
+                    If .RetrieveValueForParameter("O", strValue) Then mOutputFolderPath = strValue
+                    If .RetrieveValueForParameter("R", strValue) Then mProteinInputFilePath = strValue
+                    If .RetrieveValueForParameter("P", strValue) Then mParameterFilePath = strValue
 
-					If .RetrieveValueForParameter("F", strValue) Then
-						If Integer.TryParse(strValue, intValue) Then
-							Try
-								mInputFileFormatCode = CType(intValue, PeptideToProteinMapEngine.clsPeptideToProteinMapEngine.ePeptideInputFileFormatConstants)
-							Catch ex As Exception
-								' Conversion failed; leave mInputFileFormatCode unchanged
-							End Try
-						End If
-					End If
+                    If .RetrieveValueForParameter("F", strValue) Then
+                        If Integer.TryParse(strValue, intValue) Then
+                            Try
+                                mInputFileFormatCode = CType(intValue, PeptideToProteinMapEngine.clsPeptideToProteinMapEngine.ePeptideInputFileFormatConstants)
+                            Catch ex As Exception
+                                ' Conversion failed; leave mInputFileFormatCode unchanged
+                            End Try
+                        End If
+                    End If
 
-					If .RetrieveValueForParameter("N", strValue) Then mInspectParameterFilePath = strValue
+                    If .RetrieveValueForParameter("N", strValue) Then mInspectParameterFilePath = strValue
 
-					If .RetrieveValueForParameter("G", strValue) Then mIgnoreILDifferences = True
-					If .RetrieveValueForParameter("H", strValue) Then mOutputProteinSequence = False
-					If .RetrieveValueForParameter("K", strValue) Then mSkipCoverageComputationSteps = True
+                    If .RetrieveValueForParameter("G", strValue) Then mIgnoreILDifferences = True
+                    If .RetrieveValueForParameter("H", strValue) Then mOutputProteinSequence = False
+                    If .RetrieveValueForParameter("K", strValue) Then mSkipCoverageComputationSteps = True
 
-					If .RetrieveValueForParameter("A", strValue) Then mSaveSourceDataPlusProteinsFile = True
+                    If .RetrieveValueForParameter("A", strValue) Then mSaveSourceDataPlusProteinsFile = True
 
-					If .RetrieveValueForParameter("L", strValue) Then
-						mLogMessagesToFile = True
-						If Not String.IsNullOrEmpty(strValue) Then
-							mLogFilePath = strValue
-						End If
-					End If
+                    If .RetrieveValueForParameter("L", strValue) Then
+                        mLogMessagesToFile = True
+                        If Not String.IsNullOrEmpty(strValue) Then
+                            mLogFilePath = strValue
+                        End If
+                    End If
 
-					If .RetrieveValueForParameter("LogFolder", strValue) Then
-						mLogMessagesToFile = True
-						If Not String.IsNullOrEmpty(strValue) Then
-							mLogFolderPath = strValue
-						End If
-					End If
-					If .RetrieveValueForParameter("Q", strValue) Then mQuietMode = True
+                    If .RetrieveValueForParameter("LogFolder", strValue) Then
+                        mLogMessagesToFile = True
+                        If Not String.IsNullOrEmpty(strValue) Then
+                            mLogFolderPath = strValue
+                        End If
+                    End If
+                    If .RetrieveValueForParameter("Q", strValue) Then mQuietMode = True
 
-					If .RetrieveValueForParameter("VerboseLog", strValue) Then mVerboseLogging = True
-				End With
+                    If .RetrieveValueForParameter("VerboseLog", strValue) Then mVerboseLogging = True
+                End With
 
-				Return True
-			End If
+                Return True
+            End If
 
-		Catch ex As Exception
-			ShowErrorMessage("Error parsing the command line parameters: " & System.Environment.NewLine & ex.Message)
-		End Try
+        Catch ex As Exception
+            ShowErrorMessage("Error parsing the command line parameters: " & System.Environment.NewLine & ex.Message)
+        End Try
 
-		Return False
+        Return False
 
-	End Function
+    End Function
 
-	Private Sub ShowErrorMessage(ByVal strMessage As String)
-		Dim strSeparator As String = "------------------------------------------------------------------------------"
+    Private Sub ShowErrorMessage(strMessage As String)
+        Dim strSeparator As String = "------------------------------------------------------------------------------"
 
-		Console.WriteLine()
-		Console.WriteLine(strSeparator)
-		Console.WriteLine(strMessage)
-		Console.WriteLine(strSeparator)
-		Console.WriteLine()
+        Console.WriteLine()
+        Console.WriteLine(strSeparator)
+        Console.WriteLine(strMessage)
+        Console.WriteLine(strSeparator)
+        Console.WriteLine()
 
-		WriteToErrorStream(strMessage)
-	End Sub
+        WriteToErrorStream(strMessage)
+    End Sub
 
-	Private Sub ShowErrorMessage(ByVal strTitle As String, ByVal items As List(Of String))
-		Dim strSeparator As String = "------------------------------------------------------------------------------"
-		Dim strMessage As String
+    Private Sub ShowErrorMessage(strTitle As String, items As List(Of String))
+        Dim strSeparator As String = "------------------------------------------------------------------------------"
+        Dim strMessage As String
 
-		Console.WriteLine()
-		Console.WriteLine(strSeparator)
-		Console.WriteLine(strTitle)
-		strMessage = strTitle & ":"
+        Console.WriteLine()
+        Console.WriteLine(strSeparator)
+        Console.WriteLine(strTitle)
+        strMessage = strTitle & ":"
 
-		For Each item As String In items
-			Console.WriteLine("   " + item)
-			strMessage &= " " & item
-		Next
-		Console.WriteLine(strSeparator)
-		Console.WriteLine()
+        For Each item As String In items
+            Console.WriteLine("   " + item)
+            strMessage &= " " & item
+        Next
+        Console.WriteLine(strSeparator)
+        Console.WriteLine()
 
-		WriteToErrorStream(strMessage)
-	End Sub
+        WriteToErrorStream(strMessage)
+    End Sub
 
-	Private Sub ShowProgramHelp()
+    Private Sub ShowProgramHelp()
 
-		Try
-			Console.WriteLine("This program reads in a text file containing peptide sequences.  It then searches the specified .fasta or text file containing protein names and sequences (and optionally descriptions)")
-			Console.WriteLine("to find the proteins that contain each peptide.  It will also compute the sequence coverage percent for each protein (disable using /K).")
-			Console.WriteLine()
-			Console.WriteLine("Program syntax:" & ControlChars.NewLine & System.IO.Path.GetFileName(System.Reflection.Assembly.GetExecutingAssembly().Location) & _
-			 " /I:PeptideInputFilePath /R:ProteinInputFilePath")
-			Console.WriteLine(" [/O:OutputFolderName] [/P:ParameterFilePath] [/F:FileFormatCode] ")
-			Console.WriteLine(" [/N:InspectParameterFilePath] [/G] [/H] [/K] [/A]")
-			Console.WriteLine(" [/L[:LogFilePath]] [/LogFolder:LogFolderPath] [/VerboseLog] [/Q]")
-			Console.WriteLine()
-			Console.WriteLine("The input file path can contain the wildcard character *.  If a wildcard is present, then the same protein input file path will be used for each of the peptide input files matched.")
-			Console.WriteLine("The output folder name is optional.  If omitted, the output files will be created in the same folder as the input file.  If included, then a subfolder is created with the name OutputFolderName.")
-			Console.WriteLine("The parameter file path is optional.  If included, it should point to a valid XML parameter file.")
-			Console.WriteLine()
+        Try
+            Console.WriteLine("This program reads in a text file containing peptide sequences.  It then searches the specified .fasta or text file containing protein names and sequences (and optionally descriptions)")
+            Console.WriteLine("to find the proteins that contain each peptide.  It will also compute the sequence coverage percent for each protein (disable using /K).")
+            Console.WriteLine()
+            Console.WriteLine("Program syntax:" & ControlChars.NewLine & System.IO.Path.GetFileName(System.Reflection.Assembly.GetExecutingAssembly().Location) & _
+             " /I:PeptideInputFilePath /R:ProteinInputFilePath")
+            Console.WriteLine(" [/O:OutputFolderName] [/P:ParameterFilePath] [/F:FileFormatCode] ")
+            Console.WriteLine(" [/N:InspectParameterFilePath] [/G] [/H] [/K] [/A]")
+            Console.WriteLine(" [/L[:LogFilePath]] [/LogFolder:LogFolderPath] [/VerboseLog] [/Q]")
+            Console.WriteLine()
+            Console.WriteLine("The input file path can contain the wildcard character *.  If a wildcard is present, then the same protein input file path will be used for each of the peptide input files matched.")
+            Console.WriteLine("The output folder name is optional.  If omitted, the output files will be created in the same folder as the input file.  If included, then a subfolder is created with the name OutputFolderName.")
+            Console.WriteLine("The parameter file path is optional.  If included, it should point to a valid XML parameter file.")
+            Console.WriteLine()
 
-			Console.WriteLine("Use /F to specify the peptide input file format code.  Options are:")
-			Console.WriteLine("   " & ePeptideInputFileFormatConstants.AutoDetermine & "=Auto Determine: Treated as /F:1 unless name ends in _inspect.txt, then /F:3")
-			Console.WriteLine("   " & ePeptideInputFileFormatConstants.PeptideListFile & "=Peptide sequence in the 1st column (subsequent columns are ignored)")
-			Console.WriteLine("   " & ePeptideInputFileFormatConstants.ProteinAndPeptideFile & "=Protein name in 1st column and peptide sequence 2nd column")
-			Console.WriteLine("   " & ePeptideInputFileFormatConstants.InspectResultsFile & "=Inspect search results file (peptide sequence in the 3rd column)")
-			Console.WriteLine("   " & ePeptideInputFileFormatConstants.MSGFDBResultsFile & "=MSGF-DB or MSGF+ search results file (peptide sequence in the column titled 'Peptide')")
-			Console.WriteLine("   " & ePeptideInputFileFormatConstants.PHRPFile & "=Sequest, X!Tandem, Inspect, or MSGF-DB PHRP data file")
-			Console.WriteLine()
+            Console.WriteLine("Use /F to specify the peptide input file format code.  Options are:")
+            Console.WriteLine("   " & ePeptideInputFileFormatConstants.AutoDetermine & "=Auto Determine: Treated as /F:1 unless name ends in _inspect.txt, then /F:3")
+            Console.WriteLine("   " & ePeptideInputFileFormatConstants.PeptideListFile & "=Peptide sequence in the 1st column (subsequent columns are ignored)")
+            Console.WriteLine("   " & ePeptideInputFileFormatConstants.ProteinAndPeptideFile & "=Protein name in 1st column and peptide sequence 2nd column")
+            Console.WriteLine("   " & ePeptideInputFileFormatConstants.InspectResultsFile & "=Inspect search results file (peptide sequence in the 3rd column)")
+            Console.WriteLine("   " & ePeptideInputFileFormatConstants.MSGFDBResultsFile & "=MSGF-DB or MSGF+ search results file (peptide sequence in the column titled 'Peptide')")
+            Console.WriteLine("   " & ePeptideInputFileFormatConstants.PHRPFile & "=Sequest, X!Tandem, Inspect, or MSGF-DB PHRP data file")
+            Console.WriteLine()
 
-			Console.WriteLine("When processing an Inspect search results file, use /N to specify the Inspect parameter file used (required for determining the mod names embedded in the identified peptides).")
-			Console.WriteLine()
+            Console.WriteLine("When processing an Inspect search results file, use /N to specify the Inspect parameter file used (required for determining the mod names embedded in the identified peptides).")
+            Console.WriteLine()
 
-			Console.WriteLine("Use /G to ignore I/L differences when finding peptides in proteins or computing coverage")
-			Console.WriteLine("Use /H to suppress (hide) the protein sequence in the _coverage.txt file")
-			Console.WriteLine("Use /K to skip the protein coverage computation steps (enabling faster processing)")
-			Console.WriteLine("Use /A to create a copy of the source file, but with a new column listing the mapped protein for each peptide.  If a peptide maps to multiple proteins, then multiple lines will be listed")
+            Console.WriteLine("Use /G to ignore I/L differences when finding peptides in proteins or computing coverage")
+            Console.WriteLine("Use /H to suppress (hide) the protein sequence in the _coverage.txt file")
+            Console.WriteLine("Use /K to skip the protein coverage computation steps (enabling faster processing)")
+            Console.WriteLine("Use /A to create a copy of the source file, but with a new column listing the mapped protein for each peptide.  If a peptide maps to multiple proteins, then multiple lines will be listed")
 
-			Console.WriteLine("Use /L to create a log file, optionally specifying the file name")
-			Console.WriteLine("Use /LogFolder to define the folder in which the log file should be created")
-			Console.WriteLine("Use /VerboseLog to create a detailed log file")
-			Console.WriteLine("Use /Q to suppress any error messages")
-			Console.WriteLine()
+            Console.WriteLine("Use /L to create a log file, optionally specifying the file name")
+            Console.WriteLine("Use /LogFolder to define the folder in which the log file should be created")
+            Console.WriteLine("Use /VerboseLog to create a detailed log file")
+            Console.WriteLine("Use /Q to suppress any error messages")
+            Console.WriteLine()
 
-			Console.WriteLine("Program written by Matthew Monroe for the Department of Energy (PNNL, Richland, WA) in 2008")
-			Console.WriteLine("Version: " & GetAppVersion())
-			Console.WriteLine()
+            Console.WriteLine("Program written by Matthew Monroe for the Department of Energy (PNNL, Richland, WA) in 2008")
+            Console.WriteLine("Version: " & GetAppVersion())
+            Console.WriteLine()
 
-			Console.WriteLine("E-mail: matthew.monroe@pnnl.gov or matt@alchemistmatt.com")
-			Console.WriteLine("Website: http://omics.pnl.gov/ or http://panomics.pnnl.gov/")
-			Console.WriteLine()
+            Console.WriteLine("E-mail: matthew.monroe@pnnl.gov or matt@alchemistmatt.com")
+            Console.WriteLine("Website: http://omics.pnl.gov/ or http://panomics.pnnl.gov/")
+            Console.WriteLine()
 
-			' Delay for 750 msec in case the user double clicked this file from within Windows Explorer (or started the program via a shortcut)
-			System.Threading.Thread.Sleep(750)
+            ' Delay for 750 msec in case the user double clicked this file from within Windows Explorer (or started the program via a shortcut)
+            System.Threading.Thread.Sleep(750)
 
-		Catch ex As Exception
-			ShowErrorMessage("Error displaying the program syntax: " & ex.Message)
-		End Try
+        Catch ex As Exception
+            ShowErrorMessage("Error displaying the program syntax: " & ex.Message)
+        End Try
 
-	End Sub
+    End Sub
 
-	Private Sub WriteToErrorStream(strErrorMessage As String)
-		Try
-			Using swErrorStream As System.IO.StreamWriter = New System.IO.StreamWriter(Console.OpenStandardError())
-				swErrorStream.WriteLine(strErrorMessage)
-			End Using
-		Catch ex As Exception
-			' Ignore errors here
-		End Try
-	End Sub
+    Private Sub WriteToErrorStream(strErrorMessage As String)
+        Try
+            Using swErrorStream As System.IO.StreamWriter = New System.IO.StreamWriter(Console.OpenStandardError())
+                swErrorStream.WriteLine(strErrorMessage)
+            End Using
+        Catch ex As Exception
+            ' Ignore errors here
+        End Try
+    End Sub
 
-	Private Sub mPeptideToProteinMapEngine_ProgressChanged(ByVal taskDescription As String, ByVal percentComplete As Single) Handles mPeptideToProteinMapEngine.ProgressChanged
-		Const PROGRESS_DOT_INTERVAL_MSEC As Integer = 250
+    Private Sub mPeptideToProteinMapEngine_ProgressChanged(taskDescription As String, percentComplete As Single) Handles mPeptideToProteinMapEngine.ProgressChanged
+        Const PROGRESS_DOT_INTERVAL_MSEC As Integer = 250
 
-		If DateTime.UtcNow.Subtract(mLastPercentDisplayed).TotalSeconds >= 15 Then
-			Console.WriteLine()
+        If DateTime.UtcNow.Subtract(mLastPercentDisplayed).TotalSeconds >= 15 Then
+            Console.WriteLine()
 
-			DisplayProgressPercent(taskDescription, CInt(percentComplete), False)
-			mLastPercentDisplayed = DateTime.UtcNow
-		Else
-			If DateTime.UtcNow.Subtract(mLastProgressReportTime).TotalMilliseconds > PROGRESS_DOT_INTERVAL_MSEC Then
-				mLastProgressReportTime = DateTime.UtcNow
-				Console.Write(".")
-			End If
-		End If
+            DisplayProgressPercent(taskDescription, CInt(percentComplete), False)
+            mLastPercentDisplayed = DateTime.UtcNow
+        Else
+            If DateTime.UtcNow.Subtract(mLastProgressReportTime).TotalMilliseconds > PROGRESS_DOT_INTERVAL_MSEC Then
+                mLastProgressReportTime = DateTime.UtcNow
+                Console.Write(".")
+            End If
+        End If
 
-		If Not mVerboseLogFile Is Nothing Then
-			If taskDescription Is Nothing Then taskDescription = String.Empty
+        If Not mVerboseLogFile Is Nothing Then
+            If taskDescription Is Nothing Then taskDescription = String.Empty
 
-			If taskDescription = mVerboseLoggingMostRecentMessage Then
-				mVerboseLogFile.WriteLine(System.DateTime.Now.ToString("yyyy-MM-dd hh:mm:ss tt") & ControlChars.Tab & _
-						percentComplete.ToString & ControlChars.Tab & _
-						".")
-			Else
-				mVerboseLoggingMostRecentMessage = String.Copy(taskDescription)
+            If taskDescription = mVerboseLoggingMostRecentMessage Then
+                mVerboseLogFile.WriteLine(System.DateTime.Now.ToString("yyyy-MM-dd hh:mm:ss tt") & ControlChars.Tab & _
+                        percentComplete.ToString & ControlChars.Tab & _
+                        ".")
+            Else
+                mVerboseLoggingMostRecentMessage = String.Copy(taskDescription)
 
-				mVerboseLogFile.WriteLine(System.DateTime.Now.ToString("yyyy-MM-dd hh:mm:ss tt") & ControlChars.Tab & _
-						percentComplete.ToString & ControlChars.Tab & _
-						taskDescription)
+                mVerboseLogFile.WriteLine(System.DateTime.Now.ToString("yyyy-MM-dd hh:mm:ss tt") & ControlChars.Tab & _
+                        percentComplete.ToString & ControlChars.Tab & _
+                        taskDescription)
 
-			End If
-		End If
-	End Sub
+            End If
+        End If
+    End Sub
 
 	Private Sub mPeptideToProteinMapEngine_ProgressReset() Handles mPeptideToProteinMapEngine.ProgressReset
 		mLastProgressReportTime = DateTime.UtcNow

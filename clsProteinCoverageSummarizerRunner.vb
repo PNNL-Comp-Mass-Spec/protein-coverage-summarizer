@@ -60,7 +60,7 @@ Public Class clsProteinCoverageSummarizerRunner
         Get
             Return mCallingAppHandlesEvents
         End Get
-        Set(ByVal value As Boolean)
+        Set(value As Boolean)
             mCallingAppHandlesEvents = value
         End Set
     End Property
@@ -69,7 +69,7 @@ Public Class clsProteinCoverageSummarizerRunner
         Get
             Return mProteinCoverageSummarizer.IgnoreILDifferences
         End Get
-        Set(ByVal Value As Boolean)
+        Set(Value As Boolean)
             mProteinCoverageSummarizer.IgnoreILDifferences = Value
         End Set
 	End Property
@@ -78,7 +78,7 @@ Public Class clsProteinCoverageSummarizerRunner
         Get
             Return mProteinCoverageSummarizer.MatchPeptidePrefixAndSuffixToProtein
         End Get
-        Set(ByVal Value As Boolean)
+        Set(Value As Boolean)
             mProteinCoverageSummarizer.MatchPeptidePrefixAndSuffixToProtein = Value
         End Set
     End Property
@@ -87,7 +87,7 @@ Public Class clsProteinCoverageSummarizerRunner
         Get
             Return mProteinCoverageSummarizer.OutputProteinSequence
         End Get
-        Set(ByVal Value As Boolean)
+        Set(Value As Boolean)
             mProteinCoverageSummarizer.OutputProteinSequence = Value
         End Set
     End Property
@@ -96,7 +96,7 @@ Public Class clsProteinCoverageSummarizerRunner
         Get
             Return mProteinCoverageSummarizer.PeptideFileFormatCode
         End Get
-        Set(ByVal Value As ProteinCoverageSummarizer.clsProteinCoverageSummarizer.ePeptideFileColumnOrderingCode)
+        Set(Value As ProteinCoverageSummarizer.clsProteinCoverageSummarizer.ePeptideFileColumnOrderingCode)
             mProteinCoverageSummarizer.PeptideFileFormatCode = Value
         End Set
     End Property
@@ -105,7 +105,7 @@ Public Class clsProteinCoverageSummarizerRunner
         Get
             Return mProteinCoverageSummarizer.PeptideFileSkipFirstLine
         End Get
-        Set(ByVal Value As Boolean)
+        Set(Value As Boolean)
             mProteinCoverageSummarizer.PeptideFileSkipFirstLine = Value
         End Set
     End Property
@@ -114,7 +114,7 @@ Public Class clsProteinCoverageSummarizerRunner
         Get
             Return mProteinCoverageSummarizer.PeptideInputFileDelimiter
         End Get
-        Set(ByVal Value As Char)
+        Set(Value As Char)
             mProteinCoverageSummarizer.PeptideInputFileDelimiter = Value
         End Set
     End Property
@@ -123,7 +123,7 @@ Public Class clsProteinCoverageSummarizerRunner
         Get
             Return mProteinCoverageSummarizer.mProteinDataCache.DelimitedFileDelimiter
         End Get
-        Set(ByVal value As Char)
+        Set(value As Char)
             mProteinCoverageSummarizer.mProteinDataCache.DelimitedFileDelimiter = value
         End Set
     End Property
@@ -131,7 +131,7 @@ Public Class clsProteinCoverageSummarizerRunner
         Get
             Return mProteinCoverageSummarizer.mProteinDataCache.DelimitedFileFormatCode
         End Get
-        Set(ByVal value As ProteinFileReader.DelimitedFileReader.eDelimitedFileFormatCode)
+        Set(value As ProteinFileReader.DelimitedFileReader.eDelimitedFileFormatCode)
             mProteinCoverageSummarizer.mProteinDataCache.DelimitedFileFormatCode = value
         End Set
     End Property
@@ -139,7 +139,7 @@ Public Class clsProteinCoverageSummarizerRunner
         Get
             Return mProteinCoverageSummarizer.mProteinDataCache.DelimitedFileSkipFirstLine
         End Get
-        Set(ByVal value As Boolean)
+        Set(value As Boolean)
             mProteinCoverageSummarizer.mProteinDataCache.DelimitedFileSkipFirstLine = value
         End Set
     End Property
@@ -147,7 +147,7 @@ Public Class clsProteinCoverageSummarizerRunner
         Get
             Return mProteinCoverageSummarizer.mProteinDataCache.RemoveSymbolCharacters
         End Get
-        Set(ByVal value As Boolean)
+        Set(value As Boolean)
             mProteinCoverageSummarizer.mProteinDataCache.RemoveSymbolCharacters = value
         End Set
     End Property
@@ -155,7 +155,7 @@ Public Class clsProteinCoverageSummarizerRunner
         Get
             Return mProteinCoverageSummarizer.mProteinDataCache.IgnoreILDifferences
         End Get
-        Set(ByVal value As Boolean)
+        Set(value As Boolean)
             mProteinCoverageSummarizer.mProteinDataCache.IgnoreILDifferences = value
         End Set
     End Property
@@ -164,7 +164,7 @@ Public Class clsProteinCoverageSummarizerRunner
         Get
             Return mProteinCoverageSummarizer.ProteinInputFilePath
         End Get
-        Set(ByVal Value As String)
+        Set(Value As String)
             mProteinCoverageSummarizer.ProteinInputFilePath = Value
         End Set
     End Property
@@ -179,7 +179,7 @@ Public Class clsProteinCoverageSummarizerRunner
         Get
             Return mProteinCoverageSummarizer.RemoveSymbolCharacters
         End Get
-        Set(ByVal Value As Boolean)
+        Set(Value As Boolean)
             mProteinCoverageSummarizer.RemoveSymbolCharacters = Value
         End Set
     End Property
@@ -194,7 +194,7 @@ Public Class clsProteinCoverageSummarizerRunner
         Get
             Return mProteinCoverageSummarizer.SaveProteinToPeptideMappingFile
         End Get
-        Set(ByVal Value As Boolean)
+        Set(Value As Boolean)
             mProteinCoverageSummarizer.SaveProteinToPeptideMappingFile = Value
         End Set
     End Property
@@ -203,7 +203,7 @@ Public Class clsProteinCoverageSummarizerRunner
         Get
             Return mProteinCoverageSummarizer.SearchAllProteinsForPeptideSequence
         End Get
-        Set(ByVal Value As Boolean)
+        Set(Value As Boolean)
             mProteinCoverageSummarizer.SearchAllProteinsForPeptideSequence = Value
         End Set
     End Property
@@ -212,7 +212,7 @@ Public Class clsProteinCoverageSummarizerRunner
         Get
             Return mProteinCoverageSummarizer.UseLeaderSequenceHashTable
         End Get
-        Set(ByVal Value As Boolean)
+        Set(Value As Boolean)
             mProteinCoverageSummarizer.UseLeaderSequenceHashTable = Value
         End Set
     End Property
@@ -221,7 +221,7 @@ Public Class clsProteinCoverageSummarizerRunner
         Get
             Return mProteinCoverageSummarizer.SearchAllProteinsSkipCoverageComputationSteps
         End Get
-        Set(ByVal Value As Boolean)
+        Set(Value As Boolean)
             mProteinCoverageSummarizer.SearchAllProteinsSkipCoverageComputationSteps = Value
         End Set
     End Property
@@ -236,7 +236,7 @@ Public Class clsProteinCoverageSummarizerRunner
         Get
             Return mProteinCoverageSummarizer.TrackPeptideCounts
         End Get
-        Set(ByVal Value As Boolean)
+        Set(Value As Boolean)
             mProteinCoverageSummarizer.TrackPeptideCounts = Value
         End Set
     End Property
@@ -264,11 +264,11 @@ Public Class clsProteinCoverageSummarizerRunner
         mProteinCoverageSummarizer = New ProteinCoverageSummarizer.clsProteinCoverageSummarizer
     End Sub
 
-    Public Function LoadParameterFileSettings(ByVal strParameterFilePath As String) As Boolean
+    Public Function LoadParameterFileSettings(strParameterFilePath As String) As Boolean
         Return mProteinCoverageSummarizer.LoadParameterFileSettings(strParameterFilePath)
     End Function
 
-    Public Overloads Overrides Function ProcessFile(ByVal strInputFilePath As String, ByVal strOutputFolderPath As String, ByVal strParameterFilePath As String, ByVal blnResetErrorCode As Boolean) As Boolean
+    Public Overloads Overrides Function ProcessFile(strInputFilePath As String, strOutputFolderPath As String, strParameterFilePath As String, blnResetErrorCode As Boolean) As Boolean
 
         Dim blnSuccess As Boolean
 
@@ -301,7 +301,7 @@ Public Class clsProteinCoverageSummarizerRunner
 
     End Function
 
-    Private Sub mProteinCoverageSummarizer_ProgressChanged(ByVal taskDescription As String, ByVal percentComplete As Single) Handles mProteinCoverageSummarizer.ProgressChanged
+    Private Sub mProteinCoverageSummarizer_ProgressChanged(taskDescription As String, percentComplete As Single) Handles mProteinCoverageSummarizer.ProgressChanged
         UpdateProgress(taskDescription, percentComplete)
 
         ''If mUseProgressForm AndAlso Not mProgressForm Is Nothing Then

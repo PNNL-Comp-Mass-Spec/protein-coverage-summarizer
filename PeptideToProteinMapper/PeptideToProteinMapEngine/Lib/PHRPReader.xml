@@ -110,6 +110,47 @@ PHRPReader
 	<param name="dblMass"></param>
 	<returns></returns>
 	<remarks></remarks>
+</member><member name="M:PHRPReader.clsPHRPParserMSPathFinder.#ctor(System.String,System.String)">
+	<summary>
+ Constructor; assumes blnLoadModsAndSeqInfo=True
+ </summary>
+	<param name="strDatasetName">Dataset name</param>
+	<param name="strInputFilePath">Input file path</param>
+	<remarks></remarks>
+</member><member name="M:PHRPReader.clsPHRPParserMSPathFinder.#ctor(System.String,System.String,System.Boolean)">
+	<summary>
+ Constructor
+ </summary>
+	<param name="strDatasetName">Dataset name</param>
+	<param name="strInputFilePath">Input file path</param>
+	<param name="blnLoadModsAndSeqInfo">If True, then load the ModSummary file and SeqInfo files</param>
+	<remarks></remarks>
+</member><member name="M:PHRPReader.clsPHRPParserMSPathFinder.#ctor(System.String,System.String,PHRPReader.clsPHRPStartupOptions)">
+	<summary>
+ Constructor
+ </summary>
+	<param name="strDatasetName">Dataset name</param>
+	<param name="strInputFilePath">Input file path</param>
+	<param name="startupOptions">Startup Options, in particular LoadModsAndSeqInfo and mMaxProteinsPerPSM</param>
+	<remarks></remarks>
+</member><member name="M:PHRPReader.clsPHRPParserMSPathFinder.LoadSearchEngineParameters(System.String,PHRPReader.clsSearchEngineParameters@)">
+	<summary>
+ Parses the specified MSPathFinder parameter file
+ </summary>
+	<param name="strSearchEngineParamFileName"></param>
+	<param name="objSearchEngineParams"></param>
+	<returns></returns>
+	<remarks></remarks>
+</member><member name="M:PHRPReader.clsPHRPParserMSPathFinder.ParsePHRPDataLine(System.String,System.Int32,PHRPReader.clsPSM@,System.Boolean)">
+	<summary>
+ Parse the data line read from a PHRP results file
+ </summary>
+	<param name="strLine">Data line</param>
+	<param name="intLinesRead">Number of lines read so far (used for error reporting)</param>
+	<param name="objPSM">clsPSM object (output)</param>
+	<param name="fastReadMode">When set to true, then reads the next data line, but doesn't perform text parsing required to determine cleavage state</param>
+	<returns>True if success, false if an error</returns>
+	<remarks>When fastReadMode is True, you should call FinalizePSM to populate the remaining fields</remarks>
 </member><member name="P:PHRPReader.clsPSM.AdditionalScores">
 	<summary>
  Returns a dictionary with additional search engine scores stored as key/value pairs
@@ -1398,7 +1439,7 @@ PHRPReader
 	<remarks></remarks>
 </member><member name="M:PHRPReader.clsPHRPParserMSGFDB.DeterminePrecursorMassTolerance(PHRPReader.clsSearchEngineParameters,System.Double@)">
 	<summary>
- Determines the precursor mass tolerance
+ Determines the precursor mass tolerance for either MSGF+ or MSPathFinder
  </summary>
 	<param name="objSearchEngineParams"></param>
 	<param name="dblTolerancePPM">Precursor mass tolerance, in ppm</param>

@@ -25,7 +25,7 @@ Public Class GUI
     End Sub
 
     'Form overrides dispose to clean up the component list.
-    Protected Overloads Overrides Sub Dispose(ByVal disposing As Boolean)
+    Protected Overloads Overrides Sub Dispose(disposing As Boolean)
         If disposing Then
             If Not (components Is Nothing) Then
                 components.Dispose()
@@ -964,7 +964,7 @@ Public Class GUI
         End If
     End Function
 
-    Private Sub CreateSummaryDataTable(ByVal strResultsFilePath As String)
+    Private Sub CreateSummaryDataTable(strResultsFilePath As String)
 
         Dim srInFile As System.IO.StreamReader
         Dim bytesRead As Long = 0
@@ -1081,7 +1081,7 @@ Public Class GUI
 
 	End Sub
 
-	Private Sub DefineOutputFolderPath(ByVal strPeptideInputFilePath As String)
+	Private Sub DefineOutputFolderPath(strPeptideInputFilePath As String)
 
 		Try
 			If strPeptideInputFilePath.Length > 0 Then
@@ -1115,7 +1115,7 @@ Public Class GUI
 		Return clsProcessFilesBaseClass.GetSettingsFilePathLocal("ProteinCoverageSummarizer", XML_SETTINGS_FILE_NAME)
 	End Function
 
-	Private Sub IniFileLoadOptions(ByVal blnUpdateIOPaths As Boolean)
+	Private Sub IniFileLoadOptions(blnUpdateIOPaths As Boolean)
 		' Prompts the user to select a file to load the options from
 
 		Dim strFilePath As String
@@ -1163,7 +1163,7 @@ Public Class GUI
 
 	End Sub
 
-	Private Sub IniFileLoadOptions(ByVal strFilePath As String, ByVal blnUpdateIOPaths As Boolean)
+	Private Sub IniFileLoadOptions(strFilePath As String, blnUpdateIOPaths As Boolean)
 
 		Dim objSettingsFile As XmlSettingsFileAccessor
 
@@ -1283,7 +1283,7 @@ Public Class GUI
 
 	End Sub
 
-	Private Sub IniFileSaveOptions(ByVal FileName As String, Optional ByVal blnSaveExtendedOptions As Boolean = False)
+	Private Sub IniFileSaveOptions(FileName As String, Optional blnSaveExtendedOptions As Boolean = False)
 		Dim objSettingsFile As New XmlSettingsFileAccessor
 
 		Const XML_SECTION_PROCESSING_OPTIONS As String = "ProcessingOptions"
@@ -1446,7 +1446,7 @@ Public Class GUI
 
 	End Sub
 
-	Private Function LookupColumnDelimiter(ByVal DelimiterCombobox As ComboBox, ByVal DelimiterTextbox As TextBox, ByVal strDefaultDelimiter As Char) As Char
+	Private Function LookupColumnDelimiter(DelimiterCombobox As ComboBox, DelimiterTextbox As TextBox, strDefaultDelimiter As Char) As Char
 		Try
 			Return LookupColumnDelimiterChar(DelimiterCombobox.SelectedIndex, DelimiterTextbox.Text, strDefaultDelimiter)
 		Catch ex As Exception
@@ -1454,7 +1454,7 @@ Public Class GUI
 		End Try
 	End Function
 
-	Private Function LookupColumnDelimiterChar(ByVal intDelimiterIndex As Integer, ByVal strCustomDelimiter As String, ByVal strDefaultDelimiter As Char) As Char
+	Private Function LookupColumnDelimiterChar(intDelimiterIndex As Integer, strCustomDelimiter As String, strDefaultDelimiter As Char) As Char
 
 		Dim strDelimiter As String
 
@@ -1624,7 +1624,7 @@ Public Class GUI
 		End With
 	End Sub
 
-	Private Function SetOptionsFromGUI(ByVal objProteinCoverageSummarizer As clsProteinCoverageSummarizerRunner) As Boolean
+	Private Function SetOptionsFromGUI(objProteinCoverageSummarizer As clsProteinCoverageSummarizerRunner) As Boolean
 		Try
 			With objProteinCoverageSummarizer
 
@@ -1700,7 +1700,7 @@ Public Class GUI
 		ShowRichTextStart(eSequenceDisplayConstants.UsePrevious)
 	End Sub
 
-	Private Sub ShowRichTextStart(ByVal eSequenceDisplayMode As eSequenceDisplayConstants)
+	Private Sub ShowRichTextStart(eSequenceDisplayMode As eSequenceDisplayConstants)
 		Static blnLastSequenceWasDatagrid As Boolean
 		Dim blnUseDatagrid As Boolean
 
@@ -1731,15 +1731,15 @@ Public Class GUI
 
 	End Sub
 
-	Protected Sub ShowErrorMessage(ByVal strMessage As String)
+	Protected Sub ShowErrorMessage(strMessage As String)
 		ShowErrorMessage(strMessage, "Error")
 	End Sub
 
-	Protected Sub ShowErrorMessage(ByVal strMessage As String, ByVal strCaption As String)
+	Protected Sub ShowErrorMessage(strMessage As String, strCaption As String)
 		System.Windows.Forms.MessageBox.Show(strMessage, strCaption, MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
 	End Sub
 
-	Private Sub ShowRichText(ByVal strSequenceToShow As String, ByVal objRichTextBox As System.Windows.Forms.RichTextBox)
+	Private Sub ShowRichText(strSequenceToShow As String, objRichTextBox As System.Windows.Forms.RichTextBox)
 
 		Dim intIndex As Integer
 		Dim intModValue As Integer
@@ -1922,7 +1922,7 @@ Public Class GUI
 
     End Sub
 
-    Private Sub ValidateTextbox(ByRef ThisTextBox As TextBox, ByVal strDefaultText As String)
+    Private Sub ValidateTextbox(ByRef ThisTextBox As TextBox, strDefaultText As String)
         If ThisTextBox.TextLength = 0 Then
             ThisTextBox.Text = strDefaultText
         End If
@@ -1930,141 +1930,141 @@ Public Class GUI
 
 #Region "Command Handlers"
 
-    Private Sub chkSearchAllProteinsForPeptideSequence_CheckedChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles chkSearchAllProteinsForPeptideSequence.CheckedChanged
+    Private Sub chkSearchAllProteinsForPeptideSequence_CheckedChanged(sender As System.Object, e As System.EventArgs) Handles chkSearchAllProteinsForPeptideSequence.CheckedChanged
         EnableDisableControls()
     End Sub
 
-    Private Sub cmdAbort_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles cmdAbort.Click
+    Private Sub cmdAbort_Click(sender As System.Object, e As System.EventArgs) Handles cmdAbort.Click
         mProteinCoverageSummarizer.AbortProcessing = True
     End Sub
 
-    Private Sub cmdExit_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles cmdExit.Click
+    Private Sub cmdExit_Click(sender As System.Object, e As System.EventArgs) Handles cmdExit.Click
         Me.Close()
     End Sub
 
-    Private Sub cmdSelectOutputFolder_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles cmdSelectOutputFolder.Click
+    Private Sub cmdSelectOutputFolder_Click(sender As System.Object, e As System.EventArgs) Handles cmdSelectOutputFolder.Click
         SelectOutputFolder()
     End Sub
 
-    Private Sub cmdPeptideSelectFile_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles cmdPeptideSelectFile.Click
+    Private Sub cmdPeptideSelectFile_Click(sender As System.Object, e As System.EventArgs) Handles cmdPeptideSelectFile.Click
         SelectPeptideInputFile()
     End Sub
 
-    Private Sub cmdProteinSelectFile_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles cmdProteinSelectFile.Click
+    Private Sub cmdProteinSelectFile_Click(sender As System.Object, e As System.EventArgs) Handles cmdProteinSelectFile.Click
         SelectProteinInputFile()
     End Sub
 
-    Private Sub cmdStart_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles cmdStart.Click
+    Private Sub cmdStart_Click(sender As System.Object, e As System.EventArgs) Handles cmdStart.Click
         If ConfirmInputFilePaths() Then
             Start()
         End If
     End Sub
 
-    Private Sub chkAddSpace_CheckStateChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles chkAddSpace.CheckedChanged
+    Private Sub chkAddSpace_CheckStateChanged(sender As System.Object, e As System.EventArgs) Handles chkAddSpace.CheckedChanged
         ShowRichTextStart()
     End Sub
 
-    Private Sub cboCharactersPerLine_SelectedIndexChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles cboCharactersPerLine.SelectedIndexChanged
+    Private Sub cboCharactersPerLine_SelectedIndexChanged(sender As System.Object, e As System.EventArgs) Handles cboCharactersPerLine.SelectedIndexChanged
         ShowRichTextStart()
     End Sub
 
-    Private Sub dgResults_CurrentCellChanged(ByVal sender As Object, ByVal e As System.EventArgs) Handles dgResults.CurrentCellChanged
+    Private Sub dgResults_CurrentCellChanged(sender As Object, e As System.EventArgs) Handles dgResults.CurrentCellChanged
         ShowRichTextStart(eSequenceDisplayConstants.UseDatagrid)
     End Sub
 
 #End Region
 
 #Region "Textbox handlers"
-    Private Sub txtCoverage_KeyPress(ByVal sender As Object, ByVal e As System.Windows.Forms.KeyPressEventArgs) Handles txtCoverage.KeyPress
+    Private Sub txtCoverage_KeyPress(sender As Object, e As System.Windows.Forms.KeyPressEventArgs) Handles txtCoverage.KeyPress
         SharedVBNetRoutines.VBNetRoutines.TextBoxKeyPressHandler(txtCoverage, e, False, False, False, False, False, False, False, False, False, False, True)
     End Sub
 
-    Private Sub txtCustomProteinSequence_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles txtCustomProteinSequence.Click
+    Private Sub txtCustomProteinSequence_Click(sender As Object, e As System.EventArgs) Handles txtCustomProteinSequence.Click
         If txtCustomProteinSequence.TextLength > 0 Then ShowRichTextStart(eSequenceDisplayConstants.UseCustom)
     End Sub
 
-    Private Sub txtCustomProteinSequence_KeyPress(ByVal sender As Object, ByVal e As System.Windows.Forms.KeyPressEventArgs) Handles txtCustomProteinSequence.KeyPress
+    Private Sub txtCustomProteinSequence_KeyPress(sender As Object, e As System.Windows.Forms.KeyPressEventArgs) Handles txtCustomProteinSequence.KeyPress
         SharedVBNetRoutines.VBNetRoutines.TextBoxKeyPressHandler(txtCustomProteinSequence, e, False, False, False, True, False, False, False, False, True, True, True)
     End Sub
 
-    Private Sub txtCustomProteinSequence_TextChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles txtCustomProteinSequence.TextChanged
+    Private Sub txtCustomProteinSequence_TextChanged(sender As System.Object, e As System.EventArgs) Handles txtCustomProteinSequence.TextChanged
         ShowRichTextStart(eSequenceDisplayConstants.UseCustom)
     End Sub
 
-    Private Sub txtOutputFolderPath_KeyPress(ByVal sender As System.Object, ByVal e As System.Windows.Forms.KeyPressEventArgs) Handles txtOutputFolderPath.KeyPress
+    Private Sub txtOutputFolderPath_KeyPress(sender As System.Object, e As System.Windows.Forms.KeyPressEventArgs) Handles txtOutputFolderPath.KeyPress
         SharedVBNetRoutines.VBNetRoutines.TextBoxKeyPressHandlerCheckControlChars(txtOutputFolderPath, e)
     End Sub
 
-    Private Sub txtPeptideInputFilePath_KeyPress(ByVal sender As Object, ByVal e As System.Windows.Forms.KeyPressEventArgs) Handles txtPeptideInputFilePath.KeyPress
+    Private Sub txtPeptideInputFilePath_KeyPress(sender As Object, e As System.Windows.Forms.KeyPressEventArgs) Handles txtPeptideInputFilePath.KeyPress
         SharedVBNetRoutines.VBNetRoutines.TextBoxKeyPressHandlerCheckControlChars(txtPeptideInputFilePath, e)
     End Sub
 
-    Private Sub txtPeptideInputFilePath_TextChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles txtPeptideInputFilePath.TextChanged
+    Private Sub txtPeptideInputFilePath_TextChanged(sender As System.Object, e As System.EventArgs) Handles txtPeptideInputFilePath.TextChanged
         ' Auto-define the output file path
         DefineOutputFolderPath(txtPeptideInputFilePath.Text)
     End Sub
 
-    Private Sub txtProteinInputFilePath_KeyPress(ByVal sender As System.Object, ByVal e As System.Windows.Forms.KeyPressEventArgs) Handles txtProteinInputFilePath.KeyPress
+    Private Sub txtProteinInputFilePath_KeyPress(sender As System.Object, e As System.Windows.Forms.KeyPressEventArgs) Handles txtProteinInputFilePath.KeyPress
         SharedVBNetRoutines.VBNetRoutines.TextBoxKeyPressHandlerCheckControlChars(txtProteinInputFilePath, e)
     End Sub
 
-    Private Sub txtProteinInputFilePath_TextChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles txtProteinInputFilePath.TextChanged
+    Private Sub txtProteinInputFilePath_TextChanged(sender As System.Object, e As System.EventArgs) Handles txtProteinInputFilePath.TextChanged
         EnableDisableControls()
     End Sub
 
 #End Region
 
 #Region "Menu Handlers"
-    Private Sub mnuFileExit_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles mnuFileExit.Click
+    Private Sub mnuFileExit_Click(sender As System.Object, e As System.EventArgs) Handles mnuFileExit.Click
         CloseProgram()
     End Sub
 
-    Private Sub mnuFileSelectInputFile_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles mnuFileSelectInputFile.Click
+    Private Sub mnuFileSelectInputFile_Click(sender As System.Object, e As System.EventArgs) Handles mnuFileSelectInputFile.Click
         SelectProteinInputFile()
     End Sub
 
-    Private Sub mnuFileLoadOptions_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles mnuFileLoadOptions.Click
+    Private Sub mnuFileLoadOptions_Click(sender As System.Object, e As System.EventArgs) Handles mnuFileLoadOptions.Click
         IniFileLoadOptions(False)
     End Sub
 
-    Private Sub mnuPeptideInputFile_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles mnuPeptideInputFile.Click
+    Private Sub mnuPeptideInputFile_Click(sender As System.Object, e As System.EventArgs) Handles mnuPeptideInputFile.Click
         SelectPeptideInputFile()
     End Sub
 
-    Private Sub mnuFileSelectOutputFile_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles mnuFileSelectOutputFile.Click
+    Private Sub mnuFileSelectOutputFile_Click(sender As System.Object, e As System.EventArgs) Handles mnuFileSelectOutputFile.Click
         SelectPeptideInputFile()
     End Sub
 
-    Private Sub mnuEditShowRTF_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles mnuEditShowRTF.Click
+    Private Sub mnuEditShowRTF_Click(sender As System.Object, e As System.EventArgs) Handles mnuEditShowRTF.Click
         ToggleRTFCodeVisible()
     End Sub
 
-    Private Sub mnuHelpAbout_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles mnuHelpAbout.Click
+    Private Sub mnuHelpAbout_Click(sender As System.Object, e As System.EventArgs) Handles mnuHelpAbout.Click
         ShowAboutBox()
     End Sub
 
-    Private Sub mnuEditResetOptions_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles mnuEditResetOptions.Click
+    Private Sub mnuEditResetOptions_Click(sender As System.Object, e As System.EventArgs) Handles mnuEditResetOptions.Click
         ResetToDefaults()
     End Sub
 
-    Private Sub mnuFileSaveDefaultOptions_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles mnuFileSaveDefaultOptions.Click
+    Private Sub mnuFileSaveDefaultOptions_Click(sender As System.Object, e As System.EventArgs) Handles mnuFileSaveDefaultOptions.Click
 		IniFileSaveOptions(GetSettingsFilePath(), True)
     End Sub
 #End Region
 
-    Private Sub GUI_Closing(ByVal sender As Object, ByVal e As System.ComponentModel.CancelEventArgs) Handles MyBase.Closing
+    Private Sub GUI_Closing(sender As Object, e As System.ComponentModel.CancelEventArgs) Handles MyBase.Closing
 		IniFileSaveOptions(GetSettingsFilePath())
     End Sub
 
-    Private Sub chkSearchAllProteinsSaveDetails_CheckedChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles chkSaveProteinToPeptideMappingFile.CheckedChanged
+    Private Sub chkSearchAllProteinsSaveDetails_CheckedChanged(sender As System.Object, e As System.EventArgs) Handles chkSaveProteinToPeptideMappingFile.CheckedChanged
         EnableDisableControls()
     End Sub
 
-    Private Sub cboPeptideInputFileColumnOrdering_SelectedIndexChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles cboPeptideInputFileColumnOrdering.SelectedIndexChanged
+    Private Sub cboPeptideInputFileColumnOrdering_SelectedIndexChanged(sender As System.Object, e As System.EventArgs) Handles cboPeptideInputFileColumnOrdering.SelectedIndexChanged
         AutoDefineSearchAllProteins()
     End Sub
 
-    Private Sub mProteinCoverageSummarizer_ProgressChanged(ByVal taskDescription As String, ByVal percentComplete As Single) Handles mProteinCoverageSummarizer.ProgressChanged
+    Private Sub mProteinCoverageSummarizer_ProgressChanged(taskDescription As String, percentComplete As Single) Handles mProteinCoverageSummarizer.ProgressChanged
         lblProgress.Text = taskDescription
         If percentComplete > 0 Then lblProgress.Text &= ControlChars.NewLine & percentComplete.ToString("0.0") & "% complete"
 
