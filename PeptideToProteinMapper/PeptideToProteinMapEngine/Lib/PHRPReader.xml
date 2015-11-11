@@ -525,6 +525,13 @@ PHRPReader
 	<value></value>
 	<returns></returns>
 	<remarks></remarks>
+</member><member name="P:PHRPReader.clsPHRPReader.MaxProteinsPerPSM">
+	<summary>
+ The maximum number of proteins that will be tracked for each PSM
+ </summary>
+	<value></value>
+	<returns></returns>
+	<remarks></remarks>
 </member><member name="P:PHRPReader.clsPHRPReader.ModSummaryFileLoaded">
 	<summary>
  Returns True if the ModSummary file was successfully loaded
@@ -770,6 +777,19 @@ PHRPReader
 	<param name="strSynopsisOrFirstHitsFileName">Filename (or full path) to the synopsis or first-hits file</param>
 	<returns></returns>
 	<remarks></remarks>
+</member><member name="M:PHRPReader.clsPHRPReader.GetPeptideHitResultType(System.String)">
+	<summary>
+ Get the peptide hit result type for the given result type name
+ </summary>
+	<param name="ResultTypeName"></param>
+	<returns></returns>
+	<remarks></remarks>
+</member><member name="M:PHRPReader.clsPHRPReader.GetPHRPAuxiliaryFileSuffixes">
+	<summary>
+ Get the list of auxiliary file suffixes
+ </summary>
+	<returns></returns>
+	<remarks></remarks>
 </member><member name="M:PHRPReader.clsPHRPReader.GetPHRPFirstHitsFileName(PHRPReader.clsPHRPReader.ePeptideHitResultType,System.String)">
 	<summary>
  Returns the default first-hits file name for the given PeptideHit result type
@@ -832,6 +852,27 @@ PHRPReader
  </summary>
 	<param name="eResultType"></param>
 	<param name="strDatasetName"></param>
+	<returns></returns>
+	<remarks></remarks>
+</member><member name="M:PHRPReader.clsPHRPReader.GetScanStatsFilename(System.String)">
+	<summary>
+ Get the ScanStats filename for the given dataset
+ </summary>
+	<param name="strDatasetName"></param>
+	<returns></returns>
+	<remarks></remarks>
+</member><member name="M:PHRPReader.clsPHRPReader.GetExtendedScanStatsFilename(System.String)">
+	<summary>
+ Get the extended ScanStats filename for the given dataset
+ </summary>
+	<param name="strDatasetName"></param>
+	<returns></returns>
+	<remarks></remarks>
+</member><member name="M:PHRPReader.clsPHRPReader.GetToolVersionInfoFilename(PHRPReader.clsPHRPReader.ePeptideHitResultType)">
+	<summary>
+ Get the tool version info filename for the given analysis tool
+ </summary>
+	<param name="eResultType"></param>
 	<returns></returns>
 	<remarks></remarks>
 </member><member name="M:PHRPReader.clsPHRPReader.IsLetterAtoZ(System.Char)">
@@ -991,28 +1032,36 @@ PHRPReader
 	<param name="lstPepToProteinMap">PepToProteinMap list (ouput); keys are clean peptide sequences (no mods), Values are Protein name and residue start/end locations for the peptide</param>
 	<returns>True if success, false if an error</returns>
 	<remarks></remarks>
-</member><member name="M:PHRPReader.clsPHRPSeqMapReader.LoadPepToProtMapData(System.String,System.Collections.Generic.Dictionary{System.String,PHRPReader.clsPepToProteinMapInfo}@)">
+</member><member name="M:PHRPReader.clsPHRPSeqMapReader.LoadPepToProtMapData(System.String,System.Collections.Generic.Dictionary{System.String,PHRPReader.clsPepToProteinMapInfo})">
 	<summary>
  Load the Peptide to Protein mapping using the specified PHRP result file
  </summary>
 	<param name="strFilePath"></param>
-	<param name="lstPepToProteinMap"></param>
+	<param name="lstPepToProteinMap">Peptide to protein mapping</param>
 	<returns></returns>
 	<remarks>The PepToProtMap file contains Residue_Start and Residue_End columns</remarks>
-</member><member name="M:PHRPReader.clsPHRPSeqMapReader.LoadResultToSeqMapping(System.String,System.Collections.Generic.SortedList{System.Int32,System.Int32}@)">
+</member><member name="M:PHRPReader.clsPHRPSeqMapReader.LoadResultToSeqMapping(System.String,System.Collections.Generic.SortedList{System.Int32,System.Int32})">
 	<summary>
  Load the Result to Seq mapping using the specified PHRP result file
  </summary>
 	<param name="strFilePath"></param>
-	<param name="lstResultToSeqMap"></param>
+	<param name="lstResultToSeqMap">Result to sequence mapping</param>
 	<returns></returns>
 	<remarks></remarks>
-</member><member name="M:PHRPReader.clsPHRPSeqMapReader.LoadSeqToProteinMapping(System.String,System.Collections.Generic.SortedList{System.Int32,System.Collections.Generic.List{PHRPReader.clsProteinInfo}}@)">
+</member><member name="M:PHRPReader.clsPHRPSeqMapReader.LoadSeqInfo(System.String,System.Collections.Generic.SortedList{System.Int32,PHRPReader.clsSeqInfo})">
+	<summary>
+ Load the sequence info
+ </summary>
+	<param name="strFilePath"></param>
+	<param name="lstSeqInfo">Sequences</param>
+	<returns></returns>
+	<remarks></remarks>
+</member><member name="M:PHRPReader.clsPHRPSeqMapReader.LoadSeqToProteinMapping(System.String,System.Collections.Generic.SortedList{System.Int32,System.Collections.Generic.List{PHRPReader.clsProteinInfo}})">
 	<summary>
  Load the Sequence to Protein mapping using the specified PHRP result file
  </summary>
 	<param name="strFilePath"></param>
-	<param name="lstSeqToProteinMap"></param>
+	<param name="lstSeqToProteinMap">Sequence to protein map</param>
 	<returns></returns>
 	<remarks></remarks>
 </member><member name="P:PHRPReader.clsPHRPStartupOptions.MaxProteinsPerPSM">
@@ -1437,7 +1486,7 @@ PHRPReader
 	<param name="strInputFilePath">Input file path</param>
 	<param name="startupOptions">Startup Options, in particular LoadModsAndSeqInfo and mMaxProteinsPerPSM</param>
 	<remarks></remarks>
-</member><member name="M:PHRPReader.clsPHRPParserMSGFDB.DeterminePrecursorMassTolerance(PHRPReader.clsSearchEngineParameters,System.Double@)">
+</member><member name="M:PHRPReader.clsPHRPParserMSGFDB.DeterminePrecursorMassTolerance(PHRPReader.clsSearchEngineParameters,System.Double@,PHRPReader.clsPHRPReader.ePeptideHitResultType)">
 	<summary>
  Determines the precursor mass tolerance for either MSGF+ or MSPathFinder
  </summary>
@@ -1716,11 +1765,192 @@ PHRPReader
 	<value></value>
 	<returns></returns>
 	<remarks>For ambiguous mods, indicates the first residue on which the mod could appear</remarks>
+</member><member name="F:PHRPReader.clsModificationDefinition.eModificationTypeConstants.UnknownType">
+	<summary>
+ Unknown mod type on a residue; essentially treated as a dynamic mod
+ </summary>
+	<remarks></remarks>
+</member><member name="F:PHRPReader.clsModificationDefinition.eModificationTypeConstants.DynamicMod">
+	<summary>
+ Dynamic mod on a residue or peptide terminus; supported by Sequest and notated via a modification symbol; this mod is explicitly notated by X!Tandem; if a terminus mod, then the mod symbol is associated with the first or last residue in the peptide
+ </summary>
+	<remarks></remarks>
+</member><member name="F:PHRPReader.clsModificationDefinition.eModificationTypeConstants.StaticMod">
+	<summary>
+ Static mod on a residue or peptide terminus; supported by Sequest but not explicitly notated; this mod is explicitly notated by X!Tandem; if a terminus mod, then the mod symbol is associated with the first or last residue in the peptide
+ </summary>
+	<remarks></remarks>
+</member><member name="F:PHRPReader.clsModificationDefinition.eModificationTypeConstants.TerminalPeptideStaticMod">
+	<summary>
+ Peptide terminus static mod (DMS Symbol is T); used by Sequest and MSGFDB; note that terminal mods are always dynamic in X!Tandem
+ </summary>
+	<remarks></remarks>
+</member><member name="F:PHRPReader.clsModificationDefinition.eModificationTypeConstants.IsotopicMod">
+	<summary>
+ Isotopic mod, e.g. N15, or C13; supported by Sequest; most likely not supported by XTandem
+ </summary>
+	<remarks></remarks>
+</member><member name="F:PHRPReader.clsModificationDefinition.eModificationTypeConstants.ProteinTerminusStaticMod">
+	<summary>
+ Protein terminus static mod; supported by Sequest; this mod is also supported by X!Tandem but modified residues are not explicitly notated; instead, all peptides have their mass implicitly modified by this amount
+ </summary>
+	<remarks></remarks>
+</member><member name="P:PHRPReader.clsModificationDefinition.ModificationSymbol">
+	<summary>
+ One letter symbol for this modification
+ </summary>
+	<value></value>
+	<returns></returns>
+	<remarks>
+ Use NO_SYMBOL_MODIFICATION_SYMBOL (a dash) if no symbol 
+ (necessary for isotopic mods or protein terminus static mods)
+ </remarks>
+</member><member name="P:PHRPReader.clsModificationDefinition.ModificationMass">
+	<summary>
+ Monoisotopic modification mass
+ </summary>
+	<value></value>
+	<returns></returns>
+	<remarks></remarks>
+</member><member name="P:PHRPReader.clsModificationDefinition.ModificationMassAsText">
+	<summary>
+ Modification mass, stored as text
+ </summary>
+	<value></value>
+	<returns></returns>
+	<remarks>Represents the original string value read from the data file</remarks>
+</member><member name="P:PHRPReader.clsModificationDefinition.TargetResidues">
+	<summary>
+ Residues that this modification can apply to
+ </summary>
+	<value></value>
+	<returns></returns>
+	<remarks>
+ If an empty string, then the modification can apply to any residue or terminus; 
+ Otherwise, should contain a space-free, comma-free list of one letter amino acid residue symbols that this mod can apply to.
+ Use the *_SYMBOL_DMS constants for the peptide and protein terminii symbols 
+ (less than and greater than signs for the peptide terminii; [ and ] for the protein terminii)
+ </remarks>
+</member><member name="P:PHRPReader.clsModificationDefinition.ModificationType">
+	<summary>
+ Modification type
+ </summary>
+	<value></value>
+	<returns></returns>
+	<remarks></remarks>
+</member><member name="P:PHRPReader.clsModificationDefinition.MassCorrectionTag">
+	<summary>
+ Modification name, for example Phosph, IodoAcet, Plus1Oxy, or Methyl 
+ </summary>
+	<value></value>
+	<returns></returns>
+	<remarks>Maximum length is 8 characters; cannot contain a colon, comma, or space</remarks>
+</member><member name="P:PHRPReader.clsModificationDefinition.AffectedAtom">
+	<summary>
+ Only used with Isotopic modifications, indicating the atom affected (e.g. C, H, N, O, or S)
+ </summary>
+	<value></value>
+	<returns></returns>
+	<remarks>
+ Set to Nothing or to clsPeptideMassCalculator.NO_AFFECTED_ATOM_SYMBOL (a dash) for positional modifications 
+ (including terminus modifications)
+ </remarks>
+</member><member name="P:PHRPReader.clsModificationDefinition.OccurrenceCount">
+	<summary>
+ Number of times this modification was observed in the given dataset
+ </summary>
+	<value></value>
+	<returns></returns>
+	<remarks></remarks>
+</member><member name="P:PHRPReader.clsModificationDefinition.UnknownModAutoDefined">
+	<summary>
+ True if this was an unknown mass that was auto defined
+ </summary>
+	<value></value>
+	<returns></returns>
+	<remarks></remarks>
+</member><member name="M:PHRPReader.clsModificationDefinition.Clear">
+	<summary>
+ Initialize the modification definition
+ </summary>
+	<remarks></remarks>
+</member><member name="M:PHRPReader.clsModificationDefinition.EquivalentMassTypeTagAndAtom(PHRPReader.clsModificationDefinition)">
+	<summary>
+ Compares objB to this object, ignoring .ModificationSymbol and ignoring .AffectedResidues
+ </summary>
+	<param name="objB"></param>
+	<returns>True if the items are equivalent</returns>
+	<remarks></remarks>
+</member><member name="M:PHRPReader.clsModificationDefinition.EquivalentMassTypeTagAndAtom(PHRPReader.clsModificationDefinition,PHRPReader.clsModificationDefinition)">
+	<summary>
+ Compare objA to objB but ignore .ModificationSymbol and .AffectedResidues
+ </summary>
+	<param name="objA"></param>
+	<param name="objB"></param>
+	<returns>True if the items are equivalent</returns>
+	<remarks></remarks>
+</member><member name="M:PHRPReader.clsModificationDefinition.EquivalentMassTypeTagAtomAndResidues(PHRPReader.clsModificationDefinition)">
+	<summary>
+ Compares objB to this object, ignoring .ModificationSymbol
+ </summary>
+	<param name="objB"></param>
+	<returns>True if the items are equivalent</returns>
+	<remarks></remarks>
+</member><member name="M:PHRPReader.clsModificationDefinition.EquivalentMassTypeTagAtomAndResidues(PHRPReader.clsModificationDefinition,PHRPReader.clsModificationDefinition)">
+	<summary>
+ Compares objB to this object
+ </summary>
+	<param name="objA"></param>
+	<param name="objB"></param>
+	<returns>True if the items are equivalent</returns>
+	<remarks></remarks>
+</member><member name="M:PHRPReader.clsModificationDefinition.EquivalentTargetResidues(System.String,System.String,System.Boolean)">
+	<summary>
+ Compare the residue lists (ignoring order)
+ </summary>
+	<param name="strResidues1"></param>
+	<param name="strResidues2"></param>
+	<param name="blnAllowResidues2ToBeSubsetOfResidues1"></param>
+	<returns>True if they contain the same residues</returns>
+	<remarks></remarks>
 </member><member name="M:PHRPReader.clsModificationDefinition.CanAffectPeptideOrProteinTerminus">
 	<summary>
  Returns True if this modification can affect the peptide or protein terminus
  Note that some modifications can affect either peptide teriminii or internal residues
  </summary>
+	<returns></returns>
+	<remarks></remarks>
+</member><member name="M:PHRPReader.clsModificationDefinition.CanAffectPeptideResidues">
+	<summary>
+ Returns true if this modification can affect peptide residues
+ </summary>
+	<returns></returns>
+	<remarks></remarks>
+</member><member name="M:PHRPReader.clsModificationDefinition.GetTerminalSymbols">
+	<summary>
+ Retrieve the protein and peptide terminus symbols
+ </summary>
+	<returns></returns>
+	<remarks></remarks>
+</member><member name="M:PHRPReader.clsModificationDefinition.ModificationSymbolToModificationType(System.Char)">
+	<summary>
+ Retrieve the modification type for the given modification type symbol
+ </summary>
+	<param name="chModificationTypeSymbol">D, S, T, I, or P</param>
+	<returns></returns>
+	<remarks></remarks>
+</member><member name="M:PHRPReader.clsModificationDefinition.ModificationTypeToModificationSymbol(PHRPReader.clsModificationDefinition.eModificationTypeConstants)">
+	<summary>
+ Retrieve the modification type symbol for the given modification Type
+ </summary>
+	<param name="eModificationType"></param>
+	<returns>D, S, T, I, or P</returns>
+	<remarks></remarks>
+</member><member name="M:PHRPReader.clsModificationDefinition.TargetResiduesContain(System.Char)">
+	<summary>
+ Check whether the target residues contain the given residue
+ </summary>
+	<param name="chComparisonResidue"></param>
 	<returns></returns>
 	<remarks></remarks>
 </member><member name="P:PHRPReader.clsSeqInfo.SeqID">
