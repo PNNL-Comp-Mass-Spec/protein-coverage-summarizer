@@ -30,7 +30,6 @@ Source: ..\bin\BSA_P171_QID1638_TestPeptides_ProteinToPeptideMapping.txt  ; Dest
 Source: ..\bin\BSA_P171_QID1638_TestPeptides_SequenceOnly.txt             ; DestDir: {app}
 Source: ..\bin\BSA_P171_QID1638_TestProteins.txt                          ; DestDir: {app}
 
-Source: Images\textdoc.ico                   ; DestDir: {app}
 Source: Images\delete_16x.ico                ; DestDir: {app}
 Source: ..\Readme.txt                        ; DestDir: {app}
 Source: ..\RevisionHistory.txt               ; DestDir: {app}
@@ -45,7 +44,6 @@ Name: desktopicon; Description: {cm:CreateDesktopIcon}; GroupDescription: {cm:Ad
 [Icons]
 Name: {commondesktop}\Protein Coverage Summarizer; Filename: {app}\ProteinCoverageSummarizerGUI.exe; Tasks: desktopicon; Comment: Protein Coverage SummarizerGUI
 Name: {group}\Protein Coverage Summarizer; Filename: {app}\ProteinCoverageSummarizerGUI.exe; Comment: Protein Coverage SummarizerGUI
-Name: {group}\ReadMe File; Filename: {app}\readme.txt; IconFilename: {app}\textdoc.ico; IconIndex: 0; Comment: Protein Coverage Summarizer ReadMe
 
 [Setup]
 AppName=Protein Coverage Summarizer
