@@ -251,7 +251,7 @@ PHRPReader
  </summary>
 	<value></value>
 	<returns></returns>
-	<remarks></remarks>
+	<remarks>This mass is computed by PHRP using the PrecursorNeutralMass plus any modification masses associated with the peptide's residues</remarks>
 </member><member name="P:PHRPReader.clsPSM.PeptideWithNumericMods">
 	<summary>
  Peptide sequence where all modified residues have the modification masses displayed as numeric values
@@ -273,7 +273,7 @@ PHRPReader
  </summary>
 	<value></value>
 	<returns></returns>
-	<remarks></remarks>
+	<remarks>This mass is based on the mass or m/z value reported by the search engine</remarks>
 </member><member name="P:PHRPReader.clsPSM.Proteins">
 	<summary>
  List of proteins associated with this peptide

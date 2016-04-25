@@ -35,7 +35,7 @@ Imports PeptideToProteinMapEngine.clsPeptideToProteinMapEngine
 
 Public Module modMain
 
-    Public Const PROGRAM_DATE As String = "July 22, 2015"
+    Public Const PROGRAM_DATE As String = "April 25, 2016"
 
 	Private mPeptideInputFilePath As String
 	Private mProteinInputFilePath As String

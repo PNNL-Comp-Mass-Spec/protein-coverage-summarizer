@@ -1,5 +1,9 @@
 Protein Coverage Summarizer Change Log
 
+Version 1.3.5303; April 25, 2016
+	- Updated to System.Data.SQLite v1.0.97
+	- Updated to .NET 4.5.1
+
 Version 1.3.5681; July 22, 2015
 	- New PHRPReader that supports MSPathFinder
 
