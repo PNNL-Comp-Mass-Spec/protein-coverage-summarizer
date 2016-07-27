@@ -475,9 +475,11 @@ Public Class clsProteinFileDataCache
     End Sub
 
     Public Shared Function IsFastaFile(strFilePath As String) As Boolean
-        ' Examines the file's extension and true if it ends in .fasta
+        ' Examines the file's extension and true if it ends in .fasta or .fsa
 
-        If Path.GetFileName(strFilePath).ToLower.IndexOf(".fasta") > 0 Then
+        Dim proteinFileExtension = Path.GetExtension(strFilePath).ToLower()
+
+        If proteinFileExtension = ".fasta" OrElse proteinFileExtension = ".fsa" Then
             Return True
         Else
             Return False

@@ -1,5 +1,11 @@
 Peptide to Protein Mapper Change Log
 
+Version 1.1.6052; July 27, 2016
+	- Recognize extension .fsa for FASTA files
+
+Version 1.1.5959; April 25, 2016
+	- Update to .NET 4.5.1
+
 Version 1.1.5303; July 9, 2014
 	- Updated to System.Data.SQLite v1.0.93
 

@@ -1593,9 +1593,10 @@ Public Class clsProteinCoverageSummarizer
             With mProteinDataCache
 
                 ' Protein file options
-                If Path.GetExtension(mProteinInputFilePath).ToLower = ".fasta" Then
+                If clsProteinFileDataCache.IsFastaFile(mProteinInputFilePath) Then
+                    ' .fasta or .fsa file
                     mProteinDataCache.AssumeFastaFile = True
-                ElseIf Path.GetExtension(mProteinInputFilePath).ToLower = ".txt" Then
+                ElseIf Path.GetExtension(mProteinInputFilePath).ToLower() = ".txt" Then
                     mProteinDataCache.AssumeDelimitedFile = True
                 Else
                     mProteinDataCache.AssumeFastaFile = False
