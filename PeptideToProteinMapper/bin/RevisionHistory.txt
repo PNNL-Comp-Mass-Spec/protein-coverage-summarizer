@@ -2,6 +2,11 @@ Peptide to Protein Mapper Change Log
 
 Version 1.1.6052; July 27, 2016
 	- Recognize extension .fsa for FASTA files
+	- When pre-processing MS-GF+ or PHRP result files:
+		- Keep track of the scans in which each peptide was observed
+			- If scan number is not provided, the values in column "Non Unique Peptide Count" 
+			  in the _coverage.txt file will be incorrect due to how the input file is pre-processed
+		- Change the auto-naming of output files to end in _coverage.txt instead of _peptides_coverage.txt
 
 Version 1.1.5959; April 25, 2016
 	- Update to .NET 4.5.1
