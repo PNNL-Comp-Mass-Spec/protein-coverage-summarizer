@@ -252,7 +252,7 @@ Public Class clsLeaderSequenceCache
             intValidPeptideCount = 0
             intLeaderSequenceMinimumLength = 0
             intCurrentLine = 1
-            Do While srInFile.Peek <> -1
+            Do While Not srInFile.EndOfStream
                 If mAbortProcessing Then Exit Do
 
                 strLineIn = srInFile.ReadLine
@@ -333,7 +333,7 @@ Public Class clsLeaderSequenceCache
 
     End Function
 
-    Public Function GetFirstPeptideIndexForLeaderSequence(ByRef strLeaderSequenceToFind As String) As Integer
+    Public Function GetFirstPeptideIndexForLeaderSequence(strLeaderSequenceToFind As String) As Integer
         ' Looks up the first index value in mCachedPeptideSeqInfo that matches strLeaderSequenceToFind
         ' Returns the index value if found, or -1 if not found
         ' Calls SortIndices if mIndicesSorted = False
