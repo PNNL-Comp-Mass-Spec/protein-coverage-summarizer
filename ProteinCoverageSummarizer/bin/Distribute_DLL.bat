@@ -14,9 +14,6 @@ copy ProteinCoverageSummarizer.dll        "F:\My Documents\Projects\DataMining\P
 
 copy ProteinCoverageSummarizer.dll        "F:\My Documents\Projects\DataMining\PeptideHitResultsProcessor\PeptideHitResultsProcessor\Lib\" /Y
 
-copy ProteinCoverageSummarizer.dll        "F:\My Documents\Projects\DataMining\ProteinNmerGenerator\Lib\" /Y
-copy ProteinCoverageSummarizer.dll        "F:\My Documents\Projects\DataMining\ProteinNmerGenerator\Bin\Debug" /Y
-
 pause
 
 @echo off
