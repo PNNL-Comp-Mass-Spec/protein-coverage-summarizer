@@ -734,7 +734,7 @@ Public MustInherit Class clsProcessFilesOrFoldersBase
 
     End Sub
 
-	Protected Sub OperationComplete()
-		RaiseEvent ProgressComplete()
-	End Sub
+    Protected Sub OperationComplete()
+        RaiseEvent ProgressComplete()
+    End Sub
 End Class

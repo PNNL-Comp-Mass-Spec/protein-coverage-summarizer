@@ -417,8 +417,8 @@ Public Module modMain
         End If
     End Sub
 
-	Private Sub mPeptideToProteinMapEngine_ProgressReset() Handles mPeptideToProteinMapEngine.ProgressReset
-		mLastProgressReportTime = DateTime.UtcNow
-		mLastPercentDisplayed = DateTime.UtcNow
-	End Sub
+    Private Sub mPeptideToProteinMapEngine_ProgressReset() Handles mPeptideToProteinMapEngine.ProgressReset
+        mLastProgressReportTime = DateTime.UtcNow
+        mLastPercentDisplayed = DateTime.UtcNow
+    End Sub
 End Module

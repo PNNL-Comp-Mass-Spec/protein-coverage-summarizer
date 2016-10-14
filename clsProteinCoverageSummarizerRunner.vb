@@ -72,7 +72,7 @@ Public Class clsProteinCoverageSummarizerRunner
         Set(Value As Boolean)
             mProteinCoverageSummarizer.IgnoreILDifferences = Value
         End Set
-	End Property
+    End Property
 
     Public Property MatchPeptidePrefixAndSuffixToProtein() As Boolean
         Get

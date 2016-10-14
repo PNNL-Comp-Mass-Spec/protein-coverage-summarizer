@@ -31,83 +31,83 @@ Public Module modMain
 
     Public Const PROGRAM_DATE As String = "April 25, 2016"
 
-	Private mPeptideInputFilePath As String
-	Private mProteinInputFilePath As String
-	Private mOutputFolderPath As String
-	Private mParameterFilePath As String
+    Private mPeptideInputFilePath As String
+    Private mProteinInputFilePath As String
+    Private mOutputFolderPath As String
+    Private mParameterFilePath As String
 
-	Private mIgnoreILDifferences As Boolean
-	Private mOutputProteinSequence As Boolean
-	Private mSaveProteinToPeptideMappingFile As Boolean
-	Private mSkipCoverageComputationSteps As Boolean
+    Private mIgnoreILDifferences As Boolean
+    Private mOutputProteinSequence As Boolean
+    Private mSaveProteinToPeptideMappingFile As Boolean
+    Private mSkipCoverageComputationSteps As Boolean
 
-	Private mQuietMode As Boolean
+    Private mQuietMode As Boolean
 
-	Private WithEvents mProteinCoverageRunner As clsProteinCoverageSummarizerRunner
-	Private mLastProgressReportTime As System.DateTime
-	Private mLastProgressReportValue As Integer
+    Private WithEvents mProteinCoverageRunner As clsProteinCoverageSummarizerRunner
+    Private mLastProgressReportTime As System.DateTime
+    Private mLastProgressReportValue As Integer
 
 
-	Public Function Main() As Integer
-		' Returns 0 if no error, error code if an error
-		Dim intReturnCode As Integer
-		Dim objParseCommandLine As New clsParseCommandLine
-		Dim blnProceed As Boolean
-		Dim blnSuccess As Boolean
+    Public Function Main() As Integer
+        ' Returns 0 if no error, error code if an error
+        Dim intReturnCode As Integer
+        Dim objParseCommandLine As New clsParseCommandLine
+        Dim blnProceed As Boolean
+        Dim blnSuccess As Boolean
 
-		intReturnCode = 0
-		mPeptideInputFilePath = String.Empty
-		mProteinInputFilePath = String.Empty
-		mParameterFilePath = String.Empty
+        intReturnCode = 0
+        mPeptideInputFilePath = String.Empty
+        mProteinInputFilePath = String.Empty
+        mParameterFilePath = String.Empty
 
-		mIgnoreILDifferences = False
-		mOutputProteinSequence = True
-		mSaveProteinToPeptideMappingFile = False
-		mSkipCoverageComputationSteps = False
+        mIgnoreILDifferences = False
+        mOutputProteinSequence = True
+        mSaveProteinToPeptideMappingFile = False
+        mSkipCoverageComputationSteps = False
 
-		Try
-			blnProceed = False
-			If objParseCommandLine.ParseCommandLine Then
-				If SetOptionsUsingCommandLineParameters(objParseCommandLine) Then blnProceed = True
-			End If
+        Try
+            blnProceed = False
+            If objParseCommandLine.ParseCommandLine Then
+                If SetOptionsUsingCommandLineParameters(objParseCommandLine) Then blnProceed = True
+            End If
 
-			If objParseCommandLine.ParameterCount = 0 And Not objParseCommandLine.NeedToShowHelp Then
-				ShowGUI()
-			ElseIf Not blnProceed OrElse objParseCommandLine.NeedToShowHelp OrElse objParseCommandLine.ParameterCount = 0 OrElse mPeptideInputFilePath.Length = 0 Then
-				ShowProgramHelp()
-				intReturnCode = -1
-			Else
-				Try
-					mProteinCoverageRunner = New clsProteinCoverageSummarizerRunner
+            If objParseCommandLine.ParameterCount = 0 And Not objParseCommandLine.NeedToShowHelp Then
+                ShowGUI()
+            ElseIf Not blnProceed OrElse objParseCommandLine.NeedToShowHelp OrElse objParseCommandLine.ParameterCount = 0 OrElse mPeptideInputFilePath.Length = 0 Then
+                ShowProgramHelp()
+                intReturnCode = -1
+            Else
+                Try
+                    mProteinCoverageRunner = New clsProteinCoverageSummarizerRunner
 
-					With mProteinCoverageRunner
-						.ProteinInputFilePath = mProteinInputFilePath
-						.ShowMessages = Not mQuietMode
-						.CallingAppHandlesEvents = False
+                    With mProteinCoverageRunner
+                        .ProteinInputFilePath = mProteinInputFilePath
+                        .ShowMessages = Not mQuietMode
+                        .CallingAppHandlesEvents = False
 
-						.IgnoreILDifferences = mIgnoreILDifferences
-						.OutputProteinSequence = mOutputProteinSequence
-						.SaveProteinToPeptideMappingFile = mSaveProteinToPeptideMappingFile
-						.SearchAllProteinsSkipCoverageComputationSteps = mSkipCoverageComputationSteps
-					End With
+                        .IgnoreILDifferences = mIgnoreILDifferences
+                        .OutputProteinSequence = mOutputProteinSequence
+                        .SaveProteinToPeptideMappingFile = mSaveProteinToPeptideMappingFile
+                        .SearchAllProteinsSkipCoverageComputationSteps = mSkipCoverageComputationSteps
+                    End With
 
-					blnSuccess = mProteinCoverageRunner.ProcessFilesWildcard(mPeptideInputFilePath, mOutputFolderPath, mParameterFilePath)
+                    blnSuccess = mProteinCoverageRunner.ProcessFilesWildcard(mPeptideInputFilePath, mOutputFolderPath, mParameterFilePath)
 
-				Catch ex As Exception
-					blnSuccess = False
-					MsgBox("Error initializing Protein File Parser General Options " & ex.Message)
-				End Try
+                Catch ex As Exception
+                    blnSuccess = False
+                    MsgBox("Error initializing Protein File Parser General Options " & ex.Message)
+                End Try
 
-			End If
+            End If
 
-		Catch ex As Exception
-			ShowErrorMessage("Error occurred in modMain->Main: " & System.Environment.NewLine & ex.Message)
-			intReturnCode = -1
-		End Try
+        Catch ex As Exception
+            ShowErrorMessage("Error occurred in modMain->Main: " & System.Environment.NewLine & ex.Message)
+            intReturnCode = -1
+        End Try
 
-		Return intReturnCode
+        Return intReturnCode
 
-	End Function
+    End Function
 
     Private Sub DisplayProgressPercent(intPercentComplete As Integer, blnAddCarriageReturn As Boolean)
         If blnAddCarriageReturn Then

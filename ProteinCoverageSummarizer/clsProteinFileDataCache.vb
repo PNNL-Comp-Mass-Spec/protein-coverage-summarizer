@@ -13,7 +13,7 @@ Imports System.IO
 Public Class clsProteinFileDataCache
 
     Public Sub New()
-		mFileDate = "January 29, 2014"
+        mFileDate = "January 29, 2014"
         InitializeLocalVariables()
     End Sub
 
@@ -82,9 +82,9 @@ Public Class clsProteinFileDataCache
     Private mSqlLiteDBConnectionString As String = String.Empty
     Private mSqlLiteDBFilePath As String = SQL_LITE_PROTEIN_CACHE_FILENAME
 
-	Private mSqlLitePersistentConnection As SQLite.SQLiteConnection
+    Private mSqlLitePersistentConnection As SQLite.SQLiteConnection
 
-	Public Event ProteinCachingStart()
+    Public Event ProteinCachingStart()
     Public Event ProteinCached(intProteinsCached As Integer)
     Public Event ProteinCachedWithProgress(intProteinsCached As Integer, sngPercentFileProcessed As Single)
     Public Event ProteinCachingComplete()
@@ -448,8 +448,8 @@ Public Class clsProteinFileDataCache
             If intFileAttemptCount = 0 Then
                 mSqlLiteDBFilePath = DefineSqlLiteDBPath(SQL_LITE_PROTEIN_CACHE_FILENAME)
             Else
-                mSqlLiteDBFilePath = DefineSqlLiteDBPath(Path.GetFileNameWithoutExtension(SQL_LITE_PROTEIN_CACHE_FILENAME) & _
-                                                         intFileAttemptCount.ToString & _
+                mSqlLiteDBFilePath = DefineSqlLiteDBPath(Path.GetFileNameWithoutExtension(SQL_LITE_PROTEIN_CACHE_FILENAME) &
+                                                         intFileAttemptCount.ToString &
                                                          Path.GetExtension(SQL_LITE_PROTEIN_CACHE_FILENAME))
             End If
 
@@ -491,8 +491,6 @@ Public Class clsProteinFileDataCache
         ' If strOutputFileNameBaseOverride is defined, then uses that name for the protein output filename rather than auto-defining the name
 
         Dim objProteinFileReader As ProteinFileReader.ProteinFileReaderBaseClass = Nothing
-        Dim objFastaFileReader As ProteinFileReader.FastaFileReader
-        Dim objDelimitedFileReader As ProteinFileReader.DelimitedFileReader
         Dim blnSuccess As Boolean = False
         Dim blnInputProteinFound As Boolean
         Dim intProteinsProcessed As Integer
@@ -510,11 +508,11 @@ Public Class clsProteinFileDataCache
 
         ' SQL query to Create the Table
         SQLcommand = SQLconnect.CreateCommand
-        SQLcommand.CommandText = "CREATE TABLE udtProteinInfoType( " & _
-                                    "Name TEXT, " & _
-                                    "Description TEXT, " & _
-                                    "Sequence TEXT, " & _
-                                    "UniqueSequenceID INTEGER PRIMARY KEY, " & _
+        SQLcommand.CommandText = "CREATE TABLE udtProteinInfoType( " &
+                                    "Name TEXT, " &
+                                    "Description TEXT, " &
+                                    "Sequence TEXT, " &
+                                    "UniqueSequenceID INTEGER PRIMARY KEY, " &
                                     "PercentCoverage REAL);" ', NonUniquePeptideCount INTEGER, UniquePeptideCount INTEGER);"
         SQLcommand.ExecuteNonQuery()
 
@@ -543,20 +541,16 @@ Public Class clsProteinFileDataCache
                 End If
 
                 If mParsedFileIsFastaFile Then
-                    objFastaFileReader = New ProteinFileReader.FastaFileReader
-                    With objFastaFileReader
-                        .ProteinLineStartChar = FastaFileOptions.ProteinLineStartChar
+                    objProteinFileReader = New ProteinFileReader.FastaFileReader() With {
+                        .ProteinLineStartChar = FastaFileOptions.ProteinLineStartChar,
                         .ProteinLineAccessionEndChar = FastaFileOptions.ProteinLineAccessionEndChar
-                    End With
-                    objProteinFileReader = objFastaFileReader
+                    }
                 Else
-                    objDelimitedFileReader = New ProteinFileReader.DelimitedFileReader
-                    With objDelimitedFileReader
-                        .Delimiter = mDelimitedInputFileDelimiter
-                        .DelimitedFileFormatCode = mDelimitedInputFileFormatCode
+                    objProteinFileReader = New ProteinFileReader.DelimitedFileReader With {
+                        .Delimiter = mDelimitedInputFileDelimiter,
+                        .DelimitedFileFormatCode = mDelimitedInputFileFormatCode,
                         .SkipFirstLine = mDelimitedFileSkipFirstLine
-                    End With
-                    objProteinFileReader = objDelimitedFileReader
+                    }
                 End If
 
                 ' Verify that the input file exists
@@ -591,7 +585,7 @@ Public Class clsProteinFileDataCache
             RaiseEvent ProteinCachingStart()
 
             ' Create a parameterized Insert query
-            SQLcommand.CommandText = " INSERT INTO udtProteinInfoType(Name, Description, Sequence, UniqueSequenceID, PercentCoverage) " & _
+            SQLcommand.CommandText = " INSERT INTO udtProteinInfoType(Name, Description, Sequence, UniqueSequenceID, PercentCoverage) " &
                                      " VALUES (?, ?, ?, ?, ?)"
 
             Dim NameFld As SQLite.SQLiteParameter = SQLcommand.CreateParameter
