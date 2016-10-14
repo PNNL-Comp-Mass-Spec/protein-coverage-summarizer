@@ -101,6 +101,7 @@ Public Class clsPeptideToProteinMapEngine
 
     ' The following is used when the input file is Sequest, X!Tandem, Inspect, or MSGF-DB results file
     ' Keys are peptide sequences; values are Lists of scan numbers that each peptide was observed in
+    ' Keys may have mod symbols in them; those symbols will be removed in PreProcessDataWriteOutPeptides
     Private mUniquePeptideList As SortedList(Of String, SortedSet(Of Integer))
 
     ' Mod names must be lower case, and 4 characters in length (or shorter)
@@ -672,13 +673,12 @@ Public Class clsPeptideToProteinMapEngine
                                 ' Ignore errors occur
                             End Try
 
-                            Dim udtCachedDataEntry = New udtPepToProteinMappingType
-                            With udtCachedDataEntry
-                                .Peptide = String.Copy(strPeptideEntry.Key)
-                                .Protein = String.Copy(strProtein)
-                                .ResidueStart = udtProteinMapInfo(intMatchIndex).ResidueStart
+                            Dim udtCachedDataEntry = New udtPepToProteinMappingType With {
+                                .Peptide = String.Copy(strPeptideEntry.Key),
+                                .Protein = String.Copy(strProtein),
+                                .ResidueStart = udtProteinMapInfo(intMatchIndex).ResidueStart,
                                 .ResidueEnd = udtProteinMapInfo(intMatchIndex).ResidueEnd
-                            End With
+                            }
 
                             lstCachedData.Add(udtCachedDataEntry)
 
@@ -1018,9 +1018,7 @@ Public Class clsPeptideToProteinMapEngine
 
     End Function
 
-    Protected Function PreProcessPHRPDataFile(strInputFilePath As String,
-      strOutputFolderPath As String,
-      eFileType As ePeptideInputFileFormatConstants) As String
+    Protected Function PreProcessPHRPDataFile(strInputFilePath As String, strOutputFolderPath As String) As String
 
         Dim strPeptideListFilePath As String = String.Empty
 
@@ -1049,15 +1047,18 @@ Public Class clsPeptideToProteinMapEngine
                 mUniquePeptideList.Clear()
             End If
 
-            Dim oStartupOptions = New clsPHRPStartupOptions()
-            With oStartupOptions
-                .LoadModsAndSeqInfo = False
-                .LoadMSGFResults = False
-                .LoadScanStatsData = False
+            ' Initialize the PHRP startup options
+            Dim oStartupOptions = New clsPHRPStartupOptions() With {
+                .LoadModsAndSeqInfo = False,
+                .LoadMSGFResults = False,
+                .LoadScanStatsData = False,
                 .MaxProteinsPerPSM = 1
-            End With
+            }
 
-            ' Open the PHRP data file and construct a unique list of peptides in the file (including any modification symbols)
+            ' Open the PHRP data file and construct a unique list of peptides in the file (including any modification symbols).
+            ' MSPathFinder synopsis files do not have mod symbols in the peptides.
+            ' This is OK since the peptides in mUniquePeptideList will have mod symbols removed in PreProcessDataWriteOutPeptides 
+            ' when finding proteins that contain the peptides.
             Using objReader As New clsPHRPReader(strInputFilePath, clsPHRPReader.ePeptideHitResultType.Unknown, oStartupOptions)
                 objReader.EchoMessagesToConsole = True
                 objReader.SkipDuplicatePSMs = False
@@ -1230,7 +1231,9 @@ Public Class clsPeptideToProteinMapEngine
                             ' Make sure RemoveSymbolCharacters is true
                             Me.RemoveSymbolCharacters = True
 
-                            strInputFilePathWork = PreProcessPHRPDataFile(strInputFilePath, strOutputFolderPath, eInputFileFormat)
+                            ' Open the PHRP data files and construct a unique list of peptides in the file (including any modification symbols)
+                            ' Write the unique peptide list to _syn_peptides.txt
+                            strInputFilePathWork = PreProcessPHRPDataFile(strInputFilePath, strOutputFolderPath)
                             outputFileBaseName = Path.GetFileNameWithoutExtension(strInputFilePath)
 
                             mProteinCoverageSummarizer.PeptideFileFormatCode = clsProteinCoverageSummarizer.ePeptideFileColumnOrderingCode.SequenceOnly
@@ -1325,7 +1328,7 @@ Public Class clsPeptideToProteinMapEngine
 
     ''' <summary>
     ''' Add peptideSequence to mUniquePeptideList if not defined, including tracking the scanNumber
-    ''' Otherise, update the scan list for the peptide
+    ''' Otherwise, update the scan list for the peptide
     ''' </summary>
     ''' <param name="peptideSequence"></param>
     ''' <param name="scanNumber"></param>

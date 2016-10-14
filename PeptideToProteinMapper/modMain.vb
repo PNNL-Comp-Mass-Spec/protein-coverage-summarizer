@@ -152,25 +152,20 @@ Public Module modMain
                         Exit Try
                     End If
 
-                    mPeptideToProteinMapEngine = New clsPeptideToProteinMapEngine
-
-                    With mPeptideToProteinMapEngine
-                        .ProteinInputFilePath = mProteinInputFilePath
-                        .ShowMessages = Not mQuietMode
-                        .LogMessagesToFile = mLogMessagesToFile
-                        .LogFilePath = mLogFilePath
-                        .LogFolderPath = mLogFolderPath
-
-                        .PeptideInputFileFormat = mInputFileFormatCode
-                        .InspectParameterFilePath = mInspectParameterFilePath
-
-                        .IgnoreILDifferences = mIgnoreILDifferences
-                        .OutputProteinSequence = mOutputProteinSequence
-                        .SaveProteinToPeptideMappingFile = mSaveProteinToPeptideMappingFile
-                        .SaveSourceDataPlusProteinsFile = mSaveSourceDataPlusProteinsFile
-
+                    mPeptideToProteinMapEngine = New clsPeptideToProteinMapEngine() With {
+                        .ProteinInputFilePath = mProteinInputFilePath,
+                        .ShowMessages = Not mQuietMode,
+                        .LogMessagesToFile = mLogMessagesToFile,
+                        .LogFilePath = mLogFilePath,
+                        .LogFolderPath = mLogFolderPath,
+                        .PeptideInputFileFormat = mInputFileFormatCode,
+                        .InspectParameterFilePath = mInspectParameterFilePath,
+                        .IgnoreILDifferences = mIgnoreILDifferences,
+                        .OutputProteinSequence = mOutputProteinSequence,
+                        .SaveProteinToPeptideMappingFile = mSaveProteinToPeptideMappingFile,
+                        .SaveSourceDataPlusProteinsFile = mSaveSourceDataPlusProteinsFile,
                         .SearchAllProteinsSkipCoverageComputationSteps = mSkipCoverageComputationSteps
-                    End With
+                    }
 
                     blnSuccess = mPeptideToProteinMapEngine.ProcessFilesWildcard(mPeptideInputFilePath, mOutputFolderPath, mParameterFilePath)
 
