@@ -1,37 +1,47 @@
 Option Strict On
 
-Imports System.Collections.Specialized
-Imports System.IO
 Imports System.Runtime.InteropServices
 Imports System.Text
 Imports System.Xml
 
-' This class can be used to read or write settings in an Xml settings file
-' Based on a class from the DMS Analysis Manager software written by Dave Clark and Gary Kiebel (PNNL, Richland, WA)
-' Additional features added by Matthew Monroe for the Department of Energy (PNNL, Richland, WA) in October 2003
-' Copyright 2005, Battelle Memorial Institute
-'
-' Updated in October 2004 to truly be case-insensitive if IsCaseSensitive = False when calling LoadSettings()
-' Updated in August 2007 to remove the PRISM.Logging functionality and to include class XMLFileReader inside class XmlSettingsFileAccessor
-' Updated in December 2010 to rename objects from Ini to XML
-' Updated in July 2016 to cleanup code
-
+''' <summary>
+''' This class is used to read or write settings in an Xml settings file
+''' Based on a class from the DMS Analysis Manager software written by Dave Clark and Gary Kiebel (PNNL, Richland, WA)
+''' Additional features added by Matthew Monroe for the Department of Energy (PNNL, Richland, WA) in October 2003
+''' Copyright 2005, Battelle Memorial Institute
+'''
+''' Updated in October 2004 to truly be case-insensitive if IsCaseSensitive = False when calling LoadSettings()
+''' Updated in August 2007 to remove the PRISM.Logging functionality and to include class XMLFileReader inside class XmlSettingsFileAccessor
+''' Updated in December 2010 to rename objects from Ini to XML
+''' </summary>
 Public Class XmlSettingsFileAccessor
 
+    ''' <summary>
+    ''' Constructor
+    ''' </summary>
     Public Sub New()
         mCaseSensitive = False
-        htSectionNames = New Hashtable
+        mSectionNames = New Dictionary(Of String, String)
 
         mCachedSection = New udtRecentSectionType
         With mCachedSection
             .SectionName = String.Empty
-            .htKeys = New Hashtable
+            .KeyNames = New Dictionary(Of String, String)
         End With
     End Sub
 
     Private Structure udtRecentSectionType
-        Public SectionName As String            ' Stores the section name whose keys are cached; the section name is capitalized identically to that actually present in the Xml file
-        Public htKeys As Hashtable
+        ''' <summary>
+        ''' Stores the section name whose keys are cached; the section name is capitalized identically to that actually present in the Xml file
+        ''' </summary>
+        Public SectionName As String
+
+        ''' <summary>
+        ''' Keys for this section
+        ''' Keys in KeyNames are the lower case version of the name in the file if mCaseSensitive is true, or the actual version if mCaseSensitive is false
+        ''' Values in KeyNames are the actual way the key name is capitalized in the Xml file
+        ''' </summary>
+        Public KeyNames As Dictionary(Of String, String)
     End Structure
 
     ' XML file reader
@@ -41,15 +51,12 @@ Public Class XmlSettingsFileAccessor
 
     Private mCaseSensitive As Boolean
 
-    ' When mCaseSensitive = False, then htSectionNames stores mapping between lowercase section name and actual section name stored in file
-    '   If section is present more than once in file, then only grabs the last occurence of the section
-    ' When mCaseSensitive = True, then the mappings in htSectionNames are effectively not used
-    Private ReadOnly htSectionNames As Hashtable
-
-    ' ReSharper disable once UnassignedField.Local
+    ' When mCaseSensitive = False, then mSectionNames stores the mapping between lowercase section name and actual section name stored in file
+    '   If section is present more than once in file, then only grabs the first occurence of the section
+    ' When mCaseSensitive = True, then the mappings in mSectionNames are effectively not used
+    Private ReadOnly mSectionNames As Dictionary(Of String, String)
     Private mCachedSection As udtRecentSectionType
 
-    ' ReSharper disable once EventNeverSubscribedTo.Global
     Public Event InformationMessage(msg As String)
 
     ''' <summary>
@@ -64,7 +71,8 @@ Public Class XmlSettingsFileAccessor
     ''' Loads the settings for the defined Xml Settings File.   Assumes names are not case sensitive
     ''' </summary>
     ''' <param name="XmlSettingsFilePath">The path to the XML settings file.</param>
-    ''' <return>The function returns a boolean that shows if the file was successfully loaded.</return>
+    ''' <return>True if the file was successfully loaded (or created)</return>
+    ''' <remarks>The XML file will be created if it does not exist</remarks>
     Public Function LoadSettings(XmlSettingsFilePath As String) As Boolean
         Return LoadSettings(XmlSettingsFilePath, False)
     End Function
@@ -74,6 +82,8 @@ Public Class XmlSettingsFileAccessor
     ''' </summary>
     ''' <param name="XmlSettingsFilePath">The path to the XML settings file.</param>
     ''' <param name="IsCaseSensitive">Case sensitive names if True.  Non-case sensitive if false.</param>
+    ''' <return>True if the file was successfully loaded (or created)</return>
+    ''' <remarks>The XML file will be created if it does not exist</remarks>
     Public Function LoadSettings(XmlSettingsFilePath As String, IsCaseSensitive As Boolean) As Boolean
         mCaseSensitive = IsCaseSensitive
 
@@ -131,18 +141,18 @@ Public Class XmlSettingsFileAccessor
 
     End Function
 
-    ''' <summary>Checks if a section is present in the settings file.</summary>
+    ''' <summary>
+    ''' Checks if a section is present in the settings file.
+    ''' </summary>
     ''' <param name="sectionName">The name of the section to look for.</param>
     ''' <return>The function returns a boolean that shows if the section is present.</return>
     Public Function SectionPresent(sectionName As String) As Boolean
-        Dim strSections As StringCollection
-        Dim intIndex As Integer
 
-        strSections = m_XMLFileAccessor.AllSections
+        Dim strSections = m_XMLFileAccessor.AllSections
 
-        For intIndex = 0 To strSections.Count - 1
-            If SetNameCase(strSections.Item(intIndex)) = SetNameCase(sectionName) Then Return True
-        Next intIndex
+        For Each candidateSectionName In strSections
+            If SetNameCase(candidateSectionName) = SetNameCase(sectionName) Then Return True
+        Next
 
         Return False
 
@@ -152,14 +162,10 @@ Public Class XmlSettingsFileAccessor
         ' Looks up the Key Names for the given section, storing them in mCachedSection
         ' This is done so that this class will know the correct capitalization for the key names
 
-        Dim strKeys As StringCollection
-        Dim intIndex As Integer
-
-        Dim sectionNameInFile As String
-        Dim strKeyNameToStore As String
+        Dim strKeys As List(Of String)
 
         ' Lookup the correct capitalization for sectionName (only truly important if mCaseSensitive = False)
-        sectionNameInFile = GetCachedSectionName(sectionName)
+        Dim sectionNameInFile = GetCachedSectionName(sectionName)
         If String.IsNullOrWhiteSpace(sectionNameInFile) Then Return False
 
         Try
@@ -177,20 +183,19 @@ Public Class XmlSettingsFileAccessor
         ' Update mCachedSection with the key names for the given section
         With mCachedSection
             .SectionName = sectionNameInFile
-            .htKeys.Clear()
+            .KeyNames.Clear()
 
-            For intIndex = 0 To strKeys.Count - 1
-                If mCaseSensitive Then
-                    strKeyNameToStore = String.Copy(strKeys.Item(intIndex))
+            For Each keyName In strKeys
+                ' Change the key name to lowercase if mCaseSensitive is true
+                Dim strKeyNameToStore = SetNameCase(keyName)
+
+                If Not .KeyNames.Keys.Contains(strKeyNameToStore) Then
+                    .KeyNames.Add(strKeyNameToStore, keyName)
                 Else
-                    strKeyNameToStore = String.Copy(strKeys.Item(intIndex).ToLower)
+                    Console.WriteLine("Note: ignoring duplicate key in the XML file: " & keyName)
                 End If
 
-                If Not .htKeys.Contains(strKeyNameToStore) Then
-                    .htKeys.Add(strKeyNameToStore, strKeys.Item(intIndex))
-                End If
-
-            Next intIndex
+            Next
         End With
 
         Return True
@@ -201,27 +206,20 @@ Public Class XmlSettingsFileAccessor
         ' Looks up the Section Names in the XML file
         ' This is done so that this class will know the correct capitalization for the section names
 
-        Dim strSections As StringCollection
-        Dim strSectionNameToStore As String
+        Dim strSections = m_XMLFileAccessor.AllSections
 
-        Dim intIndex As Integer
+        mSectionNames.Clear()
 
-        strSections = m_XMLFileAccessor.AllSections
+        For Each section In strSections
+            Dim strSectionNameToStore = SetNameCase(section)
 
-        htSectionNames.Clear()
-
-        For intIndex = 0 To strSections.Count - 1
-            If mCaseSensitive Then
-                strSectionNameToStore = String.Copy(strSections.Item(intIndex))
+            If Not mSectionNames.ContainsKey(strSectionNameToStore) Then
+                mSectionNames.Add(strSectionNameToStore, section)
             Else
-                strSectionNameToStore = String.Copy(strSections.Item(intIndex).ToLower)
+                Console.WriteLine("Note: ignoring duplicate section in the XML file: " & section)
             End If
 
-            If Not htSectionNames.Contains(strSectionNameToStore) Then
-                htSectionNames.Add(strSectionNameToStore, strSections.Item(intIndex))
-            End If
-
-        Next intIndex
+        Next
 
     End Sub
 
@@ -247,8 +245,8 @@ Public Class XmlSettingsFileAccessor
         If blnSuccess Then
             With mCachedSection
                 keyNameToFind = SetNameCase(keyName)
-                If .htKeys.ContainsKey(keyNameToFind) Then
-                    Return CStr(.htKeys(keyNameToFind))
+                If .KeyNames.ContainsKey(keyNameToFind) Then
+                    Return .KeyNames(keyNameToFind)
                 Else
                     Return String.Empty
                 End If
@@ -262,29 +260,31 @@ Public Class XmlSettingsFileAccessor
         ' Looks up the correct capitalization for sectionName
         ' Returns String.Empty if not found
 
-        Dim sectionNameToFind As String
+        Dim sectionNameToFind = SetNameCase(sectionName)
 
-        sectionNameToFind = SetNameCase(sectionName)
-        If htSectionNames.ContainsKey(sectionNameToFind) Then
-            Return CStr(htSectionNames(sectionNameToFind))
+        If mSectionNames.ContainsKey(sectionNameToFind) Then
+            Return mSectionNames(sectionNameToFind)
         Else
             Return String.Empty
         End If
 
     End Function
 
-    Private Function SetNameCase(aName As String) As String
-        ' Changes aName to lowercase if mCaseSensitive = False
-
-        If mCaseSensitive Then
-            Return aName
+    ''' <summary>
+    ''' Return sectionName as is if mCaseSensitive is true, or return it lowercase if false
+    ''' </summary>
+    ''' <param name="sectionName">The name to be set.</param>
+    ''' <return>The function returns a string.</return>
+    Private Function SetNameCase(sectionName As String) As String
+        If (mCaseSensitive) Then
+            Return sectionName
         Else
-            Return aName.ToLower()
+            Return sectionName.ToLower()
         End If
     End Function
 
     ''' <summary>
-    ''' The function gets the name of the "value" attribute in section "sectionName".
+    ''' Gets the name of the "value" attribute in section "sectionName".
     ''' </summary>
     ''' <param name="sectionName">The name of the section.</param>
     ''' <param name="keyName">The name of the key.</param>
@@ -321,7 +321,7 @@ Public Class XmlSettingsFileAccessor
     End Function
 
     ''' <summary>
-    ''' The function gets the name of the "value" attribute in section "sectionName".
+    ''' Gets the name of the "value" attribute in section "sectionName".
     ''' </summary>
     ''' <param name="sectionName">The name of the section.</param>
     ''' <param name="keyName">The name of the key.</param>
@@ -347,7 +347,7 @@ Public Class XmlSettingsFileAccessor
     End Function
 
     ''' <summary>
-    ''' The function gets the name of the "value" attribute in section "sectionName".
+    ''' Gets the name of the "value" attribute in section "sectionName".
     ''' </summary>
     ''' <param name="sectionName">The name of the section.</param>
     ''' <param name="keyName">The name of the key.</param>
@@ -385,7 +385,7 @@ Public Class XmlSettingsFileAccessor
     End Function
 
     ''' <summary>
-    ''' The function gets the name of the "value" attribute in section "sectionName".
+    ''' Gets the name of the "value" attribute in section "sectionName".
     ''' </summary>
     ''' <param name="sectionName">The name of the section.</param>
     ''' <param name="keyName">The name of the key.</param>
@@ -423,7 +423,7 @@ Public Class XmlSettingsFileAccessor
     End Function
 
     ''' <summary>
-    ''' The function gets the name of the "value" attribute in section "sectionName".
+    ''' Gets the name of the "value" attribute in section "sectionName".
     ''' </summary>
     ''' <param name="sectionName">The name of the section.</param>
     ''' <param name="keyName">The name of the key.</param>
@@ -461,7 +461,7 @@ Public Class XmlSettingsFileAccessor
     End Function
 
     ''' <summary>
-    ''' The function gets the name of the "value" attribute in section "sectionName".
+    ''' Gets the name of the "value" attribute in section "sectionName".
     ''' </summary>
     ''' <param name="sectionName">The name of the section.</param>
     ''' <param name="keyName">The name of the key.</param>
@@ -499,7 +499,7 @@ Public Class XmlSettingsFileAccessor
     End Function
 
     ''' <summary>
-    ''' The function gets the name of the "value" attribute in section "sectionName".
+    ''' Gets the name of the "value" attribute in section "sectionName".
     ''' </summary>
     ''' <param name="sectionName">The name of the section.</param>
     ''' <param name="keyName">The name of the key.</param>
@@ -539,12 +539,13 @@ Public Class XmlSettingsFileAccessor
     ''' <summary>
     ''' Legacy function name; calls SetXMLFilePath
     ''' </summary>
+    <Obsolete("Use SetXMLFilePath")>
     Public Sub SetIniFilePath(XmlSettingsFilePath As String)
         SetXMLFilePath(XmlSettingsFilePath)
     End Sub
 
     ''' <summary>
-    ''' The function sets the path to the Xml Settings File.
+    ''' Sets the path to the Xml Settings File.
     ''' </summary>
     ''' <param name="XmlSettingsFilePath">The path to the XML settings file.</param>
     Public Sub SetXMLFilePath(XmlSettingsFilePath As String)
@@ -552,7 +553,7 @@ Public Class XmlSettingsFileAccessor
     End Sub
 
     ''' <summary>
-    ''' The function sets a new String value for the "value" attribute.
+    ''' Sets a new String value for the "value" attribute.
     ''' </summary>
     ''' <param name="sectionName">The name of the section.</param>
     ''' <param name="keyName">The name of the key.</param>
@@ -582,7 +583,7 @@ Public Class XmlSettingsFileAccessor
     End Function
 
     ''' <summary>
-    ''' The function sets a new Boolean value for the "value" attribute.
+    ''' Sets a new Boolean value for the "value" attribute.
     ''' </summary>
     ''' <param name="sectionName">The name of the section.</param>
     ''' <param name="keyName">The name of the key.</param>
@@ -593,7 +594,7 @@ Public Class XmlSettingsFileAccessor
     End Function
 
     ''' <summary>
-    ''' The function sets a new Short value for the "value" attribute.
+    ''' Sets a new Short value for the "value" attribute.
     ''' </summary>
     ''' <param name="sectionName">The name of the section.</param>
     ''' <param name="keyName">The name of the key.</param>
@@ -604,7 +605,7 @@ Public Class XmlSettingsFileAccessor
     End Function
 
     ''' <summary>
-    ''' The function sets a new Integer value for the "value" attribute.
+    ''' Sets a new Integer value for the "value" attribute.
     ''' </summary>
     ''' <param name="sectionName">The name of the section.</param>
     ''' <param name="keyName">The name of the key.</param>
@@ -615,7 +616,7 @@ Public Class XmlSettingsFileAccessor
     End Function
 
     ''' <summary>
-    ''' The function sets a new Long value for the "value" attribute.
+    ''' Sets a new Long value for the "value" attribute.
     ''' </summary>
     ''' <param name="sectionName">The name of the section.</param>
     ''' <param name="keyName">The name of the key.</param>
@@ -626,7 +627,7 @@ Public Class XmlSettingsFileAccessor
     End Function
 
     ''' <summary>
-    ''' The function sets a new Single value for the "value" attribute.
+    ''' Sets a new Single value for the "value" attribute.
     ''' </summary>
     ''' <param name="sectionName">The name of the section.</param>
     ''' <param name="keyName">The name of the key.</param>
@@ -637,7 +638,7 @@ Public Class XmlSettingsFileAccessor
     End Function
 
     ''' <summary>
-    ''' The function sets a new Double value for the "value" attribute.
+    ''' Sets a new Double value for the "value" attribute.
     ''' </summary>
     ''' <param name="sectionName">The name of the section.</param>
     ''' <param name="keyName">The name of the key.</param>
@@ -648,7 +649,7 @@ Public Class XmlSettingsFileAccessor
     End Function
 
     ''' <summary>
-    ''' The function renames a section.
+    ''' Renames a section.
     ''' </summary>
     ''' <param name="sectionNameOld">The name of the old XML section name.</param>
     ''' <param name="sectionNameNew">The new name for the XML section.</param>
@@ -688,28 +689,31 @@ Public Class XmlSettingsFileAccessor
         Private m_XmlFilename As String
         Private m_XmlDoc As XmlDocument
 
-        Private mUnattachedComments As ArrayList = New ArrayList
-
-        Private sections As StringCollection = New StringCollection
+        Private m_sections As List(Of String) = New List(Of String)
         Private m_CaseSensitive As Boolean = False
         Private m_SaveFilename As String
         Private m_initialized As Boolean = False
 
-        Public NotifyOnEvent As Boolean = False
-        Public ReadOnly NotifyOnException As Boolean
+        Public NotifyOnEvent As Boolean
+        Public NotifyOnException As Boolean
 
         Public Event InformationMessage(msg As String)
 
-        ''' <summary>Initializes a new instance of the XMLFileReader (non case-sensitive)</summary>
+        ''' <summary>
+        ''' Constructor: Initializes a new instance of the XMLFileReader (non case-sensitive)
+        ''' </summary>
         ''' <param name="XmlFilename">The name of the XML file.</param>
         Public Sub New(XmlFilename As String)
             NotifyOnException = False
             InitXMLFileReader(XmlFilename, False)
         End Sub
 
-        ''' <summary>Initializes a new instance of the XMLFileReader.</summary>
+        ''' <summary>
+        ''' Constructor: Initializes a new instance of the XMLFileReader.
+        ''' </summary>
         ''' <param name="XmlFilename">The name of the XML file.</param>
         ''' <param name="IsCaseSensitive">Case sensitive as boolean.</param>
+        ''' <remarks>The XML file will be created if it does not exist</remarks>
         Public Sub New(XmlFilename As String, IsCaseSensitive As Boolean)
             NotifyOnException = True
             InitXMLFileReader(XmlFilename, IsCaseSensitive)
@@ -718,6 +722,7 @@ Public Class XmlSettingsFileAccessor
         ''' <summary>
         ''' This routine is called by each of the constructors to make the actual assignments.
         ''' </summary>
+        ''' <remarks>The XML file will be created if it does not exist</remarks>
         Private Sub InitXMLFileReader(strXmlFilename As String, IsCaseSensitive As Boolean)
             m_CaseSensitive = IsCaseSensitive
             m_XmlDoc = New XmlDocument
@@ -728,6 +733,11 @@ Public Class XmlSettingsFileAccessor
 
             ' Try to load the file as an XML file
             Try
+                If Not File.Exists(strXmlFilename) Then
+                    ManualParseXmlOrIniFile(strXmlFilename)
+                    Return
+                End If
+
                 m_XmlDoc.Load(strXmlFilename)
                 UpdateSections()
                 m_XmlFilename = strXmlFilename
@@ -764,9 +774,8 @@ Public Class XmlSettingsFileAccessor
         End Property
 
         ''' <summary>
-        ''' This routine returns a boolean showing if the file was initialized or not.
+        ''' Returns a boolean showing if the file was initialized or not.
         ''' </summary>
-        ''' <return>The function returns a Boolean.</return>
         Public ReadOnly Property Initialized() As Boolean
             Get
                 Return m_initialized
@@ -774,9 +783,8 @@ Public Class XmlSettingsFileAccessor
         End Property
 
         ''' <summary>
-        ''' This routine returns a boolean showing if the name is case sensitive or not.
+        ''' Returns a boolean showing if the name is case sensitive or not.
         ''' </summary>
-        ''' <return>The function returns a Boolean.</return>
         Public ReadOnly Property CaseSensitive() As Boolean
             Get
                 Return m_CaseSensitive
@@ -784,15 +792,14 @@ Public Class XmlSettingsFileAccessor
         End Property
 
         ''' <summary>
-        ''' This routine sets a name.
+        ''' Return sectionName as is if CaseSensitive is true, or return it lowercase if false
         ''' </summary>
-        ''' <param name="aName">The name to be set.</param>
-        ''' <return>The function returns a string.</return>
-        Private Function SetNameCase(aName As String) As String
+        ''' <param name="sectionName">The name to be set.</param>
+        Private Function SetNameCase(sectionName As String) As String
             If (CaseSensitive) Then
-                Return aName
+                Return sectionName
             Else
-                Return aName.ToLower()
+                Return sectionName.ToLower()
             End If
         End Function
 
@@ -804,24 +811,24 @@ Public Class XmlSettingsFileAccessor
         End Function
 
         ''' <summary>
-        ''' The function gets the last section.
+        ''' Gets the last section.
         ''' </summary>
         ''' <return>The function returns the last section as System.Xml.XmlElement.</return>
         Private Function GetLastSection() As XmlElement
-            If sections.Count = 0 Then
+            If m_sections.Count = 0 Then
                 Return GetRoot()
             Else
-                Return GetSection(sections(sections.Count - 1))
+                Return GetSection(m_sections.Last())
             End If
         End Function
 
         ''' <summary>
-        ''' The function gets a section as System.Xml.XmlElement.
+        ''' Gets a section as System.Xml.XmlElement.
         ''' </summary>
         ''' <param name="sectionName">The name of a section.</param>
         ''' <return>The function returns a section as System.Xml.XmlElement.</return>
         Private Function GetSection(sectionName As String) As XmlElement
-            If (Not (sectionName = Nothing)) AndAlso (sectionName <> "") Then
+            If Not String.IsNullOrWhiteSpace(sectionName) Then
                 sectionName = SetNameCase(sectionName)
                 Return CType(m_XmlDoc.SelectSingleNode("//section[@name='" & sectionName & "']"), XmlElement)
             End If
@@ -829,14 +836,14 @@ Public Class XmlSettingsFileAccessor
         End Function
 
         ''' <summary>
-        ''' The function gets an item.
+        ''' Gets an item.
         ''' </summary>
         ''' <param name="sectionName">The name of the section.</param>
         ''' <param name="keyName">The name of the key.</param>
         ''' <return>The function returns a XML element.</return>
         Private Function GetItem(sectionName As String, keyName As String) As XmlElement
             Dim section As XmlElement
-            If (Not keyName Is Nothing) AndAlso (keyName <> "") Then
+            If Not String.IsNullOrWhiteSpace(keyName) Then
                 keyName = SetNameCase(keyName)
                 section = GetSection(sectionName)
                 If (Not section Is Nothing) Then
@@ -854,7 +861,7 @@ Public Class XmlSettingsFileAccessor
         End Function
 
         ''' <summary>
-        ''' The function sets the ini section name.
+        ''' Sets the ini section name.
         ''' </summary>
         ''' <param name="oldSection">The name of the old ini section name.</param>
         ''' <param name="newSection">The new name for the ini section.</param>
@@ -864,9 +871,9 @@ Public Class XmlSettingsFileAccessor
             If Not Initialized Then
                 Throw New XMLFileReaderNotInitializedException
             End If
-            If (Not newSection Is Nothing) AndAlso (newSection <> "") Then
+            If Not String.IsNullOrWhiteSpace(newSection) Then
                 section = GetSection(oldSection)
-                If (Not (section Is Nothing)) Then
+                If (Not section Is Nothing) Then
                     section.SetAttribute("name", SetNameCase(newSection))
                     UpdateSections()
                     Return True
@@ -883,7 +890,7 @@ Public Class XmlSettingsFileAccessor
         End Function
 
         ''' <summary>
-        ''' The function sets a new value for the "value" attribute.
+        ''' Sets a new value for the "value" attribute.
         ''' </summary>
         ''' <param name="sectionName">The name of the section.</param>
         ''' <param name="keyName">The name of the key.</param>
@@ -907,7 +914,7 @@ Public Class XmlSettingsFileAccessor
                 End If
             End If
             If keyName Is Nothing Then
-                ' delete the section
+                ' Delete the section
                 Return DeleteSection(sectionName)
             End If
 
@@ -973,7 +980,7 @@ Public Class XmlSettingsFileAccessor
         End Function
 
         ''' <summary>
-        ''' The function sets a new value for the "key" attribute.
+        ''' Sets a new value for the "key" attribute.
         ''' </summary>
         ''' <param name="sectionName">The name of the section.</param>
         ''' <param name="keyName">The name of the key.</param>
@@ -997,16 +1004,16 @@ Public Class XmlSettingsFileAccessor
         End Function
 
         ''' <summary>
-        ''' The function gets the name of the "value" attribute.
+        ''' Get the value for the given key in the given section
         ''' </summary>
         ''' <param name="sectionName">The name of the section.</param>
         ''' <param name="keyName">The name of the key.</param>
-        '''<return>The function returns the name of the "value" attribute.</return>
+        ''' <return>The function returns the name of the "value" attribute.</return>
         Public Function GetXMLValue(sectionName As String, keyName As String) As String
             If Not Initialized Then Throw New XMLFileReaderNotInitializedException
-            Dim N As XmlNode = GetItem(sectionName, keyName)
-            If Not N Is Nothing Then
-                Return (N.Attributes.GetNamedItem("value").Value)
+            Dim node As XmlNode = GetItem(sectionName, keyName)
+            If Not node Is Nothing Then
+                Return (node.Attributes.GetNamedItem("value").Value)
             End If
             Return Nothing
         End Function
@@ -1014,31 +1021,30 @@ Public Class XmlSettingsFileAccessor
         ''' <summary>
         ''' Legacy function name; calls GetXmlSectionComments
         ''' </summary>
-        Public Function GetIniComments(sectionName As String) As StringCollection
+        Public Function GetIniComments(sectionName As String) As List(Of String)
             Return GetXmlSectionComments(sectionName)
         End Function
 
         ''' <summary>
-        ''' The function gets the comments for a section name.
+        ''' Gets the comments for a section name.
         ''' </summary>
         ''' <param name="sectionName">The name of the section.</param>
         '''<return>The function returns a string collection with comments</return>
-        Public Function GetXmlSectionComments(sectionName As String) As StringCollection
+        Public Function GetXmlSectionComments(sectionName As String) As List(Of String)
             If Not Initialized Then Throw New XMLFileReaderNotInitializedException
-            Dim sc = New StringCollection
+            Dim sc = New List(Of String)
             Dim target As XmlNode
-            Dim nodes As XmlNodeList
-            Dim N As XmlNode
+
             If sectionName Is Nothing Then
                 target = m_XmlDoc.DocumentElement
             Else
                 target = GetSection(sectionName)
             End If
             If Not target Is Nothing Then
-                nodes = target.SelectNodes("comment")
+                Dim nodes = target.SelectNodes("comment")
                 If nodes.Count > 0 Then
-                    For Each N In nodes
-                        sc.Add(N.InnerText)
+                    For Each node As XmlNode In nodes
+                        sc.Add(node.InnerText)
                     Next
                 End If
             End If
@@ -1048,41 +1054,40 @@ Public Class XmlSettingsFileAccessor
         ''' <summary>
         ''' Legacy function name; calls SetXMLComments
         ''' </summary>
-        Public Function SetIniComments(sectionName As String, comments As StringCollection) As Boolean
+        Public Function SetIniComments(sectionName As String, comments As List(Of String)) As Boolean
             Return SetXMLComments(sectionName, comments)
         End Function
 
         ''' <summary>
-        ''' The function sets a the comments for a section name.
+        ''' Sets a the comments for a section name.
         ''' </summary>
         ''' <param name="sectionName">The name of the section.</param>
         ''' <param name="comments">A string collection.</param>
         '''<return>The function returns a Boolean that shows if the change was done.</return>
-        Public Function SetXMLComments(sectionName As String, comments As StringCollection) As Boolean
+        Public Function SetXMLComments(sectionName As String, comments As List(Of String)) As Boolean
             If Not Initialized Then Throw New XMLFileReaderNotInitializedException
             Dim target As XmlNode
-            Dim nodes As XmlNodeList
-            Dim N As XmlNode
-            Dim s As String
-            Dim NLastComment As XmlElement
+
             If sectionName Is Nothing Then
                 target = m_XmlDoc.DocumentElement
             Else
                 target = GetSection(sectionName)
             End If
+
             If Not target Is Nothing Then
-                nodes = target.SelectNodes("comment")
-                For Each N In nodes
-                    target.RemoveChild(N)
+                Dim nodes = target.SelectNodes("comment")
+                For Each node As XmlNode In nodes
+                    target.RemoveChild(node)
                 Next
+
                 For Each s In comments
-                    N = m_XmlDoc.CreateElement("comment")
-                    N.InnerText = s
-                    NLastComment = CType(target.SelectSingleNode("comment[last()]"), XmlElement)
-                    If NLastComment Is Nothing Then
-                        target.PrependChild(N)
+                    Dim node = m_XmlDoc.CreateElement("comment")
+                    node.InnerText = s
+                    Dim nodeLastComment = CType(target.SelectSingleNode("comment[last()]"), XmlElement)
+                    If nodeLastComment Is Nothing Then
+                        target.PrependChild(node)
                     Else
-                        target.InsertAfter(N, NLastComment)
+                        target.InsertAfter(node, nodeLastComment)
                     End If
                 Next
                 Return True
@@ -1094,51 +1099,51 @@ Public Class XmlSettingsFileAccessor
         ''' The subroutine updades the sections.
         ''' </summary>
         Private Sub UpdateSections()
-            sections = New StringCollection
-            Dim N As XmlElement
-            For Each N In m_XmlDoc.SelectNodes("sections/section")
-                sections.Add(N.GetAttribute("name"))
+            m_sections = New List(Of String)
+            For Each node As XmlElement In m_XmlDoc.SelectNodes("sections/section")
+                m_sections.Add(node.GetAttribute("name"))
             Next
         End Sub
+
         ''' <summary>
         ''' The subroutine gets the sections.
         ''' </summary>
         ''' <return>The subroutine returns a strin collection of sections.</return>
-        Public ReadOnly Property AllSections() As StringCollection
+        Public ReadOnly Property AllSections() As List(Of String)
             Get
                 If Not Initialized Then
-                    Return New StringCollection()
+                    Return New List(Of String)
                 Else
-                    Return sections
+                    Return m_sections
                 End If
             End Get
         End Property
 
         ''' <summary>
-        ''' The function gets a collection of items for a section name.
+        ''' Gets a collection of items for a section name.
         ''' </summary>
         ''' <param name="sectionName">The name of the section.</param>
         ''' <param name="itemType">Item type.</param>
         ''' <return>The function returns a string colection of items in a section.</return>
-        Private Function GetItemsInSection(sectionName As String, itemType As XMLItemTypeEnum) As StringCollection
-            Dim nodes As XmlNodeList
-            Dim items = New StringCollection
+        Private Function GetItemsInSection(sectionName As String, itemType As XMLItemTypeEnum) As List(Of String)
+
+            Dim items = New List(Of String)
             Dim section As XmlNode = GetSection(sectionName)
-            Dim N As XmlNode
+
             If section Is Nothing Then
                 Return Nothing
             Else
-                nodes = section.SelectNodes("item")
+                Dim nodes = section.SelectNodes("item")
                 If nodes.Count > 0 Then
-                    For Each N In nodes
+                    For Each node As XmlNode In nodes
                         Select Case itemType
                             Case XMLItemTypeEnum.GetKeys
-                                items.Add(N.Attributes.GetNamedItem("key").Value)
+                                items.Add(node.Attributes.GetNamedItem("key").Value)
                             Case XMLItemTypeEnum.GetValues
-                                items.Add(N.Attributes.GetNamedItem("value").Value)
+                                items.Add(node.Attributes.GetNamedItem("value").Value)
                             Case XMLItemTypeEnum.GetKeysAndValues
-                                items.Add(N.Attributes.GetNamedItem("key").Value & "=" &
-                                N.Attributes.GetNamedItem("value").Value)
+                                items.Add(node.Attributes.GetNamedItem("key").Value & "=" &
+                                node.Attributes.GetNamedItem("value").Value)
                         End Select
                     Next
                 End If
@@ -1149,7 +1154,7 @@ Public Class XmlSettingsFileAccessor
         ''' <summary>The funtions gets a collection of keys in a section.</summary>
         ''' <param name="sectionName">The name of the section.</param>
         ''' <return>The function returns a string colection of all the keys in a section.</return>
-        Public Function AllKeysInSection(sectionName As String) As StringCollection
+        Public Function AllKeysInSection(sectionName As String) As List(Of String)
             If Not Initialized Then Throw New XMLFileReaderNotInitializedException
             Return GetItemsInSection(sectionName, XMLItemTypeEnum.GetKeys)
         End Function
@@ -1157,7 +1162,7 @@ Public Class XmlSettingsFileAccessor
         ''' <summary>The funtions gets a collection of values in a section.</summary>
         ''' <param name="sectionName">The name of the section.</param>
         ''' <return>The function returns a string colection of all the values in a section.</return>
-        Public Function AllValuesInSection(sectionName As String) As StringCollection
+        Public Function AllValuesInSection(sectionName As String) As List(Of String)
             If Not Initialized Then Throw New XMLFileReaderNotInitializedException
             Return GetItemsInSection(sectionName, XMLItemTypeEnum.GetValues)
         End Function
@@ -1165,7 +1170,7 @@ Public Class XmlSettingsFileAccessor
         ''' <summary>The funtions gets a collection of items in a section.</summary>
         ''' <param name="sectionName">The name of the section.</param>
         ''' <return>The function returns a string colection of all the items in a section.</return>
-        Public Function AllItemsInSection(sectionName As String) As StringCollection
+        Public Function AllItemsInSection(sectionName As String) As List(Of String)
             If Not Initialized Then Throw New XMLFileReaderNotInitializedException
             Return (GetItemsInSection(sectionName, XMLItemTypeEnum.GetKeysAndValues))
         End Function
@@ -1176,13 +1181,13 @@ Public Class XmlSettingsFileAccessor
         ''' <param name="attributeName">The name of the attribute.</param>
         ''' <return>The function returns a string.</return>
         Public Function GetCustomIniAttribute(sectionName As String, keyName As String, attributeName As String) As String
-            Dim N As XmlElement
+
             If Not Initialized Then Throw New XMLFileReaderNotInitializedException
             If (Not attributeName Is Nothing) AndAlso (attributeName <> "") Then
-                N = GetItem(sectionName, keyName)
-                If Not N Is Nothing Then
+                Dim node = GetItem(sectionName, keyName)
+                If Not node Is Nothing Then
                     attributeName = SetNameCase(attributeName)
-                    Return N.GetAttribute(attributeName)
+                    Return node.GetAttribute(attributeName)
                 End If
             End If
             Return Nothing
@@ -1195,19 +1200,19 @@ Public Class XmlSettingsFileAccessor
         ''' <param name="attributeValue">The value of the attribute.</param>
         ''' <return>The function returns a Boolean.</return>
         Public Function SetCustomIniAttribute(sectionName As String, keyName As String, attributeName As String, attributeValue As String) As Boolean
-            Dim N As XmlElement
+
             If Not Initialized Then Throw New XMLFileReaderNotInitializedException
             If attributeName <> "" Then
-                N = GetItem(sectionName, keyName)
-                If Not N Is Nothing Then
+                Dim node = GetItem(sectionName, keyName)
+                If Not node Is Nothing Then
                     Try
                         If attributeValue Is Nothing Then
                             ' delete the attribute
-                            N.RemoveAttribute(attributeName)
+                            node.RemoveAttribute(attributeName)
                             Return True
                         Else
                             attributeName = SetNameCase(attributeName)
-                            N.SetAttribute(attributeName, attributeValue)
+                            node.SetAttribute(attributeName, attributeValue)
                             Return True
                         End If
 
@@ -1226,17 +1231,15 @@ Public Class XmlSettingsFileAccessor
         ''' <param name="sectionName">The name of the section to be created.</param>
         ''' <return>The function returns a Boolean.</return>
         Private Function CreateSection(sectionName As String) As Boolean
-            Dim N As XmlElement
-            Dim Natt As XmlAttribute
             If (Not sectionName Is Nothing) AndAlso (sectionName <> "") Then
                 sectionName = SetNameCase(sectionName)
                 Try
-                    N = m_XmlDoc.CreateElement("section")
-                    Natt = m_XmlDoc.CreateAttribute("name")
-                    Natt.Value = SetNameCase(sectionName)
-                    N.Attributes.SetNamedItem(Natt)
-                    m_XmlDoc.DocumentElement.AppendChild(N)
-                    sections.Add(Natt.Value)
+                    Dim node = m_XmlDoc.CreateElement("section")
+                    Dim attribute = m_XmlDoc.CreateAttribute("name")
+                    attribute.Value = SetNameCase(sectionName)
+                    node.Attributes.SetNamedItem(attribute)
+                    m_XmlDoc.DocumentElement.AppendChild(node)
+                    m_sections.Add(attribute.Value)
                     Return True
                 Catch e As Exception
                     If NotifyOnException Then
@@ -1246,32 +1249,6 @@ Public Class XmlSettingsFileAccessor
                 End Try
             End If
             Return False
-        End Function
-
-        ''' <summary>The funtions creates a section name.</summary>
-        ''' <param name="sectionName">The name of the section.</param>
-        ''' <param name="keyName">The name of the key.</param>
-        ''' <param name="newValue">The new value to be created.</param>
-        ''' <return>The function returns a Boolean.</return>
-        Private Function CreateItem(sectionName As String, keyName As String, newValue As String) As Boolean
-            Dim item As XmlElement
-            Dim section As XmlElement
-            Try
-                section = GetSection(sectionName)
-                If Not section Is Nothing Then
-                    item = m_XmlDoc.CreateElement("item")
-                    item.SetAttribute("key", keyName)
-                    item.SetAttribute("newValue", newValue)
-                    section.AppendChild(item)
-                    Return True
-                End If
-                Return False
-            Catch e As Exception
-                If NotifyOnException Then
-                    Throw New Exception("Failed to create item.")
-                End If
-                Return False
-            End Try
         End Function
 
         ''' <summary>
@@ -1286,10 +1263,8 @@ Public Class XmlSettingsFileAccessor
             m_XmlDoc.LoadXml("<?xml version=""1.0"" encoding=""UTF-8""?><sections></sections>")
 
             Try
-                Dim fi As FileInfo
-                Dim s As String
+                Dim fi = New FileInfo(strFilePath)
 
-                fi = New FileInfo(strFilePath)
                 If (fi.Exists) Then
                     ' Read strFilePath line-by-line to see if it has any .Ini style settings
                     ' For example:
@@ -1306,7 +1281,7 @@ Public Class XmlSettingsFileAccessor
                     Using srInFile = New StreamReader(New FileStream(fi.FullName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
 
                         Do While srInFile.Peek() > -1
-                            s = srInFile.ReadLine()
+                            Dim s = srInFile.ReadLine()
 
                             ' Try to manually parse this line
                             ParseLineManual(s, m_XmlDoc)
@@ -1342,24 +1317,15 @@ Public Class XmlSettingsFileAccessor
         ''' If success, then adds attributes to the doc object</summary>
         ''' <param name="strLine">The name of the string to be parse.</param>
         ''' <param name="doc">The name of the System.Xml.XmlDocument.</param>
-        ''' <returns>True if success, false if not a recognized line format</returns>
         ''' <remarks>Returns True for blank lines</remarks>
-        Private Function ParseLineManual(strLine As String, doc As XmlDocument) As Boolean
+        Private Sub ParseLineManual(strLine As String, doc As XmlDocument)
             Const SECTION_NAME_TAG = "<section name="
             Const KEY_TAG = "key="
             Const VALUE_TAG = "value="
 
-            Dim strKey As String = String.Empty
-            Dim strValue As String = String.Empty
-            Dim blnAddSetting As Boolean
-
-            Dim N As XmlElement
-            Dim Natt As XmlAttribute
-            Dim parts() As String
-
             strLine = strLine.TrimStart()
             If String.IsNullOrWhiteSpace(strLine) Then
-                Return True
+                Return
             End If
 
             Select Case (strLine.Substring(0, 1))
@@ -1370,23 +1336,25 @@ Public Class XmlSettingsFileAccessor
                     strLine = strLine.TrimEnd("]"c)
                     ' create a new section element
                     CreateSection(strLine)
-                    Return True
+                    Return
                 Case ";"
                     ' new comment
-                    N = doc.CreateElement("comment")
-                    N.InnerText = strLine.Substring(1)
-                    GetLastSection().AppendChild(N)
-                    Return True
+                    Dim node = doc.CreateElement("comment")
+                    node.InnerText = strLine.Substring(1)
+                    GetLastSection().AppendChild(node)
+                    Return
                 Case Else
                     ' Look for typical XML settings file elements
 
+                    Dim strKey As String = String.Empty
                     If ParseLineManualCheckTag(strLine, SECTION_NAME_TAG, strKey) Then
                         ' This is an XML-style section
 
                         ' Create a new section element
                         CreateSection(strKey)
-                        Return True
+                        Return
                     Else
+                        Dim strValue As String = String.Empty
                         If ParseLineManualCheckTag(strLine, KEY_TAG, strKey) Then
                             ' This is an XML-style key
 
@@ -1395,7 +1363,7 @@ Public Class XmlSettingsFileAccessor
                         Else
                             ' split the string on the "=" sign, if present
                             If (strLine.IndexOf("="c) > 0) Then
-                                parts = strLine.Split("="c)
+                                Dim parts = strLine.Split("="c)
                                 strKey = parts(0).Trim()
                                 strValue = parts(1).Trim()
                             Else
@@ -1413,11 +1381,10 @@ Public Class XmlSettingsFileAccessor
                         End If
 
                         If String.IsNullOrWhiteSpace(strKey) Then
-                            Return False
-
+                            Return
                         Else
 
-                            blnAddSetting = True
+                            Dim blnAddSetting = True
 
                             Select Case strKey.ToLower().Trim()
 
@@ -1430,31 +1397,32 @@ Public Class XmlSettingsFileAccessor
                             End Select
 
                             If blnAddSetting Then
-                                N = doc.CreateElement("item")
-                                Natt = doc.CreateAttribute("key")
-                                Natt.Value = SetNameCase(strKey)
-                                N.Attributes.SetNamedItem(Natt)
+                                Dim node = doc.CreateElement("item")
+                                Dim nodeAttribute = doc.CreateAttribute("key")
+                                nodeAttribute.Value = SetNameCase(strKey)
+                                node.Attributes.SetNamedItem(nodeAttribute)
 
-                                Natt = doc.CreateAttribute("value")
-                                Natt.Value = strValue
-                                N.Attributes.SetNamedItem(Natt)
+                                nodeAttribute = doc.CreateAttribute("value")
+                                nodeAttribute.Value = strValue
+                                node.Attributes.SetNamedItem(nodeAttribute)
 
-                                GetLastSection().AppendChild(N)
+                                GetLastSection().AppendChild(node)
 
                             End If
 
-                            Return True
+                            Return
                         End If
 
                     End If
 
             End Select
 
-        End Function
+        End Sub
 
-        Private Function ParseLineManualCheckTag(strLine As String,
-                                                 strTagTofind As String,
-                                                 <Out()> ByRef strTagValue As String) As Boolean
+        Private Function ParseLineManualCheckTag(
+          strLine As String,
+          strTagTofind As String,
+          <Out()> ByRef strTagValue As String) As Boolean
 
             Dim intMatchIndex As Integer
             Dim intNextMatchIndex As Integer
@@ -1504,7 +1472,10 @@ Public Class XmlSettingsFileAccessor
                 End If
             End Set
         End Property
-        ''' <summary>It saves the data to the Xml output file.</summary>
+
+        ''' <summary>
+        ''' It saves the data to the Xml output file.
+        ''' </summary>
         Public Sub Save()
             If Not Initialized Then Throw New XMLFileReaderNotInitializedException
             If Not OutputFilename Is Nothing AndAlso Not m_XmlDoc Is Nothing Then
@@ -1531,7 +1502,9 @@ Public Class XmlSettingsFileAccessor
             End If
         End Sub
 
-        ''' <summary>It gets the System.Xml.XmlDocument.</summary>
+        ''' <summary>
+        ''' Gets the System.Xml.XmlDocument.
+        ''' </summary>
         Public ReadOnly Property XmlDoc() As XmlDocument
             Get
                 If Not Initialized Then
@@ -1542,7 +1515,9 @@ Public Class XmlSettingsFileAccessor
             End Get
         End Property
 
-        ''' <summary>Converts an XML document to a string.</summary>
+        ''' <summary>
+        ''' Converts an XML document to a string.
+        ''' </summary>
         ''' <return>It returns the XML document formatted as a string.</return>
         Public ReadOnly Property XML() As String
             Get
@@ -1575,4 +1550,6 @@ Public Class XmlSettingsFileAccessor
     End Class
 
 End Class
+
+
 
