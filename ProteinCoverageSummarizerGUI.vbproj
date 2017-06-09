@@ -129,10 +129,6 @@
     <Reference Include="System.Data">
       <Name>System.Data</Name>
     </Reference>
-    <Reference Include="System.Data.SQLite, Version=1.0.93.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>Lib\System.Data.SQLite.dll</HintPath>
-    </Reference>
     <Reference Include="System.Deployment" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms">
@@ -216,16 +212,21 @@
   <ItemGroup>
     <None Include="app.config" />
   </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="System.Data.SQLite.Core">
+      <Version>1.0.97</Version>
+    </PackageReference>
+  </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.VisualBasic.targets" />
   <PropertyGroup>
     <PreBuildEvent>
     </PreBuildEvent>
     <PostBuildEvent>if exist "$(TargetDir)SQLite.Interop.dll" (del "$(TargetDir)SQLite.Interop.dll")
-if not exist "$(TargetDir)x86" mkdir "$(TargetDir)x86"
-if not exist "$(TargetDir)x64" mkdir "$(TargetDir)x64"
-xcopy "$(ProjectDir)Lib\x86\*" "$(TargetDir)x86\" /D /Y
-xcopy "$(ProjectDir)Lib\x64\*" "$(TargetDir)x64\" /D /Y
-xcopy "$(ProjectDir)bin\ProteinCoverageSummarizerSettings.xml" "$(TargetDir)" /D /Y
+rem if not exist "$(TargetDir)x86" mkdir "$(TargetDir)x86"
+rem if not exist "$(TargetDir)x64" mkdir "$(TargetDir)x64"
+rem xcopy "$(ProjectDir)Lib\x86\*" "$(TargetDir)x86\" /D /Y
+rem xcopy "$(ProjectDir)Lib\x64\*" "$(TargetDir)x64\" /D /Y
+rem xcopy "$(ProjectDir)bin\ProteinCoverageSummarizerSettings.xml" "$(TargetDir)" /D /Y
 </PostBuildEvent>
   </PropertyGroup>
 </Project>
