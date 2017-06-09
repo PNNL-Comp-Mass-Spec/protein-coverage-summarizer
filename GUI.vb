@@ -1572,22 +1572,20 @@ Public Class GUI
 
     Private Sub SelectOutputFolder()
 
-        Dim objFolderBrowserDialog As New PRISM.Files.FolderBrowser
+        Dim folderBrowserDialog As New Ookii.Dialogs.VistaFolderBrowserDialog()
 
-        With objFolderBrowserDialog
-            ' No need to set the Browse Flags; default values are already set
+        If txtOutputFolderPath.TextLength > 0 Then
+            folderBrowserDialog.SelectedPath = txtOutputFolderPath.Text
+        Else
+            folderBrowserDialog.SelectedPath = mLastFolderUsed
+        End If
 
-            If txtOutputFolderPath.TextLength > 0 Then
-                .FolderPath = txtOutputFolderPath.Text
-            Else
-                .FolderPath = mLastFolderUsed
-            End If
+        Dim result = folderBrowserDialog.ShowDialog()
+        If result = DialogResult.OK Then
+            txtOutputFolderPath.Text = folderBrowserDialog.SelectedPath
+            mLastFolderUsed = folderBrowserDialog.SelectedPath
+        End If
 
-            If .BrowseForFolder() Then
-                txtOutputFolderPath.Text = .FolderPath
-                mLastFolderUsed = .FolderPath
-            End If
-        End With
     End Sub
 
     Private Sub SelectProteinInputFile()

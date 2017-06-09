@@ -79,9 +79,6 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="PRISM">
-      <HintPath>Lib\PRISM.dll</HintPath>
-    </Reference>
     <Reference Include="ProteinCoverageSummarizer, Version=1.1.5142.26700, Culture=neutral, processorArchitecture=AMD64">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>ProteinCoverageSummarizer\bin\x64\ProteinCoverageSummarizer.dll</HintPath>
@@ -183,6 +180,9 @@
     <None Include="app.config" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="Ookii.Dialogs.WindowsForms">
+      <Version>1.0.0</Version>
+    </PackageReference>
     <PackageReference Include="System.Data.SQLite.Core">
       <Version>1.0.97</Version>
     </PackageReference>
