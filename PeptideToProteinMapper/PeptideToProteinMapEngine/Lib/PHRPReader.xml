@@ -319,7 +319,7 @@ PHRPReader
 </member>
 <member name="M:PHRPReader.clsMSGFPlusParamFileModExtractor.ExtractModInfoFromParamFile(System.String,System.Collections.Generic.List{PHRPReader.clsMSGFPlusParamFileModExtractor.udtModInfoType}@)">
  <summary>
- Extracts mod info from either a MSGF+ or MSPathFinder param file or from a MSGFDB_Mods.txt file
+ Extracts mod info from either a MSGF+ or MSPathFinder param file or from a MSGFPlus_Mods.txt file (previously MSGFDB_Mods.txt)
  </summary>
  <param name="paramFilePath"></param>
  <param name="lstModInfo"></param>
@@ -1069,7 +1069,7 @@ PHRPReader
  <summary>
  Read a Search Engine parameter file where settings are stored as key/value pairs
  </summary>
- <param name="searchEngineName">Search engine name (e.g. MSGF+)</param>
+ <param name="searchEngineName">Search engine name (e.g. MS-GF+)</param>
  <param name="paramFilePath">Search engine parameter file path</param>
  <param name="ePeptideHitResultType">PeptideHitResultType (only important if reading a ModA parameter file</param>
  <param name="searchEngineParams">SearchEngineParams container class (must be initialized by the calling function)</param>
@@ -1291,9 +1291,9 @@ PHRPReader
 </member>
 <member name="F:PHRPReader.clsPHRPReader.mFastReadMode">
  <summary>
- When set to true, then calls to MoveNext will read the next data line, but will skip several additional processing steps for performance reasons
+ When set to true, calls to MoveNext will read the next data line, but will skip several additional processing steps for performance reasons
  </summary>
- <remarks>If the peptide is a peptide of interest, then call FinalizeCurrentPSM</remarks>
+ <remarks>If the peptide is a peptide of interest, you must call FinalizeCurrentPSM after calling .MoveNext()</remarks>
 </member>
 <member name="F:PHRPReader.clsPHRPReader.mParentIonMzMatchNonMsx">
  <summary>
@@ -1415,7 +1415,7 @@ PHRPReader
 </member>
 <member name="P:PHRPReader.clsPHRPReader.PeptideHitResultType">
  <summary>
- Peptide hit result type; Sequest, XTandem, Inspect, or MSGFDB
+ Peptide hit result type; Sequest, XTandem, Inspect, or MSGFDB (aka MSGF+)
  </summary>
  <value></value>
  <returns></returns>
@@ -1558,6 +1558,15 @@ PHRPReader
  <returns></returns>
  <remarks></remarks>
 </member>
+<member name="M:PHRPReader.clsPHRPReader.AutoSwitchToLegacyMSGFDBIfRequired(System.String,System.String)">
+ <summary>
+ Updates strFilePath to have _msgfdb instead of _msgfplus if strBasePHRPFileName contains _msgfdb
+ </summary>
+ <param name="strFilePath"></param>
+ <param name="strBasePHRPFileName"></param>
+ <returns></returns>
+ <remarks></remarks>
+</member>
 <member name="M:PHRPReader.clsPHRPReader.ClearErrors">
  <summary>
  Clear any cached error messages
@@ -1584,7 +1593,7 @@ PHRPReader
  Looks for a valid _syn.txt or _fht.txt file for any dataset in the specified folder
  If both the _syn.txt and _fht.txt files are present, then chooses the file with _ResultToSeqMap.txt and _SeqInfo.txt files
  </summary>
- <param name="strInputFolderPath">Input folder path</param>
+ <param name="inputFolderPath">Input folder path</param>
  <returns>The full path to the most appropriate Synopsis or First hits file</returns>
  <remarks></remarks>
 </member>
@@ -1593,7 +1602,7 @@ PHRPReader
  Looks for a valid _syn.txt or _fht.txt file for any dataset in the specified folder
  If both the _syn.txt and _fht.txt files are present, then chooses the file with _ResultToSeqMap.txt and _SeqInfo.txt files
  </summary>
- <param name="strInputFolderPath">Input folder path</param>
+ <param name="inputFolderPath">Input folder path</param>
  <param name="eMatchedResultType">Output parameter: the result type of the best result file found</param>
  <returns>The full path to the most appropriate Synopsis or First hits file</returns>
  <remarks></remarks>
@@ -1814,7 +1823,7 @@ PHRPReader
  </summary>
  <param name="strColumnName"></param>
  <param name="objColumnHeaders"></param>
- <returns></returns>
+ <returns>Column index, or -1 if not found</returns>
  <remarks></remarks>
 </member>
 <member name="M:PHRPReader.clsPHRPReader.LookupColumnValue(System.String[],System.String,System.Collections.Generic.SortedDictionary{System.String,System.Int32})">
@@ -2145,7 +2154,7 @@ PHRPReader
  <param name="strDatasetName">Dataset name</param>
  <param name="strInputFolderPath">Input file path</param>
  <param name="ePeptideHitResultType">Peptide Hit result type</param>
- <param name="strPHRPDataFileName">The base PHRP data file name; used when calling AutoSwitchToFHTIfRequired</param>
+ <param name="strPHRPDataFileName">The base PHRP data file name; used when calling AutoSwitchToLegacyMSGFDBIfRequired and AutoSwitchToFHTIfRequired</param>
  <remarks></remarks>
 </member>
 <member name="M:PHRPReader.clsPHRPSeqMapReader.#ctor(System.String,System.String,System.String,System.String)">
