@@ -117,82 +117,82 @@ Public Class GUI
     Friend WithEvents txtProteinInputFilePath As System.Windows.Forms.TextBox
     Friend WithEvents chkIgnoreILDifferences As System.Windows.Forms.CheckBox
     <System.Diagnostics.DebuggerStepThrough()> Private Sub InitializeComponent()
-        Me.components = New System.ComponentModel.Container
-        Me.fraProteinInputFilePath = New System.Windows.Forms.GroupBox
-        Me.cmdProteinSelectFile = New System.Windows.Forms.Button
-        Me.txtProteinInputFilePath = New System.Windows.Forms.TextBox
+        Me.components = New System.ComponentModel.Container()
+        Me.fraProteinInputFilePath = New System.Windows.Forms.GroupBox()
+        Me.cmdProteinSelectFile = New System.Windows.Forms.Button()
+        Me.txtProteinInputFilePath = New System.Windows.Forms.TextBox()
         Me.MainMenuControl = New System.Windows.Forms.MainMenu(Me.components)
-        Me.mnuFile = New System.Windows.Forms.MenuItem
-        Me.mnuFileSelectInputFile = New System.Windows.Forms.MenuItem
-        Me.mnuPeptideInputFile = New System.Windows.Forms.MenuItem
-        Me.mnuFileSelectOutputFile = New System.Windows.Forms.MenuItem
-        Me.mnuFileSep1 = New System.Windows.Forms.MenuItem
-        Me.mnuFileLoadOptions = New System.Windows.Forms.MenuItem
-        Me.mnuFileSaveDefaultOptions = New System.Windows.Forms.MenuItem
-        Me.mnuFileSep2 = New System.Windows.Forms.MenuItem
-        Me.mnuFileExit = New System.Windows.Forms.MenuItem
-        Me.mnuEdit = New System.Windows.Forms.MenuItem
-        Me.mnuEditShowRTF = New System.Windows.Forms.MenuItem
-        Me.mnuEditResetOptions = New System.Windows.Forms.MenuItem
-        Me.mnuHelp = New System.Windows.Forms.MenuItem
-        Me.mnuHelpAbout = New System.Windows.Forms.MenuItem
-        Me.fraPeptideInputFilePath = New System.Windows.Forms.GroupBox
-        Me.cmdPeptideSelectFile = New System.Windows.Forms.Button
-        Me.txtPeptideInputFilePath = New System.Windows.Forms.TextBox
-        Me.fraProcessingOptions = New System.Windows.Forms.GroupBox
-        Me.fraMassCalculationOptions = New System.Windows.Forms.GroupBox
-        Me.fraDigestionOptions = New System.Windows.Forms.GroupBox
-        Me.txtMinimumSLiCScore = New System.Windows.Forms.TextBox
-        Me.fraPeakMatchingOptions = New System.Windows.Forms.GroupBox
-        Me.fraSqlServerOptions = New System.Windows.Forms.GroupBox
-        Me.fraUniquenessBinningOptions = New System.Windows.Forms.GroupBox
-        Me.cmdPastePMThresholdsList = New System.Windows.Forms.Button
-        Me.cboPMPredefinedThresholds = New System.Windows.Forms.ComboBox
-        Me.cmdPMThresholdsAutoPopulate = New System.Windows.Forms.Button
-        Me.cmdClearPMThresholdsList = New System.Windows.Forms.Button
-        Me.cboMassTolType = New System.Windows.Forms.ComboBox
-        Me.tbsOptions = New System.Windows.Forms.TabControl
-        Me.TabPageFileFormatOptions = New System.Windows.Forms.TabPage
-        Me.cmdExit = New System.Windows.Forms.Button
-        Me.cmdStart = New System.Windows.Forms.Button
-        Me.cmdAbort = New System.Windows.Forms.Button
-        Me.lblProgress = New System.Windows.Forms.Label
-        Me.fraOptions = New System.Windows.Forms.GroupBox
-        Me.chkIgnoreILDifferences = New System.Windows.Forms.CheckBox
-        Me.chkMatchPeptidePrefixAndSuffixToProtein = New System.Windows.Forms.CheckBox
-        Me.chkSearchAllProteinsSkipCoverageComputationSteps = New System.Windows.Forms.CheckBox
-        Me.chkSaveProteinToPeptideMappingFile = New System.Windows.Forms.CheckBox
-        Me.chkSearchAllProteinsForPeptideSequence = New System.Windows.Forms.CheckBox
-        Me.chkOutputProteinSequence = New System.Windows.Forms.CheckBox
-        Me.chkTrackPeptideCounts = New System.Windows.Forms.CheckBox
-        Me.chkRemoveSymbolCharacters = New System.Windows.Forms.CheckBox
-        Me.fraPeptideDelimitedFileOptions = New System.Windows.Forms.GroupBox
-        Me.cboPeptideInputFileColumnOrdering = New System.Windows.Forms.ComboBox
-        Me.Label1 = New System.Windows.Forms.Label
-        Me.chkPeptideFileSkipFirstLine = New System.Windows.Forms.CheckBox
-        Me.txtPeptideInputFileColumnDelimiter = New System.Windows.Forms.TextBox
-        Me.lblPeptideInputFileColumnDelimiter = New System.Windows.Forms.Label
-        Me.cboPeptideInputFileColumnDelimiter = New System.Windows.Forms.ComboBox
-        Me.lblInputFileNotes = New System.Windows.Forms.Label
-        Me.fraProteinDelimitedFileOptions = New System.Windows.Forms.GroupBox
-        Me.chkProteinFileSkipFirstLine = New System.Windows.Forms.CheckBox
-        Me.cboProteinInputFileColumnOrdering = New System.Windows.Forms.ComboBox
-        Me.lblProteinInputFileColumnOrdering = New System.Windows.Forms.Label
-        Me.txtProteinInputFileColumnDelimiter = New System.Windows.Forms.TextBox
-        Me.lblProteinInputFileColumnDelimiter = New System.Windows.Forms.Label
-        Me.cboProteinInputFileColumnDelimiter = New System.Windows.Forms.ComboBox
-        Me.TabPagePeakMatchingThresholds = New System.Windows.Forms.TabPage
-        Me.txtCoverage = New System.Windows.Forms.TextBox
-        Me.txtRTFCode = New System.Windows.Forms.TextBox
-        Me.txtCustomProteinSequence = New System.Windows.Forms.TextBox
-        Me.lblCustomProteinSequence = New System.Windows.Forms.Label
-        Me.chkAddSpace = New System.Windows.Forms.CheckBox
-        Me.cboCharactersPerLine = New System.Windows.Forms.ComboBox
-        Me.rtfRichTextBox = New System.Windows.Forms.RichTextBox
-        Me.dgResults = New System.Windows.Forms.DataGrid
-        Me.fraOutputFolderPath = New System.Windows.Forms.GroupBox
-        Me.cmdSelectOutputFolder = New System.Windows.Forms.Button
-        Me.txtOutputFolderPath = New System.Windows.Forms.TextBox
+        Me.mnuFile = New System.Windows.Forms.MenuItem()
+        Me.mnuFileSelectInputFile = New System.Windows.Forms.MenuItem()
+        Me.mnuPeptideInputFile = New System.Windows.Forms.MenuItem()
+        Me.mnuFileSelectOutputFile = New System.Windows.Forms.MenuItem()
+        Me.mnuFileSep1 = New System.Windows.Forms.MenuItem()
+        Me.mnuFileLoadOptions = New System.Windows.Forms.MenuItem()
+        Me.mnuFileSaveDefaultOptions = New System.Windows.Forms.MenuItem()
+        Me.mnuFileSep2 = New System.Windows.Forms.MenuItem()
+        Me.mnuFileExit = New System.Windows.Forms.MenuItem()
+        Me.mnuEdit = New System.Windows.Forms.MenuItem()
+        Me.mnuEditShowRTF = New System.Windows.Forms.MenuItem()
+        Me.mnuEditResetOptions = New System.Windows.Forms.MenuItem()
+        Me.mnuHelp = New System.Windows.Forms.MenuItem()
+        Me.mnuHelpAbout = New System.Windows.Forms.MenuItem()
+        Me.fraPeptideInputFilePath = New System.Windows.Forms.GroupBox()
+        Me.cmdPeptideSelectFile = New System.Windows.Forms.Button()
+        Me.txtPeptideInputFilePath = New System.Windows.Forms.TextBox()
+        Me.fraProcessingOptions = New System.Windows.Forms.GroupBox()
+        Me.fraMassCalculationOptions = New System.Windows.Forms.GroupBox()
+        Me.fraDigestionOptions = New System.Windows.Forms.GroupBox()
+        Me.txtMinimumSLiCScore = New System.Windows.Forms.TextBox()
+        Me.fraPeakMatchingOptions = New System.Windows.Forms.GroupBox()
+        Me.fraSqlServerOptions = New System.Windows.Forms.GroupBox()
+        Me.fraUniquenessBinningOptions = New System.Windows.Forms.GroupBox()
+        Me.cmdPastePMThresholdsList = New System.Windows.Forms.Button()
+        Me.cboPMPredefinedThresholds = New System.Windows.Forms.ComboBox()
+        Me.cmdPMThresholdsAutoPopulate = New System.Windows.Forms.Button()
+        Me.cmdClearPMThresholdsList = New System.Windows.Forms.Button()
+        Me.cboMassTolType = New System.Windows.Forms.ComboBox()
+        Me.tbsOptions = New System.Windows.Forms.TabControl()
+        Me.TabPageFileFormatOptions = New System.Windows.Forms.TabPage()
+        Me.cmdExit = New System.Windows.Forms.Button()
+        Me.cmdStart = New System.Windows.Forms.Button()
+        Me.cmdAbort = New System.Windows.Forms.Button()
+        Me.lblProgress = New System.Windows.Forms.Label()
+        Me.fraOptions = New System.Windows.Forms.GroupBox()
+        Me.chkIgnoreILDifferences = New System.Windows.Forms.CheckBox()
+        Me.chkMatchPeptidePrefixAndSuffixToProtein = New System.Windows.Forms.CheckBox()
+        Me.chkSearchAllProteinsSkipCoverageComputationSteps = New System.Windows.Forms.CheckBox()
+        Me.chkSaveProteinToPeptideMappingFile = New System.Windows.Forms.CheckBox()
+        Me.chkSearchAllProteinsForPeptideSequence = New System.Windows.Forms.CheckBox()
+        Me.chkOutputProteinSequence = New System.Windows.Forms.CheckBox()
+        Me.chkTrackPeptideCounts = New System.Windows.Forms.CheckBox()
+        Me.chkRemoveSymbolCharacters = New System.Windows.Forms.CheckBox()
+        Me.fraPeptideDelimitedFileOptions = New System.Windows.Forms.GroupBox()
+        Me.cboPeptideInputFileColumnOrdering = New System.Windows.Forms.ComboBox()
+        Me.Label1 = New System.Windows.Forms.Label()
+        Me.chkPeptideFileSkipFirstLine = New System.Windows.Forms.CheckBox()
+        Me.txtPeptideInputFileColumnDelimiter = New System.Windows.Forms.TextBox()
+        Me.lblPeptideInputFileColumnDelimiter = New System.Windows.Forms.Label()
+        Me.cboPeptideInputFileColumnDelimiter = New System.Windows.Forms.ComboBox()
+        Me.lblInputFileNotes = New System.Windows.Forms.Label()
+        Me.fraProteinDelimitedFileOptions = New System.Windows.Forms.GroupBox()
+        Me.chkProteinFileSkipFirstLine = New System.Windows.Forms.CheckBox()
+        Me.cboProteinInputFileColumnOrdering = New System.Windows.Forms.ComboBox()
+        Me.lblProteinInputFileColumnOrdering = New System.Windows.Forms.Label()
+        Me.txtProteinInputFileColumnDelimiter = New System.Windows.Forms.TextBox()
+        Me.lblProteinInputFileColumnDelimiter = New System.Windows.Forms.Label()
+        Me.cboProteinInputFileColumnDelimiter = New System.Windows.Forms.ComboBox()
+        Me.TabPagePeakMatchingThresholds = New System.Windows.Forms.TabPage()
+        Me.txtCoverage = New System.Windows.Forms.TextBox()
+        Me.txtRTFCode = New System.Windows.Forms.TextBox()
+        Me.txtCustomProteinSequence = New System.Windows.Forms.TextBox()
+        Me.lblCustomProteinSequence = New System.Windows.Forms.Label()
+        Me.chkAddSpace = New System.Windows.Forms.CheckBox()
+        Me.cboCharactersPerLine = New System.Windows.Forms.ComboBox()
+        Me.rtfRichTextBox = New System.Windows.Forms.RichTextBox()
+        Me.dgResults = New System.Windows.Forms.DataGrid()
+        Me.fraOutputFolderPath = New System.Windows.Forms.GroupBox()
+        Me.cmdSelectOutputFolder = New System.Windows.Forms.Button()
+        Me.txtOutputFolderPath = New System.Windows.Forms.TextBox()
         Me.fraProteinInputFilePath.SuspendLayout()
         Me.fraPeptideInputFilePath.SuspendLayout()
         Me.tbsOptions.SuspendLayout()
@@ -208,31 +208,31 @@ Public Class GUI
         'fraProteinInputFilePath
         '
         Me.fraProteinInputFilePath.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
-                    Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.fraProteinInputFilePath.Controls.Add(Me.cmdProteinSelectFile)
         Me.fraProteinInputFilePath.Controls.Add(Me.txtProteinInputFilePath)
-        Me.fraProteinInputFilePath.Location = New System.Drawing.Point(8, 16)
+        Me.fraProteinInputFilePath.Location = New System.Drawing.Point(10, 18)
         Me.fraProteinInputFilePath.Name = "fraProteinInputFilePath"
-        Me.fraProteinInputFilePath.Size = New System.Drawing.Size(872, 48)
+        Me.fraProteinInputFilePath.Size = New System.Drawing.Size(867, 56)
         Me.fraProteinInputFilePath.TabIndex = 0
         Me.fraProteinInputFilePath.TabStop = False
         Me.fraProteinInputFilePath.Text = "Protein Input File Path (Fasta or Tab-delimited)"
         '
         'cmdProteinSelectFile
         '
-        Me.cmdProteinSelectFile.Location = New System.Drawing.Point(8, 16)
+        Me.cmdProteinSelectFile.Location = New System.Drawing.Point(10, 18)
         Me.cmdProteinSelectFile.Name = "cmdProteinSelectFile"
-        Me.cmdProteinSelectFile.Size = New System.Drawing.Size(80, 24)
+        Me.cmdProteinSelectFile.Size = New System.Drawing.Size(96, 28)
         Me.cmdProteinSelectFile.TabIndex = 0
         Me.cmdProteinSelectFile.Text = "Select file"
         '
         'txtProteinInputFilePath
         '
         Me.txtProteinInputFilePath.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
-                    Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.txtProteinInputFilePath.Location = New System.Drawing.Point(104, 18)
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.txtProteinInputFilePath.Location = New System.Drawing.Point(125, 21)
         Me.txtProteinInputFilePath.Name = "txtProteinInputFilePath"
-        Me.txtProteinInputFilePath.Size = New System.Drawing.Size(752, 20)
+        Me.txtProteinInputFilePath.Size = New System.Drawing.Size(723, 22)
         Me.txtProteinInputFilePath.TabIndex = 1
         '
         'MainMenuControl
@@ -315,31 +315,31 @@ Public Class GUI
         'fraPeptideInputFilePath
         '
         Me.fraPeptideInputFilePath.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
-                    Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.fraPeptideInputFilePath.Controls.Add(Me.cmdPeptideSelectFile)
         Me.fraPeptideInputFilePath.Controls.Add(Me.txtPeptideInputFilePath)
-        Me.fraPeptideInputFilePath.Location = New System.Drawing.Point(8, 72)
+        Me.fraPeptideInputFilePath.Location = New System.Drawing.Point(10, 83)
         Me.fraPeptideInputFilePath.Name = "fraPeptideInputFilePath"
-        Me.fraPeptideInputFilePath.Size = New System.Drawing.Size(872, 48)
+        Me.fraPeptideInputFilePath.Size = New System.Drawing.Size(867, 55)
         Me.fraPeptideInputFilePath.TabIndex = 1
         Me.fraPeptideInputFilePath.TabStop = False
         Me.fraPeptideInputFilePath.Text = "Peptide Input File Path (Tab-delimited)"
         '
         'cmdPeptideSelectFile
         '
-        Me.cmdPeptideSelectFile.Location = New System.Drawing.Point(8, 16)
+        Me.cmdPeptideSelectFile.Location = New System.Drawing.Point(10, 18)
         Me.cmdPeptideSelectFile.Name = "cmdPeptideSelectFile"
-        Me.cmdPeptideSelectFile.Size = New System.Drawing.Size(80, 24)
+        Me.cmdPeptideSelectFile.Size = New System.Drawing.Size(96, 28)
         Me.cmdPeptideSelectFile.TabIndex = 0
         Me.cmdPeptideSelectFile.Text = "Select file"
         '
         'txtPeptideInputFilePath
         '
         Me.txtPeptideInputFilePath.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
-                    Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.txtPeptideInputFilePath.Location = New System.Drawing.Point(104, 18)
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.txtPeptideInputFilePath.Location = New System.Drawing.Point(125, 21)
         Me.txtPeptideInputFilePath.Name = "txtPeptideInputFilePath"
-        Me.txtPeptideInputFilePath.Size = New System.Drawing.Size(752, 20)
+        Me.txtPeptideInputFilePath.Size = New System.Drawing.Size(723, 22)
         Me.txtPeptideInputFilePath.TabIndex = 1
         '
         'fraProcessingOptions
@@ -373,7 +373,7 @@ Public Class GUI
         '
         Me.txtMinimumSLiCScore.Location = New System.Drawing.Point(144, 104)
         Me.txtMinimumSLiCScore.Name = "txtMinimumSLiCScore"
-        Me.txtMinimumSLiCScore.Size = New System.Drawing.Size(40, 20)
+        Me.txtMinimumSLiCScore.Size = New System.Drawing.Size(40, 22)
         Me.txtMinimumSLiCScore.TabIndex = 5
         '
         'fraPeakMatchingOptions
@@ -414,7 +414,7 @@ Public Class GUI
         Me.cboPMPredefinedThresholds.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
         Me.cboPMPredefinedThresholds.Location = New System.Drawing.Point(336, 256)
         Me.cboPMPredefinedThresholds.Name = "cboPMPredefinedThresholds"
-        Me.cboPMPredefinedThresholds.Size = New System.Drawing.Size(264, 21)
+        Me.cboPMPredefinedThresholds.Size = New System.Drawing.Size(264, 25)
         Me.cboPMPredefinedThresholds.TabIndex = 5
         '
         'cmdPMThresholdsAutoPopulate
@@ -438,20 +438,20 @@ Public Class GUI
         Me.cboMassTolType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
         Me.cboMassTolType.Location = New System.Drawing.Point(144, 224)
         Me.cboMassTolType.Name = "cboMassTolType"
-        Me.cboMassTolType.Size = New System.Drawing.Size(136, 21)
+        Me.cboMassTolType.Size = New System.Drawing.Size(136, 25)
         Me.cboMassTolType.TabIndex = 2
         '
         'tbsOptions
         '
         Me.tbsOptions.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
-                    Or System.Windows.Forms.AnchorStyles.Left) _
-                    Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+            Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.tbsOptions.Controls.Add(Me.TabPageFileFormatOptions)
         Me.tbsOptions.Controls.Add(Me.TabPagePeakMatchingThresholds)
-        Me.tbsOptions.Location = New System.Drawing.Point(8, 192)
+        Me.tbsOptions.Location = New System.Drawing.Point(10, 222)
         Me.tbsOptions.Name = "tbsOptions"
         Me.tbsOptions.SelectedIndex = 0
-        Me.tbsOptions.Size = New System.Drawing.Size(872, 400)
+        Me.tbsOptions.Size = New System.Drawing.Size(867, 369)
         Me.tbsOptions.TabIndex = 3
         '
         'TabPageFileFormatOptions
@@ -463,41 +463,41 @@ Public Class GUI
         Me.TabPageFileFormatOptions.Controls.Add(Me.fraOptions)
         Me.TabPageFileFormatOptions.Controls.Add(Me.fraPeptideDelimitedFileOptions)
         Me.TabPageFileFormatOptions.Controls.Add(Me.fraProteinDelimitedFileOptions)
-        Me.TabPageFileFormatOptions.Location = New System.Drawing.Point(4, 22)
+        Me.TabPageFileFormatOptions.Location = New System.Drawing.Point(4, 25)
         Me.TabPageFileFormatOptions.Name = "TabPageFileFormatOptions"
-        Me.TabPageFileFormatOptions.Size = New System.Drawing.Size(864, 374)
+        Me.TabPageFileFormatOptions.Size = New System.Drawing.Size(859, 340)
         Me.TabPageFileFormatOptions.TabIndex = 2
         Me.TabPageFileFormatOptions.Text = "File Format Options"
         '
         'cmdExit
         '
-        Me.cmdExit.Location = New System.Drawing.Point(552, 160)
+        Me.cmdExit.Location = New System.Drawing.Point(662, 185)
         Me.cmdExit.Name = "cmdExit"
-        Me.cmdExit.Size = New System.Drawing.Size(96, 32)
+        Me.cmdExit.Size = New System.Drawing.Size(116, 37)
         Me.cmdExit.TabIndex = 5
         Me.cmdExit.Text = "E&xit"
         '
         'cmdStart
         '
-        Me.cmdStart.Location = New System.Drawing.Point(552, 112)
+        Me.cmdStart.Location = New System.Drawing.Point(662, 129)
         Me.cmdStart.Name = "cmdStart"
-        Me.cmdStart.Size = New System.Drawing.Size(96, 32)
+        Me.cmdStart.Size = New System.Drawing.Size(116, 37)
         Me.cmdStart.TabIndex = 4
         Me.cmdStart.Text = "&Start"
         '
         'cmdAbort
         '
-        Me.cmdAbort.Location = New System.Drawing.Point(552, 112)
+        Me.cmdAbort.Location = New System.Drawing.Point(662, 129)
         Me.cmdAbort.Name = "cmdAbort"
-        Me.cmdAbort.Size = New System.Drawing.Size(96, 32)
+        Me.cmdAbort.Size = New System.Drawing.Size(116, 37)
         Me.cmdAbort.TabIndex = 4
         Me.cmdAbort.Text = "Abort"
         '
         'lblProgress
         '
-        Me.lblProgress.Location = New System.Drawing.Point(562, 13)
+        Me.lblProgress.Location = New System.Drawing.Point(674, 15)
         Me.lblProgress.Name = "lblProgress"
-        Me.lblProgress.Size = New System.Drawing.Size(280, 77)
+        Me.lblProgress.Size = New System.Drawing.Size(336, 89)
         Me.lblProgress.TabIndex = 3
         Me.lblProgress.Text = "Progress ..."
         '
@@ -511,74 +511,74 @@ Public Class GUI
         Me.fraOptions.Controls.Add(Me.chkOutputProteinSequence)
         Me.fraOptions.Controls.Add(Me.chkTrackPeptideCounts)
         Me.fraOptions.Controls.Add(Me.chkRemoveSymbolCharacters)
-        Me.fraOptions.Location = New System.Drawing.Point(8, 218)
+        Me.fraOptions.Location = New System.Drawing.Point(10, 252)
         Me.fraOptions.Name = "fraOptions"
-        Me.fraOptions.Size = New System.Drawing.Size(648, 142)
+        Me.fraOptions.Size = New System.Drawing.Size(777, 163)
         Me.fraOptions.TabIndex = 2
         Me.fraOptions.TabStop = False
         Me.fraOptions.Text = "Options"
         '
         'chkIgnoreILDifferences
         '
-        Me.chkIgnoreILDifferences.Location = New System.Drawing.Point(400, 96)
+        Me.chkIgnoreILDifferences.Location = New System.Drawing.Point(480, 111)
         Me.chkIgnoreILDifferences.Name = "chkIgnoreILDifferences"
-        Me.chkIgnoreILDifferences.Size = New System.Drawing.Size(224, 16)
+        Me.chkIgnoreILDifferences.Size = New System.Drawing.Size(269, 18)
         Me.chkIgnoreILDifferences.TabIndex = 7
         Me.chkIgnoreILDifferences.Text = "Ignore I/L Differences"
         '
         'chkMatchPeptidePrefixAndSuffixToProtein
         '
-        Me.chkMatchPeptidePrefixAndSuffixToProtein.Location = New System.Drawing.Point(16, 120)
+        Me.chkMatchPeptidePrefixAndSuffixToProtein.Location = New System.Drawing.Point(19, 138)
         Me.chkMatchPeptidePrefixAndSuffixToProtein.Name = "chkMatchPeptidePrefixAndSuffixToProtein"
-        Me.chkMatchPeptidePrefixAndSuffixToProtein.Size = New System.Drawing.Size(328, 16)
+        Me.chkMatchPeptidePrefixAndSuffixToProtein.Size = New System.Drawing.Size(394, 19)
         Me.chkMatchPeptidePrefixAndSuffixToProtein.TabIndex = 6
         Me.chkMatchPeptidePrefixAndSuffixToProtein.Text = "Match peptide prefix and suffix letters to protein sequence"
         '
         'chkSearchAllProteinsSkipCoverageComputationSteps
         '
-        Me.chkSearchAllProteinsSkipCoverageComputationSteps.Location = New System.Drawing.Point(400, 56)
+        Me.chkSearchAllProteinsSkipCoverageComputationSteps.Location = New System.Drawing.Point(480, 65)
         Me.chkSearchAllProteinsSkipCoverageComputationSteps.Name = "chkSearchAllProteinsSkipCoverageComputationSteps"
-        Me.chkSearchAllProteinsSkipCoverageComputationSteps.Size = New System.Drawing.Size(224, 16)
+        Me.chkSearchAllProteinsSkipCoverageComputationSteps.Size = New System.Drawing.Size(269, 18)
         Me.chkSearchAllProteinsSkipCoverageComputationSteps.TabIndex = 3
         Me.chkSearchAllProteinsSkipCoverageComputationSteps.Text = "Skip coverage computation (faster)"
         '
         'chkSaveProteinToPeptideMappingFile
         '
-        Me.chkSaveProteinToPeptideMappingFile.Location = New System.Drawing.Point(400, 40)
+        Me.chkSaveProteinToPeptideMappingFile.Location = New System.Drawing.Point(480, 46)
         Me.chkSaveProteinToPeptideMappingFile.Name = "chkSaveProteinToPeptideMappingFile"
-        Me.chkSaveProteinToPeptideMappingFile.Size = New System.Drawing.Size(224, 16)
+        Me.chkSaveProteinToPeptideMappingFile.Size = New System.Drawing.Size(269, 19)
         Me.chkSaveProteinToPeptideMappingFile.TabIndex = 2
         Me.chkSaveProteinToPeptideMappingFile.Text = "Save protein to peptide mapping details"
         '
         'chkSearchAllProteinsForPeptideSequence
         '
-        Me.chkSearchAllProteinsForPeptideSequence.Location = New System.Drawing.Point(16, 40)
+        Me.chkSearchAllProteinsForPeptideSequence.Location = New System.Drawing.Point(19, 46)
         Me.chkSearchAllProteinsForPeptideSequence.Name = "chkSearchAllProteinsForPeptideSequence"
-        Me.chkSearchAllProteinsForPeptideSequence.Size = New System.Drawing.Size(240, 24)
+        Me.chkSearchAllProteinsForPeptideSequence.Size = New System.Drawing.Size(288, 28)
         Me.chkSearchAllProteinsForPeptideSequence.TabIndex = 1
         Me.chkSearchAllProteinsForPeptideSequence.Text = "Search All Proteins For Peptide Sequence"
         '
         'chkOutputProteinSequence
         '
-        Me.chkOutputProteinSequence.Location = New System.Drawing.Point(16, 16)
+        Me.chkOutputProteinSequence.Location = New System.Drawing.Point(19, 18)
         Me.chkOutputProteinSequence.Name = "chkOutputProteinSequence"
-        Me.chkOutputProteinSequence.Size = New System.Drawing.Size(176, 24)
+        Me.chkOutputProteinSequence.Size = New System.Drawing.Size(211, 28)
         Me.chkOutputProteinSequence.TabIndex = 0
         Me.chkOutputProteinSequence.Text = "Output Protein Sequence"
         '
         'chkTrackPeptideCounts
         '
-        Me.chkTrackPeptideCounts.Location = New System.Drawing.Point(16, 72)
+        Me.chkTrackPeptideCounts.Location = New System.Drawing.Point(19, 83)
         Me.chkTrackPeptideCounts.Name = "chkTrackPeptideCounts"
-        Me.chkTrackPeptideCounts.Size = New System.Drawing.Size(264, 16)
+        Me.chkTrackPeptideCounts.Size = New System.Drawing.Size(317, 19)
         Me.chkTrackPeptideCounts.TabIndex = 4
         Me.chkTrackPeptideCounts.Text = "Track Unique And Non-Unique Peptide Counts"
         '
         'chkRemoveSymbolCharacters
         '
-        Me.chkRemoveSymbolCharacters.Location = New System.Drawing.Point(16, 96)
+        Me.chkRemoveSymbolCharacters.Location = New System.Drawing.Point(19, 111)
         Me.chkRemoveSymbolCharacters.Name = "chkRemoveSymbolCharacters"
-        Me.chkRemoveSymbolCharacters.Size = New System.Drawing.Size(368, 16)
+        Me.chkRemoveSymbolCharacters.Size = New System.Drawing.Size(442, 18)
         Me.chkRemoveSymbolCharacters.TabIndex = 5
         Me.chkRemoveSymbolCharacters.Text = "Remove non-letter characters from protein and peptide sequences"
         '
@@ -591,9 +591,9 @@ Public Class GUI
         Me.fraPeptideDelimitedFileOptions.Controls.Add(Me.lblPeptideInputFileColumnDelimiter)
         Me.fraPeptideDelimitedFileOptions.Controls.Add(Me.cboPeptideInputFileColumnDelimiter)
         Me.fraPeptideDelimitedFileOptions.Controls.Add(Me.lblInputFileNotes)
-        Me.fraPeptideDelimitedFileOptions.Location = New System.Drawing.Point(8, 112)
+        Me.fraPeptideDelimitedFileOptions.Location = New System.Drawing.Point(10, 129)
         Me.fraPeptideDelimitedFileOptions.Name = "fraPeptideDelimitedFileOptions"
-        Me.fraPeptideDelimitedFileOptions.Size = New System.Drawing.Size(536, 104)
+        Me.fraPeptideDelimitedFileOptions.Size = New System.Drawing.Size(643, 120)
         Me.fraPeptideDelimitedFileOptions.TabIndex = 1
         Me.fraPeptideDelimitedFileOptions.TabStop = False
         Me.fraPeptideDelimitedFileOptions.Text = "Peptide Delimited Input File Options"
@@ -602,41 +602,41 @@ Public Class GUI
         '
         Me.cboPeptideInputFileColumnOrdering.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
         Me.cboPeptideInputFileColumnOrdering.DropDownWidth = 70
-        Me.cboPeptideInputFileColumnOrdering.Location = New System.Drawing.Point(88, 24)
+        Me.cboPeptideInputFileColumnOrdering.Location = New System.Drawing.Point(106, 28)
         Me.cboPeptideInputFileColumnOrdering.Name = "cboPeptideInputFileColumnOrdering"
-        Me.cboPeptideInputFileColumnOrdering.Size = New System.Drawing.Size(264, 21)
+        Me.cboPeptideInputFileColumnOrdering.Size = New System.Drawing.Size(316, 24)
         Me.cboPeptideInputFileColumnOrdering.TabIndex = 1
         '
         'Label1
         '
-        Me.Label1.Location = New System.Drawing.Point(8, 24)
+        Me.Label1.Location = New System.Drawing.Point(10, 28)
         Me.Label1.Name = "Label1"
-        Me.Label1.Size = New System.Drawing.Size(80, 16)
+        Me.Label1.Size = New System.Drawing.Size(96, 18)
         Me.Label1.TabIndex = 0
         Me.Label1.Text = "Column Order"
         '
         'chkPeptideFileSkipFirstLine
         '
-        Me.chkPeptideFileSkipFirstLine.Location = New System.Drawing.Point(264, 56)
+        Me.chkPeptideFileSkipFirstLine.Location = New System.Drawing.Point(317, 65)
         Me.chkPeptideFileSkipFirstLine.Name = "chkPeptideFileSkipFirstLine"
-        Me.chkPeptideFileSkipFirstLine.Size = New System.Drawing.Size(240, 24)
+        Me.chkPeptideFileSkipFirstLine.Size = New System.Drawing.Size(288, 27)
         Me.chkPeptideFileSkipFirstLine.TabIndex = 5
         Me.chkPeptideFileSkipFirstLine.Text = "Skip first line in peptide input file"
         '
         'txtPeptideInputFileColumnDelimiter
         '
-        Me.txtPeptideInputFileColumnDelimiter.Location = New System.Drawing.Point(192, 56)
+        Me.txtPeptideInputFileColumnDelimiter.Location = New System.Drawing.Point(230, 65)
         Me.txtPeptideInputFileColumnDelimiter.MaxLength = 1
         Me.txtPeptideInputFileColumnDelimiter.Name = "txtPeptideInputFileColumnDelimiter"
-        Me.txtPeptideInputFileColumnDelimiter.Size = New System.Drawing.Size(32, 20)
+        Me.txtPeptideInputFileColumnDelimiter.Size = New System.Drawing.Size(39, 22)
         Me.txtPeptideInputFileColumnDelimiter.TabIndex = 4
         Me.txtPeptideInputFileColumnDelimiter.Text = ";"
         '
         'lblPeptideInputFileColumnDelimiter
         '
-        Me.lblPeptideInputFileColumnDelimiter.Location = New System.Drawing.Point(8, 56)
+        Me.lblPeptideInputFileColumnDelimiter.Location = New System.Drawing.Point(10, 65)
         Me.lblPeptideInputFileColumnDelimiter.Name = "lblPeptideInputFileColumnDelimiter"
-        Me.lblPeptideInputFileColumnDelimiter.Size = New System.Drawing.Size(96, 16)
+        Me.lblPeptideInputFileColumnDelimiter.Size = New System.Drawing.Size(115, 18)
         Me.lblPeptideInputFileColumnDelimiter.TabIndex = 2
         Me.lblPeptideInputFileColumnDelimiter.Text = "Column Delimiter"
         '
@@ -644,19 +644,19 @@ Public Class GUI
         '
         Me.cboPeptideInputFileColumnDelimiter.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
         Me.cboPeptideInputFileColumnDelimiter.DropDownWidth = 70
-        Me.cboPeptideInputFileColumnDelimiter.Location = New System.Drawing.Point(112, 56)
+        Me.cboPeptideInputFileColumnDelimiter.Location = New System.Drawing.Point(134, 65)
         Me.cboPeptideInputFileColumnDelimiter.Name = "cboPeptideInputFileColumnDelimiter"
-        Me.cboPeptideInputFileColumnDelimiter.Size = New System.Drawing.Size(70, 21)
+        Me.cboPeptideInputFileColumnDelimiter.Size = New System.Drawing.Size(84, 24)
         Me.cboPeptideInputFileColumnDelimiter.TabIndex = 3
         '
         'lblInputFileNotes
         '
-        Me.lblInputFileNotes.Location = New System.Drawing.Point(8, 82)
+        Me.lblInputFileNotes.Location = New System.Drawing.Point(10, 95)
         Me.lblInputFileNotes.Name = "lblInputFileNotes"
-        Me.lblInputFileNotes.Size = New System.Drawing.Size(488, 16)
+        Me.lblInputFileNotes.Size = New System.Drawing.Size(585, 18)
         Me.lblInputFileNotes.TabIndex = 6
         Me.lblInputFileNotes.Text = "Note: prefix and suffix residues will be automatically removed from the input pep" &
-            "tides"
+    "tides"
         '
         'fraProteinDelimitedFileOptions
         '
@@ -666,18 +666,18 @@ Public Class GUI
         Me.fraProteinDelimitedFileOptions.Controls.Add(Me.txtProteinInputFileColumnDelimiter)
         Me.fraProteinDelimitedFileOptions.Controls.Add(Me.lblProteinInputFileColumnDelimiter)
         Me.fraProteinDelimitedFileOptions.Controls.Add(Me.cboProteinInputFileColumnDelimiter)
-        Me.fraProteinDelimitedFileOptions.Location = New System.Drawing.Point(8, 16)
+        Me.fraProteinDelimitedFileOptions.Location = New System.Drawing.Point(10, 18)
         Me.fraProteinDelimitedFileOptions.Name = "fraProteinDelimitedFileOptions"
-        Me.fraProteinDelimitedFileOptions.Size = New System.Drawing.Size(504, 88)
+        Me.fraProteinDelimitedFileOptions.Size = New System.Drawing.Size(604, 102)
         Me.fraProteinDelimitedFileOptions.TabIndex = 0
         Me.fraProteinDelimitedFileOptions.TabStop = False
         Me.fraProteinDelimitedFileOptions.Text = "Protein Delimited Input File Options"
         '
         'chkProteinFileSkipFirstLine
         '
-        Me.chkProteinFileSkipFirstLine.Location = New System.Drawing.Point(264, 56)
+        Me.chkProteinFileSkipFirstLine.Location = New System.Drawing.Point(317, 65)
         Me.chkProteinFileSkipFirstLine.Name = "chkProteinFileSkipFirstLine"
-        Me.chkProteinFileSkipFirstLine.Size = New System.Drawing.Size(216, 24)
+        Me.chkProteinFileSkipFirstLine.Size = New System.Drawing.Size(259, 27)
         Me.chkProteinFileSkipFirstLine.TabIndex = 5
         Me.chkProteinFileSkipFirstLine.Text = "Skip first line in protein input file"
         '
@@ -685,33 +685,33 @@ Public Class GUI
         '
         Me.cboProteinInputFileColumnOrdering.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
         Me.cboProteinInputFileColumnOrdering.DropDownWidth = 70
-        Me.cboProteinInputFileColumnOrdering.Location = New System.Drawing.Point(88, 24)
+        Me.cboProteinInputFileColumnOrdering.Location = New System.Drawing.Point(106, 28)
         Me.cboProteinInputFileColumnOrdering.Name = "cboProteinInputFileColumnOrdering"
-        Me.cboProteinInputFileColumnOrdering.Size = New System.Drawing.Size(392, 21)
+        Me.cboProteinInputFileColumnOrdering.Size = New System.Drawing.Size(470, 24)
         Me.cboProteinInputFileColumnOrdering.TabIndex = 1
         '
         'lblProteinInputFileColumnOrdering
         '
-        Me.lblProteinInputFileColumnOrdering.Location = New System.Drawing.Point(8, 26)
+        Me.lblProteinInputFileColumnOrdering.Location = New System.Drawing.Point(10, 30)
         Me.lblProteinInputFileColumnOrdering.Name = "lblProteinInputFileColumnOrdering"
-        Me.lblProteinInputFileColumnOrdering.Size = New System.Drawing.Size(80, 16)
+        Me.lblProteinInputFileColumnOrdering.Size = New System.Drawing.Size(96, 18)
         Me.lblProteinInputFileColumnOrdering.TabIndex = 0
         Me.lblProteinInputFileColumnOrdering.Text = "Column Order"
         '
         'txtProteinInputFileColumnDelimiter
         '
-        Me.txtProteinInputFileColumnDelimiter.Location = New System.Drawing.Point(192, 56)
+        Me.txtProteinInputFileColumnDelimiter.Location = New System.Drawing.Point(230, 65)
         Me.txtProteinInputFileColumnDelimiter.MaxLength = 1
         Me.txtProteinInputFileColumnDelimiter.Name = "txtProteinInputFileColumnDelimiter"
-        Me.txtProteinInputFileColumnDelimiter.Size = New System.Drawing.Size(32, 20)
+        Me.txtProteinInputFileColumnDelimiter.Size = New System.Drawing.Size(39, 22)
         Me.txtProteinInputFileColumnDelimiter.TabIndex = 4
         Me.txtProteinInputFileColumnDelimiter.Text = ";"
         '
         'lblProteinInputFileColumnDelimiter
         '
-        Me.lblProteinInputFileColumnDelimiter.Location = New System.Drawing.Point(8, 58)
+        Me.lblProteinInputFileColumnDelimiter.Location = New System.Drawing.Point(10, 67)
         Me.lblProteinInputFileColumnDelimiter.Name = "lblProteinInputFileColumnDelimiter"
-        Me.lblProteinInputFileColumnDelimiter.Size = New System.Drawing.Size(96, 16)
+        Me.lblProteinInputFileColumnDelimiter.Size = New System.Drawing.Size(115, 18)
         Me.lblProteinInputFileColumnDelimiter.TabIndex = 2
         Me.lblProteinInputFileColumnDelimiter.Text = "Column Delimiter"
         '
@@ -719,9 +719,9 @@ Public Class GUI
         '
         Me.cboProteinInputFileColumnDelimiter.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
         Me.cboProteinInputFileColumnDelimiter.DropDownWidth = 70
-        Me.cboProteinInputFileColumnDelimiter.Location = New System.Drawing.Point(112, 56)
+        Me.cboProteinInputFileColumnDelimiter.Location = New System.Drawing.Point(134, 65)
         Me.cboProteinInputFileColumnDelimiter.Name = "cboProteinInputFileColumnDelimiter"
-        Me.cboProteinInputFileColumnDelimiter.Size = New System.Drawing.Size(70, 21)
+        Me.cboProteinInputFileColumnDelimiter.Size = New System.Drawing.Size(84, 24)
         Me.cboProteinInputFileColumnDelimiter.TabIndex = 3
         '
         'TabPagePeakMatchingThresholds
@@ -734,9 +734,9 @@ Public Class GUI
         Me.TabPagePeakMatchingThresholds.Controls.Add(Me.cboCharactersPerLine)
         Me.TabPagePeakMatchingThresholds.Controls.Add(Me.rtfRichTextBox)
         Me.TabPagePeakMatchingThresholds.Controls.Add(Me.dgResults)
-        Me.TabPagePeakMatchingThresholds.Location = New System.Drawing.Point(4, 22)
+        Me.TabPagePeakMatchingThresholds.Location = New System.Drawing.Point(4, 25)
         Me.TabPagePeakMatchingThresholds.Name = "TabPagePeakMatchingThresholds"
-        Me.TabPagePeakMatchingThresholds.Size = New System.Drawing.Size(864, 374)
+        Me.TabPagePeakMatchingThresholds.Size = New System.Drawing.Size(1038, 432)
         Me.TabPagePeakMatchingThresholds.TabIndex = 3
         Me.TabPagePeakMatchingThresholds.Text = "Results Browser"
         Me.TabPagePeakMatchingThresholds.Visible = False
@@ -744,22 +744,22 @@ Public Class GUI
         'txtCoverage
         '
         Me.txtCoverage.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
-        Me.txtCoverage.Location = New System.Drawing.Point(512, 327)
+        Me.txtCoverage.Location = New System.Drawing.Point(614, 374)
         Me.txtCoverage.Name = "txtCoverage"
         Me.txtCoverage.ReadOnly = True
-        Me.txtCoverage.Size = New System.Drawing.Size(216, 20)
+        Me.txtCoverage.Size = New System.Drawing.Size(260, 22)
         Me.txtCoverage.TabIndex = 7
         Me.txtCoverage.Text = "Coverage: 0%  (0 / 0)"
         '
         'txtRTFCode
         '
         Me.txtRTFCode.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
-                    Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
-        Me.txtRTFCode.Location = New System.Drawing.Point(72, 16)
+            Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
+        Me.txtRTFCode.Location = New System.Drawing.Point(86, 18)
         Me.txtRTFCode.Multiline = True
         Me.txtRTFCode.Name = "txtRTFCode"
         Me.txtRTFCode.ScrollBars = System.Windows.Forms.ScrollBars.Both
-        Me.txtRTFCode.Size = New System.Drawing.Size(432, 231)
+        Me.txtRTFCode.Size = New System.Drawing.Size(519, 264)
         Me.txtRTFCode.TabIndex = 1
         Me.txtRTFCode.WordWrap = False
         '
@@ -767,46 +767,46 @@ Public Class GUI
         '
         Me.txtCustomProteinSequence.AcceptsReturn = True
         Me.txtCustomProteinSequence.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
-        Me.txtCustomProteinSequence.Location = New System.Drawing.Point(88, 328)
+        Me.txtCustomProteinSequence.Location = New System.Drawing.Point(106, 375)
         Me.txtCustomProteinSequence.Multiline = True
         Me.txtCustomProteinSequence.Name = "txtCustomProteinSequence"
         Me.txtCustomProteinSequence.ScrollBars = System.Windows.Forms.ScrollBars.Vertical
-        Me.txtCustomProteinSequence.Size = New System.Drawing.Size(416, 39)
+        Me.txtCustomProteinSequence.Size = New System.Drawing.Size(499, 45)
         Me.txtCustomProteinSequence.TabIndex = 6
         '
         'lblCustomProteinSequence
         '
         Me.lblCustomProteinSequence.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
-        Me.lblCustomProteinSequence.Location = New System.Drawing.Point(4, 328)
+        Me.lblCustomProteinSequence.Location = New System.Drawing.Point(5, 375)
         Me.lblCustomProteinSequence.Name = "lblCustomProteinSequence"
-        Me.lblCustomProteinSequence.Size = New System.Drawing.Size(88, 32)
+        Me.lblCustomProteinSequence.Size = New System.Drawing.Size(105, 37)
         Me.lblCustomProteinSequence.TabIndex = 5
         Me.lblCustomProteinSequence.Text = "Custom Protein Sequence"
         '
         'chkAddSpace
         '
-        Me.chkAddSpace.Location = New System.Drawing.Point(736, 6)
+        Me.chkAddSpace.Location = New System.Drawing.Point(883, 7)
         Me.chkAddSpace.Name = "chkAddSpace"
-        Me.chkAddSpace.Size = New System.Drawing.Size(120, 25)
+        Me.chkAddSpace.Size = New System.Drawing.Size(144, 29)
         Me.chkAddSpace.TabIndex = 3
         Me.chkAddSpace.Text = "Add space every 10 residues"
         '
         'cboCharactersPerLine
         '
         Me.cboCharactersPerLine.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
-        Me.cboCharactersPerLine.Location = New System.Drawing.Point(512, 10)
+        Me.cboCharactersPerLine.Location = New System.Drawing.Point(614, 12)
         Me.cboCharactersPerLine.Name = "cboCharactersPerLine"
-        Me.cboCharactersPerLine.Size = New System.Drawing.Size(216, 21)
+        Me.cboCharactersPerLine.Size = New System.Drawing.Size(260, 24)
         Me.cboCharactersPerLine.TabIndex = 2
         '
         'rtfRichTextBox
         '
         Me.rtfRichTextBox.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
-                    Or System.Windows.Forms.AnchorStyles.Left) _
-                    Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.rtfRichTextBox.Location = New System.Drawing.Point(512, 40)
+            Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.rtfRichTextBox.Location = New System.Drawing.Point(614, 46)
         Me.rtfRichTextBox.Name = "rtfRichTextBox"
-        Me.rtfRichTextBox.Size = New System.Drawing.Size(344, 279)
+        Me.rtfRichTextBox.Size = New System.Drawing.Size(413, 319)
         Me.rtfRichTextBox.TabIndex = 4
         Me.rtfRichTextBox.Text = ""
         Me.rtfRichTextBox.WordWrap = False
@@ -814,49 +814,49 @@ Public Class GUI
         'dgResults
         '
         Me.dgResults.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
-                    Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
+            Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.dgResults.CaptionText = "Results"
         Me.dgResults.DataMember = ""
         Me.dgResults.HeaderForeColor = System.Drawing.SystemColors.ControlText
-        Me.dgResults.Location = New System.Drawing.Point(2, 16)
+        Me.dgResults.Location = New System.Drawing.Point(2, 18)
         Me.dgResults.Name = "dgResults"
         Me.dgResults.PreferredColumnWidth = 80
-        Me.dgResults.Size = New System.Drawing.Size(504, 304)
+        Me.dgResults.Size = New System.Drawing.Size(605, 348)
         Me.dgResults.TabIndex = 0
         '
         'fraOutputFolderPath
         '
         Me.fraOutputFolderPath.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
-                    Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.fraOutputFolderPath.Controls.Add(Me.cmdSelectOutputFolder)
         Me.fraOutputFolderPath.Controls.Add(Me.txtOutputFolderPath)
-        Me.fraOutputFolderPath.Location = New System.Drawing.Point(8, 128)
+        Me.fraOutputFolderPath.Location = New System.Drawing.Point(10, 148)
         Me.fraOutputFolderPath.Name = "fraOutputFolderPath"
-        Me.fraOutputFolderPath.Size = New System.Drawing.Size(872, 56)
+        Me.fraOutputFolderPath.Size = New System.Drawing.Size(867, 64)
         Me.fraOutputFolderPath.TabIndex = 2
         Me.fraOutputFolderPath.TabStop = False
         Me.fraOutputFolderPath.Text = "Output folder path"
         '
         'cmdSelectOutputFolder
         '
-        Me.cmdSelectOutputFolder.Location = New System.Drawing.Point(8, 16)
+        Me.cmdSelectOutputFolder.Location = New System.Drawing.Point(10, 18)
         Me.cmdSelectOutputFolder.Name = "cmdSelectOutputFolder"
-        Me.cmdSelectOutputFolder.Size = New System.Drawing.Size(80, 32)
+        Me.cmdSelectOutputFolder.Size = New System.Drawing.Size(96, 37)
         Me.cmdSelectOutputFolder.TabIndex = 0
         Me.cmdSelectOutputFolder.Text = "Select folder"
         '
         'txtOutputFolderPath
         '
         Me.txtOutputFolderPath.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
-                    Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.txtOutputFolderPath.Location = New System.Drawing.Point(104, 18)
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.txtOutputFolderPath.Location = New System.Drawing.Point(125, 21)
         Me.txtOutputFolderPath.Name = "txtOutputFolderPath"
-        Me.txtOutputFolderPath.Size = New System.Drawing.Size(752, 20)
+        Me.txtOutputFolderPath.Size = New System.Drawing.Size(723, 22)
         Me.txtOutputFolderPath.TabIndex = 1
         '
         'GUI
         '
-        Me.AutoScaleBaseSize = New System.Drawing.Size(5, 13)
+        Me.AutoScaleBaseSize = New System.Drawing.Size(6, 15)
         Me.ClientSize = New System.Drawing.Size(896, 601)
         Me.Controls.Add(Me.fraOutputFolderPath)
         Me.Controls.Add(Me.tbsOptions)
