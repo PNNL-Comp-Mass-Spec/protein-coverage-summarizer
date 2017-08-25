@@ -17,18 +17,18 @@ Imports ProteinFileReader
 ' E-mail: matthew.monroe@pnnl.gov or matt@alchemistmatt.com
 ' Website: http://omics.pnl.gov/ or http://www.sysbio.org/resources/staff/
 ' -------------------------------------------------------------------------------
-' 
+'
 ' Licensed under the Apache License, Version 2.0; you may not use this file except
-' in compliance with the License.  You may obtain a copy of the License at 
+' in compliance with the License.  You may obtain a copy of the License at
 ' http://www.apache.org/licenses/LICENSE-2.0
 '
-' Notice: This computer software was prepared by Battelle Memorial Institute, 
-' hereinafter the Contractor, under Contract No. DE-AC05-76RL0 1830 with the 
-' Department of Energy (DOE).  All rights in the computer software are reserved 
-' by DOE on behalf of the United States Government and the Contractor as 
-' provided in the Contract.  NEITHER THE GOVERNMENT NOR THE CONTRACTOR MAKES ANY 
-' WARRANTY, EXPRESS OR IMPLIED, OR ASSUMES ANY LIABILITY FOR THE USE OF THIS 
-' SOFTWARE.  This notice including this sentence must appear on any copies of 
+' Notice: This computer software was prepared by Battelle Memorial Institute,
+' hereinafter the Contractor, under Contract No. DE-AC05-76RL0 1830 with the
+' Department of Energy (DOE).  All rights in the computer software are reserved
+' by DOE on behalf of the United States Government and the Contractor as
+' provided in the Contract.  NEITHER THE GOVERNMENT NOR THE CONTRACTOR MAKES ANY
+' WARRANTY, EXPRESS OR IMPLIED, OR ASSUMES ANY LIABILITY FOR THE USE OF THIS
+' SOFTWARE.  This notice including this sentence must appear on any copies of
 ' this computer software.
 
 ' Last updated October 22, 2012
@@ -127,7 +127,7 @@ Public Class clsProteinCoverageSummarizer
     Private mSearchAllProteinsForPeptideSequence As Boolean
     Private mSearchAllProteinsSkipCoverageComputationSteps As Boolean
 
-    ' If this is disabled, then a brute-force search is applied, 
+    ' If this is disabled, then a brute-force search is applied,
     ' The brute-force search is nearly always much slower than with mUseLeaderSequenceHashTable enabled
     Private mUseLeaderSequenceHashTable As Boolean
 
@@ -151,7 +151,7 @@ Public Class clsProteinCoverageSummarizer
 
     Private mPeptideToProteinMapResults As Dictionary(Of String, List(Of String))
 
-    ' mPercentCompleteStartLevels is an array that lists the percent complete value to report 
+    ' mPercentCompleteStartLevels is an array that lists the percent complete value to report
     '  at the start of each of the various processing steps performed in this procedure
     ' The percent complete values range from 0 to 100
     Const PERCENT_COMPLETE_LEVEL_COUNT As Integer = 9
@@ -574,8 +574,8 @@ Public Class clsProteinCoverageSummarizer
 
         Dim myEnumerator As IDictionaryEnumerator
 
-        ' The data in mProteinPeptideStats is copied into these two arrays for fast lookup 
-        ' This is necessary since use of the enumerator returned by mProteinPeptideStats.GetEnumerator 
+        ' The data in mProteinPeptideStats is copied into these two arrays for fast lookup
+        ' This is necessary since use of the enumerator returned by mProteinPeptideStats.GetEnumerator
         '  for every protein in mProteinDataCache.mProteins leads to very slow program performance
         Dim intPeptideStatsCount As Integer
         Dim udtPeptideStats() As udtPeptideCountStatsType
@@ -672,12 +672,12 @@ Public Class clsProteinCoverageSummarizer
             SQLreader = mProteinDataCache.GetSQLiteDataReader("SELECT * FROM udtProteinInfoType")
             While SQLreader.Read()
                 ' Column names in table udtProteinInfoType:
-                '  Name TEXT, 
-                '  Description TEXT, 
-                '  Sequence TEXT, 
-                '  UniqueSequenceID INTEGER, 
-                '  PercentCoverage REAL, 
-                '  NonUniquePeptideCount INTEGER, 
+                '  Name TEXT,
+                '  Description TEXT,
+                '  Sequence TEXT,
+                '  UniqueSequenceID INTEGER,
+                '  PercentCoverage REAL,
+                '  NonUniquePeptideCount INTEGER,
                 '  UniquePeptideCount INTEGER
 
                 intProteinID = CInt(SQLreader("UniqueSequenceID"))
@@ -786,7 +786,7 @@ Public Class clsProteinCoverageSummarizer
     End Function
 
     ''' <summary>
-    ''' Searches for proteins that contain peptide strPeptideSequence.  
+    ''' Searches for proteins that contain peptide strPeptideSequence.
     ''' If strProteinNameForPeptide is blank or mSearchAllProteinsForPeptideSequence=True then searches all proteins
     ''' </summary>
     ''' <param name="strPeptideSequence">The peptide sequence to find</param>
@@ -812,7 +812,7 @@ Public Class clsProteinCoverageSummarizer
     End Sub
 
     ''' <summary>
-    ''' Searches for proteins that contain the peptides in htPeptideList  
+    ''' Searches for proteins that contain the peptides in htPeptideList
     ''' If strProteinNameForPeptide is blank or mSearchAllProteinsForPeptideSequence=True then searches all proteins
     ''' Otherwise, only searches protein strProteinNameForPeptide
     ''' </summary>
@@ -1796,7 +1796,7 @@ Public Class clsProteinCoverageSummarizer
     Private Function ReadProteinInfoChunk(intStartIndex As Integer, blnProteinUpdated() As Boolean, blnForceReload As Boolean) As Integer
 
         ' We use a SQLLite database to store the protein sequences (to avoid running out of memory when parsing large protein lists)
-        ' However, we will store the most recently loaded peptides in mCachedProteinInfoCount() and 
+        ' However, we will store the most recently loaded peptides in mCachedProteinInfoCount() and
         ' will only reload them if intStartIndex is different than mCachedProteinInfoStartIndex
 
         ' Reset the values in blnProteinUpdated()

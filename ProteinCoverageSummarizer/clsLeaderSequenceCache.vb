@@ -215,8 +215,8 @@ Public Class clsLeaderSequenceCache
 
     End Function
 
-    Public Function DetermineShortestPeptideLengthInFile(strInputFilePath As String, intTerminatorSize As Integer, _
-                            blnPeptideFileSkipFirstLine As Boolean, chPeptideInputFileDelimiter As Char, _
+    Public Function DetermineShortestPeptideLengthInFile(strInputFilePath As String, intTerminatorSize As Integer,
+                            blnPeptideFileSkipFirstLine As Boolean, chPeptideInputFileDelimiter As Char,
                             intColumnNumWithPeptideSequence As Integer) As Boolean
 
         ' Parses strInputFilePath examining column intColumnNumWithPeptideSequence to determine the minimum peptide sequence length present
