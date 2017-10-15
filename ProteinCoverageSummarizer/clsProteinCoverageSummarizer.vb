@@ -1210,8 +1210,9 @@ Public Class clsProteinCoverageSummarizer
         mProteinInputFilePath = String.Empty
         mResultsFilePath = String.Empty
 
-        mProteinDataCache = New clsProteinFileDataCache
-        mProteinDataCache.ShowMessages = False
+        mProteinDataCache = New clsProteinFileDataCache()
+        RegisterEvents(mProteinDataCache)
+
         mCachedProteinInfoStartIndex = -1
 
         mPeptideFileSkipFirstLine = False

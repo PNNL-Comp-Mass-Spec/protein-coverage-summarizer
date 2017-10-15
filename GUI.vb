@@ -922,7 +922,7 @@ Public Class GUI
     Private mProteinSequenceColIndex As Integer
     Private mProteinDescriptionColVisible As Boolean
 
-    Private WithEvents mProteinCoverageSummarizer As clsProteinCoverageSummarizerRunner
+    Private mProteinCoverageSummarizer As clsProteinCoverageSummarizerRunner
 
     Private mXmlSettingsFilePath As String
     Private mLastFolderUsed As String
@@ -1167,7 +1167,7 @@ Public Class GUI
 
         Dim objSettingsFile As XmlSettingsFileAccessor
 
-        Dim objProteinCoverageSummarizer As New clsProteinCoverageSummarizerRunner
+        Dim objProteinCoverageSummarizer As New clsProteinCoverageSummarizerRunner()
         Dim eColumnOrdering As ProteinFileReader.DelimitedFileReader.eDelimitedFileFormatCode
 
         Try
@@ -1844,11 +1844,17 @@ Public Class GUI
             cmdAbort.Visible = True
             cmdStart.Visible = False
 
-            mProteinCoverageSummarizer = New clsProteinCoverageSummarizerRunner
-            With mProteinCoverageSummarizer
-                .ShowMessages = True
+            mProteinCoverageSummarizer = New clsProteinCoverageSummarizerRunner() With {
+                .ShowMessages = True,
                 .CallingAppHandlesEvents = True
-            End With
+            }
+
+            AddHandler mProteinCoverageSummarizer.StatusEvent, AddressOf mProteinCoverageSummarizer_StatusEvent
+            AddHandler mProteinCoverageSummarizer.ErrorEvent, AddressOf mProteinCoverageSummarizer_ErrorEvent
+            AddHandler mProteinCoverageSummarizer.WarningEvent, AddressOf mProteinCoverageSummarizer_WarningEvent
+
+            AddHandler mProteinCoverageSummarizer.ProgressUpdate, AddressOf mProteinCoverageSummarizer_ProgressChanged
+            AddHandler mProteinCoverageSummarizer.ProgressReset, AddressOf mProteinCoverageSummarizer_ProgressReset
 
             blnSuccess = SetOptionsFromGUI(mProteinCoverageSummarizer)
             If blnSuccess Then
@@ -1856,6 +1862,10 @@ Public Class GUI
 
                 If blnSuccess And Not (mProteinCoverageSummarizer.SearchAllProteinsForPeptideSequence And mProteinCoverageSummarizer.SearchAllProteinsSkipCoverageComputationSteps) Then
                     CreateSummaryDataTable(mProteinCoverageSummarizer.ResultsFilePath)
+                End If
+
+                If lblStatus.Text.StartsWith("Done (9") Then
+                    lblStatus.Text = "Done"
                 End If
             Else
                 ShowErrorMessage("Error initializing Protein File Parser General Options.")
@@ -2061,22 +2071,40 @@ Public Class GUI
         AutoDefineSearchAllProteins()
     End Sub
 
-    Private Sub mProteinCoverageSummarizer_ProgressChanged(taskDescription As String, percentComplete As Single) Handles mProteinCoverageSummarizer.ProgressChanged
+    Private Sub mProteinCoverageSummarizer_StatusEvent(message As String)
+        If lblProgress.Text.StartsWith(message) Then
+            lblStatus.Text = ""
+        Else
+            lblStatus.Text = message
+        End If
+
+    End Sub
+
+    Private Sub mProteinCoverageSummarizer_WarningEvent(message As String)
+        lblStatus.Text = message
+    End Sub
+
+    Private Sub mProteinCoverageSummarizer_ErrorEvent(message As String, ex As Exception)
+        lblStatus.Text = message
+    End Sub
+
+
+    Private Sub mProteinCoverageSummarizer_ProgressChanged(taskDescription As String, percentComplete As Single)
         lblProgress.Text = taskDescription
         If percentComplete > 0 Then lblProgress.Text &= ControlChars.NewLine & percentComplete.ToString("0.0") & "% complete"
 
-        Windows.Forms.Application.DoEvents()
+        Application.DoEvents()
     End Sub
 
-    Private Sub mProteinCoverageSummarizer_ProgressComplete() Handles mProteinCoverageSummarizer.ProgressComplete
+    Private Sub mProteinCoverageSummarizer_ProgressComplete()
         lblProgress.Text = "Processing complete."
 
-        Windows.Forms.Application.DoEvents()
+        Application.DoEvents()
     End Sub
 
-    Private Sub mProteinCoverageSummarizer_ProgressReset() Handles mProteinCoverageSummarizer.ProgressReset
+    Private Sub mProteinCoverageSummarizer_ProgressReset()
         lblProgress.Text = mProteinCoverageSummarizer.ProgressStepDescription
-        Windows.Forms.Application.DoEvents()
+        Application.DoEvents()
     End Sub
 
 End Class

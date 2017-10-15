@@ -45,11 +45,10 @@ Public Class clsProteinCoverageSummarizerRunner
 #End Region
 
 #Region "Classwide variables"
-    Private WithEvents mProteinCoverageSummarizer As ProteinCoverageSummarizer.clsProteinCoverageSummarizer
+    Private mProteinCoverageSummarizer As clsProteinCoverageSummarizer
 
     Private mCallingAppHandlesEvents As Boolean
 
-    Private mLocalErrorCode As eProteinCoverageErrorCodes
     Private mStatusMessage As String
 
 #End Region
@@ -92,11 +91,11 @@ Public Class clsProteinCoverageSummarizerRunner
         End Set
     End Property
 
-    Public Property PeptideFileFormatCode() As ProteinCoverageSummarizer.clsProteinCoverageSummarizer.ePeptideFileColumnOrderingCode
+    Public Property PeptideFileFormatCode() As clsProteinCoverageSummarizer.ePeptideFileColumnOrderingCode
         Get
             Return mProteinCoverageSummarizer.PeptideFileFormatCode
         End Get
-        Set(Value As ProteinCoverageSummarizer.clsProteinCoverageSummarizer.ePeptideFileColumnOrderingCode)
+        Set(Value As clsProteinCoverageSummarizer.ePeptideFileColumnOrderingCode)
             mProteinCoverageSummarizer.PeptideFileFormatCode = Value
         End Set
     End Property
@@ -127,11 +126,11 @@ Public Class clsProteinCoverageSummarizerRunner
             mProteinCoverageSummarizer.mProteinDataCache.DelimitedFileDelimiter = value
         End Set
     End Property
-    Public Property ProteinDataDelimitedFileFormatCode() As ProteinFileReader.DelimitedFileReader.eDelimitedFileFormatCode
+    Public Property ProteinDataDelimitedFileFormatCode() As DelimitedFileReader.eDelimitedFileFormatCode
         Get
             Return mProteinCoverageSummarizer.mProteinDataCache.DelimitedFileFormatCode
         End Get
-        Set(value As ProteinFileReader.DelimitedFileReader.eDelimitedFileFormatCode)
+        Set(value As DelimitedFileReader.eDelimitedFileFormatCode)
             mProteinCoverageSummarizer.mProteinDataCache.DelimitedFileFormatCode = value
         End Set
     End Property
@@ -258,10 +257,16 @@ Public Class clsProteinCoverageSummarizerRunner
         Me.ShowMessages = False
         Me.mCallingAppHandlesEvents = False
 
-        mAbortProcessing = False
+        AbortProcessing = False
         mStatusMessage = String.Empty
 
-        mProteinCoverageSummarizer = New ProteinCoverageSummarizer.clsProteinCoverageSummarizer
+        mProteinCoverageSummarizer = New clsProteinCoverageSummarizer()
+        RegisterEvents(mProteinCoverageSummarizer)
+
+        AddHandler mProteinCoverageSummarizer.ProgressChanged, AddressOf mProteinCoverageSummarizer_ProgressChanged
+
+        AddHandler mProteinCoverageSummarizer.ProgressReset, AddressOf mProteinCoverageSummarizer_ProgressReset
+
     End Sub
 
     Public Function LoadParameterFileSettings(strParameterFilePath As String) As Boolean
@@ -301,7 +306,7 @@ Public Class clsProteinCoverageSummarizerRunner
 
     End Function
 
-    Private Sub mProteinCoverageSummarizer_ProgressChanged(taskDescription As String, percentComplete As Single) Handles mProteinCoverageSummarizer.ProgressChanged
+    Private Sub mProteinCoverageSummarizer_ProgressChanged(taskDescription As String, percentComplete As Single)
         UpdateProgress(taskDescription, percentComplete)
 
         ''If mUseProgressForm AndAlso Not mProgressForm Is Nothing Then
@@ -311,14 +316,7 @@ Public Class clsProteinCoverageSummarizerRunner
         ''End If
     End Sub
 
-    Private Sub mProteinCoverageSummarizer_ProgressComplete() Handles mProteinCoverageSummarizer.ProgressComplete
-        OperationComplete()
-        ''If mUseProgressForm AndAlso Not mProgressForm Is Nothing Then
-        ''    mProgressForm.UpdateProgressBar(100)
-        ''End If
-    End Sub
-
-    Private Sub mProteinCoverageSummarizer_ProgressReset() Handles mProteinCoverageSummarizer.ProgressReset
+    Private Sub mProteinCoverageSummarizer_ProgressReset()
         ResetProgress(mProteinCoverageSummarizer.ProgressStepDescription)
 
         ''If mUseProgressForm AndAlso Not mProgressForm Is Nothing Then

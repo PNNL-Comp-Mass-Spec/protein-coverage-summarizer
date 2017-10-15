@@ -59,7 +59,7 @@ Public Module modMain
     Private mVerboseLogFile As StreamWriter
     Private mVerboseLoggingMostRecentMessage As String = String.Empty
 
-    Private WithEvents mPeptideToProteinMapEngine As clsPeptideToProteinMapEngine
+    Private mPeptideToProteinMapEngine As clsPeptideToProteinMapEngine
     Private mLastProgressReportTime As DateTime
     Private mLastPercentDisplayed As DateTime
 
@@ -83,10 +83,7 @@ Public Module modMain
             mVerboseLoggingMostRecentMessage = String.Empty
 
         Catch ex As Exception
-            Console.WriteLine()
-            Console.WriteLine("----------------------------------------------------")
-            Console.WriteLine("Error creating verbose log file: " & ex.Message)
-            Console.WriteLine("----------------------------------------------------")
+            ShowErrorMessage("Error creating verbose log file: " & ex.Message)
         End Try
 
     End Sub
@@ -160,7 +157,14 @@ Public Module modMain
                         .SearchAllProteinsSkipCoverageComputationSteps = mSkipCoverageComputationSteps
                     }
 
-                    blnSuccess = mPeptideToProteinMapEngine.ProcessFilesWildcard(mPeptideInputFilePath, mOutputFolderPath, mParameterFilePath)
+                    AddHandler mPeptideToProteinMapEngine.StatusEvent, AddressOf mPeptideToProteinMapEngine_StatusEvent
+                    AddHandler mPeptideToProteinMapEngine.ErrorEvent, AddressOf mPeptideToProteinMapEngine_ErrorEvent
+                    AddHandler mPeptideToProteinMapEngine.WarningEvent, AddressOf mPeptideToProteinMapEngine_WarningEvent
+
+                    AddHandler mPeptideToProteinMapEngine.ProgressUpdate, AddressOf mPeptideToProteinMapEngine_ProgressChanged
+                    AddHandler mPeptideToProteinMapEngine.ProgressReset, AddressOf mPeptideToProteinMapEngine_ProgressReset
+
+                    mPeptideToProteinMapEngine.ProcessFilesWildcard(mPeptideInputFilePath, mOutputFolderPath, mParameterFilePath)
 
                     If Not mVerboseLogFile Is Nothing Then
                         mVerboseLogFile.Close()
@@ -274,35 +278,12 @@ Public Module modMain
 
     End Function
 
-    Private Sub ShowErrorMessage(strMessage As String)
-        Dim strSeparator As String = "------------------------------------------------------------------------------"
-
-        Console.WriteLine()
-        Console.WriteLine(strSeparator)
-        Console.WriteLine(strMessage)
-        Console.WriteLine(strSeparator)
-        Console.WriteLine()
-
-        WriteToErrorStream(strMessage)
+    Private Sub ShowErrorMessage(message As String)
+        ConsoleMsgUtils.ShowError(message)
     End Sub
 
-    Private Sub ShowErrorMessage(strTitle As String, items As List(Of String))
-        Dim strSeparator As String = "------------------------------------------------------------------------------"
-        Dim strMessage As String
-
-        Console.WriteLine()
-        Console.WriteLine(strSeparator)
-        Console.WriteLine(strTitle)
-        strMessage = strTitle & ":"
-
-        For Each item As String In items
-            Console.WriteLine("   " + item)
-            strMessage &= " " & item
-        Next
-        Console.WriteLine(strSeparator)
-        Console.WriteLine()
-
-        WriteToErrorStream(strMessage)
+    Private Sub ShowErrorMessage(title As String, errorMessages As List(Of String))
+        ConsoleMsgUtils.ShowErrors(title, errorMessages)
     End Sub
 
     Private Sub ShowProgramHelp()
@@ -349,7 +330,7 @@ Public Module modMain
             Console.WriteLine("Version: " & GetAppVersion())
             Console.WriteLine()
 
-            Console.WriteLine("E-mail: matthew.monroe@pnnl.gov or matt@alchemistmatt.com")
+            Console.WriteLine("E-mail: matthew.monroe@pnnl.gov or proteomics@pnnl.gov")
             Console.WriteLine("Website: http://omics.pnl.gov/ or http://panomics.pnnl.gov/")
             Console.WriteLine()
 
@@ -362,18 +343,20 @@ Public Module modMain
 
     End Sub
 
-    Private Sub WriteToErrorStream(strErrorMessage As String)
-        Try
-            Using swErrorStream As StreamWriter = New StreamWriter(Console.OpenStandardError())
-                swErrorStream.WriteLine(strErrorMessage)
-            End Using
-        Catch ex As Exception
-            ' Ignore errors here
-        End Try
+    Private Sub mPeptideToProteinMapEngine_StatusEvent(message As String)
+        Console.WriteLine(message)
     End Sub
 
-    Private Sub mPeptideToProteinMapEngine_ProgressChanged(taskDescription As String, percentComplete As Single) Handles mPeptideToProteinMapEngine.ProgressChanged
-        Const PROGRESS_DOT_INTERVAL_MSEC As Integer = 250
+    Private Sub mPeptideToProteinMapEngine_WarningEvent(message As String)
+        ConsoleMsgUtils.ShowWarning(message)
+    End Sub
+
+    Private Sub mPeptideToProteinMapEngine_ErrorEvent(message As String, ex As Exception)
+        ShowErrorMessage(message)
+    End Sub
+
+    Private Sub mPeptideToProteinMapEngine_ProgressChanged(taskDescription As String, percentComplete As Single)
+        Const PROGRESS_DOT_INTERVAL_MSEC = 250
 
         If DateTime.UtcNow.Subtract(mLastPercentDisplayed).TotalSeconds >= 15 Then
             Console.WriteLine()
@@ -405,7 +388,7 @@ Public Module modMain
         End If
     End Sub
 
-    Private Sub mPeptideToProteinMapEngine_ProgressReset() Handles mPeptideToProteinMapEngine.ProgressReset
+    Private Sub mPeptideToProteinMapEngine_ProgressReset()
         mLastProgressReportTime = DateTime.UtcNow
         mLastPercentDisplayed = DateTime.UtcNow
     End Sub

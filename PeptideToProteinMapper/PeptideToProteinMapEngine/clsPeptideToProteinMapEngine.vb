@@ -455,7 +455,8 @@ Public Class clsPeptideToProteinMapEngine
         mAbortProcessing = False
         mStatusMessage = String.Empty
 
-        mProteinCoverageSummarizer = New clsProteinCoverageSummarizer
+        mProteinCoverageSummarizer = New clsProteinCoverageSummarizer()
+        RegisterEvents(mProteinCoverageSummarizer)
 
         mInspectModNameList = New List(Of String)
 
