@@ -11,6 +11,7 @@ Imports System.IO
 
 <CLSCompliant(True)>
 Public Class clsProteinFileDataCache
+    Inherits clsEventNotifier
 
     Public Sub New()
         mFileDate = "January 29, 2014"
@@ -246,7 +247,7 @@ Public Class clsProteinFileDataCache
                 End If
 
                 If intRetryIndex > 1 Then
-                    Console.WriteLine(" --> File now successfully deleted")
+                    OnStatusEvent(" --> File now successfully deleted")
                 End If
 
                 ' If we get here, the delete succeeded
@@ -254,10 +255,8 @@ Public Class clsProteinFileDataCache
 
             Catch ex As Exception
                 If intRetryIndex > 0 Then
-                    Console.WriteLine()
-                    Console.WriteLine("Error deleting " & mSqlLiteDBFilePath & ": " & ControlChars.NewLine & ex.Message)
-                    Console.WriteLine()
-                    Console.WriteLine("  Waiting " & intRetryHoldoffSeconds & " seconds, then trying again")
+                    OnWarningEvent("Error deleting " & mSqlLiteDBFilePath & ": " & ControlChars.NewLine & ex.Message)
+                    OnWarningEvent("  Waiting " & intRetryHoldoffSeconds & " seconds, then trying again")
                 End If
             End Try
 
@@ -594,13 +593,9 @@ Public Class clsProteinFileDataCache
             RaiseEvent ProteinCachingComplete()
 
             If blnSuccess Then
-                If mShowMessages Then
-                    MsgBox("Done: Processed " & intProteinsProcessed.ToString("###,##0") & " proteins (" & intInputFileLinesRead.ToString("###,###,##0") & " lines)", MsgBoxStyle.Information Or MsgBoxStyle.OkOnly, "Done")
-                End If
+                OnStatusEvent("Done: Processed " & intProteinsProcessed.ToString("###,##0") & " proteins (" & intInputFileLinesRead.ToString("###,###,##0") & " lines)")
             Else
-                If mShowMessages Then
-                    MsgBox(mStatusMessage, MsgBoxStyle.Information Or MsgBoxStyle.OkOnly, "Error")
-                End If
+                OnErrorEvent(mStatusMessage)
             End If
 
         Catch ex As Exception

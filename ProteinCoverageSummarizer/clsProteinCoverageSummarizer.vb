@@ -1238,9 +1238,7 @@ Public Class clsProteinCoverageSummarizer
             If objSettingsFile.LoadSettings(strParameterFilePath) Then
 
                 If Not objSettingsFile.SectionPresent(XML_SECTION_PROCESSING_OPTIONS) Then
-                    If mShowMessages Then
-                        Console.WriteLine("The node '<section name=""" & XML_SECTION_PROCESSING_OPTIONS & """> was not found in the parameter file: " & strParameterFilePath)
-                    End If
+                    OnWarningEvent("The node '<section name=""" & XML_SECTION_PROCESSING_OPTIONS & """> was not found in the parameter file: " & strParameterFilePath)
                 Else
                     Me.OutputProteinSequence = objSettingsFile.GetParam(XML_SECTION_PROCESSING_OPTIONS, "OutputProteinSequence", Me.OutputProteinSequence)
                     Me.SearchAllProteinsForPeptideSequence = objSettingsFile.GetParam(XML_SECTION_PROCESSING_OPTIONS, "SearchAllProteinsForPeptideSequence", Me.SearchAllProteinsForPeptideSequence)
@@ -2247,7 +2245,7 @@ Public Class clsProteinCoverageSummarizer
         End If
 
         If mErrorMessage.Length > 0 Then
-            Console.WriteLine(mErrorMessage)
+            OnErrorEvent(mErrorMessage)
             UpdateProgress(mErrorMessage)
         End If
     End Sub
