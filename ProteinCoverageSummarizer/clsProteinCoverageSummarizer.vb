@@ -776,31 +776,7 @@ Public Class clsProteinCoverageSummarizer
     Private Sub FindSequenceMatchForPeptideList(peptideList As IDictionary(Of String, Integer),
       strProteinNameForPeptides As String)
 
-        Dim intProteinIndex As Integer
-        Dim strKey As String
-        Dim blnMatchFound As Boolean
-        Dim blnMatchIsNew As Boolean
-        Dim intStartResidue As Integer
-        Dim intEndResidue As Integer
-
-        Dim intStartIndex As Integer
-        Dim intProteinCount As Integer
-
-        Dim intExpectedPeptideIterations As Integer
-        Dim intPeptideIterationsComplete As Integer
-
         Dim blnProteinUpdated(PROTEIN_CHUNK_COUNT - 1) As Boolean
-
-        Dim strPeptideSequenceForKeySource As String
-        Dim strPeptideSequenceForKey As String
-
-        Dim objPeptideListEnum As IDictionaryEnumerator
-
-        Dim strPeptideSequenceClean As String
-        Dim strPeptideSequenceToSearchOn As String
-
-        Dim chPrefixResidue As Char
-        Dim chSuffixResidue As Char
 
         Try
             ' Make sure strProteinNameForPeptide is a valid string
@@ -814,11 +790,14 @@ Public Class clsProteinCoverageSummarizer
             UpdateProgress("Finding matching proteins for peptide list", 0,
                eProteinCoverageProcessingSteps.SearchProteinsAgainstShortPeptides)
 
-            intStartIndex = 0
+            Dim intStartIndex = 0
             Do
                 ' Extract up to PROTEIN_CHUNK_COUNT proteins from the SQL Lite database
                 ' Store the information in the four local arrays
-                intProteinCount = ReadProteinInfoChunk(intStartIndex, blnProteinUpdated, False)
+                Dim intProteinCount = ReadProteinInfoChunk(intStartIndex, blnProteinUpdated, False)
+
+                Dim intPeptideIterationsComplete = 0
+
                 ' Iterate through the peptides in peptideList
                 Dim myEnumerator = peptideList.GetEnumerator
 
@@ -830,7 +809,11 @@ Public Class clsProteinCoverageSummarizer
                     ' Retrieve the next peptide from peptideList
                     ' Use GetCleanPeptideSequence() to extract out the sequence, prefix, and suffix letters (we're setting blnRemoveSymbolCharacters to False since that should have been done before the peptides were stored in peptideList)
                     ' Make sure the peptide sequence has uppercase letters
-                    strPeptideSequenceClean = GetCleanPeptideSequence(CStr(objPeptideListEnum.Key), chPrefixResidue, chSuffixResidue, False).ToUpper
+                    Dim strPeptideSequenceClean = GetCleanPeptideSequence(myEnumerator.Current.Key, chPrefixResidue, chSuffixResidue, False).ToUpper
+
+                    Dim strPeptideSequenceForKeySource As String
+                    Dim strPeptideSequenceForKey As String
+                    Dim strPeptideSequenceToSearchOn As String
 
                     If mMatchPeptidePrefixAndSuffixToProtein Then
                         strPeptideSequenceForKeySource = ConstructPeptideSequenceForKey(strPeptideSequenceClean, chPrefixResidue, chSuffixResidue)
@@ -855,22 +838,33 @@ Public Class clsProteinCoverageSummarizer
 
                     ' Search for strPeptideSequence in the protein sequences
                     For intProteinIndex = 0 To intProteinCount - 1
-                        blnMatchFound = False
+                        Dim blnMatchFound = False
+                        Dim blnMatchIsNew As Boolean
+                        Dim intStartResidue As Integer
+                        Dim intEndResidue As Integer
 
                         If mSearchAllProteinsForPeptideSequence OrElse strProteinNameForPeptides.Length = 0 Then
                             ' Search through all Protein sequences and capitalize matches for Peptide Sequence
 
-                            strKey = CStr(mCachedProteinInfo(intProteinIndex).UniqueSequenceID) & "::" & strPeptideSequenceForKey
-                            mCachedProteinInfo(intProteinIndex).Sequence = CapitalizeMatchingProteinSequenceLetters(mCachedProteinInfo(intProteinIndex).Sequence, strPeptideSequenceToSearchOn, strKey, chPrefixResidue, chSuffixResidue, blnMatchFound, blnMatchIsNew, intStartResidue, intEndResidue)
+                            Dim strKey = CStr(mCachedProteinInfo(intProteinIndex).UniqueSequenceID) & "::" & strPeptideSequenceForKey
+                            mCachedProteinInfo(intProteinIndex).Sequence = CapitalizeMatchingProteinSequenceLetters(
+                                mCachedProteinInfo(intProteinIndex).Sequence, strPeptideSequenceToSearchOn,
+                                strKey, chPrefixResidue, chSuffixResidue,
+                                blnMatchFound, blnMatchIsNew,
+                                intStartResidue, intEndResidue)
                         Else
                             ' Only search protein strProteinNameForPeptide
                             If mCachedProteinInfo(intProteinIndex).Name = strProteinNameForPeptides Then
 
                                 ' Define the peptide match key using the Unique Sequence ID, two colons, and the peptide sequence
-                                strKey = CStr(mCachedProteinInfo(intProteinIndex).UniqueSequenceID) & "::" & strPeptideSequenceForKey
+                                Dim strKey = CStr(mCachedProteinInfo(intProteinIndex).UniqueSequenceID) & "::" & strPeptideSequenceForKey
 
                                 ' Capitalize matching residues in sequence
-                                mCachedProteinInfo(intProteinIndex).Sequence = CapitalizeMatchingProteinSequenceLetters(mCachedProteinInfo(intProteinIndex).Sequence, strPeptideSequenceToSearchOn, strKey, chPrefixResidue, chSuffixResidue, blnMatchFound, blnMatchIsNew, intStartResidue, intEndResidue)
+                                mCachedProteinInfo(intProteinIndex).Sequence = CapitalizeMatchingProteinSequenceLetters(
+                                    mCachedProteinInfo(intProteinIndex).Sequence, strPeptideSequenceToSearchOn,
+                                    strKey, chPrefixResidue, chSuffixResidue,
+                                    blnMatchFound, blnMatchIsNew,
+                                    intStartResidue, intEndResidue)
                             End If
                         End If
 
@@ -912,12 +906,11 @@ Public Class clsProteinCoverageSummarizer
 
         Catch ex As Exception
             SetErrorMessage("Error in FindSequenceMatch:" & ControlChars.NewLine & ex.Message)
-            If Not mShowMessages Then Throw New Exception("Error in FindSequenceMatch", ex)
         End Try
 
     End Sub
 
-    Private Sub UpdateSequenceDbDataValues(blnProteinUpdated() As Boolean, intProteinCount As Integer)
+    Private Sub UpdateSequenceDbDataValues(blnProteinUpdated As IList(Of Boolean), intProteinCount As Integer)
         Try
             If Not BooleanArrayContainsTrueEntries(blnProteinUpdated, intProteinCount) Then
                 ' All of the entries in blnProteinUpdated() are False; nothing to update
@@ -956,7 +949,6 @@ Public Class clsProteinCoverageSummarizer
 
         Catch ex As Exception
             SetErrorMessage("Error in UpdateSequenceDbDataValues: " & ex.Message)
-            If Not mShowMessages Then Throw New Exception("Error in UpdateSequenceDbDataValues", ex)
         End Try
 
     End Sub
@@ -967,8 +959,8 @@ Public Class clsProteinCoverageSummarizer
     End Function
 
     Public Shared Function GetCleanPeptideSequence(strPeptideSequence As String,
-      <Out()> ByRef chPrefixResidue As Char,
-      <Out()> ByRef chSuffixResidue As Char,
+      <Out> ByRef chPrefixResidue As Char,
+      <Out> ByRef chSuffixResidue As Char,
       blnRemoveSymbolCharacters As Boolean) As String
 
         Static reReplaceSymbols As Regex = New Regex("[^A-Za-z]", RegexOptions.Compiled)
@@ -1065,42 +1057,31 @@ Public Class clsProteinCoverageSummarizer
     End Function
 
     Private Sub GetPercentCoverage()
-        Dim intIndex As Integer
-        Dim intCapitalLetterCount As Integer
-        Dim charArray As Char()
-        Dim character As Char
-
-        Dim intStartIndex As Integer
-        Dim intProteinCount As Integer
 
         Dim blnProteinUpdated(PROTEIN_CHUNK_COUNT - 1) As Boolean
 
         UpdateProgress("Computing percent coverage", 0,
            eProteinCoverageProcessingSteps.ComputePercentCoverage)
 
-        intStartIndex = 0
+        Dim intStartIndex = 0
+        Dim intIndex = 0
         Do
             ' Extract up to PROTEIN_CHUNK_COUNT proteins from the Sql Lite database
             ' Store the information in the four local arrays
-            intProteinCount = ReadProteinInfoChunk(intStartIndex, blnProteinUpdated, False)
+            Dim intProteinCount = ReadProteinInfoChunk(intStartIndex, blnProteinUpdated, False)
 
             For intProteinIndex = 0 To intProteinCount - 1
 
                 If Not mCachedProteinInfo(intProteinIndex).Sequence Is Nothing Then
-                    charArray = mCachedProteinInfo(intProteinIndex).Sequence.ToCharArray()
-                    intCapitalLetterCount = 0
+                    Dim charArray = mCachedProteinInfo(intProteinIndex).Sequence.ToCharArray()
+                    Dim intCapitalLetterCount = 0
                     For Each character In charArray
                         If Char.IsUpper(character) Then intCapitalLetterCount += 1
                     Next
 
-                    If intCapitalLetterCount > mCachedProteinInfo(intProteinIndex).Sequence.Length Then
-                        Dim temp As String
-                        temp = "error"
-                    Else
-                        mCachedProteinInfo(intProteinIndex).PercentCoverage = intCapitalLetterCount / mCachedProteinInfo(intProteinIndex).Sequence.Length
-                        If mCachedProteinInfo(intProteinIndex).PercentCoverage > 0 Then
-                            blnProteinUpdated(intProteinIndex) = True
-                        End If
+                    mCachedProteinInfo(intProteinIndex).PercentCoverage = intCapitalLetterCount / mCachedProteinInfo(intProteinIndex).Sequence.Length
+                    If mCachedProteinInfo(intProteinIndex).PercentCoverage > 0 Then
+                        blnProteinUpdated(intProteinIndex) = True
                     End If
                 End If
 
@@ -1108,6 +1089,8 @@ Public Class clsProteinCoverageSummarizer
                     UpdateProgress(intIndex / CSng(mProteinDataCache.GetProteinCountCached()) * 100,
                        eProteinCoverageProcessingSteps.ComputePercentCoverage)
                 End If
+
+                intIndex += 1
             Next
 
             UpdatePercentCoveragesDbDataValues(blnProteinUpdated, intProteinCount)
