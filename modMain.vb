@@ -1,5 +1,6 @@
 Option Strict On
 
+Imports System.Runtime.InteropServices
 Imports PRISM
 ' This program uses clsProteinCoverageSummarizer to read in a file with protein sequences along with
 ' an accompanying file with peptide sequences and compute the percent coverage of each of the proteins
@@ -48,6 +49,16 @@ Public Module modMain
     Private mLastProgressReportTime As System.DateTime
     Private mLastProgressReportValue As Integer
 
+    <DllImport("kernel32.dll")>
+    Private Function GetConsoleWindow() As IntPtr
+    End Function
+
+    <DllImport("user32.dll")>
+    Private Function ShowWindow(hWnd As IntPtr, nCmdShow As Integer) As Boolean
+    End Function
+
+    Const SW_HIDE As Integer = 0
+    Const SW_SHOW As Integer = 5
 
     Public Function Main() As Integer
         ' Returns 0 if no error, error code if an error
@@ -276,7 +287,12 @@ Public Module modMain
         System.Windows.Forms.Application.DoEvents()
 
         Try
-            objFormMain = New GUI
+            Dim handle = GetConsoleWindow()
+
+            ' Hide
+            ShowWindow(handle, SW_HIDE)
+
+            objFormMain = New GUI()
 
             objFormMain.ShowDialog()
         Catch ex As Exception
