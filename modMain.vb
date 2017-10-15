@@ -113,7 +113,7 @@ Public Module modMain
             End If
 
         Catch ex As Exception
-            ShowErrorMessage("Error occurred in modMain->Main: " & System.Environment.NewLine & ex.Message)
+            ShowErrorMessage("Error occurred in modMain->Main: " & Environment.NewLine & ex.Message)
             intReturnCode = -1
         End Try
 
@@ -210,7 +210,7 @@ Public Module modMain
         ' /I:PeptideInputFilePath /R: ProteinInputFilePath /O:OutputFolderPath /P:ParameterFilePath
 
         Dim strValue As String = String.Empty
-        Dim lstValidParameters As Generic.List(Of String) = New Generic.List(Of String) From {"I", "O", "R", "P", "G", "H", "M", "K", "Q"}
+        Dim lstValidParameters As List(Of String) = New List(Of String) From {"I", "O", "R", "P", "G", "H", "M", "K", "Q"}
 
         Try
             ' Make sure no invalid parameters are present
@@ -283,8 +283,8 @@ Public Module modMain
     Private Sub ShowGUI()
         Dim objFormMain As GUI
 
-        System.Windows.Forms.Application.EnableVisualStyles()
-        System.Windows.Forms.Application.DoEvents()
+        Application.EnableVisualStyles()
+        Application.DoEvents()
 
         Try
             Dim handle = GetConsoleWindow()
@@ -312,7 +312,7 @@ Public Module modMain
             strSyntax &= Environment.NewLine & "This program reads in a .fasta or .txt file containing protein names and sequences (and optionally descriptions)"
             strSyntax &= Environment.NewLine & "The program also reads in a .txt file containing peptide sequences and protein names (though protein name is optional) then uses this information to compute the sequence coverage percent for each protein."
             strSyntax &= Environment.NewLine
-            strSyntax &= Environment.NewLine & "Program syntax:" & System.Environment.NewLine & IO.Path.GetFileName(clsProcessFilesBaseClass.GetAppPath())
+            strSyntax &= Environment.NewLine & "Program syntax:" & Environment.NewLine & Path.GetFileName(clsProcessFilesBaseClass.GetAppPath())
             strSyntax &= Environment.NewLine & " /I:PeptideInputFilePath /R:ProteinInputFilePath [/O:OutputFolderName] [/P:ParameterFilePath] [/G] [/H] [/M] [/K] [/Q]"
             strSyntax &= Environment.NewLine
             strSyntax &= Environment.NewLine & "The input file path can contain the wildcard character *.  If a wildcard is present, then the same protein input file path will be used for each of the peptide input files matched."
@@ -336,7 +336,7 @@ Public Module modMain
             If mQuietMode Then
                 Console.WriteLine(strSyntax)
             Else
-                System.Windows.Forms.MessageBox.Show(strSyntax, "Syntax", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                MessageBox.Show(strSyntax, "Syntax", MessageBoxButtons.OK, MessageBoxIcon.Information)
             End If
 
         Catch ex As Exception

@@ -57,7 +57,7 @@ Public Class clsProteinFileDataCache
     Private mSqlLiteDBConnectionString As String = String.Empty
     Private mSqlLiteDBFilePath As String = SQL_LITE_PROTEIN_CACHE_FILENAME
 
-    Private mSqlLitePersistentConnection As SQLite.SQLiteConnection
+    Private mSqlLitePersistentConnection As SQLiteConnection
 
     Public Event ProteinCachingStart()
     Public Event ProteinCached(intProteinsCached As Integer)
@@ -114,7 +114,7 @@ Public Class clsProteinFileDataCache
             Return Nothing
         End If
 
-        Dim SQLconnect As SQLite.SQLiteConnection = New SQLite.SQLiteConnection(mSqlLiteDBConnectionString, True)
+        Dim SQLconnect = New SQLiteConnection(mSqlLiteDBConnectionString, True)
         SQLconnect.Open()
 
         ' Turn off Journaling and set Synchronous mode to 0
@@ -215,7 +215,7 @@ Public Class clsProteinFileDataCache
 
             ' Call the garbage collector to dispose of the SQLite objects
             GC.Collect()
-            System.Threading.Thread.Sleep(500)
+            Thread.Sleep(500)
 
         Catch ex As Exception
             ' Ignore errors here
@@ -246,7 +246,7 @@ Public Class clsProteinFileDataCache
             End Try
 
             GC.Collect()
-            System.Threading.Thread.Sleep(intRetryHoldoffSeconds * 1000)
+            Thread.Sleep(intRetryHoldoffSeconds * 1000)
         Next
 
     End Sub
@@ -264,27 +264,27 @@ Public Class clsProteinFileDataCache
     End Function
 
     Protected Function GetCachedProteinFromSQLiteDB(intIndex As Integer) As udtProteinInfoType
-        Dim udtProteinInfo As udtProteinInfoType = New udtProteinInfoType
+        Dim udtProteinInfo = New udtProteinInfoType
 
         If mSqlLitePersistentConnection Is Nothing Then
             mSqlLitePersistentConnection = ConnectToSqlLiteDB(False)
         End If
 
-        Dim SQLcommand As SQLite.SQLiteCommand
+        Dim SQLcommand As SQLiteCommand
         SQLcommand = mSqlLitePersistentConnection.CreateCommand
         SQLcommand.CommandText = "SELECT * FROM udtProteinInfoType WHERE UniqueSequenceID = " & intIndex.ToString
 
-        Dim SQLreader As SQLite.SQLiteDataReader
+        Dim SQLreader As SQLiteDataReader
         SQLreader = SQLcommand.ExecuteReader()
 
         If SQLreader.Read() Then
             ' Column names in table udtProteinInfoType:
-            '  Name TEXT, 
-            '  Description TEXT, 
-            '  Sequence TEXT, 
-            '  UniqueSequenceID INTEGER, 
-            '  PercentCoverage REAL, 
-            '  NonUniquePeptideCount INTEGER, 
+            '  Name TEXT,
+            '  Description TEXT,
+            '  Sequence TEXT,
+            '  UniqueSequenceID INTEGER,
+            '  PercentCoverage REAL,
+            '  NonUniquePeptideCount INTEGER,
             '  UniquePeptideCount INTEGER
 
             With udtProteinInfo
@@ -305,7 +305,7 @@ Public Class clsProteinFileDataCache
 
     End Function
 
-    Public Function GetSQLiteDataReader(strSQLQuery As String) As SQLite.SQLiteDataReader
+    Public Function GetSQLiteDataReader(strSQLQuery As String) As SQLiteDataReader
 
         If mSqlLiteDBConnectionString Is Nothing OrElse mSqlLiteDBConnectionString.Length = 0 Then
             Return Nothing
@@ -313,11 +313,11 @@ Public Class clsProteinFileDataCache
 
         Dim SQLconnect = ConnectToSqlLiteDB(False)
 
-        Dim SQLcommand As SQLite.SQLiteCommand
+        Dim SQLcommand As SQLiteCommand
         SQLcommand = SQLconnect.CreateCommand
         SQLcommand.CommandText = strSQLQuery
 
-        Dim SQLreader As SQLite.SQLiteDataReader
+        Dim SQLreader As SQLiteDataReader
         SQLreader = SQLcommand.ExecuteReader()
 
         Return SQLreader

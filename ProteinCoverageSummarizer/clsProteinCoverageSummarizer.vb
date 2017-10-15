@@ -1199,19 +1199,19 @@ Public Class clsProteinCoverageSummarizer
                 If Not objSettingsFile.SectionPresent(XML_SECTION_PROCESSING_OPTIONS) Then
                     OnWarningEvent("The node '<section name=""" & XML_SECTION_PROCESSING_OPTIONS & """> was not found in the parameter file: " & strParameterFilePath)
                 Else
-                    Me.OutputProteinSequence = objSettingsFile.GetParam(XML_SECTION_PROCESSING_OPTIONS, "OutputProteinSequence", Me.OutputProteinSequence)
-                    Me.SearchAllProteinsForPeptideSequence = objSettingsFile.GetParam(XML_SECTION_PROCESSING_OPTIONS, "SearchAllProteinsForPeptideSequence", Me.SearchAllProteinsForPeptideSequence)
-                    Me.SaveProteinToPeptideMappingFile = objSettingsFile.GetParam(XML_SECTION_PROCESSING_OPTIONS, "SaveProteinToPeptideMappingFile", Me.SaveProteinToPeptideMappingFile)
-                    Me.SaveSourceDataPlusProteinsFile = objSettingsFile.GetParam(XML_SECTION_PROCESSING_OPTIONS, "mSaveSourceDataPlusProteinsFile", Me.SaveSourceDataPlusProteinsFile)
+                    OutputProteinSequence = objSettingsFile.GetParam(XML_SECTION_PROCESSING_OPTIONS, "OutputProteinSequence", Me.OutputProteinSequence)
+                    SearchAllProteinsForPeptideSequence = objSettingsFile.GetParam(XML_SECTION_PROCESSING_OPTIONS, "SearchAllProteinsForPeptideSequence", Me.SearchAllProteinsForPeptideSequence)
+                    SaveProteinToPeptideMappingFile = objSettingsFile.GetParam(XML_SECTION_PROCESSING_OPTIONS, "SaveProteinToPeptideMappingFile", Me.SaveProteinToPeptideMappingFile)
+                    SaveSourceDataPlusProteinsFile = objSettingsFile.GetParam(XML_SECTION_PROCESSING_OPTIONS, "mSaveSourceDataPlusProteinsFile", Me.SaveSourceDataPlusProteinsFile)
 
-                    Me.TrackPeptideCounts = objSettingsFile.GetParam(XML_SECTION_PROCESSING_OPTIONS, "TrackPeptideCounts", Me.TrackPeptideCounts)
-                    Me.RemoveSymbolCharacters = objSettingsFile.GetParam(XML_SECTION_PROCESSING_OPTIONS, "RemoveSymbolCharacters", Me.RemoveSymbolCharacters)
-                    Me.MatchPeptidePrefixAndSuffixToProtein = objSettingsFile.GetParam(XML_SECTION_PROCESSING_OPTIONS, "MatchPeptidePrefixAndSuffixToProtein", Me.MatchPeptidePrefixAndSuffixToProtein)
-                    Me.IgnoreILDifferences = objSettingsFile.GetParam(XML_SECTION_PROCESSING_OPTIONS, "IgnoreILDifferences", Me.IgnoreILDifferences)
+                    TrackPeptideCounts = objSettingsFile.GetParam(XML_SECTION_PROCESSING_OPTIONS, "TrackPeptideCounts", Me.TrackPeptideCounts)
+                    RemoveSymbolCharacters = objSettingsFile.GetParam(XML_SECTION_PROCESSING_OPTIONS, "RemoveSymbolCharacters", Me.RemoveSymbolCharacters)
+                    MatchPeptidePrefixAndSuffixToProtein = objSettingsFile.GetParam(XML_SECTION_PROCESSING_OPTIONS, "MatchPeptidePrefixAndSuffixToProtein", Me.MatchPeptidePrefixAndSuffixToProtein)
+                    IgnoreILDifferences = objSettingsFile.GetParam(XML_SECTION_PROCESSING_OPTIONS, "IgnoreILDifferences", Me.IgnoreILDifferences)
 
-                    Me.PeptideFileSkipFirstLine = objSettingsFile.GetParam(XML_SECTION_PROCESSING_OPTIONS, "PeptideFileSkipFirstLine", Me.PeptideFileSkipFirstLine)
-                    Me.PeptideInputFileDelimiter = objSettingsFile.GetParam(XML_SECTION_PROCESSING_OPTIONS, "PeptideInputFileDelimiter", Me.PeptideInputFileDelimiter).Chars(0)
-                    Me.PeptideFileFormatCode = CType(objSettingsFile.GetParam(XML_SECTION_PROCESSING_OPTIONS, "PeptideFileFormatCode", CInt(Me.PeptideFileFormatCode)), ePeptideFileColumnOrderingCode)
+                    PeptideFileSkipFirstLine = objSettingsFile.GetParam(XML_SECTION_PROCESSING_OPTIONS, "PeptideFileSkipFirstLine", Me.PeptideFileSkipFirstLine)
+                    PeptideInputFileDelimiter = objSettingsFile.GetParam(XML_SECTION_PROCESSING_OPTIONS, "PeptideInputFileDelimiter", Me.PeptideInputFileDelimiter).Chars(0)
+                    PeptideFileFormatCode = CType(objSettingsFile.GetParam(XML_SECTION_PROCESSING_OPTIONS, "PeptideFileFormatCode", CInt(Me.PeptideFileFormatCode)), ePeptideFileColumnOrderingCode)
 
                     mProteinDataCache.DelimitedFileSkipFirstLine = objSettingsFile.GetParam(XML_SECTION_PROCESSING_OPTIONS, "ProteinFileSkipFirstLine", mProteinDataCache.DelimitedFileSkipFirstLine)
                     mProteinDataCache.DelimitedFileDelimiter = objSettingsFile.GetParam(XML_SECTION_PROCESSING_OPTIONS, "DelimitedProteinFileDelimiter", mProteinDataCache.DelimitedFileDelimiter).Chars(0)
@@ -1538,9 +1538,9 @@ Public Class clsProteinCoverageSummarizer
     End Function
 
     Public Function ProcessFile(strInputFilePath As String,
-     strOutputFolderPath As String,
-     strParameterFilePath As String,
-     blnResetErrorCode As Boolean) As Boolean
+      strOutputFolderPath As String,
+      strParameterFilePath As String,
+      blnResetErrorCode As Boolean) As Boolean
 
         Dim strProteinToPeptideMappingFilePath As String = String.Empty
 
@@ -1548,12 +1548,12 @@ Public Class clsProteinCoverageSummarizer
     End Function
 
     Public Function ProcessFile(
-     strInputFilePath As String,
-     strOutputFolderPath As String,
-     strParameterFilePath As String,
-     blnResetErrorCode As Boolean,
-     <Out()> ByRef strProteinToPeptideMappingFilePath As String,
-     Optional outputFileBaseName As String = "") As Boolean
+      strInputFilePath As String,
+      strOutputFolderPath As String,
+      strParameterFilePath As String,
+      blnResetErrorCode As Boolean,
+      <Out> ByRef strProteinToPeptideMappingFilePath As String,
+      Optional outputFileBaseName As String = "") As Boolean
 
         Dim blnSuccess As Boolean
 

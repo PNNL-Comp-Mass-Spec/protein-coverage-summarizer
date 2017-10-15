@@ -437,7 +437,7 @@ Public Class clsPeptideToProteinMapEngine
     End Function
 
     Private Sub InitializeVariables()
-        Me.ShowMessages = True
+        ShowMessages = True
 
         mPeptideInputFileFormat = ePeptideInputFileFormatConstants.AutoDetermine
         mDeleteTempFiles = True

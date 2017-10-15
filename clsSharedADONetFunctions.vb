@@ -17,7 +17,7 @@ Public Class ADONetRoutines
 
     Public Const DEFAULT_CONNECTION_STRING_NO_PROVIDER As String = "Data Source=pogo;Initial Catalog=MTS_Master;User ID=mtuser;Password=mt4fun"
 
-    Public Shared Function AppendColumnToTable(ByRef dtDataTable As DataTable, strColumnName As String, objColumnType As System.Type, dblDefaultValue As Double, blnReadOnly As Boolean, blnUnique As Boolean) As Boolean
+    Public Shared Function AppendColumnToTable(ByRef dtDataTable As DataTable, strColumnName As String, objColumnType As Type, dblDefaultValue As Double, blnReadOnly As Boolean, blnUnique As Boolean) As Boolean
         Dim objNewCol As DataColumn
 
         Try
@@ -41,7 +41,7 @@ Public Class ADONetRoutines
 
         Dim blnSuccess As Boolean
 
-        blnSuccess = AppendColumnToTable(dtDataTable, strColumnName, System.Type.GetType("System.DateTime"), 0, blnReadOnly, blnUnique)
+        blnSuccess = AppendColumnToTable(dtDataTable, strColumnName, Type.GetType("System.DateTime"), 0, blnReadOnly, blnUnique)
 
         If blnSuccess Then
             With dtDataTable.Columns(strColumnName)
@@ -52,18 +52,18 @@ Public Class ADONetRoutines
     End Sub
 
     Public Shared Function AppendColumnDoubleToTable(ByRef dtDataTable As DataTable, strColumnName As String, Optional dblDefaultValue As Double = 0, Optional blnReadOnly As Boolean = False, Optional blnUnique As Boolean = False) As Boolean
-        Return AppendColumnToTable(dtDataTable, strColumnName, System.Type.GetType("System.Double"), dblDefaultValue, blnReadOnly, blnUnique)
+        Return AppendColumnToTable(dtDataTable, strColumnName, Type.GetType("System.Double"), dblDefaultValue, blnReadOnly, blnUnique)
     End Function
 
     Public Shared Function AppendColumnSingleToTable(ByRef dtDataTable As DataTable, strColumnName As String, Optional sngDefaultValue As Single = 0, Optional blnReadOnly As Boolean = False, Optional blnUnique As Boolean = False) As Boolean
-        Return AppendColumnToTable(dtDataTable, strColumnName, System.Type.GetType("System.Double"), sngDefaultValue, blnReadOnly, blnUnique)
+        Return AppendColumnToTable(dtDataTable, strColumnName, Type.GetType("System.Double"), sngDefaultValue, blnReadOnly, blnUnique)
     End Function
 
     Public Shared Sub AppendColumnIntegerToTable(ByRef dtDataTable As DataTable, strColumnName As String, Optional intDefaultValue As Integer = 0, Optional blnAutoIncrement As Boolean = False, Optional blnReadOnly As Boolean = False, Optional blnUnique As Boolean = False)
 
         Dim blnSuccess As Boolean
 
-        blnSuccess = AppendColumnToTable(dtDataTable, strColumnName, System.Type.GetType("System.Int32"), intDefaultValue, blnReadOnly, blnUnique)
+        blnSuccess = AppendColumnToTable(dtDataTable, strColumnName, Type.GetType("System.Int32"), intDefaultValue, blnReadOnly, blnUnique)
 
         If blnSuccess And blnAutoIncrement Then
             With dtDataTable.Columns(strColumnName)
@@ -79,7 +79,7 @@ Public Class ADONetRoutines
 
         Dim blnSuccess As Boolean
 
-        blnSuccess = AppendColumnToTable(dtDataTable, strColumnName, System.Type.GetType("System.Int64"), lngDefaultValue, blnReadOnly, blnUnique)
+        blnSuccess = AppendColumnToTable(dtDataTable, strColumnName, Type.GetType("System.Int64"), lngDefaultValue, blnReadOnly, blnUnique)
 
         If blnSuccess And blnAutoIncrement Then
             With dtDataTable.Columns(strColumnName)
@@ -96,7 +96,7 @@ Public Class ADONetRoutines
         Dim myDataColumn As New DataColumn
 
         With myDataColumn
-            .DataType = System.Type.GetType("System.String")
+            .DataType = Type.GetType("System.String")
             .ColumnName = strColumnName
             If Not strDefaultValue Is Nothing Then
                 .DefaultValue = strDefaultValue
@@ -110,9 +110,9 @@ Public Class ADONetRoutines
     End Sub
 
 
-    Public Shared Sub AppendColumnToTableStyle(ByRef tsTableStyle As System.Windows.Forms.DataGridTableStyle, strMappingName As String, strHeaderText As String, Optional intWidth As Integer = 75, Optional blnIsReadOnly As Boolean = False, Optional blnIsDateTime As Boolean = False, Optional intDecimalPlaces As Integer = -1)
+    Public Shared Sub AppendColumnToTableStyle(ByRef tsTableStyle As DataGridTableStyle, strMappingName As String, strHeaderText As String, Optional intWidth As Integer = 75, Optional blnIsReadOnly As Boolean = False, Optional blnIsDateTime As Boolean = False, Optional intDecimalPlaces As Integer = -1)
         ' If intDecimalPlaces is >=0, then a format string is constructed to show the specified number of decimal places
-        Dim TextCol As New Windows.Forms.DataGridTextBoxColumn
+        Dim TextCol As New DataGridTextBoxColumn
         Dim i As Integer
 
         With TextCol
@@ -134,9 +134,9 @@ Public Class ADONetRoutines
 
     End Sub
 
-    Public Shared Sub AppendBoolColumnToTableStyle(ByRef tsTableStyle As System.Windows.Forms.DataGridTableStyle, strMappingName As String, strHeaderText As String, Optional intWidth As Integer = 75, Optional blnIsReadOnly As Boolean = False, Optional blnSourceIsTrueFalse As Boolean = True)
+    Public Shared Sub AppendBoolColumnToTableStyle(ByRef tsTableStyle As DataGridTableStyle, strMappingName As String, strHeaderText As String, Optional intWidth As Integer = 75, Optional blnIsReadOnly As Boolean = False, Optional blnSourceIsTrueFalse As Boolean = True)
         ' If intDecimalPlaces is >=0, then a format string is constructed to show the specified number of decimal places
-        Dim BoolCol As New Windows.Forms.DataGridBoolColumn
+        Dim BoolCol As New DataGridBoolColumn
 
         With BoolCol
             .MappingName = strMappingName
@@ -191,7 +191,7 @@ Public Class ADONetRoutines
         strNewConnStr = String.Empty
 
         For intIndex = 0 To strConnStrParts.Length - 1
-            intCharIndex = strConnStrParts(intIndex).IndexOf("=")
+            intCharIndex = strConnStrParts(intIndex).IndexOf("=", StringComparison.Ordinal)
             If intCharIndex > 0 Then
                 strParameterName = strConnStrParts(intIndex).Substring(0, intCharIndex)
                 Select Case strParameterName.ToLower.Trim
@@ -221,7 +221,7 @@ Public Class ADONetRoutines
 
     End Function
 
-    Public Shared Sub FixDataGridScrollBarBug(ByRef objThisDataGrid As Windows.Forms.DataGrid)
+    Public Shared Sub FixDataGridScrollBarBug(ByRef objThisDataGrid As DataGrid)
 
         With objThisDataGrid
             'Resize DataGrid to prevent a bug with unusable scroll bars that occurs when the previous
@@ -241,7 +241,7 @@ Public Class ADONetRoutines
         Dim strNewConnStr As String
         Dim intIndex As Integer
 
-        If strConnectionString.ToLower.IndexOf("provider") >= 0 Then
+        If strConnectionString.ToLower().IndexOf("provider", StringComparison.Ordinal) >= 0 Then
             ' Remove the provider portion from strOleDBConnectionString
 
             strConnStrParts = strConnectionString.Split(";"c)
