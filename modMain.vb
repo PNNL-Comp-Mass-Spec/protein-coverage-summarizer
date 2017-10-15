@@ -1,5 +1,6 @@
 Option Strict On
 
+Imports PRISM
 ' This program uses clsProteinCoverageSummarizer to read in a file with protein sequences along with
 ' an accompanying file with peptide sequences and compute the percent coverage of each of the proteins
 '

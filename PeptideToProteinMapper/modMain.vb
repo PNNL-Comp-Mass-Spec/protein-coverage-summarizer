@@ -36,6 +36,7 @@ Imports System.Reflection
 Imports System.Threading
 Imports PeptideToProteinMapEngine
 Imports PeptideToProteinMapEngine.clsPeptideToProteinMapEngine
+Imports PRISM
 
 Public Module modMain
 
