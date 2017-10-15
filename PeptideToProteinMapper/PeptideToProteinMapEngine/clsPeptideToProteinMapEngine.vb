@@ -54,8 +54,8 @@ Public Class clsPeptideToProteinMapEngine
         PeptideListFile = 1             ' First column is peptide sequence
         ProteinAndPeptideFile = 2       ' First column is protein name, second column is peptide sequence
         InspectResultsFile = 3          ' Inspect results file; pre-process the file to determine the peptides present, then determine the proteins that contain the given peptides
-        MSGFDBResultsFile = 4           ' MSGF-DB results file; pre-process the file to determine the peptides present, then determine the proteins that contain the given peptides
-        PHRPFile = 5                    ' Sequest, Inspect, X!Tandem, or MSGF-DB synopsis or first-hits file created by PHRP; pre-process the file to determine the peptides present, then determine the proteins that contain the given peptides
+        MSGFDBResultsFile = 4           ' MSGF+ results file; pre-process the file to determine the peptides present, then determine the proteins that contain the given peptides
+        PHRPFile = 5                    ' Sequest, Inspect, X!Tandem, or MSGF+ synopsis or first-hits file created by PHRP; pre-process the file to determine the peptides present, then determine the proteins that contain the given peptides
     End Enum
 
 #End Region
@@ -83,21 +83,20 @@ Public Class clsPeptideToProteinMapEngine
     Private mPeptideInputFileFormat As ePeptideInputFileFormatConstants
     Private mDeleteTempFiles As Boolean
 
-    ' When processing an inspect search result file, if you provide the inspect parameter file name, 
+    ' When processing an inspect search result file, if you provide the inspect parameter file name,
     '  then this program will read the parameter file and look for the "mod," lines.  The user-assigned mod
     '  names will be extracted and used when "cleaning" the peptides prior to looking for matching proteins
     Private mInspectParameterFilePath As String
 
-    Private mLocalErrorCode As eProteinCoverageErrorCodes
     Private mStatusMessage As String
 
-    ' The following is used when the input file is Sequest, X!Tandem, Inspect, or MSGF-DB results file
+    ' The following is used when the input file is Sequest, X!Tandem, Inspect, or MSGF+ results file
     ' Keys are peptide sequences; values are Lists of scan numbers that each peptide was observed in
     ' Keys may have mod symbols in them; those symbols will be removed in PreProcessDataWriteOutPeptides
     Private mUniquePeptideList As SortedList(Of String, SortedSet(Of Integer))
 
     ' Mod names must be lower case, and 4 characters in length (or shorter)
-    ' Only used with Inspect since mods in MSGF-DB are simply numbers, e.g. R.DNFM+15.995SATQAVEYGLVDAVM+15.995TK.R
+    ' Only used with Inspect since mods in MSGF+ are simply numbers, e.g. R.DNFM+15.995SATQAVEYGLVDAVM+15.995TK.R
     '  while mods in Sequest and XTandem are symbols (*, #, @)
     Private mInspectModNameList As List(Of String)
 
