@@ -245,42 +245,19 @@ Public Module modMain
             End If
 
         Catch ex As Exception
-            ShowErrorMessage("Error parsing the command line parameters: " & System.Environment.NewLine & ex.Message)
+            ShowErrorMessage("Error parsing the command line parameters: " & Environment.NewLine & ex.Message)
         End Try
 
         Return False
 
     End Function
 
-    Private Sub ShowErrorMessage(strMessage As String)
-        Dim strSeparator As String = "------------------------------------------------------------------------------"
-
-        Console.WriteLine()
-        Console.WriteLine(strSeparator)
-        Console.WriteLine(strMessage)
-        Console.WriteLine(strSeparator)
-        Console.WriteLine()
-
-        WriteToErrorStream(strMessage)
+    Private Sub ShowErrorMessage(message As String)
+        ConsoleMsgUtils.ShowError(message)
     End Sub
 
-    Private Sub ShowErrorMessage(strTitle As String, items As List(Of String))
-        Dim strSeparator As String = "------------------------------------------------------------------------------"
-        Dim strMessage As String
-
-        Console.WriteLine()
-        Console.WriteLine(strSeparator)
-        Console.WriteLine(strTitle)
-        strMessage = strTitle & ":"
-
-        For Each item As String In items
-            Console.WriteLine("   " + item)
-            strMessage &= " " & item
-        Next
-        Console.WriteLine(strSeparator)
-        Console.WriteLine()
-
-        WriteToErrorStream(strMessage)
+    Private Sub ShowErrorMessage(title As String, errorMessages As List(Of String))
+        ConsoleMsgUtils.ShowErrors(title, errorMessages)
     End Sub
 
     Private Sub ShowGUI()
@@ -348,14 +325,6 @@ Public Module modMain
 
     End Sub
 
-    Private Sub WriteToErrorStream(strErrorMessage As String)
-        Try
-            Using swErrorStream As System.IO.StreamWriter = New System.IO.StreamWriter(Console.OpenStandardError())
-                swErrorStream.WriteLine(strErrorMessage)
-            End Using
-        Catch ex As Exception
-            ' Ignore errors here
-        End Try
     Private Sub mProteinCoverageSummarizer_StatusEvent(message As String)
         Console.WriteLine(message)
     End Sub
