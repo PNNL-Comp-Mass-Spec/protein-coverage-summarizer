@@ -1117,13 +1117,8 @@ Public Class GUI
     End Sub
 
     Private Sub EnableDisableControls()
-        Dim blnFastaFile As Boolean
 
-        If txtProteinInputFilePath.Text.ToLower.EndsWith(".fasta") Then
-            blnFastaFile = True
-        Else
-            blnFastaFile = False
-        End If
+        Dim blnFastaFile = clsProteinFileDataCache.IsFastaFile(txtProteinInputFilePath.Text)
 
         cboProteinInputFileColumnOrdering.Enabled = Not blnFastaFile
         cboProteinInputFileColumnDelimiter.Enabled = Not blnFastaFile
