@@ -1199,7 +1199,7 @@ Public Class clsProteinCoverageSummarizer
                 End If
             End If
 
-            Dim objSettingsFile = New XmlSettingsFileAccessor
+            Dim objSettingsFile = New XmlSettingsFileAccessor()
 
             If objSettingsFile.LoadSettings(strParameterFilePath) Then
 

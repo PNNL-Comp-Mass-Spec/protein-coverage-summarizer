@@ -194,7 +194,7 @@ Public Class ADONetRoutines
             intCharIndex = strConnStrParts(intIndex).IndexOf("=", StringComparison.Ordinal)
             If intCharIndex > 0 Then
                 strParameterName = strConnStrParts(intIndex).Substring(0, intCharIndex)
-                Select Case strParameterName.ToLower.Trim
+                Select Case strParameterName.ToLower().Trim()
                     Case "data source", "server"
                         ' Server name
                         strConnStrParts(intIndex) = strParameterName & "=" & strServerName
@@ -248,7 +248,7 @@ Public Class ADONetRoutines
             strNewConnStr = String.Empty
 
             For intIndex = 0 To strConnStrParts.Length - 1
-                If strConnStrParts(intIndex).ToLower.StartsWith("provider") Then
+                If strConnStrParts(intIndex).ToLower().StartsWith("provider") Then
                     ' Skip this part
                 Else
                     If strNewConnStr.Length > 0 Then

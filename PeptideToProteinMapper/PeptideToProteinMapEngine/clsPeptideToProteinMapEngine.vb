@@ -336,10 +336,10 @@ Public Class clsPeptideToProteinMapEngine
     Public Function DetermineResultsFileFormat(strFilePath As String) As ePeptideInputFileFormatConstants
         ' Examine the strFilePath to determine the file format
 
-        If Path.GetFileName(strFilePath).ToLower.EndsWith(FILENAME_SUFFIX_INSPECT_RESULTS_FILE.ToLower()) Then
+        If Path.GetFileName(strFilePath).ToLower().EndsWith(FILENAME_SUFFIX_INSPECT_RESULTS_FILE.ToLower()) Then
             Return ePeptideInputFileFormatConstants.InspectResultsFile
 
-        ElseIf Path.GetFileName(strFilePath).ToLower.EndsWith(FILENAME_SUFFIX_MSGFDB_RESULTS_FILE.ToLower()) Then
+        ElseIf Path.GetFileName(strFilePath).ToLower().EndsWith(FILENAME_SUFFIX_MSGFDB_RESULTS_FILE.ToLower()) Then
             Return ePeptideInputFileFormatConstants.MSGFDBResultsFile
 
         ElseIf mPeptideInputFileFormat <> ePeptideInputFileFormatConstants.AutoDetermine And mPeptideInputFileFormat <> ePeptideInputFileFormatConstants.Unknown Then
@@ -391,13 +391,13 @@ Public Class clsPeptideToProteinMapEngine
 
                         If strLineIn.Chars(0) = "#"c Then
                             ' Comment line; skip it
-                        ElseIf strLineIn.ToLower.StartsWith("mod") Then
+                        ElseIf strLineIn.ToLower().StartsWith("mod") Then
                             ' Modification definition line
 
                             ' Split the line on commas
                             Dim strSplitLine = strLineIn.Split(","c)
 
-                            If strSplitLine.Length >= 5 AndAlso strSplitLine(0).ToLower.Trim = "mod" Then
+                            If strSplitLine.Length >= 5 AndAlso strSplitLine(0).ToLower().Trim = "mod" Then
 
                                 Dim strModName As String
                                 strModName = strSplitLine(4).ToLower()
