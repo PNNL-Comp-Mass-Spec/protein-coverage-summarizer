@@ -46,7 +46,7 @@ Public Class clsLeaderSequenceCache
 
 #Region "Classwide variables"
     Private mLeaderSequenceMinimumLength As Integer
-    Private mLeaderSequenceHashTable As System.Collections.Hashtable
+    Private mLeaderSequences As Dictionary(Of String, Integer)
 
     Public mCachedPeptideCount As Integer
     Public mCachedPeptideSeqInfo() As udtPeptideSequenceInfoType
@@ -159,15 +159,13 @@ Public Class clsLeaderSequenceCache
                 If chSuffixResidueLtoI = "L"c Then chSuffixResidueLtoI = "I"c
             End If
 
-            ' Look for strLeaderSequence in mLeaderSequenceHashTable
-            objItem = mLeaderSequenceHashTable(strLeaderSequence)
-            If objItem Is Nothing Then
+            Dim hashIndexPointer As Integer
+
+            ' Look for strLeaderSequence in mLeaderSequences
+            If Not mLeaderSequences.TryGetValue(strLeaderSequence, hashIndexPointer) Then
                 ' strLeaderSequence was not found; add it and initialize intHashIndexPointer
-                intHashIndexPointer = mLeaderSequenceHashTable.Count
-                mLeaderSequenceHashTable.Add(strLeaderSequence, intHashIndexPointer)
-            Else
-                ' strLeaderSequence is already present; update intHashIndexPointer 
-                intHashIndexPointer = CInt(objItem)
+                hashIndexPointer = mLeaderSequences.Count
+                mLeaderSequences.Add(strLeaderSequence, hashIndexPointer)
             End If
 
             ' Expand mCachedPeptideSeqInfo if needed
@@ -328,18 +326,11 @@ Public Class clsLeaderSequenceCache
         ' Returns the index value if found, or -1 if not found
         ' Calls SortIndices if mIndicesSorted = False
 
-        Dim objItem As Object
+        Dim targetHashIndex As Integer
 
-        Dim intTargetHashIndex As Integer
-        Dim intCachedPeptideMatchIndex As Integer
-
-        objItem = mLeaderSequenceHashTable(strLeaderSequenceToFind)
-
-        If objItem Is Nothing Then
+        If Not mLeaderSequences.TryGetValue(strLeaderSequenceToFind, targetHashIndex) Then
             Return -1
-        Else
-            ' Item found in mLeaderSequenceHashTable
-            ' Return the first peptide index value mapped to objzItem
+        End If
 
             intTargetHashIndex = CInt(objItem)
 
@@ -378,10 +369,10 @@ Public Class clsLeaderSequenceCache
 
         mIndicesSorted = False
 
-        If mLeaderSequenceHashTable Is Nothing Then
-            mLeaderSequenceHashTable = New Hashtable
+        If mLeaderSequences Is Nothing Then
+            mLeaderSequences = New Dictionary(Of String, Integer)
         Else
-            mLeaderSequenceHashTable.Clear()
+            mLeaderSequences.Clear()
         End If
     End Sub
 

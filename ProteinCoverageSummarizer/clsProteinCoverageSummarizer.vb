@@ -105,11 +105,11 @@ Public Class clsProteinCoverageSummarizer
     Private WithEvents mLeaderSequenceCache As clsLeaderSequenceCache
     Private mNewProteinsCache() As udtSequence
 
-    ' This hashtable contains entries of the form 1234::K.ABCDEFR.A
+    ' This dictionary contains entries of the form 1234::K.ABCDEFR.A
     '  where the number is the protein ID and the peptide is the peptide sequence
     ' The value for each entry is the number of times the peptide is present in the given protein
-    ' This hashtable is only populated if mTrackPeptideCounts is true
-    Private mProteinPeptideStats As Hashtable
+    ' This dictionary is only populated if mTrackPeptideCounts is true
+    Private mProteinPeptideStats As Dictionary(Of String, Integer)
 
     Private mProteinInputFilePath As String
     Private mResultsFilePath As String              ' This value is populated by function ProcessFile()
@@ -580,11 +580,6 @@ Public Class clsProteinCoverageSummarizer
         Dim intPeptideStatsCount As Integer
         Dim udtPeptideStats() As udtPeptideCountStatsType
 
-        ' Contains pointers to entries in udtPeptideStats()
-        Dim htProteinIDLookup As Hashtable
-        Dim objItem As Object
-        Dim intTargetIndex As Integer
-
         If mResultsFilePath = Nothing OrElse mResultsFilePath.Length = 0 Then
             If strPeptideInputFilePath.Length > 0 Then
                 mResultsFilePath = ConstructOutputFilePath(strPeptideInputFilePath, "_coverage.txt", strOutputFolderPath, outputFileBaseName)
@@ -611,9 +606,10 @@ Public Class clsProteinCoverageSummarizer
             End If
             swOutputFile.WriteLine(strLineOut)
 
-            htProteinIDLookup = New Hashtable
+            ' Contains pointers to entries in udtPeptideStats()
+            Dim proteinIDLookup = New Dictionary(Of Integer, Integer)
 
-            ' Populate udtPeptideStats() using hashtable mProteinPeptideStats
+            ' Populate udtPeptideStats() using dictionary mProteinPeptideStats
             If mTrackPeptideCounts Then
 
                 ' Initially reserve space for INITIAL_PROTEIN_COUNT_RESERVE proteins
@@ -810,16 +806,14 @@ Public Class clsProteinCoverageSummarizer
         FindSequenceMatchForPeptideList(htPeptideList, strProteinNameForPeptide)
 
     End Sub
-
-    ''' <summary>
-    ''' Searches for proteins that contain the peptides in htPeptideList
+    ''' Searches for proteins that contain the peptides in peptideList
     ''' If strProteinNameForPeptide is blank or mSearchAllProteinsForPeptideSequence=True then searches all proteins
     ''' Otherwise, only searches protein strProteinNameForPeptide
     ''' </summary>
-    ''' <param name="htPeptideList">Hash table containing the peptides to search; peptides must be in the format Prefix.Peptide.Suffix where Prefix and Suffix are single characters; peptides are assumed to only contain letters (no symbols)</param>
+    ''' <param name="peptideList">Dictionary containing the peptides to search; peptides must be in the format Prefix.Peptide.Suffix where Prefix and Suffix are single characters; peptides are assumed to only contain letters (no symbols)</param>
     ''' <param name="strProteinNameForPeptides">The protein to search; only used if mSearchAllProteinsForPeptideSequence=False</param>
     ''' <remarks></remarks>
-    Private Sub FindSequenceMatchForPeptideList(htPeptideList As Hashtable,
+    Private Sub FindSequenceMatchForPeptideList(peptideList As IDictionary(Of String, Integer),
       strProteinNameForPeptides As String)
 
         Dim intProteinIndex As Integer
@@ -854,7 +848,7 @@ Public Class clsProteinCoverageSummarizer
                 strProteinNameForPeptides = String.Empty
             End If
 
-            intExpectedPeptideIterations = CInt(Math.Ceiling(mProteinDataCache.GetProteinCountCached / PROTEIN_CHUNK_COUNT)) * htPeptideList.Count
+            Dim intExpectedPeptideIterations = CInt(Math.Ceiling(mProteinDataCache.GetProteinCountCached / PROTEIN_CHUNK_COUNT)) * peptideList.Count
             If intExpectedPeptideIterations < 1 Then intExpectedPeptideIterations = 1
 
             UpdateProgress("Finding matching proteins for peptide list", 0,
@@ -865,14 +859,16 @@ Public Class clsProteinCoverageSummarizer
                 ' Extract up to PROTEIN_CHUNK_COUNT proteins from the SQL Lite database
                 ' Store the information in the four local arrays
                 intProteinCount = ReadProteinInfoChunk(intStartIndex, blnProteinUpdated, False)
+                ' Iterate through the peptides in peptideList
+                Dim myEnumerator = peptideList.GetEnumerator
 
-                ' Iterate through the peptides in htPeptideList
-                objPeptideListEnum = htPeptideList.GetEnumerator
+                Do While myEnumerator.MoveNext
 
-                Do While objPeptideListEnum.MoveNext
+                    Dim chPrefixResidue As Char
+                    Dim chSuffixResidue As Char
 
-                    ' Retrieve the next peptide from htPeptideList
-                    ' Use GetCleanPeptideSequence() to extract out the sequence, prefix, and suffix letters (we're setting blnRemoveSymbolCharacters to False since that should have been done before the peptides were stored in htPeptideList)
+                    ' Retrieve the next peptide from peptideList
+                    ' Use GetCleanPeptideSequence() to extract out the sequence, prefix, and suffix letters (we're setting blnRemoveSymbolCharacters to False since that should have been done before the peptides were stored in peptideList)
                     ' Make sure the peptide sequence has uppercase letters
                     strPeptideSequenceClean = GetCleanPeptideSequence(CStr(objPeptideListEnum.Key), chPrefixResidue, chSuffixResidue, False).ToUpper
 
@@ -1385,8 +1381,6 @@ Public Class clsProteinCoverageSummarizer
 
         Dim intTerminatorSize As Integer
 
-        Dim htShortPeptideCache As Hashtable
-
         strProteinToPeptideMappingFilePath = String.Empty
 
         Try
@@ -1394,11 +1388,10 @@ Public Class clsProteinCoverageSummarizer
             ReDim chSepChars(0)
             chSepChars(0) = mPeptideInputFileDelimiter
 
-            ' Initialize some hash tables
-            htShortPeptideCache = New Hashtable
+            Dim shortPeptideCache = New Dictionary(Of String, Integer)
 
             If mProteinPeptideStats Is Nothing Then
-                mProteinPeptideStats = New Hashtable
+                mProteinPeptideStats = New Dictionary(Of String, Integer)
             Else
                 mProteinPeptideStats.Clear()
             End If
@@ -2185,11 +2178,11 @@ Public Class clsProteinCoverageSummarizer
 
     End Sub
 
-    Private Sub SearchProteinsUsingCachedPeptides(htShortPeptideCache As Hashtable)
+    Private Sub SearchProteinsUsingCachedPeptides(shortPeptideCache As IDictionary(Of String, Integer))
 
         Dim strProgressMessageBase As String
 
-        If htShortPeptideCache.Count > 0 Then
+        If shortPeptideCache.Count > 0 Then
             Console.WriteLine()
             Console.WriteLine()
             strProgressMessageBase = "Comparing proteins to short peptide sequences"
@@ -2197,8 +2190,8 @@ Public Class clsProteinCoverageSummarizer
 
             UpdateProgress(strProgressMessageBase)
 
-            ' Need to step through the proteins and match them to the data in htShortPeptideCache
-            FindSequenceMatchForPeptideList(htShortPeptideCache, String.Empty)
+            ' Need to step through the proteins and match them to the data in shortPeptideCache
+            FindSequenceMatchForPeptideList(shortPeptideCache, String.Empty)
         End If
 
     End Sub
