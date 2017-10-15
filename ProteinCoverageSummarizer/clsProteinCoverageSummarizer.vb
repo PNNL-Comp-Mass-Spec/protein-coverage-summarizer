@@ -1117,7 +1117,6 @@ Public Class clsProteinCoverageSummarizer
 
         Catch ex As Exception
             SetErrorMessage("Error in UpdatePercentCoveragesDbDataValues: " & ex.Message)
-            If Not mShowMessages Then Throw New Exception("Error in UpdatePercentCoveragesDbDataValues", ex)
         End Try
 
     End Sub
@@ -1143,7 +1142,6 @@ Public Class clsProteinCoverageSummarizer
 
     Private Sub InitializeVariables()
         mAbortProcessing = False
-        mShowMessages = True
         mErrorMessage = String.Empty
 
         mProteinInputFilePath = String.Empty
@@ -1246,7 +1244,6 @@ Public Class clsProteinCoverageSummarizer
         Catch ex As Exception
             SetErrorMessage("Error in LoadParameterFileSettings:" & ex.Message)
             SetErrorCode(eProteinCoverageErrorCodes.ErrorReadingParameterFile)
-            If Not mShowMessages Then Throw New Exception("Error in LoadParameterFileSettings", ex)
             Return False
         End Try
 
@@ -1596,7 +1593,6 @@ Public Class clsProteinCoverageSummarizer
         Try
             mCachedProteinInfoStartIndex = -1
             With mProteinDataCache
-                .ShowMessages = mShowMessages
                 .RemoveSymbolCharacters = Me.RemoveSymbolCharacters
                 .IgnoreILDifferences = Me.IgnoreILDifferences
             End With
@@ -1655,7 +1651,6 @@ Public Class clsProteinCoverageSummarizer
 
         Catch ex As Exception
             SetErrorMessage("Error in ProcessFile:" & ControlChars.NewLine & ex.Message)
-            If Not mShowMessages Then Throw New Exception("Error in ProcessFile", ex)
             blnSuccess = False
         End Try
 
@@ -1819,7 +1814,6 @@ Public Class clsProteinCoverageSummarizer
 
         Catch ex As Exception
             SetErrorMessage("Error in SaveDataPlusAllProteinsFile: " & ex.Message)
-            If Not mShowMessages Then Throw New Exception("Error in SaveDataPlusAllProteinsFile", ex)
         End Try
     End Sub
 
@@ -2016,7 +2010,6 @@ Public Class clsProteinCoverageSummarizer
 
         Catch ex As Exception
             SetErrorMessage("Error in SearchProteinsUsingLeaderSequences: " & ex.Message)
-            If Not mShowMessages Then Throw New Exception("Error in SearchProteinsUsingLeaderSequences", ex)
         End Try
 
     End Sub
