@@ -136,18 +136,18 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\ProteinCoverageSummarizer\ProteinCoverageSummarizer.vbproj">
-      <Project>{27958CB4-6AE4-4F9B-8FA9-381DEF2646BF}</Project>
-      <Name>ProteinCoverageSummarizer</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <PackageReference Include="PRISM-Library">
       <Version>2.4.36</Version>
     </PackageReference>
     <PackageReference Include="ProteinFileReader">
       <Version>1.3.1</Version>
     </PackageReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\ProteinCoverageSummarizer\ProteinCoverageSummarizer.vbproj">
+      <Project>{27958cb4-6ae4-4f9b-8fa9-381def2646bf}</Project>
+      <Name>ProteinCoverageSummarizer</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

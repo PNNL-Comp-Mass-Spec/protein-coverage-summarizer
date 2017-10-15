@@ -333,7 +333,9 @@ Public MustInherit Class clsProcessFilesBaseClass
         Try
             Dim inputFolderPath As String
 
-            If Not inputFilePathOrFolder Is Nothing AndAlso (inputFilePathOrFolder.Contains("*") Or inputFilePathOrFolder.Contains("?")) Then
+            If String.IsNullOrWhiteSpace(inputFilePathOrFolder) Then
+                inputFolderPath = String.Empty
+            ElseIf inputFilePathOrFolder.Contains("*") OrElse inputFilePathOrFolder.Contains("?") Then
                 ' Copy the path into cleanPath and replace any * or ? characters with _
                 Dim cleanPath = inputFilePathOrFolder.Replace("*", "_")
                 cleanPath = cleanPath.Replace("?", "_")
@@ -350,13 +352,13 @@ Public MustInherit Class clsProcessFilesBaseClass
                 inputFilePathOrFolder = Path.GetFileName(inputFilePathOrFolder)
 
             Else
-                Dim ioFolderInfo = New DirectoryInfo(inputFilePathOrFolder)
-                If ioFolderInfo.Exists Then
-                    inputFolderPath = ioFolderInfo.FullName
+                Dim inputfolder = New DirectoryInfo(inputFilePathOrFolder)
+                If inputfolder.Exists Then
+                    inputFolderPath = inputfolder.FullName
                     inputFilePathOrFolder = "*"
                 Else
-                    If ioFolderInfo.Parent.Exists Then
-                        inputFolderPath = ioFolderInfo.Parent.FullName
+                    If Not inputfolder.Parent Is Nothing AndAlso inputfolder.Parent.Exists Then
+                        inputFolderPath = inputfolder.Parent.FullName
                         inputFilePathOrFolder = Path.GetFileName(inputFilePathOrFolder)
                     Else
                         ' Unable to determine the input folder path
