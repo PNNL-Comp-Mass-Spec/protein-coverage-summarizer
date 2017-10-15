@@ -1309,19 +1309,6 @@ Public Class clsPeptideToProteinMapEngine
     End Sub
 #End Region
 
-
-#Region "PHRPReader Event Handlers"
-
-    Private Sub PHRPReader_ErrorEvent(strErrorMessage As String)
-        ShowErrorMessage(strErrorMessage)
-    End Sub
-
-    Private Sub PHRPReader_WarningEvent(strWarningMessage As String)
-        ShowMessage("Warning: " & strWarningMessage)
-    End Sub
-
-#End Region
-
 #Region "IComparer Classes"
     Protected Class ProteinIDMapInfoComparer
         Implements IComparer
