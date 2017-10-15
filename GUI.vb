@@ -1,6 +1,12 @@
 Option Strict On
 
+Imports System.ComponentModel
+Imports System.Text.RegularExpressions
+Imports Ookii.Dialogs
 Imports PRISM
+Imports ProteinCoverageSummarizer
+Imports ProteinFileReader
+Imports SharedVBNetRoutines
 ' This program uses clsProteinCoverageSummarizer to read in a file with protein sequences along with
 ' an accompanying file with peptide sequences and compute the percent coverage of each of the proteins
 '
@@ -956,7 +962,7 @@ Public Class GUI
     End Sub
 
     Private Sub AutoDefineSearchAllProteins()
-        If cboPeptideInputFileColumnOrdering.SelectedIndex = ProteinFileReader.DelimitedFileReader.eDelimitedFileFormatCode.SequenceOnly Then
+        If cboPeptideInputFileColumnOrdering.SelectedIndex = DelimitedFileReader.eDelimitedFileFormatCode.SequenceOnly Then
             chkSearchAllProteinsForPeptideSequence.Checked = True
         Else
             chkSearchAllProteinsForPeptideSequence.Checked = False
@@ -964,15 +970,15 @@ Public Class GUI
     End Sub
     Private Function ConfirmInputFilePaths() As Boolean
         If txtProteinInputFilePath.Text.Length = 0 And txtPeptideInputFilePath.Text.Length = 0 Then
-            Windows.Forms.MessageBox.Show("Please define the input file paths", "Missing Value", MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
+            MessageBox.Show("Please define the input file paths", "Missing Value", MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
             txtProteinInputFilePath.Focus()
             Return False
         ElseIf txtProteinInputFilePath.Text.Length = 0 Then
-            Windows.Forms.MessageBox.Show("Please define Protein input file path", "Missing Value", MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
+            MessageBox.Show("Please define Protein input file path", "Missing Value", MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
             txtProteinInputFilePath.Focus()
             Return False
         ElseIf txtPeptideInputFilePath.Text.Length = 0 Then
-            Windows.Forms.MessageBox.Show("Please define Peptide input file path", "Missing Value", MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
+            MessageBox.Show("Please define Peptide input file path", "Missing Value", MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
             txtPeptideInputFilePath.Focus()
             Return False
         Else
@@ -982,7 +988,7 @@ Public Class GUI
 
     Private Sub CreateSummaryDataTable(strResultsFilePath As String)
 
-        Dim srInFile As System.IO.StreamReader
+        Dim srInFile As StreamReader
         Dim bytesRead As Long = 0
 
         Dim intLineCount As Integer
@@ -1001,7 +1007,7 @@ Public Class GUI
                 Exit Sub
             End If
 
-            If Not System.IO.File.Exists(strResultsFilePath) Then
+            If Not File.Exists(strResultsFilePath) Then
                 ShowErrorMessage("Results file not found: " & strResultsFilePath)
             End If
 
@@ -1012,7 +1018,7 @@ Public Class GUI
             mDSCoverageResults.Tables(COVERAGE_RESULTS_DATATABLE).Clear()
 
             ' Open the file and read in the lines
-            srInFile = New System.IO.StreamReader(strResultsFilePath)
+            srInFile = New StreamReader(strResultsFilePath)
             intLineCount = 1
             blnProteinDescriptionPresent = False
 
@@ -1027,10 +1033,10 @@ Public Class GUI
 
                     objNewRow = mDSCoverageResults.Tables(COVERAGE_RESULTS_DATATABLE).NewRow()
                     For intIndex = 0 To strSplitLine.Length - 1
-                        If intIndex > ProteinCoverageSummarizer.clsProteinCoverageSummarizer.OUTPUT_FILE_PROTEIN_SEQUENCE_COLUMN_NUMBER - 1 Then Exit For
+                        If intIndex > clsProteinCoverageSummarizer.OUTPUT_FILE_PROTEIN_SEQUENCE_COLUMN_NUMBER - 1 Then Exit For
 
                         Try
-                            Select Case System.Type.GetTypeCode(objNewRow(intIndex).GetType)
+                            Select Case Type.GetTypeCode(objNewRow(intIndex).GetType)
                                 Case TypeCode.String
                                     objNewRow(intIndex) = strSplitLine(intIndex)
                                 Case TypeCode.Double
@@ -1049,8 +1055,8 @@ Public Class GUI
                         End Try
                     Next intIndex
 
-                    If strSplitLine.Length >= ProteinCoverageSummarizer.clsProteinCoverageSummarizer.OUTPUT_FILE_PROTEIN_DESCRIPTION_COLUMN_NUMBER Then
-                        If strSplitLine(ProteinCoverageSummarizer.clsProteinCoverageSummarizer.OUTPUT_FILE_PROTEIN_DESCRIPTION_COLUMN_NUMBER - 1).Length > 0 Then
+                    If strSplitLine.Length >= clsProteinCoverageSummarizer.OUTPUT_FILE_PROTEIN_DESCRIPTION_COLUMN_NUMBER Then
+                        If strSplitLine(clsProteinCoverageSummarizer.OUTPUT_FILE_PROTEIN_DESCRIPTION_COLUMN_NUMBER - 1).Length > 0 Then
                             blnProteinDescriptionPresent = True
                         End If
                     End If
@@ -1101,11 +1107,11 @@ Public Class GUI
 
         Try
             If strPeptideInputFilePath.Length > 0 Then
-                txtOutputFolderPath.Text = System.IO.Path.GetDirectoryName(strPeptideInputFilePath)
+                txtOutputFolderPath.Text = Path.GetDirectoryName(strPeptideInputFilePath)
             End If
         Catch ex As Exception
             MessageBox.Show("Error defining default output folder path: " & ex.Message,
-                     "Error", Windows.Forms.MessageBoxButtons.OK, Windows.Forms.MessageBoxIcon.Exclamation)
+                     "Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
         End Try
 
     End Sub
@@ -1155,7 +1161,7 @@ Public Class GUI
 
             If strFilePath.Length > 0 Then
                 Try
-                    .InitialDirectory = System.IO.Directory.GetParent(strFilePath).ToString
+                    .InitialDirectory = Directory.GetParent(strFilePath).ToString
                 Catch
                     .InitialDirectory = clsProcessFilesBaseClass.GetAppFolderPath()
                 End Try
@@ -1163,8 +1169,8 @@ Public Class GUI
                 .InitialDirectory = clsProcessFilesBaseClass.GetAppFolderPath()
             End If
 
-            If System.IO.File.Exists(strFilePath) Then
-                .FileName = System.IO.Path.GetFileName(strFilePath)
+            If File.Exists(strFilePath) Then
+                .FileName = Path.GetFileName(strFilePath)
             End If
 
             .Title = "Specify file to load options from"
@@ -1184,7 +1190,7 @@ Public Class GUI
         Dim objSettingsFile As XmlSettingsFileAccessor
 
         Dim objProteinCoverageSummarizer As New clsProteinCoverageSummarizerRunner()
-        Dim eColumnOrdering As ProteinFileReader.DelimitedFileReader.eDelimitedFileFormatCode
+        Dim eColumnOrdering As DelimitedFileReader.eDelimitedFileFormatCode
 
         Try
 
@@ -1193,7 +1199,7 @@ Public Class GUI
                 Exit Sub
             End If
 
-            If Not System.IO.File.Exists(strFilePath) Then
+            If Not File.Exists(strFilePath) Then
                 ShowErrorMessage("Parameter file not Found: " & strFilePath)
                 Exit Sub
             End If
@@ -1223,15 +1229,15 @@ Public Class GUI
                     cboCharactersPerLine.SelectedIndex = objSettingsFile.GetParam(XML_SECTION_GUI_OPTIONS, "ProteinSequenceCharactersPerLine", cboCharactersPerLine.SelectedIndex)
                     chkAddSpace.Checked = objSettingsFile.GetParam(XML_SECTION_GUI_OPTIONS, "ProteinSequenceAddSpace", chkAddSpace.Checked)
 
-                    If Not objSettingsFile.SectionPresent(ProteinCoverageSummarizer.clsProteinCoverageSummarizer.XML_SECTION_PROCESSING_OPTIONS) Then
+                    If Not objSettingsFile.SectionPresent(clsProteinCoverageSummarizer.XML_SECTION_PROCESSING_OPTIONS) Then
                         If blnShowMessages Then
-                            ShowErrorMessage("The node '<section name=""" & ProteinCoverageSummarizer.clsProteinCoverageSummarizer.XML_SECTION_PROCESSING_OPTIONS & """> was not found in the parameter file: ", "Invalid File")
+                            ShowErrorMessage("The node '<section name=""" & clsProteinCoverageSummarizer.XML_SECTION_PROCESSING_OPTIONS & """> was not found in the parameter file: ", "Invalid File")
                         End If
                     Else
                         Try
-                            eColumnOrdering = CType(objSettingsFile.GetParam(ProteinCoverageSummarizer.clsProteinCoverageSummarizer.XML_SECTION_PROCESSING_OPTIONS, "DelimitedProteinFileFormatCode", cboProteinInputFileColumnOrdering.SelectedIndex + PROTEIN_INPUT_FILE_INDEX_OFFSET), ProteinFileReader.DelimitedFileReader.eDelimitedFileFormatCode)
+                            eColumnOrdering = CType(objSettingsFile.GetParam(clsProteinCoverageSummarizer.XML_SECTION_PROCESSING_OPTIONS, "DelimitedProteinFileFormatCode", cboProteinInputFileColumnOrdering.SelectedIndex + PROTEIN_INPUT_FILE_INDEX_OFFSET), DelimitedFileReader.eDelimitedFileFormatCode)
                         Catch ex As Exception
-                            eColumnOrdering = ProteinFileReader.DelimitedFileReader.eDelimitedFileFormatCode.ProteinName_Sequence
+                            eColumnOrdering = DelimitedFileReader.eDelimitedFileFormatCode.ProteinName_Sequence
                         End Try
 
                         Try
@@ -1243,9 +1249,9 @@ Public Class GUI
                         End Try
 
                         Try
-                            eColumnOrdering = CType(objSettingsFile.GetParam(ProteinCoverageSummarizer.clsProteinCoverageSummarizer.XML_SECTION_PROCESSING_OPTIONS, "PeptideFileFormatCode", cboPeptideInputFileColumnOrdering.SelectedIndex), ProteinFileReader.DelimitedFileReader.eDelimitedFileFormatCode)
+                            eColumnOrdering = CType(objSettingsFile.GetParam(clsProteinCoverageSummarizer.XML_SECTION_PROCESSING_OPTIONS, "PeptideFileFormatCode", cboPeptideInputFileColumnOrdering.SelectedIndex), DelimitedFileReader.eDelimitedFileFormatCode)
                         Catch ex As Exception
-                            eColumnOrdering = ProteinFileReader.DelimitedFileReader.eDelimitedFileFormatCode.ProteinName_Sequence
+                            eColumnOrdering = DelimitedFileReader.eDelimitedFileFormatCode.ProteinName_Sequence
                         End Try
 
                         Try
@@ -1276,7 +1282,7 @@ Public Class GUI
             If blnShowMessages Then
                 ShowErrorMessage("Error in IniFileLoadOptions: " & ex.Message)
             Else
-                Throw New System.Exception("Error in IniFileLoadOptions", ex)
+                Throw New Exception("Error in IniFileLoadOptions", ex)
             End If
 
         End Try
@@ -1289,9 +1295,6 @@ Public Class GUI
 
         Try
             LoadProcessingClassOptions(objProteinCoverageSummarizer)
-
-            objProteinCoverageSummarizer = Nothing
-
         Catch ex As Exception
             ShowErrorMessage("Error calling LoadProcessingClassOptions: " & ex.ToString)
         End Try
@@ -1302,13 +1305,13 @@ Public Class GUI
     Private Sub IniFileSaveOptions(FileName As String, Optional blnSaveExtendedOptions As Boolean = False)
         Dim objSettingsFile As New XmlSettingsFileAccessor
 
-        Const XML_SECTION_PROCESSING_OPTIONS As String = "ProcessingOptions"
+        Const XML_SECTION_PROCESSING_OPTIONS = "ProcessingOptions"
 
         Try
             objSettingsFile = New XmlSettingsFileAccessor
         Catch ex As Exception
             MessageBox.Show("Error instantiating the XmlSettingsFileAccessor in GUI->IniFileSaveOptions: " _
-            & ControlChars.NewLine & ex.Message, "Error", Windows.Forms.MessageBoxButtons.OK, Windows.Forms.MessageBoxIcon.Exclamation)
+            & ControlChars.NewLine & ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
         End Try
 
 
@@ -1357,7 +1360,7 @@ Public Class GUI
 
                 .SaveSettings()
             Catch ex As Exception
-                MessageBox.Show("Error storing parameter in settings file: " & System.IO.Path.GetFileName(FileName),
+                MessageBox.Show("Error storing parameter in settings file: " & Path.GetFileName(FileName),
                          "Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
             End Try
         End With
@@ -1395,7 +1398,7 @@ Public Class GUI
         Try
 
             ' Make the Peak Matching Thresholds datatable
-            Dim dtCoverageResults As DataTable = New DataTable(COVERAGE_RESULTS_DATATABLE)
+            Dim dtCoverageResults = New DataTable(COVERAGE_RESULTS_DATATABLE)
 
             ' Add the columns to the datatable
             ADONetRoutines.AppendColumnStringToTable(dtCoverageResults, COL_NAME_PROTEIN_NAME, String.Empty)
@@ -1407,7 +1410,7 @@ Public Class GUI
             ADONetRoutines.AppendColumnStringToTable(dtCoverageResults, COL_NAME_PROTEIN_SEQUENCE, String.Empty)
 
             ' Note that Protein Sequence should be at ColIndex 6 = clsProteinCoverageSummarizer.OUTPUT_FILE_PROTEIN_SEQUENCE_COLUMN_NUMBER-1
-            mProteinSequenceColIndex = ProteinCoverageSummarizer.clsProteinCoverageSummarizer.OUTPUT_FILE_PROTEIN_SEQUENCE_COLUMN_NUMBER - 1
+            mProteinSequenceColIndex = clsProteinCoverageSummarizer.OUTPUT_FILE_PROTEIN_SEQUENCE_COLUMN_NUMBER - 1
 
             ' Could define a primary key if we wanted
             'With dtCoverageResults
@@ -1535,36 +1538,36 @@ Public Class GUI
             With .Items
                 .Clear()
                 ' Note: Skipping ProteinFileReader.DelimitedFileReader.eDelimitedFileFormatCode.SequenceOnly since a Protein Sequence Only file is inappropriate for this program
-                .Insert(ProteinFileReader.DelimitedFileReader.eDelimitedFileFormatCode.ProteinName_Sequence - PROTEIN_INPUT_FILE_INDEX_OFFSET, "ProteinName and Sequence")
-                .Insert(ProteinFileReader.DelimitedFileReader.eDelimitedFileFormatCode.ProteinName_Description_Sequence - PROTEIN_INPUT_FILE_INDEX_OFFSET, "ProteinName, Descr, Seq")
-                .Insert(ProteinFileReader.DelimitedFileReader.eDelimitedFileFormatCode.UniqueID_Sequence - PROTEIN_INPUT_FILE_INDEX_OFFSET, "UniqueID and Seq")
-                .Insert(ProteinFileReader.DelimitedFileReader.eDelimitedFileFormatCode.ProteinName_PeptideSequence_UniqueID - PROTEIN_INPUT_FILE_INDEX_OFFSET, "ProteinName, Seq, UniqueID")
-                .Insert(ProteinFileReader.DelimitedFileReader.eDelimitedFileFormatCode.ProteinName_PeptideSequence_UniqueID_Mass_NET - PROTEIN_INPUT_FILE_INDEX_OFFSET, "ProteinName, Seq, UniqueID, Mass, Time")
-                .Insert(ProteinFileReader.DelimitedFileReader.eDelimitedFileFormatCode.ProteinName_PeptideSequence_UniqueID_Mass_NET_NETStDev_DiscriminantScore - PROTEIN_INPUT_FILE_INDEX_OFFSET, "ProteinName, Seq, UniqueID, Mass, Time, TimeStDev, DiscriminantScore")
-                .Insert(ProteinFileReader.DelimitedFileReader.eDelimitedFileFormatCode.UniqueID_Sequence_Mass_NET - PROTEIN_INPUT_FILE_INDEX_OFFSET, "UniqueID, Seq, Mass, Time")
+                .Insert(DelimitedFileReader.eDelimitedFileFormatCode.ProteinName_Sequence - PROTEIN_INPUT_FILE_INDEX_OFFSET, "ProteinName and Sequence")
+                .Insert(DelimitedFileReader.eDelimitedFileFormatCode.ProteinName_Description_Sequence - PROTEIN_INPUT_FILE_INDEX_OFFSET, "ProteinName, Descr, Seq")
+                .Insert(DelimitedFileReader.eDelimitedFileFormatCode.UniqueID_Sequence - PROTEIN_INPUT_FILE_INDEX_OFFSET, "UniqueID and Seq")
+                .Insert(DelimitedFileReader.eDelimitedFileFormatCode.ProteinName_PeptideSequence_UniqueID - PROTEIN_INPUT_FILE_INDEX_OFFSET, "ProteinName, Seq, UniqueID")
+                .Insert(DelimitedFileReader.eDelimitedFileFormatCode.ProteinName_PeptideSequence_UniqueID_Mass_NET - PROTEIN_INPUT_FILE_INDEX_OFFSET, "ProteinName, Seq, UniqueID, Mass, Time")
+                .Insert(DelimitedFileReader.eDelimitedFileFormatCode.ProteinName_PeptideSequence_UniqueID_Mass_NET_NETStDev_DiscriminantScore - PROTEIN_INPUT_FILE_INDEX_OFFSET, "ProteinName, Seq, UniqueID, Mass, Time, TimeStDev, DiscriminantScore")
+                .Insert(DelimitedFileReader.eDelimitedFileFormatCode.UniqueID_Sequence_Mass_NET - PROTEIN_INPUT_FILE_INDEX_OFFSET, "UniqueID, Seq, Mass, Time")
             End With
-            .SelectedIndex = ProteinFileReader.DelimitedFileReader.eDelimitedFileFormatCode.ProteinName_Description_Sequence - PROTEIN_INPUT_FILE_INDEX_OFFSET
+            .SelectedIndex = DelimitedFileReader.eDelimitedFileFormatCode.ProteinName_Description_Sequence - PROTEIN_INPUT_FILE_INDEX_OFFSET
         End With
 
 
         With cboPeptideInputFileColumnOrdering
             With .Items
                 .Clear()
-                .Insert(ProteinFileReader.DelimitedFileReader.eDelimitedFileFormatCode.SequenceOnly, "Sequence Only")
-                .Insert(ProteinFileReader.DelimitedFileReader.eDelimitedFileFormatCode.ProteinName_Sequence, "ProteinName and Sequence")
+                .Insert(DelimitedFileReader.eDelimitedFileFormatCode.SequenceOnly, "Sequence Only")
+                .Insert(DelimitedFileReader.eDelimitedFileFormatCode.ProteinName_Sequence, "ProteinName and Sequence")
             End With
-            .SelectedIndex = ProteinFileReader.DelimitedFileReader.eDelimitedFileFormatCode.ProteinName_Sequence
+            .SelectedIndex = DelimitedFileReader.eDelimitedFileFormatCode.ProteinName_Sequence
         End With
     End Sub
 
     Private Sub ResetToDefaults()
 
-        cboProteinInputFileColumnOrdering.SelectedIndex = ProteinFileReader.DelimitedFileReader.eDelimitedFileFormatCode.ProteinName_Sequence - PROTEIN_INPUT_FILE_INDEX_OFFSET
+        cboProteinInputFileColumnOrdering.SelectedIndex = DelimitedFileReader.eDelimitedFileFormatCode.ProteinName_Sequence - PROTEIN_INPUT_FILE_INDEX_OFFSET
         cboProteinInputFileColumnDelimiter.SelectedIndex = 1
         txtProteinInputFileColumnDelimiter.Text = ";"
         chkProteinFileSkipFirstLine.Checked = False
 
-        cboPeptideInputFileColumnOrdering.SelectedIndex = ProteinFileReader.DelimitedFileReader.eDelimitedFileFormatCode.ProteinName_Sequence
+        cboPeptideInputFileColumnOrdering.SelectedIndex = DelimitedFileReader.eDelimitedFileFormatCode.ProteinName_Sequence
         cboPeptideInputFileColumnDelimiter.SelectedIndex = 1
         txtPeptideInputFileColumnDelimiter.Text = ";"
         chkPeptideFileSkipFirstLine.Checked = False
@@ -1589,7 +1592,7 @@ Public Class GUI
 
     Private Sub SelectOutputFolder()
 
-        Dim folderBrowserDialog As New Ookii.Dialogs.VistaFolderBrowserDialog()
+        Dim folderBrowserDialog As New VistaFolderBrowserDialog()
 
         If txtOutputFolderPath.TextLength > 0 Then
             folderBrowserDialog.SelectedPath = txtOutputFolderPath.Text
@@ -1615,7 +1618,7 @@ Public Class GUI
         eResult = dlgOpenFileDialog.ShowDialog()
         If eResult = DialogResult.OK Then
             txtProteinInputFilePath.Text = dlgOpenFileDialog.FileName
-            mLastFolderUsed = System.IO.Path.GetDirectoryName(dlgOpenFileDialog.FileName)
+            mLastFolderUsed = Path.GetDirectoryName(dlgOpenFileDialog.FileName)
         End If
 
     End Sub
@@ -1633,7 +1636,7 @@ Public Class GUI
         eResult = dlgOpenFileDialog.ShowDialog()
         If eResult = DialogResult.OK Then
             txtPeptideInputFilePath.Text = dlgOpenFileDialog.FileName
-            mLastFolderUsed = System.IO.Path.GetDirectoryName(dlgOpenFileDialog.FileName)
+            mLastFolderUsed = Path.GetDirectoryName(dlgOpenFileDialog.FileName)
         End If
 
     End Sub
@@ -1644,14 +1647,14 @@ Public Class GUI
 
                 .ProteinInputFilePath = txtProteinInputFilePath.Text
 
-                .ProteinDataDelimitedFileFormatCode = CType(cboProteinInputFileColumnOrdering.SelectedIndex + PROTEIN_INPUT_FILE_INDEX_OFFSET, ProteinFileReader.DelimitedFileReader.eDelimitedFileFormatCode)
+                .ProteinDataDelimitedFileFormatCode = CType(cboProteinInputFileColumnOrdering.SelectedIndex + PROTEIN_INPUT_FILE_INDEX_OFFSET, DelimitedFileReader.eDelimitedFileFormatCode)
                 .ProteinDataDelimitedFileDelimiter = LookupColumnDelimiter(cboProteinInputFileColumnDelimiter, txtProteinInputFileColumnDelimiter, ControlChars.Tab)
                 .ProteinDataDelimitedFileSkipFirstLine = chkProteinFileSkipFirstLine.Checked
                 .ProteinDataRemoveSymbolCharacters = chkRemoveSymbolCharacters.Checked
                 .ProteinDataIgnoreILDifferences = chkIgnoreILDifferences.Checked
 
                 'peptide file options
-                .PeptideFileFormatCode = CType(cboPeptideInputFileColumnOrdering.SelectedIndex, ProteinCoverageSummarizer.clsProteinCoverageSummarizer.ePeptideFileColumnOrderingCode)
+                .PeptideFileFormatCode = CType(cboPeptideInputFileColumnOrdering.SelectedIndex, clsProteinCoverageSummarizer.ePeptideFileColumnOrderingCode)
                 .PeptideInputFileDelimiter = LookupColumnDelimiter(cboPeptideInputFileColumnDelimiter, txtPeptideInputFileColumnDelimiter, ControlChars.Tab)
                 .PeptideFileSkipFirstLine = chkPeptideFileSkipFirstLine.Checked
 
@@ -1754,10 +1757,10 @@ Public Class GUI
         Dim sngCoveragePercent As Single
 
         Dim strRtf As String
-        Dim reReplaceSymbols As System.Text.RegularExpressions.Regex
+        Dim reReplaceSymbols As Regex
 
         ' Define a RegEx to replace all of the non-letter characters
-        reReplaceSymbols = New System.Text.RegularExpressions.Regex("[ \t\r\n]", System.Text.RegularExpressions.RegexOptions.Compiled)
+        reReplaceSymbols = New Regex("[ \t\r\n]", RegexOptions.Compiled)
 
         Dim blnInUpperRegion As Boolean
 
@@ -1847,7 +1850,7 @@ Public Class GUI
         Dim blnSuccess As Boolean
 
         Try
-            Windows.Forms.Cursor.Current = Cursors.WaitCursor
+            Cursor.Current = Cursors.WaitCursor
 
             cmdAbort.Visible = True
             cmdStart.Visible = False
@@ -1879,7 +1882,7 @@ Public Class GUI
                 ShowErrorMessage("Error initializing Protein File Parser General Options.")
             End If
 
-            Windows.Forms.Cursor.Current = Cursors.Default
+            Cursor.Current = Cursors.Default
 
         Catch ex As Exception
             ShowErrorMessage("Error in Start: " & ex.Message)
@@ -1945,45 +1948,45 @@ Public Class GUI
 
 #Region "Command Handlers"
 
-    Private Sub chkSearchAllProteinsForPeptideSequence_CheckedChanged(sender As System.Object, e As System.EventArgs) Handles chkSearchAllProteinsForPeptideSequence.CheckedChanged
+    Private Sub chkSearchAllProteinsForPeptideSequence_CheckedChanged(sender As Object, e As EventArgs) Handles chkSearchAllProteinsForPeptideSequence.CheckedChanged
         EnableDisableControls()
     End Sub
 
-    Private Sub cmdAbort_Click(sender As System.Object, e As System.EventArgs) Handles cmdAbort.Click
+    Private Sub cmdAbort_Click(sender As Object, e As EventArgs) Handles cmdAbort.Click
         mProteinCoverageSummarizer.AbortProcessing = True
     End Sub
 
-    Private Sub cmdExit_Click(sender As System.Object, e As System.EventArgs) Handles cmdExit.Click
+    Private Sub cmdExit_Click(sender As Object, e As EventArgs) Handles cmdExit.Click
         Me.Close()
     End Sub
 
-    Private Sub cmdSelectOutputFolder_Click(sender As System.Object, e As System.EventArgs) Handles cmdSelectOutputFolder.Click
+    Private Sub cmdSelectOutputFolder_Click(sender As Object, e As EventArgs) Handles cmdSelectOutputFolder.Click
         SelectOutputFolder()
     End Sub
 
-    Private Sub cmdPeptideSelectFile_Click(sender As System.Object, e As System.EventArgs) Handles cmdPeptideSelectFile.Click
+    Private Sub cmdPeptideSelectFile_Click(sender As Object, e As EventArgs) Handles cmdPeptideSelectFile.Click
         SelectPeptideInputFile()
     End Sub
 
-    Private Sub cmdProteinSelectFile_Click(sender As System.Object, e As System.EventArgs) Handles cmdProteinSelectFile.Click
+    Private Sub cmdProteinSelectFile_Click(sender As Object, e As EventArgs) Handles cmdProteinSelectFile.Click
         SelectProteinInputFile()
     End Sub
 
-    Private Sub cmdStart_Click(sender As System.Object, e As System.EventArgs) Handles cmdStart.Click
+    Private Sub cmdStart_Click(sender As Object, e As EventArgs) Handles cmdStart.Click
         If ConfirmInputFilePaths() Then
             Start()
         End If
     End Sub
 
-    Private Sub chkAddSpace_CheckStateChanged(sender As System.Object, e As System.EventArgs) Handles chkAddSpace.CheckedChanged
+    Private Sub chkAddSpace_CheckStateChanged(sender As Object, e As EventArgs) Handles chkAddSpace.CheckedChanged
         ShowRichTextStart()
     End Sub
 
-    Private Sub cboCharactersPerLine_SelectedIndexChanged(sender As System.Object, e As System.EventArgs) Handles cboCharactersPerLine.SelectedIndexChanged
+    Private Sub cboCharactersPerLine_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cboCharactersPerLine.SelectedIndexChanged
         ShowRichTextStart()
     End Sub
 
-    Private Sub dgResults_CurrentCellChanged(sender As Object, e As System.EventArgs) Handles dgResults.CurrentCellChanged
+    Private Sub dgResults_CurrentCellChanged(sender As Object, e As EventArgs) Handles dgResults.CurrentCellChanged
         ShowRichTextStart(eSequenceDisplayConstants.UseDatagrid)
     End Sub
 
@@ -1991,91 +1994,91 @@ Public Class GUI
 
 #Region "Textbox handlers"
     Private Sub txtCoverage_KeyPress(sender As Object, e As KeyPressEventArgs) Handles txtCoverage.KeyPress
-        SharedVBNetRoutines.VBNetRoutines.TextBoxKeyPressHandler(txtCoverage, e, False, False, False, False, False, False, False, False, False, False, True)
+        VBNetRoutines.TextBoxKeyPressHandler(txtCoverage, e, False, False, False, False, False, False, False, False, False, False, True)
     End Sub
 
-    Private Sub txtCustomProteinSequence_Click(sender As Object, e As System.EventArgs) Handles txtCustomProteinSequence.Click
+    Private Sub txtCustomProteinSequence_Click(sender As Object, e As EventArgs) Handles txtCustomProteinSequence.Click
         If txtCustomProteinSequence.TextLength > 0 Then ShowRichTextStart(eSequenceDisplayConstants.UseCustom)
     End Sub
 
     Private Sub txtCustomProteinSequence_KeyPress(sender As Object, e As KeyPressEventArgs) Handles txtCustomProteinSequence.KeyPress
-        SharedVBNetRoutines.VBNetRoutines.TextBoxKeyPressHandler(txtCustomProteinSequence, e, False, False, False, True, False, False, False, False, True, True, True)
+        VBNetRoutines.TextBoxKeyPressHandler(txtCustomProteinSequence, e, False, False, False, True, False, False, False, False, True, True, True)
     End Sub
 
-    Private Sub txtCustomProteinSequence_TextChanged(sender As System.Object, e As System.EventArgs) Handles txtCustomProteinSequence.TextChanged
+    Private Sub txtCustomProteinSequence_TextChanged(sender As Object, e As EventArgs) Handles txtCustomProteinSequence.TextChanged
         ShowRichTextStart(eSequenceDisplayConstants.UseCustom)
     End Sub
 
-    Private Sub txtOutputFolderPath_KeyPress(sender As System.Object, e As KeyPressEventArgs) Handles txtOutputFolderPath.KeyPress
-        SharedVBNetRoutines.VBNetRoutines.TextBoxKeyPressHandlerCheckControlChars(txtOutputFolderPath, e)
+    Private Sub txtOutputFolderPath_KeyPress(sender As Object, e As KeyPressEventArgs) Handles txtOutputFolderPath.KeyPress
+        VBNetRoutines.TextBoxKeyPressHandlerCheckControlChars(txtOutputFolderPath, e)
     End Sub
 
     Private Sub txtPeptideInputFilePath_KeyPress(sender As Object, e As KeyPressEventArgs) Handles txtPeptideInputFilePath.KeyPress
-        SharedVBNetRoutines.VBNetRoutines.TextBoxKeyPressHandlerCheckControlChars(txtPeptideInputFilePath, e)
+        VBNetRoutines.TextBoxKeyPressHandlerCheckControlChars(txtPeptideInputFilePath, e)
     End Sub
 
-    Private Sub txtPeptideInputFilePath_TextChanged(sender As System.Object, e As System.EventArgs) Handles txtPeptideInputFilePath.TextChanged
+    Private Sub txtPeptideInputFilePath_TextChanged(sender As Object, e As EventArgs) Handles txtPeptideInputFilePath.TextChanged
         ' Auto-define the output file path
         DefineOutputFolderPath(txtPeptideInputFilePath.Text)
     End Sub
 
-    Private Sub txtProteinInputFilePath_KeyPress(sender As System.Object, e As KeyPressEventArgs) Handles txtProteinInputFilePath.KeyPress
-        SharedVBNetRoutines.VBNetRoutines.TextBoxKeyPressHandlerCheckControlChars(txtProteinInputFilePath, e)
+    Private Sub txtProteinInputFilePath_KeyPress(sender As Object, e As KeyPressEventArgs) Handles txtProteinInputFilePath.KeyPress
+        VBNetRoutines.TextBoxKeyPressHandlerCheckControlChars(txtProteinInputFilePath, e)
     End Sub
 
-    Private Sub txtProteinInputFilePath_TextChanged(sender As System.Object, e As System.EventArgs) Handles txtProteinInputFilePath.TextChanged
+    Private Sub txtProteinInputFilePath_TextChanged(sender As Object, e As EventArgs) Handles txtProteinInputFilePath.TextChanged
         EnableDisableControls()
     End Sub
 
 #End Region
 
 #Region "Menu Handlers"
-    Private Sub mnuFileExit_Click(sender As System.Object, e As System.EventArgs) Handles mnuFileExit.Click
+    Private Sub mnuFileExit_Click(sender As Object, e As EventArgs) Handles mnuFileExit.Click
         CloseProgram()
     End Sub
 
-    Private Sub mnuFileSelectInputFile_Click(sender As System.Object, e As System.EventArgs) Handles mnuFileSelectInputFile.Click
+    Private Sub mnuFileSelectInputFile_Click(sender As Object, e As EventArgs) Handles mnuFileSelectInputFile.Click
         SelectProteinInputFile()
     End Sub
 
-    Private Sub mnuFileLoadOptions_Click(sender As System.Object, e As System.EventArgs) Handles mnuFileLoadOptions.Click
+    Private Sub mnuFileLoadOptions_Click(sender As Object, e As EventArgs) Handles mnuFileLoadOptions.Click
         IniFileLoadOptions(False)
     End Sub
 
-    Private Sub mnuPeptideInputFile_Click(sender As System.Object, e As System.EventArgs) Handles mnuPeptideInputFile.Click
+    Private Sub mnuPeptideInputFile_Click(sender As Object, e As EventArgs) Handles mnuPeptideInputFile.Click
         SelectPeptideInputFile()
     End Sub
 
-    Private Sub mnuFileSelectOutputFile_Click(sender As System.Object, e As System.EventArgs) Handles mnuFileSelectOutputFile.Click
+    Private Sub mnuFileSelectOutputFile_Click(sender As Object, e As EventArgs) Handles mnuFileSelectOutputFile.Click
         SelectPeptideInputFile()
     End Sub
 
-    Private Sub mnuEditShowRTF_Click(sender As System.Object, e As System.EventArgs) Handles mnuEditShowRTF.Click
+    Private Sub mnuEditShowRTF_Click(sender As Object, e As EventArgs) Handles mnuEditShowRTF.Click
         ToggleRTFCodeVisible()
     End Sub
 
-    Private Sub mnuHelpAbout_Click(sender As System.Object, e As System.EventArgs) Handles mnuHelpAbout.Click
+    Private Sub mnuHelpAbout_Click(sender As Object, e As EventArgs) Handles mnuHelpAbout.Click
         ShowAboutBox()
     End Sub
 
-    Private Sub mnuEditResetOptions_Click(sender As System.Object, e As System.EventArgs) Handles mnuEditResetOptions.Click
+    Private Sub mnuEditResetOptions_Click(sender As Object, e As EventArgs) Handles mnuEditResetOptions.Click
         ResetToDefaults()
     End Sub
 
-    Private Sub mnuFileSaveDefaultOptions_Click(sender As System.Object, e As System.EventArgs) Handles mnuFileSaveDefaultOptions.Click
+    Private Sub mnuFileSaveDefaultOptions_Click(sender As Object, e As EventArgs) Handles mnuFileSaveDefaultOptions.Click
         IniFileSaveOptions(GetSettingsFilePath(), True)
     End Sub
 #End Region
 
-    Private Sub GUI_Closing(sender As Object, e As System.ComponentModel.CancelEventArgs) Handles MyBase.Closing
+    Private Sub GUI_Closing(sender As Object, e As CancelEventArgs) Handles MyBase.Closing
         IniFileSaveOptions(GetSettingsFilePath())
     End Sub
 
-    Private Sub chkSearchAllProteinsSaveDetails_CheckedChanged(sender As System.Object, e As System.EventArgs) Handles chkSaveProteinToPeptideMappingFile.CheckedChanged
+    Private Sub chkSearchAllProteinsSaveDetails_CheckedChanged(sender As Object, e As EventArgs) Handles chkSaveProteinToPeptideMappingFile.CheckedChanged
         EnableDisableControls()
     End Sub
 
-    Private Sub cboPeptideInputFileColumnOrdering_SelectedIndexChanged(sender As System.Object, e As System.EventArgs) Handles cboPeptideInputFileColumnOrdering.SelectedIndexChanged
+    Private Sub cboPeptideInputFileColumnOrdering_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cboPeptideInputFileColumnOrdering.SelectedIndexChanged
         AutoDefineSearchAllProteins()
     End Sub
 
@@ -2095,7 +2098,6 @@ Public Class GUI
     Private Sub mProteinCoverageSummarizer_ErrorEvent(message As String, ex As Exception)
         lblStatus.Text = message
     End Sub
-
 
     Private Sub mProteinCoverageSummarizer_ProgressChanged(taskDescription As String, percentComplete As Single)
         lblProgress.Text = taskDescription

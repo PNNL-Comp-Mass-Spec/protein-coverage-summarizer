@@ -955,7 +955,7 @@ Public Class clsProteinCoverageSummarizer
 
         Dim strMessage As String
 
-        Select Case Me.ErrorCode
+        Select Case ErrorCode
             Case eProteinCoverageErrorCodes.NoError
                 strMessage = String.Empty
             Case eProteinCoverageErrorCodes.InvalidInputFilePath
@@ -1206,23 +1206,23 @@ Public Class clsProteinCoverageSummarizer
                 If Not objSettingsFile.SectionPresent(XML_SECTION_PROCESSING_OPTIONS) Then
                     OnWarningEvent("The node '<section name=""" & XML_SECTION_PROCESSING_OPTIONS & """> was not found in the parameter file: " & strParameterFilePath)
                 Else
-                    OutputProteinSequence = objSettingsFile.GetParam(XML_SECTION_PROCESSING_OPTIONS, "OutputProteinSequence", Me.OutputProteinSequence)
-                    SearchAllProteinsForPeptideSequence = objSettingsFile.GetParam(XML_SECTION_PROCESSING_OPTIONS, "SearchAllProteinsForPeptideSequence", Me.SearchAllProteinsForPeptideSequence)
-                    SaveProteinToPeptideMappingFile = objSettingsFile.GetParam(XML_SECTION_PROCESSING_OPTIONS, "SaveProteinToPeptideMappingFile", Me.SaveProteinToPeptideMappingFile)
-                    SaveSourceDataPlusProteinsFile = objSettingsFile.GetParam(XML_SECTION_PROCESSING_OPTIONS, "mSaveSourceDataPlusProteinsFile", Me.SaveSourceDataPlusProteinsFile)
+                    OutputProteinSequence = objSettingsFile.GetParam(XML_SECTION_PROCESSING_OPTIONS, "OutputProteinSequence", OutputProteinSequence)
+                    SearchAllProteinsForPeptideSequence = objSettingsFile.GetParam(XML_SECTION_PROCESSING_OPTIONS, "SearchAllProteinsForPeptideSequence", SearchAllProteinsForPeptideSequence)
+                    SaveProteinToPeptideMappingFile = objSettingsFile.GetParam(XML_SECTION_PROCESSING_OPTIONS, "SaveProteinToPeptideMappingFile", SaveProteinToPeptideMappingFile)
+                    SaveSourceDataPlusProteinsFile = objSettingsFile.GetParam(XML_SECTION_PROCESSING_OPTIONS, "mSaveSourceDataPlusProteinsFile", SaveSourceDataPlusProteinsFile)
 
-                    TrackPeptideCounts = objSettingsFile.GetParam(XML_SECTION_PROCESSING_OPTIONS, "TrackPeptideCounts", Me.TrackPeptideCounts)
-                    RemoveSymbolCharacters = objSettingsFile.GetParam(XML_SECTION_PROCESSING_OPTIONS, "RemoveSymbolCharacters", Me.RemoveSymbolCharacters)
-                    MatchPeptidePrefixAndSuffixToProtein = objSettingsFile.GetParam(XML_SECTION_PROCESSING_OPTIONS, "MatchPeptidePrefixAndSuffixToProtein", Me.MatchPeptidePrefixAndSuffixToProtein)
-                    IgnoreILDifferences = objSettingsFile.GetParam(XML_SECTION_PROCESSING_OPTIONS, "IgnoreILDifferences", Me.IgnoreILDifferences)
+                    TrackPeptideCounts = objSettingsFile.GetParam(XML_SECTION_PROCESSING_OPTIONS, "TrackPeptideCounts", TrackPeptideCounts)
+                    RemoveSymbolCharacters = objSettingsFile.GetParam(XML_SECTION_PROCESSING_OPTIONS, "RemoveSymbolCharacters", RemoveSymbolCharacters)
+                    MatchPeptidePrefixAndSuffixToProtein = objSettingsFile.GetParam(XML_SECTION_PROCESSING_OPTIONS, "MatchPeptidePrefixAndSuffixToProtein", MatchPeptidePrefixAndSuffixToProtein)
+                    IgnoreILDifferences = objSettingsFile.GetParam(XML_SECTION_PROCESSING_OPTIONS, "IgnoreILDifferences", IgnoreILDifferences)
 
-                    PeptideFileSkipFirstLine = objSettingsFile.GetParam(XML_SECTION_PROCESSING_OPTIONS, "PeptideFileSkipFirstLine", Me.PeptideFileSkipFirstLine)
-                    PeptideInputFileDelimiter = objSettingsFile.GetParam(XML_SECTION_PROCESSING_OPTIONS, "PeptideInputFileDelimiter", Me.PeptideInputFileDelimiter).Chars(0)
-                    PeptideFileFormatCode = CType(objSettingsFile.GetParam(XML_SECTION_PROCESSING_OPTIONS, "PeptideFileFormatCode", CInt(Me.PeptideFileFormatCode)), ePeptideFileColumnOrderingCode)
+                    PeptideFileSkipFirstLine = objSettingsFile.GetParam(XML_SECTION_PROCESSING_OPTIONS, "PeptideFileSkipFirstLine", PeptideFileSkipFirstLine)
+                    PeptideInputFileDelimiter = objSettingsFile.GetParam(XML_SECTION_PROCESSING_OPTIONS, "PeptideInputFileDelimiter", PeptideInputFileDelimiter).Chars(0)
+                    PeptideFileFormatCode = CType(objSettingsFile.GetParam(XML_SECTION_PROCESSING_OPTIONS, "PeptideFileFormatCode", PeptideFileFormatCode), ePeptideFileColumnOrderingCode)
 
                     mProteinDataCache.DelimitedFileSkipFirstLine = objSettingsFile.GetParam(XML_SECTION_PROCESSING_OPTIONS, "ProteinFileSkipFirstLine", mProteinDataCache.DelimitedFileSkipFirstLine)
                     mProteinDataCache.DelimitedFileDelimiter = objSettingsFile.GetParam(XML_SECTION_PROCESSING_OPTIONS, "DelimitedProteinFileDelimiter", mProteinDataCache.DelimitedFileDelimiter).Chars(0)
-                    mProteinDataCache.DelimitedFileFormatCode = CType(objSettingsFile.GetParam(XML_SECTION_PROCESSING_OPTIONS, "DelimitedProteinFileFormatCode", CInt(mProteinDataCache.DelimitedFileFormatCode)), DelimitedFileReader.eDelimitedFileFormatCode)
+                    mProteinDataCache.DelimitedFileFormatCode = CType(objSettingsFile.GetParam(XML_SECTION_PROCESSING_OPTIONS, "DelimitedProteinFileFormatCode", mProteinDataCache.DelimitedFileFormatCode), DelimitedFileReader.eDelimitedFileFormatCode)
 
                 End If
 
@@ -1583,8 +1583,8 @@ Public Class clsProteinCoverageSummarizer
         Try
             mCachedProteinInfoStartIndex = -1
             With mProteinDataCache
-                .RemoveSymbolCharacters = Me.RemoveSymbolCharacters
-                .IgnoreILDifferences = Me.IgnoreILDifferences
+                .RemoveSymbolCharacters = RemoveSymbolCharacters
+                .IgnoreILDifferences = IgnoreILDifferences
             End With
 
             If String.IsNullOrWhiteSpace(strInputFilePath) Then
@@ -1863,7 +1863,8 @@ Public Class clsProteinCoverageSummarizer
                                     blnTestPeptide = True
                                 Else
                                     ' Make sure that the protein for intCachedPeptideMatchIndex matches this protein name
-                                    If mLeaderSequenceCache.mCachedPeptideSeqInfo(intCachedPeptideMatchIndex).ProteinName.ToLower = mCachedProteinInfo(intProteinIndex).Name.ToLower Then
+                                    If String.Equals(mLeaderSequenceCache.mCachedPeptideSeqInfo(intCachedPeptideMatchIndex).ProteinName,
+                                                     mCachedProteinInfo(intProteinIndex).Name, StringComparison.CurrentCultureIgnoreCase) Then
                                         blnTestPeptide = True
                                     Else
                                         blnTestPeptide = False
@@ -2189,11 +2190,11 @@ Public Class clsProteinCoverageSummarizer
 
     Protected Sub UpdateProgress(strProgressStepDescription As String)
         mProgressStepDescription = String.Copy(strProgressStepDescription)
-        RaiseEvent ProgressChanged(Me.ProgressStepDescription, Me.ProgressPercentComplete)
+        RaiseEvent ProgressChanged(ProgressStepDescription, ProgressPercentComplete)
     End Sub
 
     Protected Sub UpdateProgress(sngPercentComplete As Single, eCurrentProcessingStep As eProteinCoverageProcessingSteps)
-        UpdateProgress(Me.ProgressStepDescription, sngPercentComplete, eCurrentProcessingStep)
+        UpdateProgress(ProgressStepDescription, sngPercentComplete, eCurrentProcessingStep)
     End Sub
 
     Protected Sub UpdateProgress(strProgressStepDescription As String, sngPercentComplete As Single, eCurrentProcessingStep As eProteinCoverageProcessingSteps)
@@ -2213,7 +2214,7 @@ Public Class clsProteinCoverageSummarizer
         ' Use the start and end percent complete values for the specified processing step to convert sngPercentComplete to an overall percent complete value
         mProgressPercentComplete = sngStartPercent + CSng(sngPercentComplete / 100.0 * (sngEndPercent - sngStartPercent))
 
-        RaiseEvent ProgressChanged(Me.ProgressStepDescription, Me.ProgressPercentComplete)
+        RaiseEvent ProgressChanged(ProgressStepDescription, ProgressPercentComplete)
     End Sub
 
     ''Protected Sub UpdateSubtaskProgress(sngPercentComplete As Single)
@@ -2229,7 +2230,7 @@ Public Class clsProteinCoverageSummarizer
     ''    End If
     ''    mSubtaskPercentComplete = sngPercentComplete
 
-    ''    RaiseEvent SubtaskProgressChanged(Me.SubtaskStepDescription, Me.SubtaskPercentComplete)
+    ''    RaiseEvent SubtaskProgressChanged(SubtaskStepDescription, SubtaskPercentComplete)
     ''End Sub
 
     Private Sub mLeaderSequenceCache_ProgressChanged(taskDescription As String, percentComplete As Single) Handles mLeaderSequenceCache.ProgressChanged
