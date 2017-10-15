@@ -5,6 +5,7 @@ Imports System.IO
 Imports System.Reflection
 Imports System.Runtime.InteropServices
 Imports System.Text.RegularExpressions
+Imports PRISM
 Imports ProteinFileReader
 
 ' This class will read in a protein fasta file or delimited protein info file along with
@@ -14,27 +15,18 @@ Imports ProteinFileReader
 ' Written by Matthew Monroe and Nikša Blonder for the Department of Energy (PNNL, Richland, WA)
 ' Program started June 14, 2005
 '
-' E-mail: matthew.monroe@pnnl.gov or matt@alchemistmatt.com
-' Website: http://omics.pnl.gov/ or http://www.sysbio.org/resources/staff/
+' E-mail: matthew.monroe@pnnl.gov or proteomics@pnnl.gov
+' Website: https://panomics.pnl.gov/ or https://omics.pnl.gov
 ' -------------------------------------------------------------------------------
 '
 ' Licensed under the Apache License, Version 2.0; you may not use this file except
 ' in compliance with the License.  You may obtain a copy of the License at
 ' http://www.apache.org/licenses/LICENSE-2.0
 '
-' Notice: This computer software was prepared by Battelle Memorial Institute,
-' hereinafter the Contractor, under Contract No. DE-AC05-76RL0 1830 with the
-' Department of Energy (DOE).  All rights in the computer software are reserved
-' by DOE on behalf of the United States Government and the Contractor as
-' provided in the Contract.  NEITHER THE GOVERNMENT NOR THE CONTRACTOR MAKES ANY
-' WARRANTY, EXPRESS OR IMPLIED, OR ASSUMES ANY LIABILITY FOR THE USE OF THIS
-' SOFTWARE.  This notice including this sentence must appear on any copies of
-' this computer software.
-
-' Last updated October 22, 2012
 
 <CLSCompliant(True)>
 Public Class clsProteinCoverageSummarizer
+    Inherits clsEventNotifier
 
     Public Sub New()
         InitializeVariables()
@@ -103,7 +95,6 @@ Public Class clsProteinCoverageSummarizer
 #Region "Classwide variables"
     Public WithEvents mProteinDataCache As clsProteinFileDataCache
     Private WithEvents mLeaderSequenceCache As clsLeaderSequenceCache
-    Private mNewProteinsCache() As udtSequence
 
     ' This dictionary contains entries of the form 1234::K.ABCDEFR.A
     '  where the number is the protein ID and the peptide is the peptide sequence
@@ -161,7 +152,6 @@ Public Class clsProteinCoverageSummarizer
 #Region "Progress Events and Variables"
     Public Event ProgressReset()
     Public Event ProgressChanged(taskDescription As String, percentComplete As Single)     ' PercentComplete ranges from 0 to 100, but can contain decimal percentage values
-    Public Event ProgressComplete()
 
     ' Note: These events are no longer used
     ''Public Event SubtaskProgressChanged(taskDescription As String, percentComplete As Single)     ' PercentComplete ranges from 0 to 100, but can contain decimal percentage values
@@ -1078,7 +1068,7 @@ Public Class clsProteinCoverageSummarizer
 
     End Sub
 
-    Private Sub UpdatePercentCoveragesDbDataValues(blnProteinUpdated() As Boolean, intProteinCount As Integer)
+    Private Sub UpdatePercentCoveragesDbDataValues(blnProteinUpdated As IList(Of Boolean), intProteinCount As Integer)
         Try
             If Not BooleanArrayContainsTrueEntries(blnProteinUpdated, intProteinCount) Then
                 ' All of the entries in blnProteinUpdated() are False; nothing to update
@@ -2086,18 +2076,22 @@ Public Class clsProteinCoverageSummarizer
       ByRef ePeptideFileColumnOrdering As ePeptideFileColumnOrderingCode,
       blnSkipFirstLine As Boolean,
       chColumnDelimiter As Char) As Boolean
+
         ' Open the file and read in the lines
         Using srInFile = New StreamReader(New FileStream(strPeptideInputFilePath, FileMode.Open, FileAccess.Read, FileShare.Read))
 
             Dim intCurrentLine = 1
             Do While Not srInFile.EndOfStream AndAlso intCurrentLine < 3
-                Dim strLineIn = srInFile.ReadLine.Trim
+                Dim strLineIn = srInFile.ReadLine
+                If strLineIn Is Nothing Then Continue Do
+
+                Dim dataLine = strLineIn.Trim()
 
                 If intCurrentLine = 1 AndAlso blnSkipFirstLine Then
                     ' do nothing, skip the first line
-                ElseIf strLineIn.Length > 0 Then
+                ElseIf dataLine.Length > 0 Then
                     Try
-                        Dim strSplitLine = strLineIn.Split(chColumnDelimiter)
+                        Dim strSplitLine = dataLine.Split(chColumnDelimiter)
 
                         If (Not blnSkipFirstLine AndAlso intCurrentLine = 1) OrElse
                            (blnSkipFirstLine AndAlso intCurrentLine = 2) Then

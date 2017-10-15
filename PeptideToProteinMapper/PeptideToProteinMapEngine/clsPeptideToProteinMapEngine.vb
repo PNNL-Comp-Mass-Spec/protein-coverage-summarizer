@@ -443,7 +443,7 @@ Public Class clsPeptideToProteinMapEngine
 
         mInspectParameterFilePath = String.Empty
 
-        mAbortProcessing = False
+        AbortProcessing = False
         mStatusMessage = String.Empty
 
         mProteinCoverageSummarizer = New clsProteinCoverageSummarizer()
@@ -502,7 +502,7 @@ Public Class clsPeptideToProteinMapEngine
         End Try
 
     End Function
-    
+
     Public Function LoadParameterFileSettings(strParameterFilePath As String) As Boolean
         Return mProteinCoverageSummarizer.LoadParameterFileSettings(strParameterFilePath)
     End Function
@@ -1297,10 +1297,6 @@ Public Class clsPeptideToProteinMapEngine
            percentComplete * CSng((PERCENT_COMPLETE_POSTPROCESSING - PERCENT_COMPLETE_RUNNING_PROTEIN_COVERAGE_SUMMARIZER) / 100.0)
 
         UpdateProgress(taskDescription, sngPercentCompleteEffective)
-    End Sub
-
-    Private Sub mProteinCoverageSummarizer_ProgressComplete() Handles mProteinCoverageSummarizer.ProgressComplete
-        OperationComplete()
     End Sub
 
     Private Sub mProteinCoverageSummarizer_ProgressReset() Handles mProteinCoverageSummarizer.ProgressReset

@@ -12,26 +12,18 @@ Imports PRISM
 ' Written by Matthew Monroe and Nikša Blonder for the Department of Energy (PNNL, Richland, WA)
 ' Program started June 14, 2005
 '
-' E-mail: matthew.monroe@pnnl.gov or matt@alchemistmatt.com
-' Website: http://omics.pnl.gov/ or http://www.sysbio.org/resources/staff/ or http://panomics.pnnl.gov/
+' E-mail: matthew.monroe@pnnl.gov or proteomics@pnnl.gov
+' Website: https://panomics.pnl.gov/ or https://omics.pnl.gov
 ' -------------------------------------------------------------------------------
 '
 ' Licensed under the Apache License, Version 2.0; you may not use this file except
 ' in compliance with the License.  You may obtain a copy of the License at
 ' http://www.apache.org/licenses/LICENSE-2.0
 '
-' Notice: This computer software was prepared by Battelle Memorial Institute,
-' hereinafter the Contractor, under Contract No. DE-AC05-76RL0 1830 with the
-' Department of Energy (DOE).  All rights in the computer software are reserved
-' by DOE on behalf of the United States Government and the Contractor as
-' provided in the Contract.  NEITHER THE GOVERNMENT NOR THE CONTRACTOR MAKES ANY
-' WARRANTY, EXPRESS OR IMPLIED, OR ASSUMES ANY LIABILITY FOR THE USE OF THIS
-' SOFTWARE.  This notice including this sentence must appear on any copies of
-' this computer software.
 
 Public Module modMain
 
-    Public Const PROGRAM_DATE As String = "June 8, 2017"
+    Public Const PROGRAM_DATE As String = "October 15, 2017"
 
     Private mPeptideInputFilePath As String
     Private mProteinInputFilePath As String
@@ -65,7 +57,6 @@ Public Module modMain
         Dim intReturnCode As Integer
         Dim objParseCommandLine As New clsParseCommandLine
         Dim blnProceed As Boolean
-        Dim blnSuccess As Boolean
 
         intReturnCode = 0
         mPeptideInputFilePath = String.Empty
@@ -277,8 +268,6 @@ Public Module modMain
             objFormMain.ShowDialog()
         Catch ex As Exception
             MsgBox("Error in ShowGUI: " & ex.Message, MsgBoxStyle.Exclamation Or MsgBoxStyle.OkOnly, "Error")
-        Finally
-            objFormMain = Nothing
         End Try
 
     End Sub
@@ -309,7 +298,7 @@ Public Module modMain
             strSyntax &= Environment.NewLine & "Version: " & GetAppVersion()
             strSyntax &= Environment.NewLine
 
-            strSyntax &= Environment.NewLine & "E-mail: matthew.monroe@pnnl.gov or matt@alchemistmatt.com"
+            strSyntax &= Environment.NewLine & "E-mail: matthew.monroe@pnnl.gov or proteomics@pnnl.gov"
             strSyntax &= Environment.NewLine & "Website: http://omics.pnl.gov/ or http://panomics.pnnl.gov/"
             strSyntax &= Environment.NewLine
 

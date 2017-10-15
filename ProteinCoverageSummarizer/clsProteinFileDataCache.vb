@@ -1,7 +1,13 @@
 Option Strict On
 
+Imports System.Data.SQLite
 Imports System.IO
-' This class will read a protein fasta file or delimited protein info file and 
+Imports System.Text.RegularExpressions
+Imports System.Threading
+Imports PRISM
+Imports ProteinFileReader
+
+' This class will read a protein fasta file or delimited protein info file and
 ' store the proteins in memory
 '
 ' Written by Matthew Monroe and Nikša Blonder for the Department of Energy (PNNL, Richland, WA)
@@ -14,7 +20,7 @@ Public Class clsProteinFileDataCache
     Inherits clsEventNotifier
 
     Public Sub New()
-        mFileDate = "January 29, 2014"
+        mFileDate = "October 15, 2017"
         InitializeLocalVariables()
     End Sub
 
@@ -108,7 +114,7 @@ Public Class clsProteinFileDataCache
 
 #End Region
 
-    Public Function ConnectToSqlLiteDB(blnDisableJournalling As Boolean) As SQLite.SQLiteConnection
+    Public Function ConnectToSqlLiteDB(blnDisableJournaling As Boolean) As SQLiteConnection
 
         If mSqlLiteDBConnectionString Is Nothing OrElse mSqlLiteDBConnectionString.Length = 0 Then
             Return Nothing
@@ -119,9 +125,9 @@ Public Class clsProteinFileDataCache
 
         ' Turn off Journaling and set Synchronous mode to 0
         ' These changes are required to improve the update speed
-        If blnDisableJournalling Then
+        If blnDisableJournaling Then
 
-            Using SQLcommand As SQLite.SQLiteCommand = SQLconnect.CreateCommand
+            Using SQLcommand As SQLiteCommand = SQLconnect.CreateCommand
                 SQLcommand.CommandText = "PRAGMA journal_mode = OFF"
                 SQLcommand.ExecuteNonQuery()
                 SQLcommand.CommandText = "PRAGMA synchronous = 0"
@@ -138,8 +144,7 @@ Public Class clsProteinFileDataCache
         Dim strFolderPath As String = String.Empty
         Dim strFilePath As String = String.Empty
 
-        Dim swTestFile As StreamWriter
-        Dim blnSuccess As Boolean = False
+        Dim blnSuccess As Boolean
 
         Try
             ' See if we can create files in the folder that contains this .Dll
@@ -147,9 +152,10 @@ Public Class clsProteinFileDataCache
 
             strFilePath = Path.Combine(strFolderPath, "TempFileToTestFileIOPermissions.tmp")
 
-            swTestFile = New StreamWriter(New FileStream(strFilePath, IO.FileMode.Create, IO.FileAccess.Write, IO.FileShare.Read))
-            swTestFile.WriteLine("Test")
-            swTestFile.Close()
+            Using swTestFile = New StreamWriter(New FileStream(strFilePath, FileMode.Create, FileAccess.Write, FileShare.Read))
+                swTestFile.WriteLine("Test")
+            End Using
+
             blnSuccess = True
 
         Catch ex As Exception
@@ -190,10 +196,7 @@ Public Class clsProteinFileDataCache
     End Function
 
     Public Sub DeleteSQLiteDBFile()
-        Const MAX_RETRY_ATTEMPT_COUNT As Integer = 3
-
-        Dim intRetryIndex As Integer
-        Dim intRetryHoldoffSeconds As Integer
+        Const MAX_RETRY_ATTEMPT_COUNT = 3
 
         Try
             If Not mSqlLitePersistentConnection Is Nothing Then
@@ -222,7 +225,7 @@ Public Class clsProteinFileDataCache
         End Try
 
         For intRetryIndex = 0 To MAX_RETRY_ATTEMPT_COUNT - 1
-            intRetryHoldoffSeconds = (intRetryIndex + 1)
+            Dim intRetryHoldoffSeconds = (intRetryIndex + 1)
 
             Try
                 If Not String.IsNullOrEmpty(mSqlLiteDBFilePath) Then

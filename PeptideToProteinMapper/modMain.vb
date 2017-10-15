@@ -32,7 +32,7 @@ Imports PRISM
 
 Public Module modMain
 
-    Public Const PROGRAM_DATE As String = "June 8, 2017"
+    Public Const PROGRAM_DATE As String = "October 15, 2017"
 
     Private mPeptideInputFilePath As String
     Private mProteinInputFilePath As String
@@ -73,8 +73,9 @@ Public Module modMain
 
             blnOpeningExistingFile = File.Exists(strLogFilePath)
 
-            mVerboseLogFile = New StreamWriter(New FileStream(strLogFilePath, FileMode.Append, FileAccess.Write, FileShare.Read))
-            mVerboseLogFile.AutoFlush = True
+            mVerboseLogFile = New StreamWriter(New FileStream(strLogFilePath, FileMode.Append, FileAccess.Write, FileShare.Read)) With {
+                .AutoFlush = True
+            }
 
             If Not blnOpeningExistingFile Then
                 mVerboseLogFile.WriteLine("Date" & ControlChars.Tab & "Percent Complete" & ControlChars.Tab & "Message")
@@ -93,7 +94,6 @@ Public Module modMain
         Dim intReturnCode As Integer
         Dim objParseCommandLine As New clsParseCommandLine
         Dim blnProceed As Boolean
-        Dim blnSuccess As Boolean
 
         intReturnCode = 0
         mPeptideInputFilePath = String.Empty
@@ -171,7 +171,6 @@ Public Module modMain
                     End If
 
                 Catch ex As Exception
-                    blnSuccess = False
                     ShowErrorMessage("Error initializing the Peptide to Protein Mapper Options " & ex.Message)
                 End Try
 
@@ -208,7 +207,7 @@ Public Module modMain
         ' /I:PeptideInputFilePath /R: ProteinInputFilePath /O:OutputFolderPath /P:ParameterFilePath
 
         Dim strValue As String = String.Empty
-        Dim lstValidParameters As List(Of String) = New List(Of String) From {"I", "O", "R", "P", "F", "N", "G", "H", "K", "A", "L", "LogFolder", "Q", "VerboseLog"}
+        Dim lstValidParameters = New List(Of String) From {"I", "O", "R", "P", "F", "N", "G", "H", "K", "A", "L", "LogFolder", "Q", "VerboseLog"}
         Dim intValue As Integer
 
         Try
