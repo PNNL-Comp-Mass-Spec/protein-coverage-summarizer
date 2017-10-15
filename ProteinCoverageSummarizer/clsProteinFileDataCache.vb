@@ -411,38 +411,25 @@ Public Class clsProteinFileDataCache
     Public Function ParseProteinFile(strProteinInputFilePath As String) As Boolean
         ' If strOutputFileNameBaseOverride is defined, then uses that name for the protein output filename rather than auto-defining the name
 
-        Dim objProteinFileReader As ProteinFileReader.ProteinFileReaderBaseClass = Nothing
-        Dim blnSuccess As Boolean = False
-        Dim blnInputProteinFound As Boolean
-        Dim intProteinsProcessed As Integer
-        Dim intInputFileLinesRead As Integer
-
-        Dim Name As String
-        Dim Description As String
-        Dim Sequence As String
-
-        Dim SQLcommand As SQLite.SQLiteCommand
-        Dim SQLTransaction As SQLite.SQLiteTransaction
-
         ' Create the SQL Lite DB
         Dim SQLconnect = ConnectToSqlLiteDB(True)
 
         ' SQL query to Create the Table
-        SQLcommand = SQLconnect.CreateCommand
+        Dim SQLcommand = SQLconnect.CreateCommand
         SQLcommand.CommandText = "CREATE TABLE udtProteinInfoType( " &
                                     "Name TEXT, " &
                                     "Description TEXT, " &
-                                    "Sequence TEXT, " &
-                                    "UniqueSequenceID INTEGER PRIMARY KEY, " &
+                                    "sequence TEXT, " &
+                                    "UniquesequenceID INTEGER PRIMARY KEY, " &
                                     "PercentCoverage REAL);" ', NonUniquePeptideCount INTEGER, UniquePeptideCount INTEGER);"
         SQLcommand.ExecuteNonQuery()
 
-        Dim reReplaceSymbols As System.Text.RegularExpressions.Regex
-
         ' Define a RegEx to replace all of the non-letter characters
-        reReplaceSymbols = New System.Text.RegularExpressions.Regex("[^A-Za-z]", System.Text.RegularExpressions.RegexOptions.Compiled)
+        Dim reReplaceSymbols = New Regex("[^A-Za-z]", RegexOptions.Compiled)
 
-        Dim split As String() = Nothing
+        Dim objProteinFileReader As ProteinFileReaderBaseClass = Nothing
+
+        Dim blnSuccess As Boolean
 
         Try
 
@@ -451,8 +438,8 @@ Public Class clsProteinFileDataCache
                 blnSuccess = False
             Else
 
-                If mAssumeFastaFile OrElse IsFastaFile(strProteinInputFilePath) Then
-                    If mAssumeDelimitedFile Then
+                If AssumeFastaFile OrElse IsFastaFile(strProteinInputFilePath) Then
+                    If AssumeDelimitedFile Then
                         mParsedFileIsFastaFile = False
                     Else
                         mParsedFileIsFastaFile = True
@@ -462,15 +449,15 @@ Public Class clsProteinFileDataCache
                 End If
 
                 If mParsedFileIsFastaFile Then
-                    objProteinFileReader = New ProteinFileReader.FastaFileReader() With {
+                    objProteinFileReader = New FastaFileReader() With {
                         .ProteinLineStartChar = FastaFileOptions.ProteinLineStartChar,
                         .ProteinLineAccessionEndChar = FastaFileOptions.ProteinLineAccessionEndChar
                     }
                 Else
-                    objProteinFileReader = New ProteinFileReader.DelimitedFileReader With {
+                    objProteinFileReader = New DelimitedFileReader With {
                         .Delimiter = mDelimitedInputFileDelimiter,
-                        .DelimitedFileFormatCode = mDelimitedInputFileFormatCode,
-                        .SkipFirstLine = mDelimitedFileSkipFirstLine
+                        .DelimitedFileFormatCode = DelimitedFileFormatCode,
+                        .SkipFirstLine = DelimitedFileSkipFirstLine
                     }
                 End If
 
@@ -506,79 +493,89 @@ Public Class clsProteinFileDataCache
             RaiseEvent ProteinCachingStart()
 
             ' Create a parameterized Insert query
-            SQLcommand.CommandText = " INSERT INTO udtProteinInfoType(Name, Description, Sequence, UniqueSequenceID, PercentCoverage) " &
+            SQLcommand.CommandText = " INSERT INTO udtProteinInfoType(Name, Description, sequence, UniquesequenceID, PercentCoverage) " &
                                      " VALUES (?, ?, ?, ?, ?)"
 
-            Dim NameFld As SQLite.SQLiteParameter = SQLcommand.CreateParameter
-            Dim DescriptionFld As SQLite.SQLiteParameter = SQLcommand.CreateParameter
-            Dim SequenceFld As SQLite.SQLiteParameter = SQLcommand.CreateParameter
-            Dim UniqueSequenceIDFld As SQLite.SQLiteParameter = SQLcommand.CreateParameter
-            Dim PercentCoverageFld As SQLite.SQLiteParameter = SQLcommand.CreateParameter
-            SQLcommand.Parameters.Add(NameFld)
-            SQLcommand.Parameters.Add(DescriptionFld)
-            SQLcommand.Parameters.Add(SequenceFld)
-            SQLcommand.Parameters.Add(UniqueSequenceIDFld)
-            SQLcommand.Parameters.Add(PercentCoverageFld)
+            Dim nameFld As SQLiteParameter = SQLcommand.CreateParameter
+            Dim descriptionFld As SQLiteParameter = SQLcommand.CreateParameter
+            Dim sequenceFld As SQLiteParameter = SQLcommand.CreateParameter
+            Dim uniquesequenceIDFld As SQLiteParameter = SQLcommand.CreateParameter
+            Dim percentCoverageFld As SQLiteParameter = SQLcommand.CreateParameter
+            SQLcommand.Parameters.Add(nameFld)
+            SQLcommand.Parameters.Add(descriptionFld)
+            SQLcommand.Parameters.Add(sequenceFld)
+            SQLcommand.Parameters.Add(uniquesequenceIDFld)
+            SQLcommand.Parameters.Add(percentCoverageFld)
 
             ' Begin a SQL Transaction
-            SQLTransaction = SQLconnect.BeginTransaction()
+            Dim SQLTransaction = SQLconnect.BeginTransaction()
+
+            Dim intProteinsProcessed = 0
+            Dim intInputFileLinesRead = 0
 
             Do
-                blnInputProteinFound = objProteinFileReader.ReadNextProteinEntry()
+                Dim blnInputProteinFound = objProteinFileReader.ReadNextProteinEntry()
 
-                If blnInputProteinFound Then
-                    intProteinsProcessed += 1
-                    intInputFileLinesRead = objProteinFileReader.LinesRead
+                If Not blnInputProteinFound Then
+                    Exit Do
+                End If
 
-                    Name = objProteinFileReader.ProteinName
-                    Description = objProteinFileReader.ProteinDescription
+                intProteinsProcessed += 1
+                intInputFileLinesRead = objProteinFileReader.LinesRead
 
-                    If RemoveSymbolCharacters Then
-                        Sequence = reReplaceSymbols.Replace(objProteinFileReader.ProteinSequence, String.Empty)
+                Dim name = objProteinFileReader.ProteinName
+                Dim description = objProteinFileReader.ProteinDescription
+                Dim sequence As String
+
+                If RemoveSymbolCharacters Then
+                    sequence = reReplaceSymbols.Replace(objProteinFileReader.ProteinSequence, String.Empty)
+                Else
+                    sequence = objProteinFileReader.ProteinSequence
+                End If
+
+                If ChangeProteinSequencesToLowercase Then
+                    If IgnoreILDifferences Then
+                        ' Replace all L characters with I
+                        sequence = sequence.ToLower().Replace("l"c, "i"c)
                     Else
-                        Sequence = objProteinFileReader.ProteinSequence
+                        sequence = sequence.ToLower()
                     End If
-
-                    If mChangeProteinSequencesToLowercase Then
-                        If mIgnoreILDifferences Then
-                            ' Replace all L characters with I
-                            Sequence = Sequence.ToLower.Replace("l"c, "i"c)
-                        Else
-                            Sequence = Sequence.ToLower
-                        End If
-                    ElseIf mChangeProteinSequencesToUppercase Then
-                        If mIgnoreILDifferences Then
-                            ' Replace all L characters with I
-                            Sequence = Sequence.ToUpper.Replace("L"c, "I"c)
-                        Else
-                            Sequence = Sequence.ToUpper
-                        End If
+                ElseIf ChangeProteinSequencesToUppercase Then
+                    If IgnoreILDifferences Then
+                        ' Replace all L characters with I
+                        sequence = sequence.ToUpper.Replace("L"c, "I"c)
                     Else
-                        If mIgnoreILDifferences Then
-                            ' Replace all L characters with I
-                            Sequence = Sequence.Replace("L"c, "I"c).Replace("l"c, "i"c)
-                        End If
+                        sequence = sequence.ToUpper
                     End If
-
-                    ' Store this protein in the Sql Lite DB
-                    NameFld.Value = Name
-                    DescriptionFld.Value = Description
-                    SequenceFld.Value = Sequence
-                    UniqueSequenceIDFld.Value = mProteinCount       ' Use mProteinCount to assign UniqueSequenceID values
-                    PercentCoverageFld.Value = 0
-
-                    SQLcommand.ExecuteNonQuery()
-
-                    mProteinCount += 1
-
-                    RaiseEvent ProteinCached(mProteinCount)
-
-                    If mProteinCount Mod 100 = 0 Then
-                        RaiseEvent ProteinCachedWithProgress(mProteinCount, objProteinFileReader.PercentFileProcessed)
+                Else
+                    If IgnoreILDifferences Then
+                        ' Replace all L characters with I
+                        sequence = sequence.Replace("L"c, "I"c).Replace("l"c, "i"c)
                     End If
                 End If
+
+                ' Store this protein in the Sql Lite DB
+                nameFld.Value = name
+                descriptionFld.Value = description
+                sequenceFld.Value = sequence
+
+                ' Use mProteinCount to assign UniquesequenceID values
+                uniquesequenceIDFld.Value = mProteinCount
+
+                percentCoverageFld.Value = 0
+
+                SQLcommand.ExecuteNonQuery()
+
+                mProteinCount += 1
+
+                RaiseEvent ProteinCached(mProteinCount)
+
+                If mProteinCount Mod 100 = 0 Then
+                    RaiseEvent ProteinCachedWithProgress(mProteinCount, objProteinFileReader.PercentFileProcessed)
+                End If
+
                 blnSuccess = True
-            Loop While blnInputProteinFound
+            Loop
 
             ' Finalize the SQL Transaction
             SQLTransaction.Commit()

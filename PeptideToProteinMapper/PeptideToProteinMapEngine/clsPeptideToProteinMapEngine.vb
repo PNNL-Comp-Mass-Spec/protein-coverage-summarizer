@@ -365,13 +365,6 @@ Public Class clsPeptideToProteinMapEngine
 
     Public Function ExtractModInfoFromInspectParamFile(strInspectParameterFilePath As String, ByRef lstInspectModNames As List(Of String)) As Boolean
 
-        Dim strLineIn As String
-        Dim strSplitLine As String()
-
-        Dim intCurrentLine As Integer
-
-        Dim blnSuccess = False
-
         Try
 
             If lstInspectModNames Is Nothing Then
@@ -389,9 +382,9 @@ Public Class clsPeptideToProteinMapEngine
             ' Read the contents of strProteinToPeptideMappingFilePath
             Using srInFile = New StreamReader(New FileStream(strInspectParameterFilePath, FileMode.Open, FileAccess.Read, FileShare.Read))
 
-                intCurrentLine = 1
                 Do While Not srInFile.EndOfStream
-                    strLineIn = srInFile.ReadLine
+                    Dim strLineIn = srInFile.ReadLine()
+                    If strLineIn Is Nothing Then Continue Do
 
                     strLineIn = strLineIn.Trim
 
@@ -403,7 +396,7 @@ Public Class clsPeptideToProteinMapEngine
                             ' Modification definition line
 
                             ' Split the line on commas
-                            strSplitLine = strLineIn.Split(","c)
+                            Dim strSplitLine = strLineIn.Split(","c)
 
                             If strSplitLine.Length >= 5 AndAlso strSplitLine(0).ToLower.Trim = "mod" Then
 
@@ -421,7 +414,6 @@ Public Class clsPeptideToProteinMapEngine
                             End If
                         End If
                     End If
-                    intCurrentLine += 1
 
                 Loop
 
@@ -429,14 +421,14 @@ Public Class clsPeptideToProteinMapEngine
 
             Console.WriteLine()
 
-            blnSuccess = True
+            Return True
 
         Catch ex As Exception
             mStatusMessage = "Error reading the Inspect parameter file (" & Path.GetFileName(strInspectParameterFilePath) & ")"
             HandleException(mStatusMessage, ex)
         End Try
 
-        Return blnSuccess
+        Return False
 
     End Function
 
@@ -522,28 +514,10 @@ Public Class clsPeptideToProteinMapEngine
 
         Const UNKNOWN_PROTEIN_NAME = "__NoMatch__"
 
-        Dim strPeptideToProteinMappingFilePath As String
-
-        Dim strCleanSequence As String
-        Dim strProtein As String
-
-        Dim chPrefixResidue As Char
-        Dim chSuffixResidue As Char
-
-        Dim intMatchIndex As Integer
-        Dim intProteinIDMatchIndex As Integer
-
-        Dim objProteinMapPeptideComparer As ProteinIDMapInfoPeptideSearchComparer
-
         Dim strProteins() As String
         Dim intProteinIDPointerArray() As Integer
 
         Dim udtProteinMapInfo() As udtProteinIDMapInfoType
-
-        Dim lstCachedData As List(Of udtPepToProteinMappingType)
-        Dim objCachedDataComparer As PepToProteinMappingComparer
-
-        Dim blnSuccess = False
 
         Try
             Console.WriteLine()
@@ -563,11 +537,12 @@ Public Class clsPeptideToProteinMapEngine
             ReDim intProteinIDPointerArray(0)
             ReDim udtProteinMapInfo(0)
 
-            blnSuccess = PostProcessPSMResultsFileReadMapFile(strProteinToPeptideMappingFilePath,
-              strProteins, intProteinIDPointerArray, udtProteinMapInfo)
+            PostProcessPSMResultsFileReadMapFile(strProteinToPeptideMappingFilePath, strProteins, intProteinIDPointerArray, udtProteinMapInfo)
 
             ' Sort udtProteinMapInfo on peptide, then on protein
             Array.Sort(udtProteinMapInfo, New ProteinIDMapInfoComparer)
+
+            Dim strPeptideToProteinMappingFilePath As String
 
             ' Create the final result file
             If strProteinToPeptideMappingFilePath.Contains(FILENAME_SUFFIX_PSM_UNIQUE_PEPTIDES & clsProteinCoverageSummarizer.FILENAME_SUFFIX_PROTEIN_TO_PEPTIDE_MAPPING) Then
@@ -600,33 +575,36 @@ Public Class clsPeptideToProteinMapEngine
                   "Residue_End")
 
                 ' Initialize the Binary Search comparer
-                objProteinMapPeptideComparer = New ProteinIDMapInfoPeptideSearchComparer()
+                Dim objProteinMapPeptideComparer = New ProteinIDMapInfoPeptideSearchComparer()
 
 
                 ' Assure that intProteinIDPointerArray and strProteins are sorted in parallel
                 Array.Sort(intProteinIDPointerArray, strProteins)
 
                 ' Initialize lstCachedData
-                lstCachedData = New List(Of udtPepToProteinMappingType)
+                Dim lstCachedData = New List(Of udtPepToProteinMappingType)
 
                 ' Initialize objCachedDataComparer
-                objCachedDataComparer = New PepToProteinMappingComparer
+                Dim objCachedDataComparer = New PepToProteinMappingComparer()
 
                 For Each strPeptideEntry In mUniquePeptideList
 
+                    Dim chPrefixResidue As Char
+                    Dim chSuffixResidue As Char
+
                     ' Construct the clean sequence for this peptide
-                    strCleanSequence = clsProteinCoverageSummarizer.GetCleanPeptideSequence(
-                     strPeptideEntry.Key,
-                     chPrefixResidue,
-                     chSuffixResidue,
-                     mProteinCoverageSummarizer.RemoveSymbolCharacters)
+                    Dim strCleanSequence = clsProteinCoverageSummarizer.GetCleanPeptideSequence(
+                       strPeptideEntry.Key,
+                       chPrefixResidue,
+                       chSuffixResidue,
+                       mProteinCoverageSummarizer.RemoveSymbolCharacters)
 
                     If mInspectModNameList.Count > 0 Then
                         strCleanSequence = RemoveInspectMods(strCleanSequence, mInspectModNameList)
                     End If
 
                     ' Look for strCleanSequence in udtProteinMapInfo
-                    intMatchIndex = Array.BinarySearch(udtProteinMapInfo, strCleanSequence, objProteinMapPeptideComparer)
+                    Dim intMatchIndex = Array.BinarySearch(udtProteinMapInfo, strCleanSequence, objProteinMapPeptideComparer)
 
                     If intMatchIndex < 0 Then
                         ' Match not found; this is unexpected
@@ -648,7 +626,8 @@ Public Class clsPeptideToProteinMapEngine
 
                         Do
                             ' Find the Protein for ID udtProteinMapInfo(intMatchIndex).ProteinID
-                            intProteinIDMatchIndex = Array.BinarySearch(intProteinIDPointerArray, udtProteinMapInfo(intMatchIndex).ProteinID)
+                            Dim intProteinIDMatchIndex = Array.BinarySearch(intProteinIDPointerArray, udtProteinMapInfo(intMatchIndex).ProteinID)
+                            Dim strProtein As String
 
                             If intProteinIDMatchIndex >= 0 Then
                                 strProtein = strProteins(intProteinIDMatchIndex)
@@ -713,14 +692,14 @@ Public Class clsPeptideToProteinMapEngine
 
             End If
 
-            blnSuccess = True
+            Return True
 
         Catch ex As Exception
-            mStatusMessage = "Error writing the Inspect or MSGF-DB peptide to protein map file in PostProcessPSMResultsFile"
+            mStatusMessage = "Error writing the Inspect or MSGF+ peptide to protein map file in PostProcessPSMResultsFile"
             HandleException(mStatusMessage, ex)
         End Try
 
-        Return blnSuccess
+        Return False
 
     End Function
 
@@ -731,25 +710,12 @@ Public Class clsPeptideToProteinMapEngine
 
         Dim intTerminatorSize = 2
 
-        Dim strLineIn As String
-        Dim strSplitLine As String()
-
-        Dim intCurrentLine As Integer
-        Dim bytesRead As Long = 0
-
-        Dim dctProteinList As Dictionary(Of String, Integer)
-
-        Dim intProteinMapInfoCount As Integer
-
-        Dim strCurrentProtein As String
-        Dim intCurrentProteinID As Integer
-
-        Dim blnSuccess = False
-
         Try
 
             ' Initialize the protein list dictionary
-            dctProteinList = New Dictionary(Of String, Integer)
+            Dim dctProteinList = New Dictionary(Of String, Integer)
+
+            Dim intProteinMapInfoCount = 0
 
             ' Initialize the protein to peptide mapping array
             ' We know the length will be at least as long as mUniquePeptideList, and easily twice that length
@@ -760,13 +726,17 @@ Public Class clsPeptideToProteinMapEngine
             ' Read the contents of strProteinToPeptideMappingFilePath
             Using srInFile = New StreamReader(New FileStream(strProteinToPeptideMappingFilePath, FileMode.Open, FileAccess.Read, FileShare.Read))
 
-                strCurrentProtein = String.Empty
+                Dim strCurrentProtein = String.Empty
 
-                intCurrentLine = 1
+                Dim intCurrentLine = 1
+                Dim bytesRead As Long = 0
+
                 Do While Not srInFile.EndOfStream
-                    If mAbortProcessing Then Exit Do
+                    If AbortProcessing Then Exit Do
 
-                    strLineIn = srInFile.ReadLine
+                    Dim strLineIn = srInFile.ReadLine
+                    If strLineIn Is Nothing Then Continue Do
+
                     bytesRead += strLineIn.Length + intTerminatorSize
 
                     strLineIn = strLineIn.Trim
@@ -776,12 +746,14 @@ Public Class clsPeptideToProteinMapEngine
                     ElseIf strLineIn.Length > 0 Then
 
                         ' Split the line
-                        strSplitLine = strLineIn.Split(ControlChars.Tab)
+                        Dim strSplitLine = strLineIn.Split(ControlChars.Tab)
 
                         If strSplitLine.Length >= 4 Then
                             If intProteinMapInfoCount >= udtProteinMapInfo.Length Then
                                 ReDim Preserve udtProteinMapInfo(udtProteinMapInfo.Length * 2 - 1)
                             End If
+
+                            Dim intCurrentProteinID = 0
 
                             If strCurrentProtein.Length = 0 OrElse strCurrentProtein <> strSplitLine(0) Then
                                 ' Determine the Protein ID for this protein
@@ -828,14 +800,14 @@ Public Class clsPeptideToProteinMapEngine
             ' Shrink udtProteinMapInfo to the appropriate length
             ReDim Preserve udtProteinMapInfo(intProteinMapInfoCount - 1)
 
-            blnSuccess = True
+            Return True
 
         Catch ex As Exception
             mStatusMessage = "Error reading the newly created protein to peptide mapping file (" & Path.GetFileName(strProteinToPeptideMappingFilePath) & ")"
             HandleException(mStatusMessage, ex)
         End Try
 
-        Return blnSuccess
+        Return False
 
     End Function
 
@@ -858,24 +830,13 @@ Public Class clsPeptideToProteinMapEngine
                                                 strOutputFolderPath As String,
                                                 eFileType As ePeptideInputFileFormatConstants) As String
 
-
-        Dim strPeptideListFilePath As String = String.Empty
-
         Dim intTerminatorSize As Integer
 
-        Dim strLineIn As String
-
         Dim chSepChars = New Char() {ControlChars.Tab}
-        Dim strSplitLine As String()
-
-        Dim intCurrentLine As Integer
-        Dim bytesRead As Long = 0
-
-        Dim intModPeptidesFound As Integer
 
         Dim peptideSequenceColIndex As Integer
         Dim scanColIndex As Integer
-        Dim strToolDescription As String = String.Empty
+        Dim strToolDescription As String
 
         If eFileType = ePeptideInputFileFormatConstants.InspectResultsFile Then
             ' Assume inspect results file line terminators are only a single byte (it doesn't matter if the terminators are actually two bytes)
@@ -890,7 +851,7 @@ Public Class clsPeptideToProteinMapEngine
             intTerminatorSize = 2
             peptideSequenceColIndex = -1
             scanColIndex = -1
-            strToolDescription = "MSGF-DB"
+            strToolDescription = "MSGF+"
 
         Else
             mStatusMessage = "Unrecognized file type: " & eFileType.ToString() & "; will look for column header 'Peptide'"
@@ -929,12 +890,15 @@ Public Class clsPeptideToProteinMapEngine
             ' Keep track of PSM counts
             Using srInFile = New StreamReader(New FileStream(strInputFilePath, FileMode.Open, FileAccess.Read, FileShare.Read))
 
-                intModPeptidesFound = 0
-                intCurrentLine = 1
-                Do While Not srInFile.EndOfStream
-                    If mAbortProcessing Then Exit Do
+                Dim intCurrentLine = 1
+                Dim bytesRead As Long = 0
 
-                    strLineIn = srInFile.ReadLine
+                Do While Not srInFile.EndOfStream
+                    If AbortProcessing Then Exit Do
+
+                    Dim strLineIn = srInFile.ReadLine
+                    If strLineIn Is Nothing Then Continue Do
+
                     bytesRead += strLineIn.Length + intTerminatorSize
 
                     strLineIn = strLineIn.Trim
@@ -944,7 +908,7 @@ Public Class clsPeptideToProteinMapEngine
                         ' Header line
                         If peptideSequenceColIndex < 0 Then
                             ' Split the header line to look for the "Peptide" and Scan columns
-                            strSplitLine = strLineIn.Split(chSepChars)
+                            Dim strSplitLine = strLineIn.Split(chSepChars)
                             For intIndex = 0 To strSplitLine.Length - 1
                                 If peptideSequenceColIndex < 0 AndAlso strSplitLine(intIndex).ToLower() = "peptide" Then
                                     peptideSequenceColIndex = intIndex
@@ -972,7 +936,7 @@ Public Class clsPeptideToProteinMapEngine
 
                     ElseIf strLineIn.Length > 0 Then
 
-                        strSplitLine = strLineIn.Split(chSepChars)
+                        Dim strSplitLine = strLineIn.Split(chSepChars)
 
                         If strSplitLine.Length > peptideSequenceColIndex Then
                             Dim scanNumber As Integer
@@ -998,22 +962,19 @@ Public Class clsPeptideToProteinMapEngine
 
             End Using
 
-            strPeptideListFilePath = PreProcessDataWriteOutPeptides(strInputFilePath, strOutputFolderPath)
+            Dim strPeptideListFilePath = PreProcessDataWriteOutPeptides(strInputFilePath, strOutputFolderPath)
+            Return strPeptideListFilePath
 
         Catch ex As Exception
             mStatusMessage = "Error reading " & strToolDescription & " input file in PreProcessPSMResultsFile"
             HandleException(mStatusMessage, ex)
-
-            strPeptideListFilePath = String.Empty
         End Try
 
-        Return strPeptideListFilePath
+        Return String.Empty
 
     End Function
 
     Protected Function PreProcessPHRPDataFile(strInputFilePath As String, strOutputFolderPath As String) As String
-
-        Dim strPeptideListFilePath As String = String.Empty
 
         Try
             If Not File.Exists(strInputFilePath) Then
@@ -1050,7 +1011,7 @@ Public Class clsPeptideToProteinMapEngine
 
             ' Open the PHRP data file and construct a unique list of peptides in the file (including any modification symbols).
             ' MSPathFinder synopsis files do not have mod symbols in the peptides.
-            ' This is OK since the peptides in mUniquePeptideList will have mod symbols removed in PreProcessDataWriteOutPeptides 
+            ' This is OK since the peptides in mUniquePeptideList will have mod symbols removed in PreProcessDataWriteOutPeptides
             ' when finding proteins that contain the peptides.
             Using objReader As New clsPHRPReader(strInputFilePath, clsPHRPReader.ePeptideHitResultType.Unknown, oStartupOptions)
                 objReader.EchoMessagesToConsole = True
@@ -1067,11 +1028,10 @@ Public Class clsPeptideToProteinMapEngine
                 objReader.ClearErrors()
                 objReader.ClearWarnings()
 
-                AddHandler objReader.ErrorEvent, AddressOf PHRPReader_ErrorEvent
-                AddHandler objReader.WarningEvent, AddressOf PHRPReader_WarningEvent
+                RegisterEvents(objReader)
 
                 Do While objReader.MoveNext()
-                    If mAbortProcessing Then Exit Do
+                    If AbortProcessing Then Exit Do
 
                     UpdateUniquePeptideList(objReader.CurrentPSM.Peptide, objReader.CurrentPSM.ScanNumber)
 
@@ -1082,30 +1042,25 @@ Public Class clsPeptideToProteinMapEngine
                 Loop
             End Using
 
-            strPeptideListFilePath = PreProcessDataWriteOutPeptides(strInputFilePath, strOutputFolderPath)
+            Dim strPeptideListFilePath = PreProcessDataWriteOutPeptides(strInputFilePath, strOutputFolderPath)
+            Return strPeptideListFilePath
 
         Catch ex As Exception
             mStatusMessage = "Error reading PSM input file in PreProcessPHRPDataFile"
             HandleException(mStatusMessage, ex)
-
-            strPeptideListFilePath = String.Empty
         End Try
 
-        Return strPeptideListFilePath
+        Return String.Empty
 
     End Function
 
     Protected Function PreProcessDataWriteOutPeptides(strInputFilePath As String, strOutputFolderPath As String) As String
 
-        Dim strPeptideListFileName As String
-        Dim strPeptideListFilePath As String = String.Empty
-
-        Dim intModPeptidesFound As Integer
-
         Try
 
             ' Now write out the unique list of peptides to strPeptideListFilePath
-            strPeptideListFileName = Path.GetFileNameWithoutExtension(strInputFilePath) & FILENAME_SUFFIX_PSM_UNIQUE_PEPTIDES & ".txt"
+            Dim strPeptideListFileName = Path.GetFileNameWithoutExtension(strInputFilePath) & FILENAME_SUFFIX_PSM_UNIQUE_PEPTIDES & ".txt"
+            Dim strPeptideListFilePath As String
 
             If Not String.IsNullOrEmpty(strOutputFolderPath) Then
                 strPeptideListFilePath = Path.Combine(strOutputFolderPath, strPeptideListFileName)
@@ -1127,9 +1082,6 @@ Public Class clsPeptideToProteinMapEngine
 
                     If mInspectModNameList.Count > 0 Then
                         strPeptide = RemoveInspectMods(peptideEntry.Key, mInspectModNameList)
-                        If strPeptide <> peptideEntry.Key Then
-                            intModPeptidesFound += 1
-                        End If
                     Else
                         strPeptide = peptideEntry.Key
                     End If
@@ -1145,27 +1097,17 @@ Public Class clsPeptideToProteinMapEngine
                 Next
             End Using
 
+            Return strPeptideListFilePath
+
         Catch ex As Exception
             mStatusMessage = "Error writing the Unique Peptides file in PreProcessDataWriteOutPeptides"
             HandleException(mStatusMessage, ex)
-
-            strPeptideListFilePath = String.Empty
+            Return String.Empty
         End Try
-
-        Return strPeptideListFilePath
 
     End Function
 
     Public Overloads Overrides Function ProcessFile(strInputFilePath As String, strOutputFolderPath As String, strParameterFilePath As String, blnResetErrorCode As Boolean) As Boolean
-
-        Dim blnSuccess As Boolean
-
-        Dim strInputFilePathWork As String
-        Dim outputFileBaseName As String
-
-        Dim strProteinToPeptideMappingFilePath As String = String.Empty
-
-        Dim eInputFileFormat As ePeptideInputFileFormatConstants
 
         If blnResetErrorCode Then
             MyBase.SetBaseClassErrorCode(eProcessFilesErrorCodes.NoError)
@@ -1175,124 +1117,132 @@ Public Class clsPeptideToProteinMapEngine
             If strInputFilePath Is Nothing OrElse strInputFilePath.Length = 0 Then
                 ShowMessage("Input file name is empty")
                 MyBase.SetBaseClassErrorCode(eProcessFilesErrorCodes.InvalidInputFilePath)
+                Return False
+            End If
+            Dim blnSuccess = False
+
+            ' Note that CleanupFilePaths() will update mOutputFolderPath, which is used by LogMessage()
+            If Not CleanupFilePaths(strInputFilePath, strOutputFolderPath) Then
+                MyBase.SetBaseClassErrorCode(eProcessFilesErrorCodes.FilePathError)
             Else
-                ' Note that CleanupFilePaths() will update mOutputFolderPath, which is used by LogMessage()
-                If Not CleanupFilePaths(strInputFilePath, strOutputFolderPath) Then
-                    MyBase.SetBaseClassErrorCode(eProcessFilesErrorCodes.FilePathError)
+
+                LogMessage("Processing " & Path.GetFileName(strInputFilePath))
+                Dim eInputFileFormat As ePeptideInputFileFormatConstants
+
+                If mPeptideInputFileFormat = ePeptideInputFileFormatConstants.AutoDetermine Then
+                    eInputFileFormat = DetermineResultsFileFormat(strInputFilePath)
                 Else
+                    eInputFileFormat = mPeptideInputFileFormat
+                End If
 
-                    LogMessage("Processing " & Path.GetFileName(strInputFilePath))
+                If eInputFileFormat = ePeptideInputFileFormatConstants.Unknown Then
+                    ShowMessage("Input file type not recognized")
+                    Return False
+                End If
 
-                    If mPeptideInputFileFormat = ePeptideInputFileFormatConstants.AutoDetermine Then
-                        eInputFileFormat = DetermineResultsFileFormat(strInputFilePath)
-                    Else
-                        eInputFileFormat = mPeptideInputFileFormat
-                    End If
+                UpdateProgress("Preprocessing input file", PERCENT_COMPLETE_PREPROCESSING)
+                mInspectModNameList.Clear()
 
-                    If eInputFileFormat = ePeptideInputFileFormatConstants.Unknown Then
-                        ShowMessage("Input file type not recognized")
-                        Return False
-                    End If
+                Dim strInputFilePathWork As String
+                Dim outputFileBaseName As String
 
-                    UpdateProgress("Preprocessing input file", PERCENT_COMPLETE_PREPROCESSING)
-                    mInspectModNameList.Clear()
+                Select Case eInputFileFormat
+                    Case ePeptideInputFileFormatConstants.InspectResultsFile
+                        ' Inspect search results file; need to pre-process it
+                        strInputFilePathWork = PreProcessInspectResultsFile(strInputFilePath, strOutputFolderPath, mInspectParameterFilePath)
+                        outputFileBaseName = Path.GetFileNameWithoutExtension(strInputFilePath)
+
+                        mProteinCoverageSummarizer.PeptideFileFormatCode = clsProteinCoverageSummarizer.ePeptideFileColumnOrderingCode.SequenceOnly
+                        mProteinCoverageSummarizer.PeptideFileSkipFirstLine = False
+                        mProteinCoverageSummarizer.MatchPeptidePrefixAndSuffixToProtein = False
+
+                    Case ePeptideInputFileFormatConstants.MSGFDBResultsFile
+                        ' MSGF+ search results file; need to pre-process it
+                        ' Make sure RemoveSymbolCharacters is true
+                        Me.RemoveSymbolCharacters = True
+
+                        strInputFilePathWork = PreProcessPSMResultsFile(strInputFilePath, strOutputFolderPath, eInputFileFormat)
+                        outputFileBaseName = Path.GetFileNameWithoutExtension(strInputFilePath)
+
+                        mProteinCoverageSummarizer.PeptideFileFormatCode = clsProteinCoverageSummarizer.ePeptideFileColumnOrderingCode.SequenceOnly
+                        mProteinCoverageSummarizer.PeptideFileSkipFirstLine = False
+                        mProteinCoverageSummarizer.MatchPeptidePrefixAndSuffixToProtein = False
+
+                    Case ePeptideInputFileFormatConstants.PHRPFile
+                        ' Sequest, X!Tandem, Inspect, or MSGF+ PHRP data file; need to pre-process it
+                        ' Make sure RemoveSymbolCharacters is true
+                        Me.RemoveSymbolCharacters = True
+
+                        ' Open the PHRP data files and construct a unique list of peptides in the file (including any modification symbols)
+                        ' Write the unique peptide list to _syn_peptides.txt
+                        strInputFilePathWork = PreProcessPHRPDataFile(strInputFilePath, strOutputFolderPath)
+                        outputFileBaseName = Path.GetFileNameWithoutExtension(strInputFilePath)
+
+                        mProteinCoverageSummarizer.PeptideFileFormatCode = clsProteinCoverageSummarizer.ePeptideFileColumnOrderingCode.SequenceOnly
+                        mProteinCoverageSummarizer.PeptideFileSkipFirstLine = False
+                        mProteinCoverageSummarizer.MatchPeptidePrefixAndSuffixToProtein = False
+
+                    Case Else
+                        ' Pre-process the file to check for a header line
+                        strInputFilePathWork = String.Copy(strInputFilePath)
+                        outputFileBaseName = String.Empty
+
+                        If eInputFileFormat = ePeptideInputFileFormatConstants.ProteinAndPeptideFile Then
+                            mProteinCoverageSummarizer.PeptideFileFormatCode = clsProteinCoverageSummarizer.ePeptideFileColumnOrderingCode.ProteinName_PeptideSequence
+                        Else
+                            mProteinCoverageSummarizer.PeptideFileFormatCode = clsProteinCoverageSummarizer.ePeptideFileColumnOrderingCode.SequenceOnly
+                        End If
+
+                        If IsHeaderLinePresent(strInputFilePath, eInputFileFormat) Then
+                            mProteinCoverageSummarizer.PeptideFileSkipFirstLine = True
+                        End If
+
+                End Select
+
+                If String.IsNullOrWhiteSpace(strInputFilePathWork) Then
+                    Return False
+                End If
+
+                UpdateProgress("Running protein coverage summarizer", PERCENT_COMPLETE_RUNNING_PROTEIN_COVERAGE_SUMMARIZER)
+
+                Dim strProteinToPeptideMappingFilePath As String = Nothing
+
+                ' Call mProteinCoverageSummarizer.ProcessFile to perform the work
+                blnSuccess = mProteinCoverageSummarizer.ProcessFile(strInputFilePathWork, strOutputFolderPath,
+                                                                    strParameterFilePath, True,
+                                                                    strProteinToPeptideMappingFilePath, outputFileBaseName)
+                If Not blnSuccess Then
+                    mStatusMessage = "Error running ProteinCoverageSummarizer: " & mProteinCoverageSummarizer.ErrorMessage
+                End If
+
+                If blnSuccess AndAlso strProteinToPeptideMappingFilePath.Length > 0 Then
+                    UpdateProgress("Postprocessing", PERCENT_COMPLETE_POSTPROCESSING)
 
                     Select Case eInputFileFormat
-                        Case ePeptideInputFileFormatConstants.InspectResultsFile
-                            ' Inspect search results file; need to pre-process it
-                            strInputFilePathWork = PreProcessInspectResultsFile(strInputFilePath, strOutputFolderPath, mInspectParameterFilePath)
-                            outputFileBaseName = Path.GetFileNameWithoutExtension(strInputFilePath)
-
-                            mProteinCoverageSummarizer.PeptideFileFormatCode = clsProteinCoverageSummarizer.ePeptideFileColumnOrderingCode.SequenceOnly
-                            mProteinCoverageSummarizer.PeptideFileSkipFirstLine = False
-                            mProteinCoverageSummarizer.MatchPeptidePrefixAndSuffixToProtein = False
-
-                        Case ePeptideInputFileFormatConstants.MSGFDBResultsFile
-                            ' MSGF-DB search results file; need to pre-process it
-                            ' Make sure RemoveSymbolCharacters is true
-                            Me.RemoveSymbolCharacters = True
-
-                            strInputFilePathWork = PreProcessPSMResultsFile(strInputFilePath, strOutputFolderPath, eInputFileFormat)
-                            outputFileBaseName = Path.GetFileNameWithoutExtension(strInputFilePath)
-
-                            mProteinCoverageSummarizer.PeptideFileFormatCode = clsProteinCoverageSummarizer.ePeptideFileColumnOrderingCode.SequenceOnly
-                            mProteinCoverageSummarizer.PeptideFileSkipFirstLine = False
-                            mProteinCoverageSummarizer.MatchPeptidePrefixAndSuffixToProtein = False
-
-                        Case ePeptideInputFileFormatConstants.PHRPFile
-                            ' Sequest, X!Tandem, Inspect, or MSGF-DB PHRP data file; need to pre-process it
-                            ' Make sure RemoveSymbolCharacters is true
-                            Me.RemoveSymbolCharacters = True
-
-                            ' Open the PHRP data files and construct a unique list of peptides in the file (including any modification symbols)
-                            ' Write the unique peptide list to _syn_peptides.txt
-                            strInputFilePathWork = PreProcessPHRPDataFile(strInputFilePath, strOutputFolderPath)
-                            outputFileBaseName = Path.GetFileNameWithoutExtension(strInputFilePath)
-
-                            mProteinCoverageSummarizer.PeptideFileFormatCode = clsProteinCoverageSummarizer.ePeptideFileColumnOrderingCode.SequenceOnly
-                            mProteinCoverageSummarizer.PeptideFileSkipFirstLine = False
-                            mProteinCoverageSummarizer.MatchPeptidePrefixAndSuffixToProtein = False
+                        Case ePeptideInputFileFormatConstants.PeptideListFile, ePeptideInputFileFormatConstants.ProteinAndPeptideFile
+                            ' No post-processing is required
 
                         Case Else
-                            ' Pre-process the file to check for a header line
-                            strInputFilePathWork = String.Copy(strInputFilePath)
-                            outputFileBaseName = String.Empty
-
-                            If eInputFileFormat = ePeptideInputFileFormatConstants.ProteinAndPeptideFile Then
-                                mProteinCoverageSummarizer.PeptideFileFormatCode = clsProteinCoverageSummarizer.ePeptideFileColumnOrderingCode.ProteinName_PeptideSequence
-                            Else
-                                mProteinCoverageSummarizer.PeptideFileFormatCode = clsProteinCoverageSummarizer.ePeptideFileColumnOrderingCode.SequenceOnly
-                            End If
-
-                            If IsHeaderLinePresent(strInputFilePath, eInputFileFormat) Then
-                                mProteinCoverageSummarizer.PeptideFileSkipFirstLine = True
-                            End If
+                            ' Sequest, X!Tandem, Inspect, or MSGF+ PHRP data file; need to post-process the results file
+                            blnSuccess = PostProcessPSMResultsFile(strInputFilePathWork, strProteinToPeptideMappingFilePath, mDeleteTempFiles)
 
                     End Select
+                End If
 
-                    If String.IsNullOrWhiteSpace(strInputFilePathWork) Then
-                        Return False
-                    End If
-
-                    UpdateProgress("Running protein coverage summarizer", PERCENT_COMPLETE_RUNNING_PROTEIN_COVERAGE_SUMMARIZER)
-
-                    ' Call mProteinCoverageSummarizer.ProcessFile to perform the work
-                    blnSuccess = mProteinCoverageSummarizer.ProcessFile(strInputFilePathWork, strOutputFolderPath,
-                                                                        strParameterFilePath, True,
-                                                                        strProteinToPeptideMappingFilePath, outputFileBaseName)
-                    If Not blnSuccess Then
-                        mStatusMessage = "Error running ProteinCoverageSummarizer: " & mProteinCoverageSummarizer.ErrorMessage
-                    End If
-
-                    If blnSuccess AndAlso strProteinToPeptideMappingFilePath.Length > 0 Then
-                        UpdateProgress("Postprocessing", PERCENT_COMPLETE_POSTPROCESSING)
-
-                        Select Case eInputFileFormat
-                            Case ePeptideInputFileFormatConstants.PeptideListFile, ePeptideInputFileFormatConstants.ProteinAndPeptideFile
-                                ' No post-processing is required
-
-                            Case Else
-                                ' Sequest, X!Tandem, Inspect, or MSGF-DB PHRP data file; need to post-process the results file
-                                blnSuccess = PostProcessPSMResultsFile(strInputFilePathWork, strProteinToPeptideMappingFilePath, mDeleteTempFiles)
-
-                        End Select
-                    End If
-
-                    If blnSuccess Then
-                        LogMessage("Processing successful")
-                        OperationComplete()
-                    Else
-                        LogMessage("Processing not successful")
-                    End If
+                If blnSuccess Then
+                    LogMessage("Processing successful")
+                    OperationComplete()
+                Else
+                    LogMessage("Processing not successful")
                 End If
             End If
 
+            Return blnSuccess
+
         Catch ex As Exception
             HandleException("Error in ProcessFile", ex)
-            blnSuccess = False
+            Return False
         End Try
-
-        Return blnSuccess
 
     End Function
 
