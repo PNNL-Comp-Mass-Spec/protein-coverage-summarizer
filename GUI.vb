@@ -2106,12 +2106,6 @@ Public Class GUI
         Application.DoEvents()
     End Sub
 
-    Private Sub mProteinCoverageSummarizer_ProgressComplete()
-        lblProgress.Text = "Processing complete."
-
-        Application.DoEvents()
-    End Sub
-
     Private Sub mProteinCoverageSummarizer_ProgressReset()
         lblProgress.Text = mProteinCoverageSummarizer.ProgressStepDescription
         Application.DoEvents()
