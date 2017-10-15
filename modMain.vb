@@ -45,8 +45,8 @@ Public Module modMain
 
     Private mQuietMode As Boolean
 
-    Private WithEvents mProteinCoverageRunner As clsProteinCoverageSummarizerRunner
-    Private mLastProgressReportTime As System.DateTime
+    Private mProteinCoverageSummarizer As clsProteinCoverageSummarizerRunner
+    Private mLastProgressReportTime As DateTime
     Private mLastProgressReportValue As Integer
 
     <DllImport("kernel32.dll")>
@@ -90,24 +90,27 @@ Public Module modMain
                 intReturnCode = -1
             Else
                 Try
-                    mProteinCoverageRunner = New clsProteinCoverageSummarizerRunner
-
-                    With mProteinCoverageRunner
-                        .ProteinInputFilePath = mProteinInputFilePath
-                        .ShowMessages = Not mQuietMode
-                        .CallingAppHandlesEvents = False
-
-                        .IgnoreILDifferences = mIgnoreILDifferences
-                        .OutputProteinSequence = mOutputProteinSequence
-                        .SaveProteinToPeptideMappingFile = mSaveProteinToPeptideMappingFile
+                    mProteinCoverageSummarizer = New clsProteinCoverageSummarizerRunner() With {
+                        .ProteinInputFilePath = mProteinInputFilePath,
+                        .ShowMessages = Not mQuietMode,
+                        .CallingAppHandlesEvents = False,
+                        .IgnoreILDifferences = mIgnoreILDifferences,
+                        .OutputProteinSequence = mOutputProteinSequence,
+                        .SaveProteinToPeptideMappingFile = mSaveProteinToPeptideMappingFile,
                         .SearchAllProteinsSkipCoverageComputationSteps = mSkipCoverageComputationSteps
-                    End With
+                    }
 
-                    blnSuccess = mProteinCoverageRunner.ProcessFilesWildcard(mPeptideInputFilePath, mOutputFolderPath, mParameterFilePath)
+                    AddHandler mProteinCoverageSummarizer.StatusEvent, AddressOf mProteinCoverageSummarizer_StatusEvent
+                    AddHandler mProteinCoverageSummarizer.ErrorEvent, AddressOf mProteinCoverageSummarizer_ErrorEvent
+                    AddHandler mProteinCoverageSummarizer.WarningEvent, AddressOf mProteinCoverageSummarizer_WarningEvent
+
+                    AddHandler mProteinCoverageSummarizer.ProgressUpdate, AddressOf mProteinCoverageSummarizer_ProgressChanged
+                    AddHandler mProteinCoverageSummarizer.ProgressReset, AddressOf mProteinCoverageSummarizer_ProgressReset
+
+                    mProteinCoverageSummarizer.ProcessFilesWildcard(mPeptideInputFilePath, mOutputFolderPath, mParameterFilePath)
 
                 Catch ex As Exception
-                    blnSuccess = False
-                    MsgBox("Error initializing Protein File Parser General Options " & ex.Message)
+                    ShowErrorMessage("Error initializing Protein File Parser General Options " & ex.Message)
                 End Try
 
             End If
@@ -353,11 +356,21 @@ Public Module modMain
         Catch ex As Exception
             ' Ignore errors here
         End Try
+    Private Sub mProteinCoverageSummarizer_StatusEvent(message As String)
+        Console.WriteLine(message)
     End Sub
 
-    Private Sub mProteinCoverageRunner_ProgressChanged(taskDescription As String, percentComplete As Single) Handles mProteinCoverageRunner.ProgressChanged
-        Const PERCENT_REPORT_INTERVAL As Integer = 25
-        Const PROGRESS_DOT_INTERVAL_MSEC As Integer = 250
+    Private Sub mProteinCoverageSummarizer_WarningEvent(message As String)
+        ConsoleMsgUtils.ShowWarning(message)
+    End Sub
+
+    Private Sub mProteinCoverageSummarizer_ErrorEvent(message As String, ex As Exception)
+        ShowErrorMessage(message)
+    End Sub
+
+    Private Sub mProteinCoverageSummarizer_ProgressChanged(taskDescription As String, percentComplete As Single)
+        Const PERCENT_REPORT_INTERVAL = 25
+        Const PROGRESS_DOT_INTERVAL_MSEC = 250
 
         If percentComplete >= mLastProgressReportValue Then
             If mLastProgressReportValue > 0 Then
@@ -374,7 +387,7 @@ Public Module modMain
         End If
     End Sub
 
-    Private Sub mProteinCoverageRunner_ProgressReset() Handles mProteinCoverageRunner.ProgressReset
+    Private Sub mProteinCoverageSummarizer_ProgressReset()
         mLastProgressReportTime = DateTime.UtcNow
         mLastProgressReportValue = 0
     End Sub
