@@ -20,21 +20,6 @@ Public Class clsProteinFileDataCache
 
 #Region "Constants and Enums"
 
-    Private Const OPTIONS_SECTION As String = "ProteinFileParsingOptions"
-    Private Const XML_SECTION_PROTEIN_FILE_OPTIONS As String = "ProteinFileOptions"
-    Private Const XML_SECTION_PROCESSING_OPTIONS As String = "ProcessingOptions"
-    Private Const XML_SECTION_GUI_OPTIONS As String = "GUIOptions"
-
-    Private Const PROTEIN_CACHE_MEMORY_RESERVE_COUNT As Integer = 500
-
-    Private Const SCRAMBLING_CACHE_LENGTH As Integer = 4000
-    Private Const PROTEIN_PREFIX_SCRAMBLED As String = "Scrambled_"
-    Private Const PROTEIN_PREFIX_REVERSED As String = "Reversed_"
-
-    Private Const MAXIMUM_PROTEIN_NAME_LENGTH As Integer = 34
-
-    Private Const MAX_ABBREVIATED_FILENAME_LENGTH As Integer = 15
-
     Protected Const SQL_LITE_PROTEIN_CACHE_FILENAME As String = "tmpProteinInfoCache.db3"
 
     Public Enum DelimiterCharConstants

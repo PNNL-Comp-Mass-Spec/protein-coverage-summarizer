@@ -742,30 +742,6 @@ Public Class clsProteinCoverageSummarizer
     End Function
 
     ''' <summary>
-    ''' Searches for proteins that contain peptide strPeptideSequence.
-    ''' If strProteinNameForPeptide is blank or mSearchAllProteinsForPeptideSequence=True then searches all proteins
-    ''' </summary>
-    ''' <param name="strPeptideSequence">The peptide sequence to find</param>
-    ''' <param name="chPrefixResidue">The prefix for the peptide</param>
-    ''' <param name="chSuffixResidue">The suffix for the peptide</param>
-    ''' <param name="strProteinNameForPeptide">The protein to search; only used if mSearchAllProteinsForPeptideSequence=False</param>
-    ''' <remarks></remarks>
-    Private Sub FindSequenceMatchForPeptide(strPeptideSequence As String,
-     chPrefixResidue As Char, chSuffixResidue As Char,
-     strProteinNameForPeptide As String)
-
-        Static htPeptideList As Hashtable
-
-        If htPeptideList Is Nothing Then
-            htPeptideList = New Hashtable
-        End If
-        htPeptideList.Clear()
-
-        htPeptideList.Add(chPrefixResidue & "."c & strPeptideSequence & "."c & chSuffixResidue, 1)
-
-        FindSequenceMatchForPeptideList(htPeptideList, strProteinNameForPeptide)
-
-    End Sub
     ''' Searches for proteins that contain the peptides in peptideList
     ''' If strProteinNameForPeptide is blank or mSearchAllProteinsForPeptideSequence=True then searches all proteins
     ''' Otherwise, only searches protein strProteinNameForPeptide
@@ -1256,34 +1232,6 @@ Public Class clsProteinCoverageSummarizer
         End Try
 
         Return True
-
-    End Function
-
-    Private Function LookupColumnDelimiterChar(intDelimiterIndex As Integer, strCustomDelimiter As String, strDefaultDelimiter As Char) As Char
-
-        Dim strDelimiter As String
-
-        Select Case intDelimiterIndex
-            Case DelimiterCharConstants.Space
-                strDelimiter = " "
-            Case DelimiterCharConstants.Tab
-                strDelimiter = ControlChars.Tab
-            Case DelimiterCharConstants.Comma
-                strDelimiter = ","
-            Case Else
-                ' Includes DelimiterCharConstants.Other
-                strDelimiter = String.Copy(strCustomDelimiter)
-        End Select
-
-        If String.IsNullOrWhiteSpace(strDelimiter) Then
-            strDelimiter = String.Copy(strDefaultDelimiter)
-        End If
-
-        Try
-            Return strDelimiter.Chars(0)
-        Catch ex As Exception
-            Return ControlChars.Tab
-        End Try
 
     End Function
 
