@@ -1,5 +1,6 @@
 Option Strict On
 
+Imports PRISM
 ' This program uses clsProteinCoverageSummarizer to read in a file with protein sequences along with
 ' an accompanying file with peptide sequences and compute the percent coverage of each of the proteins
 '
@@ -39,7 +40,7 @@ Public Class GUI
 #Region "Designer generated code "
 
     'NOTE: The following procedure is required by the Windows Form Designer
-    'It can be modified using the Windows Form Designer.  
+    'It can be modified using the Windows Form Designer.
     'Do not modify it using the code editor.
     Friend WithEvents MainMenuControl As System.Windows.Forms.MainMenu
     Friend WithEvents mnuFile As System.Windows.Forms.MenuItem
@@ -115,6 +116,7 @@ Public Class GUI
     Friend WithEvents chkSaveProteinToPeptideMappingFile As System.Windows.Forms.CheckBox
     Friend WithEvents chkMatchPeptidePrefixAndSuffixToProtein As System.Windows.Forms.CheckBox
     Friend WithEvents txtProteinInputFilePath As System.Windows.Forms.TextBox
+    Friend WithEvents lblStatus As Label
     Friend WithEvents chkIgnoreILDifferences As System.Windows.Forms.CheckBox
     <System.Diagnostics.DebuggerStepThrough()> Private Sub InitializeComponent()
         Me.components = New System.ComponentModel.Container()
@@ -193,6 +195,7 @@ Public Class GUI
         Me.fraOutputFolderPath = New System.Windows.Forms.GroupBox()
         Me.cmdSelectOutputFolder = New System.Windows.Forms.Button()
         Me.txtOutputFolderPath = New System.Windows.Forms.TextBox()
+        Me.lblStatus = New System.Windows.Forms.Label()
         Me.fraProteinInputFilePath.SuspendLayout()
         Me.fraPeptideInputFilePath.SuspendLayout()
         Me.tbsOptions.SuspendLayout()
@@ -213,7 +216,7 @@ Public Class GUI
         Me.fraProteinInputFilePath.Controls.Add(Me.txtProteinInputFilePath)
         Me.fraProteinInputFilePath.Location = New System.Drawing.Point(10, 18)
         Me.fraProteinInputFilePath.Name = "fraProteinInputFilePath"
-        Me.fraProteinInputFilePath.Size = New System.Drawing.Size(867, 56)
+        Me.fraProteinInputFilePath.Size = New System.Drawing.Size(885, 56)
         Me.fraProteinInputFilePath.TabIndex = 0
         Me.fraProteinInputFilePath.TabStop = False
         Me.fraProteinInputFilePath.Text = "Protein Input File Path (Fasta or Tab-delimited)"
@@ -232,7 +235,7 @@ Public Class GUI
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.txtProteinInputFilePath.Location = New System.Drawing.Point(125, 21)
         Me.txtProteinInputFilePath.Name = "txtProteinInputFilePath"
-        Me.txtProteinInputFilePath.Size = New System.Drawing.Size(723, 22)
+        Me.txtProteinInputFilePath.Size = New System.Drawing.Size(741, 22)
         Me.txtProteinInputFilePath.TabIndex = 1
         '
         'MainMenuControl
@@ -320,7 +323,7 @@ Public Class GUI
         Me.fraPeptideInputFilePath.Controls.Add(Me.txtPeptideInputFilePath)
         Me.fraPeptideInputFilePath.Location = New System.Drawing.Point(10, 83)
         Me.fraPeptideInputFilePath.Name = "fraPeptideInputFilePath"
-        Me.fraPeptideInputFilePath.Size = New System.Drawing.Size(867, 55)
+        Me.fraPeptideInputFilePath.Size = New System.Drawing.Size(885, 55)
         Me.fraPeptideInputFilePath.TabIndex = 1
         Me.fraPeptideInputFilePath.TabStop = False
         Me.fraPeptideInputFilePath.Text = "Peptide Input File Path (Tab-delimited)"
@@ -339,7 +342,7 @@ Public Class GUI
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.txtPeptideInputFilePath.Location = New System.Drawing.Point(125, 21)
         Me.txtPeptideInputFilePath.Name = "txtPeptideInputFilePath"
-        Me.txtPeptideInputFilePath.Size = New System.Drawing.Size(723, 22)
+        Me.txtPeptideInputFilePath.Size = New System.Drawing.Size(741, 22)
         Me.txtPeptideInputFilePath.TabIndex = 1
         '
         'fraProcessingOptions
@@ -451,11 +454,12 @@ Public Class GUI
         Me.tbsOptions.Location = New System.Drawing.Point(10, 222)
         Me.tbsOptions.Name = "tbsOptions"
         Me.tbsOptions.SelectedIndex = 0
-        Me.tbsOptions.Size = New System.Drawing.Size(867, 369)
+        Me.tbsOptions.Size = New System.Drawing.Size(885, 369)
         Me.tbsOptions.TabIndex = 3
         '
         'TabPageFileFormatOptions
         '
+        Me.TabPageFileFormatOptions.Controls.Add(Me.lblStatus)
         Me.TabPageFileFormatOptions.Controls.Add(Me.cmdExit)
         Me.TabPageFileFormatOptions.Controls.Add(Me.cmdStart)
         Me.TabPageFileFormatOptions.Controls.Add(Me.cmdAbort)
@@ -465,13 +469,13 @@ Public Class GUI
         Me.TabPageFileFormatOptions.Controls.Add(Me.fraProteinDelimitedFileOptions)
         Me.TabPageFileFormatOptions.Location = New System.Drawing.Point(4, 25)
         Me.TabPageFileFormatOptions.Name = "TabPageFileFormatOptions"
-        Me.TabPageFileFormatOptions.Size = New System.Drawing.Size(859, 340)
+        Me.TabPageFileFormatOptions.Size = New System.Drawing.Size(877, 340)
         Me.TabPageFileFormatOptions.TabIndex = 2
         Me.TabPageFileFormatOptions.Text = "File Format Options"
         '
         'cmdExit
         '
-        Me.cmdExit.Location = New System.Drawing.Point(662, 185)
+        Me.cmdExit.Location = New System.Drawing.Point(662, 204)
         Me.cmdExit.Name = "cmdExit"
         Me.cmdExit.Size = New System.Drawing.Size(116, 37)
         Me.cmdExit.TabIndex = 5
@@ -479,7 +483,7 @@ Public Class GUI
         '
         'cmdStart
         '
-        Me.cmdStart.Location = New System.Drawing.Point(662, 129)
+        Me.cmdStart.Location = New System.Drawing.Point(662, 148)
         Me.cmdStart.Name = "cmdStart"
         Me.cmdStart.Size = New System.Drawing.Size(116, 37)
         Me.cmdStart.TabIndex = 4
@@ -487,7 +491,7 @@ Public Class GUI
         '
         'cmdAbort
         '
-        Me.cmdAbort.Location = New System.Drawing.Point(662, 129)
+        Me.cmdAbort.Location = New System.Drawing.Point(662, 148)
         Me.cmdAbort.Name = "cmdAbort"
         Me.cmdAbort.Size = New System.Drawing.Size(116, 37)
         Me.cmdAbort.TabIndex = 4
@@ -495,9 +499,11 @@ Public Class GUI
         '
         'lblProgress
         '
-        Me.lblProgress.Location = New System.Drawing.Point(674, 15)
+        Me.lblProgress.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.lblProgress.Location = New System.Drawing.Point(657, 15)
         Me.lblProgress.Name = "lblProgress"
-        Me.lblProgress.Size = New System.Drawing.Size(336, 89)
+        Me.lblProgress.Size = New System.Drawing.Size(192, 51)
         Me.lblProgress.TabIndex = 3
         Me.lblProgress.Text = "Progress ..."
         '
@@ -736,7 +742,7 @@ Public Class GUI
         Me.TabPagePeakMatchingThresholds.Controls.Add(Me.dgResults)
         Me.TabPagePeakMatchingThresholds.Location = New System.Drawing.Point(4, 25)
         Me.TabPagePeakMatchingThresholds.Name = "TabPagePeakMatchingThresholds"
-        Me.TabPagePeakMatchingThresholds.Size = New System.Drawing.Size(1038, 432)
+        Me.TabPagePeakMatchingThresholds.Size = New System.Drawing.Size(859, 340)
         Me.TabPagePeakMatchingThresholds.TabIndex = 3
         Me.TabPagePeakMatchingThresholds.Text = "Results Browser"
         Me.TabPagePeakMatchingThresholds.Visible = False
@@ -744,7 +750,7 @@ Public Class GUI
         'txtCoverage
         '
         Me.txtCoverage.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
-        Me.txtCoverage.Location = New System.Drawing.Point(614, 374)
+        Me.txtCoverage.Location = New System.Drawing.Point(614, 282)
         Me.txtCoverage.Name = "txtCoverage"
         Me.txtCoverage.ReadOnly = True
         Me.txtCoverage.Size = New System.Drawing.Size(260, 22)
@@ -759,7 +765,7 @@ Public Class GUI
         Me.txtRTFCode.Multiline = True
         Me.txtRTFCode.Name = "txtRTFCode"
         Me.txtRTFCode.ScrollBars = System.Windows.Forms.ScrollBars.Both
-        Me.txtRTFCode.Size = New System.Drawing.Size(519, 264)
+        Me.txtRTFCode.Size = New System.Drawing.Size(519, 172)
         Me.txtRTFCode.TabIndex = 1
         Me.txtRTFCode.WordWrap = False
         '
@@ -767,7 +773,7 @@ Public Class GUI
         '
         Me.txtCustomProteinSequence.AcceptsReturn = True
         Me.txtCustomProteinSequence.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
-        Me.txtCustomProteinSequence.Location = New System.Drawing.Point(106, 375)
+        Me.txtCustomProteinSequence.Location = New System.Drawing.Point(106, 283)
         Me.txtCustomProteinSequence.Multiline = True
         Me.txtCustomProteinSequence.Name = "txtCustomProteinSequence"
         Me.txtCustomProteinSequence.ScrollBars = System.Windows.Forms.ScrollBars.Vertical
@@ -777,7 +783,7 @@ Public Class GUI
         'lblCustomProteinSequence
         '
         Me.lblCustomProteinSequence.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
-        Me.lblCustomProteinSequence.Location = New System.Drawing.Point(5, 375)
+        Me.lblCustomProteinSequence.Location = New System.Drawing.Point(5, 283)
         Me.lblCustomProteinSequence.Name = "lblCustomProteinSequence"
         Me.lblCustomProteinSequence.Size = New System.Drawing.Size(105, 37)
         Me.lblCustomProteinSequence.TabIndex = 5
@@ -806,7 +812,7 @@ Public Class GUI
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.rtfRichTextBox.Location = New System.Drawing.Point(614, 46)
         Me.rtfRichTextBox.Name = "rtfRichTextBox"
-        Me.rtfRichTextBox.Size = New System.Drawing.Size(413, 319)
+        Me.rtfRichTextBox.Size = New System.Drawing.Size(234, 227)
         Me.rtfRichTextBox.TabIndex = 4
         Me.rtfRichTextBox.Text = ""
         Me.rtfRichTextBox.WordWrap = False
@@ -821,7 +827,7 @@ Public Class GUI
         Me.dgResults.Location = New System.Drawing.Point(2, 18)
         Me.dgResults.Name = "dgResults"
         Me.dgResults.PreferredColumnWidth = 80
-        Me.dgResults.Size = New System.Drawing.Size(605, 348)
+        Me.dgResults.Size = New System.Drawing.Size(605, 256)
         Me.dgResults.TabIndex = 0
         '
         'fraOutputFolderPath
@@ -832,7 +838,7 @@ Public Class GUI
         Me.fraOutputFolderPath.Controls.Add(Me.txtOutputFolderPath)
         Me.fraOutputFolderPath.Location = New System.Drawing.Point(10, 148)
         Me.fraOutputFolderPath.Name = "fraOutputFolderPath"
-        Me.fraOutputFolderPath.Size = New System.Drawing.Size(867, 64)
+        Me.fraOutputFolderPath.Size = New System.Drawing.Size(885, 64)
         Me.fraOutputFolderPath.TabIndex = 2
         Me.fraOutputFolderPath.TabStop = False
         Me.fraOutputFolderPath.Text = "Output folder path"
@@ -851,13 +857,23 @@ Public Class GUI
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.txtOutputFolderPath.Location = New System.Drawing.Point(125, 21)
         Me.txtOutputFolderPath.Name = "txtOutputFolderPath"
-        Me.txtOutputFolderPath.Size = New System.Drawing.Size(723, 22)
+        Me.txtOutputFolderPath.Size = New System.Drawing.Size(741, 22)
         Me.txtOutputFolderPath.TabIndex = 1
+        '
+        'lblStatus
+        '
+        Me.lblStatus.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.lblStatus.Location = New System.Drawing.Point(657, 69)
+        Me.lblStatus.Name = "lblStatus"
+        Me.lblStatus.Size = New System.Drawing.Size(192, 51)
+        Me.lblStatus.TabIndex = 7
+        Me.lblStatus.Text = "Status ..."
         '
         'GUI
         '
         Me.AutoScaleBaseSize = New System.Drawing.Size(6, 15)
-        Me.ClientSize = New System.Drawing.Size(896, 601)
+        Me.ClientSize = New System.Drawing.Size(914, 601)
         Me.Controls.Add(Me.fraOutputFolderPath)
         Me.Controls.Add(Me.tbsOptions)
         Me.Controls.Add(Me.fraPeptideInputFilePath)
@@ -1357,6 +1373,7 @@ Public Class GUI
         mLastFolderUsed = Application.StartupPath
 
         lblProgress.Text = String.Empty
+        lblStatus.Text = String.Empty
 
         PopulateComboBoxes()
         InitializeDatagrid()
@@ -1674,20 +1691,11 @@ Public Class GUI
 
         strMessage &= "This is version " & Application.ProductVersion & " (" & PROGRAM_DATE & ")" & ControlChars.NewLine & ControlChars.NewLine
 
-        strMessage &= "E-mail: matthew.monroe@pnnl.gov or matt@alchemistmatt.com" & ControlChars.NewLine
+        strMessage &= "E-mail: matthew.monroe@pnnl.gov or proteomics@pnnl.gov" & ControlChars.NewLine
         strMessage &= "Website: http://omics.pnl.gov/ or http://www.sysbio.org/resources/staff/" & ControlChars.NewLine & ControlChars.NewLine
 
         strMessage &= "Licensed under the Apache License, Version 2.0; you may not use this file except in compliance with the License.  "
         strMessage &= "You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0" & ControlChars.NewLine & ControlChars.NewLine
-
-        strMessage &= "Notice: This computer software was prepared by Battelle Memorial Institute, "
-        strMessage &= "hereinafter the Contractor, under Contract No. DE-AC05-76RL0 1830 with the "
-        strMessage &= "Department of Energy (DOE).  All rights in the computer software are reserved "
-        strMessage &= "by DOE on behalf of the United States Government and the Contractor as "
-        strMessage &= "provided in the Contract.  NEITHER THE GOVERNMENT NOR THE CONTRACTOR MAKES ANY "
-        strMessage &= "WARRANTY, EXPRESS OR IMPLIED, OR ASSUMES ANY LIABILITY FOR THE USE OF THIS "
-        strMessage &= "SOFTWARE.  This notice including this sentence must appear on any copies of "
-        strMessage &= "this computer software." & ControlChars.NewLine
 
         MessageBox.Show(strMessage, "About", MessageBoxButtons.OK, MessageBoxIcon.Information)
 
@@ -1889,7 +1897,7 @@ Public Class GUI
 
     Private Sub UpdateDatagridTableStyle()
 
-        ' Define the coverage results table style 
+        ' Define the coverage results table style
         Dim tsResults As New DataGridTableStyle
 
         ' Setting the MappingName of the table style to COVERAGE_RESULTS_DATATABLE will cause this style to be used with that table
