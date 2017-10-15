@@ -68,44 +68,44 @@ Public Class clsLeaderSequenceCache
 #End Region
 
 #Region "Properties"
-    Public ReadOnly Property CachedPeptideCount() As Integer
+    Public ReadOnly Property CachedPeptideCount As Integer
         Get
             Return mCachedPeptideCount
         End Get
     End Property
 
-    Public ReadOnly Property ErrorMessage() As String
+    Public ReadOnly Property ErrorMessage As String
         Get
             Return mErrorMessage
         End Get
     End Property
 
-    Public Property IgnoreILDifferences() As Boolean
+    Public Property IgnoreILDifferences As Boolean
         Get
             Return mIgnoreILDifferences
         End Get
-        Set(Value As Boolean)
+        Set
             mIgnoreILDifferences = Value
         End Set
     End Property
 
-    Public Property LeaderSequenceMinimumLength() As Integer
+    Public Property LeaderSequenceMinimumLength As Integer
         Get
             Return mLeaderSequenceMinimumLength
         End Get
-        Set(Value As Integer)
+        Set
             mLeaderSequenceMinimumLength = Value
         End Set
     End Property
 
-    Public ReadOnly Property ProgressStepDescription() As String
+    Public ReadOnly Property ProgressStepDescription As String
         Get
             Return mProgressStepDescription
         End Get
     End Property
 
     ' ProgressPercentComplete ranges from 0 to 100, but can contain decimal percentage values
-    Public ReadOnly Property ProgressPercentComplete() As Single
+    Public ReadOnly Property ProgressPercentComplete As Single
         Get
             Return CType(Math.Round(mProgressPercentComplete, 2), Single)
         End Get

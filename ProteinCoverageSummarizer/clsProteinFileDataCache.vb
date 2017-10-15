@@ -58,25 +58,14 @@ Public Class clsProteinFileDataCache
 
 #Region "Classwide Variables"
     Protected mFileDate As String
-    Protected mShowMessages As Boolean
     Private mStatusMessage As String
 
-    Private mAssumeDelimitedFile As Boolean
-    Private mAssumeFastaFile As Boolean
     Private mDelimitedInputFileDelimiter As Char                              ' Only used for delimited protein input files, not for fasta files
-    Private mDelimitedInputFileFormatCode As ProteinFileReader.DelimitedFileReader.eDelimitedFileFormatCode
-    Private mDelimitedFileSkipFirstLine As Boolean
 
     Public FastaFileOptions As FastaFileOptionsClass
-    Private mObjectVariablesLoaded As Boolean
 
     Private mProteinCount As Integer
     Private mParsedFileIsFastaFile As Boolean
-
-    Private mRemoveSymbolCharacters As Boolean
-    Private mChangeProteinSequencesToLowercase As Boolean
-    Private mChangeProteinSequencesToUppercase As Boolean
-    Private mIgnoreILDifferences As Boolean
 
     ' Sql Lite Connection String and filepath
     Private mSqlLiteDBConnectionString As String = String.Empty
@@ -92,105 +81,40 @@ Public Class clsProteinFileDataCache
 #End Region
 
 #Region "Processing Options Interface Functions"
-    Public Property AssumeDelimitedFile() As Boolean
-        Get
-            Return mAssumeDelimitedFile
-        End Get
-        Set(Value As Boolean)
-            mAssumeDelimitedFile = Value
-        End Set
-    End Property
+    Public Property AssumeDelimitedFile As Boolean
 
-    Public Property AssumeFastaFile() As Boolean
-        Get
-            Return mAssumeFastaFile
-        End Get
-        Set(Value As Boolean)
-            mAssumeFastaFile = Value
-        End Set
-    End Property
+    Public Property AssumeFastaFile As Boolean
 
-    Public Property ChangeProteinSequencesToLowercase() As Boolean
-        Get
-            Return mChangeProteinSequencesToLowercase
-        End Get
-        Set(Value As Boolean)
-            mChangeProteinSequencesToLowercase = Value
-        End Set
-    End Property
+    Public Property ChangeProteinSequencesToLowercase As Boolean
 
-    Public Property ChangeProteinSequencesToUppercase() As Boolean
-        Get
-            Return mChangeProteinSequencesToUppercase
-        End Get
-        Set(Value As Boolean)
-            mChangeProteinSequencesToUppercase = Value
-        End Set
-    End Property
+    Public Property ChangeProteinSequencesToUppercase As Boolean
 
-    Public Property DelimitedFileFormatCode() As ProteinFileReader.DelimitedFileReader.eDelimitedFileFormatCode
-        Get
-            Return mDelimitedInputFileFormatCode
-        End Get
-        Set(Value As ProteinFileReader.DelimitedFileReader.eDelimitedFileFormatCode)
-            mDelimitedInputFileFormatCode = Value
-        End Set
-    End Property
+    Public Property DelimitedFileFormatCode As DelimitedFileReader.eDelimitedFileFormatCode
 
-    Public Property DelimitedFileDelimiter() As Char
+    Public Property DelimitedFileDelimiter As Char
         Get
             Return mDelimitedInputFileDelimiter
         End Get
-        Set(Value As Char)
+        Set
             If Not Value = Nothing Then
                 mDelimitedInputFileDelimiter = Value
             End If
         End Set
     End Property
 
-    Public Property DelimitedFileSkipFirstLine() As Boolean
-        Get
-            Return mDelimitedFileSkipFirstLine
-        End Get
-        Set(Value As Boolean)
-            mDelimitedFileSkipFirstLine = Value
-        End Set
-    End Property
+    Public Property DelimitedFileSkipFirstLine As Boolean
 
-    Public Property IgnoreILDifferences() As Boolean
-        Get
-            Return mIgnoreILDifferences
-        End Get
-        Set(Value As Boolean)
-            mIgnoreILDifferences = Value
-        End Set
-    End Property
+    Public Property IgnoreILDifferences As Boolean
 
-    Public ReadOnly Property ParsedFileIsFastaFile() As Boolean
+    Public ReadOnly Property ParsedFileIsFastaFile As Boolean
         Get
             Return mParsedFileIsFastaFile
         End Get
     End Property
 
-    Public Property RemoveSymbolCharacters() As Boolean
-        Get
-            Return mRemoveSymbolCharacters
-        End Get
-        Set(Value As Boolean)
-            mRemoveSymbolCharacters = Value
-        End Set
-    End Property
+    Public Property RemoveSymbolCharacters As Boolean
 
-    Public Property ShowMessages() As Boolean
-        Get
-            Return mShowMessages
-        End Get
-        Set(Value As Boolean)
-            Value = mShowMessages
-        End Set
-    End Property
-
-    Public ReadOnly Property StatusMessage() As String
+    Public ReadOnly Property StatusMessage As String
         Get
             Return mStatusMessage
         End Get
@@ -417,31 +341,28 @@ Public Class clsProteinFileDataCache
     End Function
 
     Private Sub InitializeLocalVariables()
-        Const MAX_FILE_CREATE_ATTEMPTS As Integer = 10
+        Const MAX_FILE_CREATE_ATTEMPTS = 10
 
-        Dim intFileAttemptCount As Integer
-        Dim blnSuccess As Boolean
-
-        mAssumeDelimitedFile = False
-        mAssumeFastaFile = False
+        AssumeDelimitedFile = False
+        AssumeFastaFile = False
 
         mDelimitedInputFileDelimiter = ControlChars.Tab
-        mDelimitedInputFileFormatCode = ProteinFileReader.DelimitedFileReader.eDelimitedFileFormatCode.ProteinName_Description_Sequence
-        mDelimitedFileSkipFirstLine = False
+        DelimitedFileFormatCode = DelimitedFileReader.eDelimitedFileFormatCode.ProteinName_Description_Sequence
+        DelimitedFileSkipFirstLine = False
 
         FastaFileOptions = New FastaFileOptionsClass
 
         mProteinCount = 0
 
-        mRemoveSymbolCharacters = True
+        RemoveSymbolCharacters = True
 
-        mChangeProteinSequencesToLowercase = False
-        mChangeProteinSequencesToUppercase = False
+        ChangeProteinSequencesToLowercase = False
+        ChangeProteinSequencesToUppercase = False
 
-        mIgnoreILDifferences = False
+        IgnoreILDifferences = False
 
-        intFileAttemptCount = 0
-        blnSuccess = False
+        Dim intFileAttemptCount = 0
+        Dim blnSuccess = False
         Do While Not blnSuccess AndAlso intFileAttemptCount < MAX_FILE_CREATE_ATTEMPTS
 
             ' Define the path to the Sql Lite database
@@ -712,33 +633,33 @@ Public Class clsProteinFileDataCache
 #End Region
 
 #Region "Processing Options Interface Functions"
-        Public Property ReadonlyClass() As Boolean
+        Public Property ReadonlyClass As Boolean
             Get
                 Return mReadonlyClass
             End Get
-            Set(Value As Boolean)
+            Set
                 If Not mReadonlyClass Then
                     mReadonlyClass = Value
                 End If
             End Set
         End Property
 
-        Public Property ProteinLineStartChar() As Char
+        Public Property ProteinLineStartChar As Char
             Get
                 Return mProteinLineStartChar
             End Get
-            Set(Value As Char)
+            Set
                 If Not Value = Nothing AndAlso Not mReadonlyClass Then
                     mProteinLineStartChar = Value
                 End If
             End Set
         End Property
 
-        Public Property ProteinLineAccessionEndChar() As Char
+        Public Property ProteinLineAccessionEndChar As Char
             Get
                 Return mProteinLineAccessionEndChar
             End Get
-            Set(Value As Char)
+            Set
                 If Not Value = Nothing AndAlso Not mReadonlyClass Then
                     mProteinLineAccessionEndChar = Value
                 End If

@@ -111,216 +111,216 @@ Public Class clsPeptideToProteinMapEngine
     ''' <value></value>
     ''' <returns></returns>
     ''' <remarks></remarks>
-    Public Property DeleteInspectTempFiles() As Boolean
+    Public Property DeleteInspectTempFiles As Boolean
         Get
             Return Me.DeleteTempFiles
         End Get
-        Set(value As Boolean)
-            Me.DeleteTempFiles = value
+        Set
+            Me.DeleteTempFiles = Value
         End Set
     End Property
 
-    Public Property DeleteTempFiles() As Boolean
+    Public Property DeleteTempFiles As Boolean
         Get
             Return mDeleteTempFiles
         End Get
-        Set(value As Boolean)
-            mDeleteTempFiles = value
+        Set
+            mDeleteTempFiles = Value
         End Set
     End Property
 
-    Public Property IgnoreILDifferences() As Boolean
+    Public Property IgnoreILDifferences As Boolean
         Get
             Return mProteinCoverageSummarizer.IgnoreILDifferences
         End Get
-        Set(Value As Boolean)
+        Set
             mProteinCoverageSummarizer.IgnoreILDifferences = Value
         End Set
     End Property
 
-    Public Property InspectParameterFilePath() As String
+    Public Property InspectParameterFilePath As String
         Get
             Return mInspectParameterFilePath
         End Get
-        Set(value As String)
-            If value Is Nothing Then value = String.Empty
-            mInspectParameterFilePath = value
+        Set
+            If Value Is Nothing Then Value = String.Empty
+            mInspectParameterFilePath = Value
         End Set
     End Property
 
-    Public Property MatchPeptidePrefixAndSuffixToProtein() As Boolean
+    Public Property MatchPeptidePrefixAndSuffixToProtein As Boolean
         Get
             Return mProteinCoverageSummarizer.MatchPeptidePrefixAndSuffixToProtein
         End Get
-        Set(Value As Boolean)
+        Set
             mProteinCoverageSummarizer.MatchPeptidePrefixAndSuffixToProtein = Value
         End Set
     End Property
 
-    Public Property OutputProteinSequence() As Boolean
+    Public Property OutputProteinSequence As Boolean
         Get
             Return mProteinCoverageSummarizer.OutputProteinSequence
         End Get
-        Set(Value As Boolean)
+        Set
             mProteinCoverageSummarizer.OutputProteinSequence = Value
         End Set
     End Property
 
-    Public Property PeptideFileSkipFirstLine() As Boolean
+    Public Property PeptideFileSkipFirstLine As Boolean
         Get
             Return mProteinCoverageSummarizer.PeptideFileSkipFirstLine
         End Get
-        Set(Value As Boolean)
+        Set
             mProteinCoverageSummarizer.PeptideFileSkipFirstLine = Value
         End Set
     End Property
 
-    Public Property PeptideInputFileDelimiter() As Char
+    Public Property PeptideInputFileDelimiter As Char
         Get
             Return mProteinCoverageSummarizer.PeptideInputFileDelimiter
         End Get
-        Set(Value As Char)
+        Set
             mProteinCoverageSummarizer.PeptideInputFileDelimiter = Value
         End Set
     End Property
 
-    Public Property PeptideInputFileFormat() As ePeptideInputFileFormatConstants
+    Public Property PeptideInputFileFormat As ePeptideInputFileFormatConstants
         Get
             Return mPeptideInputFileFormat
         End Get
-        Set(value As ePeptideInputFileFormatConstants)
-            mPeptideInputFileFormat = value
+        Set
+            mPeptideInputFileFormat = Value
         End Set
     End Property
 
-    Public Property ProteinDataDelimitedFileDelimiter() As Char
+    Public Property ProteinDataDelimitedFileDelimiter As Char
         Get
             Return mProteinCoverageSummarizer.mProteinDataCache.DelimitedFileDelimiter
         End Get
-        Set(value As Char)
-            mProteinCoverageSummarizer.mProteinDataCache.DelimitedFileDelimiter = value
+        Set
+            mProteinCoverageSummarizer.mProteinDataCache.DelimitedFileDelimiter = Value
         End Set
     End Property
-    Public Property ProteinDataDelimitedFileFormatCode() As DelimitedFileReader.eDelimitedFileFormatCode
+    Public Property ProteinDataDelimitedFileFormatCode As DelimitedFileReader.eDelimitedFileFormatCode
         Get
             Return mProteinCoverageSummarizer.mProteinDataCache.DelimitedFileFormatCode
         End Get
-        Set(value As DelimitedFileReader.eDelimitedFileFormatCode)
-            mProteinCoverageSummarizer.mProteinDataCache.DelimitedFileFormatCode = value
+        Set
+            mProteinCoverageSummarizer.mProteinDataCache.DelimitedFileFormatCode = Value
         End Set
     End Property
-    Public Property ProteinDataDelimitedFileSkipFirstLine() As Boolean
+    Public Property ProteinDataDelimitedFileSkipFirstLine As Boolean
         Get
             Return mProteinCoverageSummarizer.mProteinDataCache.DelimitedFileSkipFirstLine
         End Get
-        Set(value As Boolean)
-            mProteinCoverageSummarizer.mProteinDataCache.DelimitedFileSkipFirstLine = value
+        Set
+            mProteinCoverageSummarizer.mProteinDataCache.DelimitedFileSkipFirstLine = Value
         End Set
     End Property
-    Public Property ProteinDataRemoveSymbolCharacters() As Boolean
+    Public Property ProteinDataRemoveSymbolCharacters As Boolean
         Get
             Return mProteinCoverageSummarizer.mProteinDataCache.RemoveSymbolCharacters
         End Get
-        Set(value As Boolean)
-            mProteinCoverageSummarizer.mProteinDataCache.RemoveSymbolCharacters = value
+        Set
+            mProteinCoverageSummarizer.mProteinDataCache.RemoveSymbolCharacters = Value
         End Set
     End Property
-    Public Property ProteinDataIgnoreILDifferences() As Boolean
+    Public Property ProteinDataIgnoreILDifferences As Boolean
         Get
             Return mProteinCoverageSummarizer.mProteinDataCache.IgnoreILDifferences
         End Get
-        Set(value As Boolean)
-            mProteinCoverageSummarizer.mProteinDataCache.IgnoreILDifferences = value
+        Set
+            mProteinCoverageSummarizer.mProteinDataCache.IgnoreILDifferences = Value
         End Set
     End Property
 
-    Public Property ProteinInputFilePath() As String
+    Public Property ProteinInputFilePath As String
         Get
             Return mProteinCoverageSummarizer.ProteinInputFilePath
         End Get
-        Set(Value As String)
+        Set
             If Value Is Nothing Then Value = String.Empty
             mProteinCoverageSummarizer.ProteinInputFilePath = Value
         End Set
     End Property
 
-    Public ReadOnly Property ProteinToPeptideMappingFilePath() As String
+    Public ReadOnly Property ProteinToPeptideMappingFilePath As String
         Get
             Return mProteinCoverageSummarizer.ProteinToPeptideMappingFilePath
         End Get
     End Property
 
-    Public Property RemoveSymbolCharacters() As Boolean
+    Public Property RemoveSymbolCharacters As Boolean
         Get
             Return mProteinCoverageSummarizer.RemoveSymbolCharacters
         End Get
-        Set(Value As Boolean)
+        Set
             mProteinCoverageSummarizer.RemoveSymbolCharacters = Value
         End Set
     End Property
 
-    Public ReadOnly Property ResultsFilePath() As String
+    Public ReadOnly Property ResultsFilePath As String
         Get
             Return mProteinCoverageSummarizer.ResultsFilePath
         End Get
     End Property
 
-    Public Property SaveProteinToPeptideMappingFile() As Boolean
+    Public Property SaveProteinToPeptideMappingFile As Boolean
         Get
             Return mProteinCoverageSummarizer.SaveProteinToPeptideMappingFile
         End Get
-        Set(Value As Boolean)
+        Set
             mProteinCoverageSummarizer.SaveProteinToPeptideMappingFile = Value
         End Set
     End Property
 
-    Public Property SaveSourceDataPlusProteinsFile() As Boolean
+    Public Property SaveSourceDataPlusProteinsFile As Boolean
         Get
             Return mProteinCoverageSummarizer.SaveSourceDataPlusProteinsFile
         End Get
-        Set(value As Boolean)
-            mProteinCoverageSummarizer.SaveSourceDataPlusProteinsFile = value
+        Set
+            mProteinCoverageSummarizer.SaveSourceDataPlusProteinsFile = Value
         End Set
     End Property
 
-    Public Property SearchAllProteinsForPeptideSequence() As Boolean
+    Public Property SearchAllProteinsForPeptideSequence As Boolean
         Get
             Return mProteinCoverageSummarizer.SearchAllProteinsForPeptideSequence
         End Get
-        Set(Value As Boolean)
+        Set
             mProteinCoverageSummarizer.SearchAllProteinsForPeptideSequence = Value
         End Set
     End Property
 
-    Public Property UseLeaderSequenceHashTable() As Boolean
+    Public Property UseLeaderSequenceHashTable As Boolean
         Get
             Return mProteinCoverageSummarizer.UseLeaderSequenceHashTable
         End Get
-        Set(Value As Boolean)
+        Set
             mProteinCoverageSummarizer.UseLeaderSequenceHashTable = Value
         End Set
     End Property
 
-    Public Property SearchAllProteinsSkipCoverageComputationSteps() As Boolean
+    Public Property SearchAllProteinsSkipCoverageComputationSteps As Boolean
         Get
             Return mProteinCoverageSummarizer.SearchAllProteinsSkipCoverageComputationSteps
         End Get
-        Set(Value As Boolean)
+        Set
             mProteinCoverageSummarizer.SearchAllProteinsSkipCoverageComputationSteps = Value
         End Set
     End Property
 
-    Public ReadOnly Property StatusMessage() As String
+    Public ReadOnly Property StatusMessage As String
         Get
             Return mStatusMessage
         End Get
     End Property
 
-    Public Property TrackPeptideCounts() As Boolean
+    Public Property TrackPeptideCounts As Boolean
         Get
             Return mProteinCoverageSummarizer.TrackPeptideCounts
         End Get
-        Set(Value As Boolean)
+        Set
             mProteinCoverageSummarizer.TrackPeptideCounts = Value
         End Set
     End Property

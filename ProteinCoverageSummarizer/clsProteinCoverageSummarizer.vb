@@ -142,7 +142,6 @@ Public Class clsProteinCoverageSummarizer
     Private mErrorCode As eProteinCoverageErrorCodes
     Private mErrorMessage As String
 
-    Private mShowMessages As Boolean
     Private mAbortProcessing As Boolean
 
     Private mCachedProteinInfoStartIndex As Integer = -1
@@ -177,120 +176,120 @@ Public Class clsProteinCoverageSummarizer
 #End Region
 
 #Region "Properties"
-    Public ReadOnly Property ErrorCode() As eProteinCoverageErrorCodes
+    Public ReadOnly Property ErrorCode As eProteinCoverageErrorCodes
         Get
             Return mErrorCode
         End Get
     End Property
 
-    Public ReadOnly Property ErrorMessage() As String
+    Public ReadOnly Property ErrorMessage As String
         Get
             Return GetErrorMessage()
         End Get
     End Property
 
-    Public Property IgnoreILDifferences() As Boolean
+    Public Property IgnoreILDifferences As Boolean
         Get
             Return mIgnoreILDifferences
         End Get
-        Set(Value As Boolean)
+        Set
             mIgnoreILDifferences = Value
         End Set
     End Property
 
-    Public Property MatchPeptidePrefixAndSuffixToProtein() As Boolean
+    Public Property MatchPeptidePrefixAndSuffixToProtein As Boolean
         Get
             Return mMatchPeptidePrefixAndSuffixToProtein
         End Get
-        Set(Value As Boolean)
+        Set
             mMatchPeptidePrefixAndSuffixToProtein = Value
         End Set
     End Property
 
-    Public Property OutputProteinSequence() As Boolean
+    Public Property OutputProteinSequence As Boolean
         Get
             Return mOutputProteinSequence
         End Get
-        Set(Value As Boolean)
+        Set
             mOutputProteinSequence = Value
         End Set
     End Property
 
-    Public Property PeptideFileFormatCode() As ePeptideFileColumnOrderingCode
+    Public Property PeptideFileFormatCode As ePeptideFileColumnOrderingCode
         Get
             Return mPeptideFileColumnOrdering
         End Get
-        Set(Value As ePeptideFileColumnOrderingCode)
+        Set
             mPeptideFileColumnOrdering = Value
         End Set
     End Property
 
-    Public Property PeptideFileSkipFirstLine() As Boolean
+    Public Property PeptideFileSkipFirstLine As Boolean
         Get
             Return mPeptideFileSkipFirstLine
         End Get
-        Set(Value As Boolean)
+        Set
             mPeptideFileSkipFirstLine = Value
         End Set
     End Property
 
-    Public Property PeptideInputFileDelimiter() As Char
+    Public Property PeptideInputFileDelimiter As Char
         Get
             Return mPeptideInputFileDelimiter
         End Get
-        Set(Value As Char)
+        Set
             mPeptideInputFileDelimiter = Value
         End Set
     End Property
 
-    Public Overridable ReadOnly Property ProgressStepDescription() As String
+    Public Overridable ReadOnly Property ProgressStepDescription As String
         Get
             Return mProgressStepDescription
         End Get
     End Property
 
     ' ProgressPercentComplete ranges from 0 to 100, but can contain decimal percentage values
-    Public ReadOnly Property ProgressPercentComplete() As Single
+    Public ReadOnly Property ProgressPercentComplete As Single
         Get
             Return CType(Math.Round(mProgressPercentComplete, 2), Single)
         End Get
     End Property
 
-    Public Property ProteinInputFilePath() As String
+    Public Property ProteinInputFilePath As String
         Get
             Return mProteinInputFilePath
         End Get
-        Set(Value As String)
+        Set
             mProteinInputFilePath = Value
         End Set
     End Property
 
-    Public ReadOnly Property ProteinToPeptideMappingFilePath() As String
+    Public ReadOnly Property ProteinToPeptideMappingFilePath As String
         Get
             Return mProteinToPeptideMappingFilePath
         End Get
     End Property
 
-    Public Property RemoveSymbolCharacters() As Boolean
+    Public Property RemoveSymbolCharacters As Boolean
         Get
             Return mRemoveSymbolCharacters
         End Get
-        Set(Value As Boolean)
+        Set
             mRemoveSymbolCharacters = Value
         End Set
     End Property
 
-    Public ReadOnly Property ResultsFilePath() As String
+    Public ReadOnly Property ResultsFilePath As String
         Get
             Return mResultsFilePath
         End Get
     End Property
 
-    Public Property SaveProteinToPeptideMappingFile() As Boolean
+    Public Property SaveProteinToPeptideMappingFile As Boolean
         Get
             Return mSaveProteinToPeptideMappingFile
         End Get
-        Set(Value As Boolean)
+        Set
             mSaveProteinToPeptideMappingFile = Value
         End Set
     End Property
@@ -299,39 +298,39 @@ Public Class clsProteinCoverageSummarizer
         Get
             Return mSaveSourceDataPlusProteinsFile
         End Get
-        Set(value As Boolean)
-            mSaveSourceDataPlusProteinsFile = value
+        Set
+            mSaveSourceDataPlusProteinsFile = Value
         End Set
     End Property
 
-    Public Property SearchAllProteinsForPeptideSequence() As Boolean
+    Public Property SearchAllProteinsForPeptideSequence As Boolean
         Get
             Return mSearchAllProteinsForPeptideSequence
         End Get
-        Set(Value As Boolean)
+        Set
             mSearchAllProteinsForPeptideSequence = Value
         End Set
     End Property
 
-    Public Property UseLeaderSequenceHashTable() As Boolean
+    Public Property UseLeaderSequenceHashTable As Boolean
         Get
             Return mUseLeaderSequenceHashTable
         End Get
-        Set(Value As Boolean)
+        Set
             mUseLeaderSequenceHashTable = Value
         End Set
     End Property
 
-    Public Property SearchAllProteinsSkipCoverageComputationSteps() As Boolean
+    Public Property SearchAllProteinsSkipCoverageComputationSteps As Boolean
         Get
             Return mSearchAllProteinsSkipCoverageComputationSteps
         End Get
-        Set(Value As Boolean)
+        Set
             mSearchAllProteinsSkipCoverageComputationSteps = Value
         End Set
     End Property
 
-    Public ReadOnly Property StatusMessage() As String
+    Public ReadOnly Property StatusMessage As String
         Get
             Return mErrorMessage
         End Get
@@ -349,11 +348,11 @@ Public Class clsProteinCoverageSummarizer
     ''    End Get
     ''End Property
 
-    Public Property TrackPeptideCounts() As Boolean
+    Public Property TrackPeptideCounts As Boolean
         Get
             Return mTrackPeptideCounts
         End Get
-        Set(Value As Boolean)
+        Set
             mTrackPeptideCounts = Value
         End Set
     End Property
