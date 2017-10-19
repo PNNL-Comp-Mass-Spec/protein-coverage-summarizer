@@ -21,7 +21,7 @@ Public MustInherit Class clsProcessFilesBaseClass
     ''' </summary>
     ''' <remarks></remarks>
     Public Sub New()
-        mFileDate = "October 15, 2017"
+        mFileDate = "October 18, 2017"
         ErrorCode = eProcessFilesErrorCodes.NoError
     End Sub
 
