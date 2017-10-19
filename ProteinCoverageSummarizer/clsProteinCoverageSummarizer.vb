@@ -1287,9 +1287,7 @@ Public Class clsProteinCoverageSummarizer
 
             mProgressStepDescription = String.Copy(strProgressMessageBase)
             Console.WriteLine()
-            Console.WriteLine()
-            Console.WriteLine("Parsing " & Path.GetFileName(strPeptideInputFilePath))
-            Console.WriteLine(mProgressStepDescription)
+            OnStatusEvent("Parsing " & Path.GetFileName(strPeptideInputFilePath))
 
             UpdateProgress(mProgressStepDescription, 0,
                eProteinCoverageProcessingSteps.DetermineShortestPeptideLength)
@@ -1567,7 +1565,7 @@ Public Class clsProteinCoverageSummarizer
             SetErrorCode(eProteinCoverageErrorCodes.NoError)
         End If
 
-        Console.WriteLine("Initializing")
+        OnStatusEvent("Initializing")
         strProteinToPeptideMappingFilePath = String.Empty
 
         If Not LoadParameterFileSettings(strParameterFilePath) Then
@@ -1588,7 +1586,7 @@ Public Class clsProteinCoverageSummarizer
             End With
 
             If String.IsNullOrWhiteSpace(strInputFilePath) Then
-                Console.WriteLine("Input file name is empty")
+                OnErrorEvent("Input file name is empty")
                 SetErrorCode(eProteinCoverageErrorCodes.InvalidInputFilePath)
                 Return False
             End If
@@ -1610,15 +1608,12 @@ Public Class clsProteinCoverageSummarizer
 
             ' First read the protein input file
             mProgressStepDescription = "Reading protein input file: " & Path.GetFileName(mProteinInputFilePath)
-            Console.WriteLine(mProgressStepDescription)
             UpdateProgress(mProgressStepDescription, 0, eProteinCoverageProcessingSteps.CacheProteins)
 
             blnSuccess = ParseProteinInputFile()
 
             If blnSuccess Then
-                Console.WriteLine()
                 mProgressStepDescription = "Complete reading protein input file: " & Path.GetFileName(mProteinInputFilePath)
-                Console.WriteLine(mProgressStepDescription)
                 UpdateProgress(mProgressStepDescription, 100, eProteinCoverageProcessingSteps.CacheProteins)
 
                 ' Now read the peptide input file
@@ -2007,15 +2002,8 @@ Public Class clsProteinCoverageSummarizer
 
     Private Sub SearchProteinsUsingCachedPeptides(shortPeptideCache As IDictionary(Of String, Integer))
 
-        Dim strProgressMessageBase As String
-
         If shortPeptideCache.Count > 0 Then
-            Console.WriteLine()
-            Console.WriteLine()
-            strProgressMessageBase = "Comparing proteins to short peptide sequences"
-            Console.WriteLine(strProgressMessageBase)
-
-            UpdateProgress(strProgressMessageBase)
+            UpdateProgress("Comparing proteins to short peptide sequences")
 
             ' Need to step through the proteins and match them to the data in shortPeptideCache
             FindSequenceMatchForPeptideList(shortPeptideCache, String.Empty)
