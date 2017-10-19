@@ -746,6 +746,8 @@ Public Class clsPeptideToProteinMapEngine
                 Dim intCurrentLine = 1
                 Dim bytesRead As Long = 0
 
+                Dim intCurrentProteinID = 0
+
                 Do While Not srInFile.EndOfStream
                     If AbortProcessing Then Exit Do
 
@@ -768,7 +770,6 @@ Public Class clsPeptideToProteinMapEngine
                                 ReDim Preserve udtProteinMapInfo(udtProteinMapInfo.Length * 2 - 1)
                             End If
 
-                            Dim intCurrentProteinID = 0
 
                             If strCurrentProtein.Length = 0 OrElse strCurrentProtein <> strSplitLine(0) Then
                                 ' Determine the Protein ID for this protein
