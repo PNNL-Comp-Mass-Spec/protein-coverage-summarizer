@@ -73,8 +73,18 @@ Public Class clsProteinFileDataCache
 #End Region
 
 #Region "Processing Options Interface Functions"
+
+    ''' <summary>
+    ''' When True, assume the input file is a tab-delimited text file
+    ''' </summary>
+    ''' <returns></returns>
+    ''' <remarks>Ignored if AssumeFastaFile is True</remarks>
     Public Property AssumeDelimitedFile As Boolean
 
+    ''' <summary>
+    ''' When True, assume the input file is a FASTA text file
+    ''' </summary>
+    ''' <returns></returns>
     Public Property AssumeFastaFile As Boolean
 
     Public Property ChangeProteinSequencesToLowercase As Boolean
@@ -430,13 +440,13 @@ Public Class clsProteinFileDataCache
             Else
 
                 If AssumeFastaFile OrElse IsFastaFile(strProteinInputFilePath) Then
+                    mParsedFileIsFastaFile = True
+                Else
                     If AssumeDelimitedFile Then
                         mParsedFileIsFastaFile = False
                     Else
                         mParsedFileIsFastaFile = True
                     End If
-                Else
-                    mParsedFileIsFastaFile = False
                 End If
 
                 If mParsedFileIsFastaFile Then
