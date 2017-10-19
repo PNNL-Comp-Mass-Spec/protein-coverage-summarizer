@@ -536,7 +536,6 @@ Public Class clsPeptideToProteinMapEngine
 
         Try
             Console.WriteLine()
-            Console.WriteLine()
 
             ShowMessage("Post-processing the results files")
 
@@ -743,12 +742,14 @@ Public Class clsPeptideToProteinMapEngine
 
                 Dim strCurrentProtein = String.Empty
 
-                Dim intCurrentLine = 1
+                Dim intCurrentLine = 0
                 Dim bytesRead As Long = 0
 
                 Dim intCurrentProteinID = 0
 
                 Do While Not srInFile.EndOfStream
+                    intCurrentLine += 1
+
                     If AbortProcessing Then Exit Do
 
                     Dim strLineIn = srInFile.ReadLine()
@@ -760,46 +761,50 @@ Public Class clsPeptideToProteinMapEngine
 
                     If intCurrentLine = 1 Then
                         ' Header line; skip it
-                    ElseIf strLineIn.Length > 0 Then
+                        Continue Do
+                    End If
 
-                        ' Split the line
-                        Dim strSplitLine = strLineIn.Split(ControlChars.Tab)
+                    If strLineIn.Length = 0 Then
+                        Continue Do
+                    End If
 
-                        If strSplitLine.Length >= 4 Then
-                            If intProteinMapInfoCount >= udtProteinMapInfo.Length Then
-                                ReDim Preserve udtProteinMapInfo(udtProteinMapInfo.Length * 2 - 1)
-                            End If
+                    ' Split the line
+                    Dim strSplitLine = strLineIn.Split(ControlChars.Tab)
 
+                    If strSplitLine.Length < 4 Then
+                        Continue Do
+                    End If
 
-                            If strCurrentProtein.Length = 0 OrElse strCurrentProtein <> strSplitLine(0) Then
-                                ' Determine the Protein ID for this protein
+                    If intProteinMapInfoCount >= udtProteinMapInfo.Length Then
+                        ReDim Preserve udtProteinMapInfo(udtProteinMapInfo.Length * 2 - 1)
+                    End If
 
-                                strCurrentProtein = strSplitLine(0)
+                    If strCurrentProtein.Length = 0 OrElse strCurrentProtein <> strSplitLine(0) Then
+                        ' Determine the Protein ID for this protein
 
-                                If Not dctProteinList.TryGetValue(strCurrentProtein, intCurrentProteinID) Then
-                                    ' New protein; add it, assigning it index htProteinList.Count
-                                    intCurrentProteinID = dctProteinList.Count
-                                    dctProteinList.Add(strCurrentProtein, intCurrentProteinID)
-                                End If
+                        strCurrentProtein = strSplitLine(0)
 
-                            End If
-
-                            With udtProteinMapInfo(intProteinMapInfoCount)
-                                .ProteinID = intCurrentProteinID
-                                .Peptide = strSplitLine(1)
-                                .ResidueStart = Integer.Parse(strSplitLine(2))
-                                .ResidueEnd = Integer.Parse(strSplitLine(3))
-                            End With
-
-                            intProteinMapInfoCount += 1
+                        If Not dctProteinList.TryGetValue(strCurrentProtein, intCurrentProteinID) Then
+                            ' New protein; add it, assigning it index htProteinList.Count
+                            intCurrentProteinID = dctProteinList.Count
+                            dctProteinList.Add(strCurrentProtein, intCurrentProteinID)
                         End If
 
                     End If
+
+                    With udtProteinMapInfo(intProteinMapInfoCount)
+                        .ProteinID = intCurrentProteinID
+                        .Peptide = strSplitLine(1)
+                        .ResidueStart = Integer.Parse(strSplitLine(2))
+                        .ResidueEnd = Integer.Parse(strSplitLine(3))
+                    End With
+
+                    intProteinMapInfoCount += 1
+
                     If intCurrentLine Mod 1000 = 0 Then
                         UpdateProgress(PERCENT_COMPLETE_POSTPROCESSING +
                            CSng((bytesRead / srInFile.BaseStream.Length) * 100) * (PERCENT_COMPLETE_POSTPROCESSING - PERCENT_COMPLETE_RUNNING_PROTEIN_COVERAGE_SUMMARIZER) / 100)
                     End If
-                    intCurrentLine += 1
 
                 Loop
 
