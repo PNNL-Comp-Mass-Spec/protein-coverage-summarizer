@@ -67,6 +67,14 @@ Public Class clsPeptideToProteinMapEngine
         Public Peptide As String
         Public ResidueStart As Integer
         Public ResidueEnd As Integer
+
+        ''' <summary>
+        ''' Show the peptide sequence
+        ''' </summary>
+        ''' <returns></returns>
+        Public Overrides Function ToString() As String
+            Return Peptide & ", Protein ID " & ProteinID
+        End Function
     End Structure
 
     Protected Structure udtPepToProteinMappingType
@@ -74,6 +82,14 @@ Public Class clsPeptideToProteinMapEngine
         Public Protein As String
         Public ResidueStart As Integer
         Public ResidueEnd As Integer
+
+        ''' <summary>
+        ''' Show the peptide sequence
+        ''' </summary>
+        ''' <returns></returns>
+        Public Overrides Function ToString() As String
+            Return Peptide & ", Protein " & Protein
+        End Function
     End Structure
 #End Region
 

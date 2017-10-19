@@ -35,14 +35,57 @@ Public Class clsLeaderSequenceCache
 
 #Region "Structures"
     Public Structure udtPeptideSequenceInfoType
-        Public ProteinName As String                    ' The protein name is optional
-        Public PeptideSequence As String                ' Note that residues are stored as uppercase letters
+        ''' <summary>
+        ''' Protein name (optional)
+        ''' </summary>
+        Public ProteinName As String
+
+        ''' <summary>
+        ''' Peptide amino acids (stored as uppercase letters)
+        ''' </summary>
+        Public PeptideSequence As String
+
+        ''' <summary>
+        ''' Prefix residue
+        ''' </summary>
         Public Prefix As Char
+
+        ''' <summary>
+        ''' Suffix residue
+        ''' </summary>
         Public Suffix As Char
-        Public PeptideSequenceLtoI As String            ' Only used if mIgnoreILDifferences=True
-        Public PrefixLtoI As Char              ' Only used if mIgnoreILDifferences=True
-        Public SuffixLtoI As Char              ' Only used if mIgnoreILDifferences=True
+
+        ''' <summary>
+        ''' Peptide sequence where leucines have been changed to isoleucine
+        ''' </summary>
+        ''' <remarks>Only used if mIgnoreILDifferences is True</remarks>
+        Public PeptideSequenceLtoI As String
+
+        ''' <summary>
+        ''' Prefix residue; if leucine, changed to isoleucine
+        ''' </summary>
+        ''' <remarks>Only used if mIgnoreILDifferences is True</remarks>
+        Public PrefixLtoI As Char
+
+        ''' <summary>
+        ''' Suffix residue; if leucine, changed to isoleucine
+        ''' </summary>
+        ''' <remarks>Only used if mIgnoreILDifferences is True</remarks>
+        Public SuffixLtoI As Char
+
+        ''' <summary>
+        ''' Show the peptide sequence, including prefix and suffix
+        ''' </summary>
+        ''' <returns></returns>
+        Public Overrides Function ToString() As String
+            If String.IsNullOrWhiteSpace(Prefix) Then
+                Return PeptideSequence
+            End If
+
+            Return Prefix & "." & PeptideSequence & "." & Suffix
+        End Function
     End Structure
+
 #End Region
 
 #Region "Classwide variables"
@@ -207,7 +250,7 @@ Public Class clsLeaderSequenceCache
         ' Updates mLeaderSequenceMinimumLength if successful, though the minimum length is not allowed to be less than MINIMUM_LEADER_SEQUENCE_LENGTH
 
         ' intColumnNumWithPeptideSequence should be 1 if the peptide sequence is in the first column, 2 if in the second, etc.
-        
+
         ' Define a RegEx to replace all of the non-letter characters
         Dim reReplaceSymbols = New Regex("[^A-Za-z]", RegexOptions.Compiled)
 
