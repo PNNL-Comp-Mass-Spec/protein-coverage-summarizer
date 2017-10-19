@@ -401,7 +401,7 @@ Public Class clsPeptideToProteinMapEngine
                     Dim strLineIn = srInFile.ReadLine()
                     If strLineIn Is Nothing Then Continue Do
 
-                    strLineIn = strLineIn.Trim
+                    strLineIn = strLineIn.Trim()
 
                     If strLineIn.Length > 0 Then
 
@@ -413,7 +413,7 @@ Public Class clsPeptideToProteinMapEngine
                             ' Split the line on commas
                             Dim strSplitLine = strLineIn.Split(","c)
 
-                            If strSplitLine.Length >= 5 AndAlso strSplitLine(0).ToLower().Trim = "mod" Then
+                            If strSplitLine.Length >= 5 AndAlso strSplitLine(0).ToLower().Trim() = "mod" Then
 
                                 Dim strModName As String
                                 strModName = strSplitLine(4).ToLower()
@@ -751,12 +751,12 @@ Public Class clsPeptideToProteinMapEngine
                 Do While Not srInFile.EndOfStream
                     If AbortProcessing Then Exit Do
 
-                    Dim strLineIn = srInFile.ReadLine
+                    Dim strLineIn = srInFile.ReadLine()
                     If strLineIn Is Nothing Then Continue Do
 
                     bytesRead += strLineIn.Length + intTerminatorSize
 
-                    strLineIn = strLineIn.Trim
+                    strLineIn = strLineIn.Trim()
 
                     If intCurrentLine = 1 Then
                         ' Header line; skip it
@@ -912,12 +912,12 @@ Public Class clsPeptideToProteinMapEngine
                 Do While Not srInFile.EndOfStream
                     If AbortProcessing Then Exit Do
 
-                    Dim strLineIn = srInFile.ReadLine
+                    Dim strLineIn = srInFile.ReadLine()
                     If strLineIn Is Nothing Then Continue Do
 
                     bytesRead += strLineIn.Length + intTerminatorSize
 
-                    strLineIn = strLineIn.Trim
+                    strLineIn = strLineIn.Trim()
 
                     If intCurrentLine = 1 AndAlso (peptideSequenceColIndex < 0 OrElse strLineIn.StartsWith("#")) Then
 
