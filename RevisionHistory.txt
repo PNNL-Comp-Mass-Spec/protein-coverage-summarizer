@@ -1,5 +1,12 @@
 Protein Coverage Summarizer Change Log
 
+Version 1.3.6606; February 1, 2018
+	- Use TrimEnd instead of Trim when reading data from tab-delimited text files
+		- Required to properly handle the first column of data being empty
+
+Version 1.3.6500; October 18, 2017
+	- Fix bug populating CurrentProteinID when mapping peptides to proteins
+
 Version 1.3.6368; June 8, 2017
 	- Obtain System.Data.SQLite.Core v1.0.97 from NuGet
 	- Use Ookii.Dialogs.dll instead of PRISM.dll

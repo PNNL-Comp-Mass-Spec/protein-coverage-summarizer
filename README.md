@@ -22,7 +22,7 @@ ProteinCoverageSummarizerGUI.exe
 The input file path can contain the wildcard character *.  If a wildcard is present, the same 
 protein input file path will be used for each of the peptide input files matched.
 
-The output folder name is optional. If omitted, the output files will be created in the same folder as the input file.  
+The output folder name is optional. If omitted, the output files will be created in the same folder as the input file.
 If included, then a subfolder is created with the name OutputFolderName.
 
 The parameter file path is optional.  If included, it should point to a valid XML parameter file.
