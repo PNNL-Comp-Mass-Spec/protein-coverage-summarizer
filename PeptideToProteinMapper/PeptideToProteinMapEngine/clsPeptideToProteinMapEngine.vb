@@ -23,7 +23,7 @@ Imports ProteinFileReader
 '
 
 Public Class clsPeptideToProteinMapEngine
-    Inherits clsProcessFilesBaseClass
+    Inherits PRISM.FileProcessor.ProcessFilesBase
 
     Public Sub New()
         InitializeVariables()
@@ -452,7 +452,6 @@ Public Class clsPeptideToProteinMapEngine
     End Function
 
     Private Sub InitializeVariables()
-        ShowMessages = True
 
         mPeptideInputFileFormat = ePeptideInputFileFormatConstants.AutoDetermine
         mDeleteTempFiles = True
@@ -888,12 +887,7 @@ Public Class clsPeptideToProteinMapEngine
                 SetBaseClassErrorCode(eProcessFilesErrorCodes.InvalidInputFilePath)
                 mStatusMessage = "File not found: " & strInputFilePath
 
-                If Me.ShowMessages Then
-                    ShowErrorMessage(mStatusMessage)
-                Else
-                    Throw New Exception(mStatusMessage)
-                End If
-
+                ShowErrorMessage(mStatusMessage)
                 Exit Try
 
             End If
@@ -944,11 +938,7 @@ Public Class clsPeptideToProteinMapEngine
                                 SetBaseClassErrorCode(eProcessFilesErrorCodes.LocalizedError)
                                 mStatusMessage = "Peptide column not found; unable to continue"
 
-                                If Me.ShowMessages Then
-                                    ShowErrorMessage(mStatusMessage)
-                                Else
-                                    Throw New Exception(mStatusMessage)
-                                End If
+                                ShowErrorMessage(mStatusMessage)
                                 Return String.Empty
 
                             End If
@@ -1002,12 +992,7 @@ Public Class clsPeptideToProteinMapEngine
                 SetBaseClassErrorCode(eProcessFilesErrorCodes.InvalidInputFilePath)
                 mStatusMessage = "File not found: " & strInputFilePath
 
-                If Me.ShowMessages Then
-                    ShowErrorMessage(mStatusMessage)
-                Else
-                    Throw New Exception(mStatusMessage)
-                End If
-
+                ShowErrorMessage(mStatusMessage)
                 Exit Try
 
             End If

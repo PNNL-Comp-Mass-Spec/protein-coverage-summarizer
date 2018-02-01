@@ -23,7 +23,7 @@ Imports PRISM
 
 Public Module modMain
 
-    Public Const PROGRAM_DATE As String = "October 17, 2017"
+    Public Const PROGRAM_DATE As String = "February 1, 2018"
 
     Private mPeptideInputFilePath As String
     Private mProteinInputFilePath As String
@@ -34,8 +34,6 @@ Public Module modMain
     Private mOutputProteinSequence As Boolean
     Private mSaveProteinToPeptideMappingFile As Boolean
     Private mSkipCoverageComputationSteps As Boolean
-
-    Private mQuietMode As Boolean
 
     Private mProteinCoverageSummarizer As clsProteinCoverageSummarizerRunner
     Private mLastProgressReportTime As DateTime
@@ -83,7 +81,6 @@ Public Module modMain
                 Try
                     mProteinCoverageSummarizer = New clsProteinCoverageSummarizerRunner() With {
                         .ProteinInputFilePath = mProteinInputFilePath,
-                        .ShowMessages = Not mQuietMode,
                         .CallingAppHandlesEvents = False,
                         .IgnoreILDifferences = mIgnoreILDifferences,
                         .OutputProteinSequence = mOutputProteinSequence,
@@ -127,7 +124,7 @@ Public Module modMain
     End Sub
 
     Private Function GetAppVersion() As String
-        Return clsProcessFilesBaseClass.GetAppVersion(PROGRAM_DATE)
+        Return PRISM.FileProcessor.ProcessFilesBase.GetAppVersion(PROGRAM_DATE)
     End Function
 
     ''Private Function GetFilePath(mInputFolderOrFilePath As String) As String
@@ -204,7 +201,7 @@ Public Module modMain
         ' /I:PeptideInputFilePath /R: ProteinInputFilePath /O:OutputFolderPath /P:ParameterFilePath
 
         Dim strValue As String = String.Empty
-        Dim lstValidParameters As List(Of String) = New List(Of String) From {"I", "O", "R", "P", "G", "H", "M", "K", "Q"}
+        Dim lstValidParameters As List(Of String) = New List(Of String) From {"I", "O", "R", "P", "G", "H", "M", "K"}
 
         Try
             ' Make sure no invalid parameters are present
@@ -228,8 +225,6 @@ Public Module modMain
                     If .RetrieveValueForParameter("H", strValue) Then mOutputProteinSequence = False
                     If .RetrieveValueForParameter("M", strValue) Then mSaveProteinToPeptideMappingFile = True
                     If .RetrieveValueForParameter("K", strValue) Then mSkipCoverageComputationSteps = True
-
-                    If .RetrieveValueForParameter("Q", strValue) Then mQuietMode = True
                 End With
 
                 Return True
@@ -281,8 +276,8 @@ Public Module modMain
             strSyntax &= Environment.NewLine & "This program reads in a .fasta or .txt file containing protein names and sequences (and optionally descriptions)"
             strSyntax &= Environment.NewLine & "The program also reads in a .txt file containing peptide sequences and protein names (though protein name is optional) then uses this information to compute the sequence coverage percent for each protein."
             strSyntax &= Environment.NewLine
-            strSyntax &= Environment.NewLine & "Program syntax:" & Environment.NewLine & Path.GetFileName(clsProcessFilesBaseClass.GetAppPath())
-            strSyntax &= Environment.NewLine & " /I:PeptideInputFilePath /R:ProteinInputFilePath [/O:OutputFolderName] [/P:ParameterFilePath] [/G] [/H] [/M] [/K] [/Q]"
+            strSyntax &= Environment.NewLine & "Program syntax:" & Environment.NewLine & Path.GetFileName(PRISM.FileProcessor.ProcessFilesBase.GetAppPath())
+            strSyntax &= Environment.NewLine & " /I:PeptideInputFilePath /R:ProteinInputFilePath [/O:OutputFolderName] [/P:ParameterFilePath] [/G] [/H] [/M] [/K]"
             strSyntax &= Environment.NewLine
             strSyntax &= Environment.NewLine & "The input file path can contain the wildcard character *.  If a wildcard is present, then the same protein input file path will be used for each of the peptide input files matched."
             strSyntax &= Environment.NewLine & "The output folder name is optional.  If omitted, the output files will be created in the same folder as the input file.  If included, then a subfolder is created with the name OutputFolderName."
@@ -302,11 +297,7 @@ Public Module modMain
             strSyntax &= Environment.NewLine & "Website: http://omics.pnl.gov/ or http://panomics.pnnl.gov/"
             strSyntax &= Environment.NewLine
 
-            If mQuietMode Then
-                Console.WriteLine(strSyntax)
-            Else
-                MessageBox.Show(strSyntax, "Syntax", MessageBoxButtons.OK, MessageBoxIcon.Information)
-            End If
+            Console.WriteLine(strSyntax)
 
         Catch ex As Exception
             ShowErrorMessage("Error displaying the program syntax: " & ex.Message)

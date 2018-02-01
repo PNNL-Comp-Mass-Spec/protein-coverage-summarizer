@@ -949,8 +949,6 @@ Public Class GUI
     Private mXmlSettingsFilePath As String
     Private mLastFolderUsed As String
 
-    Private blnShowMessages As Boolean = False
-
 #End Region
 
 #Region "Properties"
@@ -1129,7 +1127,7 @@ Public Class GUI
     End Sub
 
     Private Function GetSettingsFilePath() As String
-        Return clsProcessFilesBaseClass.GetSettingsFilePathLocal("ProteinCoverageSummarizer", XML_SETTINGS_FILE_NAME)
+        Return PRISM.FileProcessor.ProcessFilesBase.GetSettingsFilePathLocal("ProteinCoverageSummarizer", XML_SETTINGS_FILE_NAME)
     End Function
 
     Private Sub IniFileLoadOptions(blnUpdateIOPaths As Boolean)
@@ -1158,10 +1156,10 @@ Public Class GUI
                 Try
                     .InitialDirectory = Directory.GetParent(strFilePath).ToString
                 Catch
-                    .InitialDirectory = clsProcessFilesBaseClass.GetAppFolderPath()
+                    .InitialDirectory = PRISM.FileProcessor.ProcessFilesBase.GetAppFolderPath()
                 End Try
             Else
-                .InitialDirectory = clsProcessFilesBaseClass.GetAppFolderPath()
+                .InitialDirectory = PRISM.FileProcessor.ProcessFilesBase.GetAppFolderPath()
             End If
 
             If File.Exists(strFilePath) Then
@@ -1205,9 +1203,7 @@ Public Class GUI
 
                 ' Read the GUI-specific options from the XML file
                 If Not objSettingsFile.SectionPresent(XML_SECTION_GUI_OPTIONS) Then
-                    If blnShowMessages Then
-                        ShowErrorMessage("The node '<section name=""" & XML_SECTION_GUI_OPTIONS & """> was not found in the parameter file: " & strFilePath, "Invalid File")
-                    End If
+                    ShowErrorMessage("The node '<section name=""" & XML_SECTION_GUI_OPTIONS & """> was not found in the parameter file: " & strFilePath, "Invalid File")
                 Else
                     If blnUpdateIOPaths Then
                         txtProteinInputFilePath.Text = objSettingsFile.GetParam(XML_SECTION_GUI_OPTIONS, "ProteinInputFilePath", txtProteinInputFilePath.Text)
@@ -1225,9 +1221,7 @@ Public Class GUI
                     chkAddSpace.Checked = objSettingsFile.GetParam(XML_SECTION_GUI_OPTIONS, "ProteinSequenceAddSpace", chkAddSpace.Checked)
 
                     If Not objSettingsFile.SectionPresent(clsProteinCoverageSummarizer.XML_SECTION_PROCESSING_OPTIONS) Then
-                        If blnShowMessages Then
-                            ShowErrorMessage("The node '<section name=""" & clsProteinCoverageSummarizer.XML_SECTION_PROCESSING_OPTIONS & """> was not found in the parameter file: ", "Invalid File")
-                        End If
+                        ShowErrorMessage("The node '<section name=""" & clsProteinCoverageSummarizer.XML_SECTION_PROCESSING_OPTIONS & """> was not found in the parameter file: ", "Invalid File")
                     Else
                         Try
                             eColumnOrdering = CType(objSettingsFile.GetParam(clsProteinCoverageSummarizer.XML_SECTION_PROCESSING_OPTIONS, "DelimitedProteinFileFormatCode", cboProteinInputFileColumnOrdering.SelectedIndex + PROTEIN_INPUT_FILE_INDEX_OFFSET), DelimitedFileReader.eDelimitedFileFormatCode)
@@ -1274,12 +1268,7 @@ Public Class GUI
             End If
 
         Catch ex As Exception
-            If blnShowMessages Then
-                ShowErrorMessage("Error in IniFileLoadOptions: " & ex.Message)
-            Else
-                Throw New Exception("Error in IniFileLoadOptions", ex)
-            End If
-
+            ShowErrorMessage("Error in IniFileLoadOptions: " & ex.Message)
         End Try
 
         Try
@@ -1581,7 +1570,7 @@ Public Class GUI
         chkAddSpace.Checked = True
 
         mXmlSettingsFilePath = GetSettingsFilePath()
-        clsProcessFilesBaseClass.CreateSettingsFileIfMissing(mXmlSettingsFilePath)
+        PRISM.FileProcessor.ProcessFilesBase.CreateSettingsFileIfMissing(mXmlSettingsFilePath)
 
     End Sub
 
@@ -1851,7 +1840,6 @@ Public Class GUI
             cmdStart.Visible = False
 
             mProteinCoverageSummarizer = New clsProteinCoverageSummarizerRunner() With {
-                .ShowMessages = True,
                 .CallingAppHandlesEvents = True
             }
 

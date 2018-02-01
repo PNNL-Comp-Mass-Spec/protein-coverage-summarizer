@@ -32,7 +32,7 @@ Imports PRISM
 
 Public Module modMain
 
-    Public Const PROGRAM_DATE As String = "October 17, 2017"
+    Public Const PROGRAM_DATE As String = "February 1, 2018"
 
     Private mPeptideInputFilePath As String
     Private mProteinInputFilePath As String
@@ -52,8 +52,6 @@ Public Module modMain
     Private mLogMessagesToFile As Boolean
     Private mLogFilePath As String = String.Empty
     Private mLogFolderPath As String = String.Empty
-
-    Private mQuietMode As Boolean
 
     Private mVerboseLogging As Boolean
     Private mVerboseLogFile As StreamWriter
@@ -110,7 +108,6 @@ Public Module modMain
         mSkipCoverageComputationSteps = False
         mInputFileFormatCode = ePeptideInputFileFormatConstants.AutoDetermine
 
-        mQuietMode = False
         mLogMessagesToFile = False
         mLogFilePath = String.Empty
         mLogFolderPath = String.Empty
@@ -144,7 +141,6 @@ Public Module modMain
 
                     mPeptideToProteinMapEngine = New clsPeptideToProteinMapEngine() With {
                         .ProteinInputFilePath = mProteinInputFilePath,
-                        .ShowMessages = Not mQuietMode,
                         .LogMessagesToFile = mLogMessagesToFile,
                         .LogFilePath = mLogFilePath,
                         .LogFolderPath = mLogFolderPath,
@@ -199,7 +195,7 @@ Public Module modMain
     End Sub
 
     Private Function GetAppVersion() As String
-        Return clsProcessFilesBaseClass.GetAppVersion(PROGRAM_DATE)
+        Return PRISM.FileProcessor.ProcessFilesBase.GetAppVersion(PROGRAM_DATE)
     End Function
 
     Private Function SetOptionsUsingCommandLineParameters(objParseCommandLine As clsParseCommandLine) As Boolean
@@ -207,7 +203,7 @@ Public Module modMain
         ' /I:PeptideInputFilePath /R: ProteinInputFilePath /O:OutputFolderPath /P:ParameterFilePath
 
         Dim strValue As String = String.Empty
-        Dim lstValidParameters = New List(Of String) From {"I", "O", "R", "P", "F", "N", "G", "H", "K", "A", "L", "LogFolder", "Q", "VerboseLog"}
+        Dim lstValidParameters = New List(Of String) From {"I", "O", "R", "P", "F", "N", "G", "H", "K", "A", "L", "LogFolder", "VerboseLog"}
         Dim intValue As Integer
 
         Try
@@ -261,7 +257,6 @@ Public Module modMain
                             mLogFolderPath = strValue
                         End If
                     End If
-                    If .RetrieveValueForParameter("Q", strValue) Then mQuietMode = True
 
                     If .RetrieveValueForParameter("VerboseLog", strValue) Then mVerboseLogging = True
                 End With
@@ -322,7 +317,6 @@ Public Module modMain
             Console.WriteLine("Use /L to create a log file, optionally specifying the file name")
             Console.WriteLine("Use /LogFolder to define the folder in which the log file should be created")
             Console.WriteLine("Use /VerboseLog to create a detailed log file")
-            Console.WriteLine("Use /Q to suppress any error messages")
             Console.WriteLine()
 
             Console.WriteLine("Program written by Matthew Monroe for the Department of Energy (PNNL, Richland, WA) in 2008")

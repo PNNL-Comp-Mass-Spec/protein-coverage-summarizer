@@ -97,8 +97,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="clsPeptideToProteinMapEngine.vb" />
-    <Compile Include="clsProcessFilesBaseClass.vb" />
-    <Compile Include="clsProcessFilesOrFoldersBase.vb" />
     <Compile Include="My Project\AssemblyInfo.vb" />
     <Compile Include="My Project\Application.Designer.vb">
       <AutoGen>True</AutoGen>
@@ -137,7 +135,7 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="PRISM-Library">
-      <Version>2.4.39</Version>
+      <Version>2.4.58</Version>
     </PackageReference>
     <PackageReference Include="ProteinFileReader">
       <Version>1.3.1</Version>

@@ -19,7 +19,7 @@ Imports ProteinFileReader
 '
 
 Public Class clsProteinCoverageSummarizerRunner
-    Inherits clsProcessFilesBaseClass
+    Inherits PRISM.FileProcessor.ProcessFilesBase
 
     Public Sub New()
         InitializeVariables()
@@ -246,7 +246,6 @@ Public Class clsProteinCoverageSummarizerRunner
     End Function
 
     Private Sub InitializeVariables()
-        Me.ShowMessages = False
         Me.mCallingAppHandlesEvents = False
 
         AbortProcessing = False
@@ -285,12 +284,8 @@ Public Class clsProteinCoverageSummarizerRunner
             mProteinCoverageSummarizer.mProteinDataCache.DeleteSQLiteDBFile()
 
         Catch ex As Exception
-            If Me.ShowMessages Then
-                mStatusMessage = "Error in ProcessFile:" & ControlChars.NewLine & ex.Message
-                MessageBox.Show(mStatusMessage, "Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
-            Else
-                Throw New Exception("Error in ProcessFile", ex)
-            End If
+            mStatusMessage = "Error in ProcessFile:" & ControlChars.NewLine & ex.Message
+            OnErrorEvent(mStatusMessage, ex)
             blnSuccess = False
         End Try
 
