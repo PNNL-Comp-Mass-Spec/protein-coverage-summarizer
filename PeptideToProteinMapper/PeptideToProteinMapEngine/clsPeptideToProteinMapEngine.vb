@@ -401,7 +401,7 @@ Public Class clsPeptideToProteinMapEngine
                     Dim strLineIn = srInFile.ReadLine()
                     If strLineIn Is Nothing Then Continue Do
 
-                    strLineIn = strLineIn.Trim()
+                    strLineIn = strLineIn.TrimEnd()
 
                     If strLineIn.Length > 0 Then
 
@@ -756,7 +756,7 @@ Public Class clsPeptideToProteinMapEngine
 
                     bytesRead += strLineIn.Length + intTerminatorSize
 
-                    strLineIn = strLineIn.Trim()
+                    strLineIn = strLineIn.TrimEnd()
 
                     If intCurrentLine = 1 Then
                         ' Header line; skip it
@@ -916,7 +916,7 @@ Public Class clsPeptideToProteinMapEngine
 
                     bytesRead += strLineIn.Length + intTerminatorSize
 
-                    strLineIn = strLineIn.Trim()
+                    strLineIn = strLineIn.TrimEnd()
 
                     If intCurrentLine = 1 AndAlso (peptideSequenceColIndex < 0 OrElse strLineIn.StartsWith("#")) Then
 

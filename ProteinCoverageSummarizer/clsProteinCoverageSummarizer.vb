@@ -1367,7 +1367,7 @@ Public Class clsProteinCoverageSummarizer
 
                     bytesRead += strLineIn.Length + intTerminatorSize
 
-                    strLineIn = strLineIn.Trim
+                    strLineIn = strLineIn.TrimEnd()
 
                     If intCurrentLine Mod 500 = 0 Then
                         UpdateProgress("Reading peptide input file", CSng((bytesRead / srInFile.BaseStream.Length) * 100),
@@ -1726,7 +1726,7 @@ Public Class clsProteinCoverageSummarizer
                         If strLineIn Is Nothing Then Continue Do
 
                         bytesRead += strLineIn.Length + intTerminatorSize
-                        strLineIn = strLineIn.Trim()
+                        strLineIn = strLineIn.TrimEnd()
 
                         If intCurrentLine Mod 500 = 0 Then
                             UpdateProgress("Creating the data plus all-proteins output file", CSng((bytesRead / srInFile.BaseStream.Length) * 100), eProteinCoverageProcessingSteps.SaveAllProteinsVersionOfInputFile)
@@ -2074,7 +2074,7 @@ Public Class clsProteinCoverageSummarizer
                 Dim strLineIn = srInFile.ReadLine
                 If strLineIn Is Nothing Then Continue Do
 
-                Dim dataLine = strLineIn.Trim()
+                Dim dataLine = strLineIn.TrimEnd()
 
                 If intCurrentLine = 1 AndAlso blnSkipFirstLine Then
                     ' do nothing, skip the first line

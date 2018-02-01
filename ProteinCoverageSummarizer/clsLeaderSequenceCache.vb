@@ -242,9 +242,10 @@ Public Class clsLeaderSequenceCache
 
     End Function
 
-    Public Function DetermineShortestPeptideLengthInFile(strInputFilePath As String, intTerminatorSize As Integer,
-                            blnPeptideFileSkipFirstLine As Boolean, chPeptideInputFileDelimiter As Char,
-                            intColumnNumWithPeptideSequence As Integer) As Boolean
+    Public Function DetermineShortestPeptideLengthInFile(
+        strInputFilePath As String, intTerminatorSize As Integer,
+        blnPeptideFileSkipFirstLine As Boolean, chPeptideInputFileDelimiter As Char,
+        intColumnNumWithPeptideSequence As Integer) As Boolean
 
         ' Parses strInputFilePath examining column intColumnNumWithPeptideSequence to determine the minimum peptide sequence length present
         ' Updates mLeaderSequenceMinimumLength if successful, though the minimum length is not allowed to be less than MINIMUM_LEADER_SEQUENCE_LENGTH
@@ -273,7 +274,7 @@ Public Class clsLeaderSequenceCache
 
                     bytesRead += strLineIn.Length + intTerminatorSize
 
-                    strLineIn = strLineIn.Trim
+                    strLineIn = strLineIn.TrimEnd()
 
                     If intCurrentLine Mod 100 = 1 Then
                         UpdateProgress("Scanning input file to determine minimum peptide length: " & intCurrentLine.ToString, CSng((bytesRead / srInFile.BaseStream.Length) * 100))
