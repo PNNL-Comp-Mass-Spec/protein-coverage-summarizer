@@ -23,7 +23,7 @@ Imports PRISM
 
 Public Module modMain
 
-    Public Const PROGRAM_DATE As String = "February 1, 2018"
+    Public Const PROGRAM_DATE As String = "March 2, 2018"
 
     Private mPeptideInputFilePath As String
     Private mProteinInputFilePath As String
@@ -259,8 +259,9 @@ Public Module modMain
             ShowWindow(handle, SW_HIDE)
 
             objFormMain = New GUI()
-
             objFormMain.ShowDialog()
+
+            ShowWindow(handle, SW_SHOW)
         Catch ex As Exception
             MsgBox("Error in ShowGUI: " & ex.Message, MsgBoxStyle.Exclamation Or MsgBoxStyle.OkOnly, "Error")
         End Try
