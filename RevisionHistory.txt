@@ -1,5 +1,8 @@
 Protein Coverage Summarizer Change Log
 
+Version 1.3.6635; March 2, 2018
+	- Fix bug that failed to show the console after closing the GUI
+
 Version 1.3.6606; February 1, 2018
 	- Use TrimEnd instead of Trim when reading data from tab-delimited text files
 		- Required to properly handle the first column of data being empty
