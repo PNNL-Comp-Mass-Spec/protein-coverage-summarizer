@@ -16,6 +16,7 @@ WelcomeLabel2=This will install [name/ver] on your computer.
 Source: ..\bin\AnyCPU\ProteinCoverageSummarizerGUI.exe         ; DestDir: {app}
 Source: ..\bin\AnyCPU\ProteinCoverageSummarizerGUI.exe.config  ; DestDir: {app}
 Source: ..\bin\AnyCPU\Ookii.Dialogs.dll                        ; DestDir: {app}
+Source: ..\bin\AnyCPU\PRISM.dll                                ; DestDir: {app}
 Source: ..\bin\AnyCPU\ProteinCoverageSummarizer.dll            ; DestDir: {app}
 Source: ..\bin\AnyCPU\ProteinFileReader.dll                    ; DestDir: {app}
 Source: ..\bin\AnyCPU\SharedVBNetRoutines.dll                  ; DestDir: {app}
