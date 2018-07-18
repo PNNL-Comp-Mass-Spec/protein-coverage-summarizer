@@ -1,7 +1,7 @@
 Option Strict On
 
 Imports System.Runtime.InteropServices
-Imports PRISM
+
 ' This program uses clsProteinCoverageSummarizer to read in a file with protein sequences along with
 ' an accompanying file with peptide sequences and compute the percent coverage of each of the proteins
 '
@@ -23,7 +23,7 @@ Imports PRISM
 
 Public Module modMain
 
-    Public Const PROGRAM_DATE As String = "March 2, 2018"
+    Public Const PROGRAM_DATE As String = "July 17, 2018"
 
     Private mPeptideInputFilePath As String
     Private mProteinInputFilePath As String
@@ -53,7 +53,7 @@ Public Module modMain
     Public Function Main() As Integer
         ' Returns 0 if no error, error code if an error
         Dim intReturnCode As Integer
-        Dim objParseCommandLine As New clsParseCommandLine
+        Dim objParseCommandLine As New PRISM.clsParseCommandLine
         Dim blnProceed As Boolean
 
         intReturnCode = 0
@@ -196,12 +196,12 @@ Public Module modMain
     ''End Function
 
 
-    Private Function SetOptionsUsingCommandLineParameters(objParseCommandLine As clsParseCommandLine) As Boolean
+    Private Function SetOptionsUsingCommandLineParameters(objParseCommandLine As PRISM.clsParseCommandLine) As Boolean
         ' Returns True if no problems; otherwise, returns false
         ' /I:PeptideInputFilePath /R: ProteinInputFilePath /O:OutputFolderPath /P:ParameterFilePath
 
         Dim strValue As String = String.Empty
-        Dim lstValidParameters As List(Of String) = New List(Of String) From {"I", "O", "R", "P", "G", "H", "M", "K"}
+        Dim lstValidParameters = New List(Of String) From {"I", "O", "R", "P", "G", "H", "M", "K"}
 
         Try
             ' Make sure no invalid parameters are present
@@ -239,11 +239,11 @@ Public Module modMain
     End Function
 
     Private Sub ShowErrorMessage(message As String)
-        ConsoleMsgUtils.ShowError(message)
+        PRISM.ConsoleMsgUtils.ShowError(message)
     End Sub
 
     Private Sub ShowErrorMessage(title As String, errorMessages As List(Of String))
-        ConsoleMsgUtils.ShowErrors(title, errorMessages)
+        PRISM.ConsoleMsgUtils.ShowErrors(title, errorMessages)
     End Sub
 
     Private Sub ShowGUI()
@@ -311,7 +311,7 @@ Public Module modMain
     End Sub
 
     Private Sub mProteinCoverageSummarizer_WarningEvent(message As String)
-        ConsoleMsgUtils.ShowWarning(message)
+        PRISM.ConsoleMsgUtils.ShowWarning(message)
     End Sub
 
     Private Sub mProteinCoverageSummarizer_ErrorEvent(message As String, ex As Exception)
