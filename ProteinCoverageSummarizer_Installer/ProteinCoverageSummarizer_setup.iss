@@ -21,6 +21,8 @@ Source: ..\bin\AnyCPU\ProteinCoverageSummarizer.dll            ; DestDir: {app}
 Source: ..\bin\AnyCPU\ProteinFileReader.dll                    ; DestDir: {app}
 Source: ..\bin\AnyCPU\SharedVBNetRoutines.dll                  ; DestDir: {app}
 Source: ..\bin\AnyCPU\System.Data.SQLite.dll                   ; DestDir: {app}
+Source: ..\bin\AnyCPU\System.Threading.Tasks.Dataflow.dll      ; DestDir: {app}
+Source: ..\bin\ProteinCoverageSummarizerSettings.xml           ; DestDir: {app}
 Source: ..\bin\AnyCPU\x64\SQLite.Interop.dll                   ; DestDir: {app}\x64
 Source: ..\bin\AnyCPU\x86\SQLite.Interop.dll                   ; DestDir: {app}\x86
 
