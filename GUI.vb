@@ -1679,10 +1679,10 @@ Public Class GUI
         strMessage &= "This is version " & Application.ProductVersion & " (" & PROGRAM_DATE & ")" & ControlChars.NewLine & ControlChars.NewLine
 
         strMessage &= "E-mail: matthew.monroe@pnnl.gov or proteomics@pnnl.gov" & ControlChars.NewLine
-        strMessage &= "Website: http://omics.pnl.gov/ or http://www.sysbio.org/resources/staff/" & ControlChars.NewLine & ControlChars.NewLine
+        strMessage &= "Website: https://omics.pnl.gov or https://panomics.pnl.gov/" & ControlChars.NewLine & ControlChars.NewLine
 
         strMessage &= "Licensed under the Apache License, Version 2.0; you may not use this file except in compliance with the License.  "
-        strMessage &= "You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0" & ControlChars.NewLine & ControlChars.NewLine
+        strMessage &= "You may obtain a copy of the License at https://www.apache.org/licenses/LICENSE-2.0" & ControlChars.NewLine & ControlChars.NewLine
 
         MessageBox.Show(strMessage, "About", MessageBoxButtons.OK, MessageBoxIcon.Information)
 

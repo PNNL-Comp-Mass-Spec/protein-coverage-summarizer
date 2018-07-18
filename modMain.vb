@@ -13,12 +13,12 @@ Imports PRISM
 ' Program started June 14, 2005
 '
 ' E-mail: matthew.monroe@pnnl.gov or proteomics@pnnl.gov
-' Website: https://panomics.pnl.gov/ or https://omics.pnl.gov
+' Website: https://omics.pnl.gov or https://panomics.pnl.gov/
 ' -------------------------------------------------------------------------------
 '
 ' Licensed under the Apache License, Version 2.0; you may not use this file except
 ' in compliance with the License.  You may obtain a copy of the License at
-' http://www.apache.org/licenses/LICENSE-2.0
+' https://www.apache.org/licenses/LICENSE-2.0
 '
 
 Public Module modMain
@@ -295,7 +295,7 @@ Public Module modMain
             strSyntax &= Environment.NewLine
 
             strSyntax &= Environment.NewLine & "E-mail: matthew.monroe@pnnl.gov or proteomics@pnnl.gov"
-            strSyntax &= Environment.NewLine & "Website: http://omics.pnl.gov/ or http://panomics.pnnl.gov/"
+            strSyntax &= Environment.NewLine & "Website: https://omics.pnl.gov or https://panomics.pnl.gov/"
             strSyntax &= Environment.NewLine
 
             Console.WriteLine(strSyntax)

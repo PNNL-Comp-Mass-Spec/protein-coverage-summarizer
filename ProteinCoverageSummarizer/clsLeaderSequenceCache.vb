@@ -11,12 +11,12 @@ Imports System.Text.RegularExpressions
 ' Class started August 24, 2007
 '
 ' E-mail: matthew.monroe@pnnl.gov or proteomics@pnnl.gov
-' Website: https://panomics.pnl.gov/ or https://omics.pnl.gov
+' Website: https://omics.pnl.gov or https://panomics.pnl.gov/
 ' -------------------------------------------------------------------------------
 '
 ' Licensed under the Apache License, Version 2.0; you may not use this file except
 ' in compliance with the License.  You may obtain a copy of the License at
-' http://www.apache.org/licenses/LICENSE-2.0
+' https://www.apache.org/licenses/LICENSE-2.0
 '
 
 Public Class clsLeaderSequenceCache

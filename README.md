@@ -36,8 +36,8 @@ Use /M to enable the creation of a protein to peptide mapping file.
 ## Contacts
 
 Written by Matthew Monroe and Nikša Blonder for the Department of Energy (PNNL, Richland, WA) in 2005 \
-E-mail: matthew.monroe@pnnl.gov or matt@alchemistmatt.com \
-Website: http://panomics.pnnl.gov/ or http://omics.pnl.gov or http://www.sysbio.org/resources/staff/
+E-mail: matthew.monroe@pnnl.gov or proteomics@pnnl.gov \
+Website: https://panomics.pnl.gov/ or https://omics.pnl.gov
 
 ## License
 
