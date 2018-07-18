@@ -1,8 +1,30 @@
-<?xml version="1.0" encoding="UTF-8"?>
+﻿<?xml version="1.0" encoding="UTF-8"?>
 <sections>
   <section name="GUIOptions">
     <item key="ProteinInputFilePath" value="C:\Program Files (x86)\ProteinCoverageSummarizer\BSA_P171_QID1638_TestProteins.fasta" />
     <item key="PeptideInputFilePath" value="C:\Program Files (x86)\ProteinCoverageSummarizer\BSA_P171_QID1638_TestPeptides.txt" />
-    <item key="OutputFolderPath" value="C:\temp" />
+    <item key="OutputFolderPath" value="C:\Temp" />
+    <item key="ProteinInputFileColumnDelimiterIndex" value="1" />
+    <item key="ProteinInputFileColumnDelimiter" value=";" />
+    <item key="PeptideInputFileColumnDelimiterIndex" value="1" />
+    <item key="PeptideInputFileColumnDelimiter" value=";" />
+    <item key="ProteinSequenceCharactersPerLine" value="0" />
+    <item key="ProteinSequenceAddSpace" value="True" />
+  </section>
+  <section name="ProcessingOptions">
+    <item key="OutputProteinSequence" value="True" />
+    <item key="SearchAllProteinsForPeptideSequence" value="True" />
+    <item key="SaveProteinToPeptideMappingFile" value="False" />
+    <item key="SearchAllProteinsSkipCoverageComputationSteps" value="False" />
+    <item key="TrackPeptideCounts" value="True" />
+    <item key="RemoveSymbolCharacters" value="True" />
+    <item key="MatchPeptidePrefixAndSuffixToProtein" value="False" />
+    <item key="IgnoreILDifferences" value="False" />
+    <item key="PeptideInputFileDelimiter" value="	" />
+    <item key="PeptideFileFormatCode" value="1" />
+    <item key="PeptideFileSkipFirstLine" value="False" />
+    <item key="DelimitedProteinFileDelimiter" value="	" />
+    <item key="DelimitedProteinFileFormatCode" value="1" />
+    <item key="ProteinFileSkipFirstLine" value="False" />
   </section>
 </sections>
