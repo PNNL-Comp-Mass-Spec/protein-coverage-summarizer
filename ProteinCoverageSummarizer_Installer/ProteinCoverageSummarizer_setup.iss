@@ -32,7 +32,7 @@ Source: ..\bin\BSA_P171_QID1638_TestPeptides_SequenceOnly.txt             ; Dest
 Source: ..\bin\BSA_P171_QID1638_TestProteins.txt                          ; DestDir: {app}
 
 Source: Images\delete_16x.ico                ; DestDir: {app}
-Source: ..\Readme.txt                        ; DestDir: {app}
+Source: ..\Readme.md                         ; DestDir: {app}
 Source: ..\RevisionHistory.txt               ; DestDir: {app}
 
 [Dirs]
