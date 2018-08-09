@@ -4,7 +4,6 @@ pushd "F:\Documents\Projects\DataMining\Protein_Coverage_Summarizer\PeptideToPro
 copy PeptideToProteinMapEngine.dll        "F:\Documents\projects\dataMining\DMS_Managers\Analysis_Manager\AM_Common\" /Y
 copy PeptideToProteinMapEngine.dll        "F:\Documents\projects\dataMining\DMS_Managers\Analysis_Manager\AM_Program\bin\" /Y
 copy PeptideToProteinMapEngine.dll        "F:\Documents\projects\dataMining\DMS_Managers\Analysis_Manager\Plugins\AM_InspectResultsAssembly_PlugIn\bin\" /Y
-copy PeptideToProteinMapEngine.dll        "F:\Documents\projects\dataMining\DMS_Managers\Analysis_Manager\Plugins\AM_MSGFDB_IMS_Plugin\bin\" /Y
 copy PeptideToProteinMapEngine.dll        "F:\Documents\projects\dataMining\DMS_Managers\Analysis_Manager\Plugins\AM_MSGFDB_PlugIn\bin\" /Y
 
 copy PeptideToProteinMapEngine.dll        "F:\Documents\projects\dataMining\PeptideHitResultsProcessor\bin\" /Y
