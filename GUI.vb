@@ -947,6 +947,7 @@ Public Class GUI
     Private mProteinCoverageSummarizer As clsProteinCoverageSummarizerRunner
 
     Private mXmlSettingsFilePath As String
+    Private mSaveFullSettingsFileOnExit As Boolean
     Private mLastFolderUsed As String
 
 #End Region
@@ -966,17 +967,18 @@ Public Class GUI
             chkSearchAllProteinsForPeptideSequence.Checked = False
         End If
     End Sub
+
     Private Function ConfirmInputFilePaths() As Boolean
         If txtProteinInputFilePath.Text.Length = 0 And txtPeptideInputFilePath.Text.Length = 0 Then
-            MessageBox.Show("Please define the input file paths", "Missing Value", MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
+            ShowErrorMessage("Please define the input file paths", "Missing Value")
             txtProteinInputFilePath.Focus()
             Return False
         ElseIf txtProteinInputFilePath.Text.Length = 0 Then
-            MessageBox.Show("Please define Protein input file path", "Missing Value", MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
+            ShowErrorMessage("Please define Protein input file path", "Missing Value")
             txtProteinInputFilePath.Focus()
             Return False
         ElseIf txtPeptideInputFilePath.Text.Length = 0 Then
-            MessageBox.Show("Please define Peptide input file path", "Missing Value", MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
+            ShowErrorMessage("Please define Peptide input file path", "Missing Value")
             txtPeptideInputFilePath.Focus()
             Return False
         Else
@@ -1108,8 +1110,7 @@ Public Class GUI
                 txtOutputFolderPath.Text = Path.GetDirectoryName(strPeptideInputFilePath)
             End If
         Catch ex As Exception
-            MessageBox.Show("Error defining default output folder path: " & ex.Message,
-                     "Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
+            ShowErrorMessage("Error defining default output folder path: " & ex.Message, "Error")
         End Try
 
     End Sub
@@ -1204,6 +1205,7 @@ Public Class GUI
                 ' Read the GUI-specific options from the XML file
                 If Not objSettingsFile.SectionPresent(XML_SECTION_GUI_OPTIONS) Then
                     ShowErrorMessage("The node '<section name=""" & XML_SECTION_GUI_OPTIONS & """> was not found in the parameter file: " & strFilePath, "Invalid File")
+                    mSaveFullSettingsFileOnExit = True
                 Else
                     If blnUpdateIOPaths Then
                         txtProteinInputFilePath.Text = objSettingsFile.GetParam(XML_SECTION_GUI_OPTIONS, "ProteinInputFilePath", txtProteinInputFilePath.Text)
@@ -1222,6 +1224,7 @@ Public Class GUI
 
                     If Not objSettingsFile.SectionPresent(clsProteinCoverageSummarizer.XML_SECTION_PROCESSING_OPTIONS) Then
                         ShowErrorMessage("The node '<section name=""" & clsProteinCoverageSummarizer.XML_SECTION_PROCESSING_OPTIONS & """> was not found in the parameter file: ", "Invalid File")
+                        mSaveFullSettingsFileOnExit = True
                     Else
                         Try
                             eColumnOrdering = CType(objSettingsFile.GetParam(clsProteinCoverageSummarizer.XML_SECTION_PROCESSING_OPTIONS, "DelimitedProteinFileFormatCode", cboProteinInputFileColumnOrdering.SelectedIndex + PROTEIN_INPUT_FILE_INDEX_OFFSET), DelimitedFileReader.eDelimitedFileFormatCode)
@@ -1286,68 +1289,68 @@ Public Class GUI
 
     End Sub
 
-    Private Sub IniFileSaveOptions(FileName As String, Optional blnSaveExtendedOptions As Boolean = False)
-        Dim objSettingsFile As New XmlSettingsFileAccessor
+    Private Sub IniFileSaveOptions(strSettingsFilePath As String, Optional blnSaveExtendedOptions As Boolean = False)
+        Dim objSettingsFile As New XmlSettingsFileAccessor()
 
         Const XML_SECTION_PROCESSING_OPTIONS = "ProcessingOptions"
 
         Try
-            objSettingsFile = New XmlSettingsFileAccessor
-        Catch ex As Exception
-            MessageBox.Show("Error instantiating the XmlSettingsFileAccessor in GUI->IniFileSaveOptions: " _
-            & ControlChars.NewLine & ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
+            Dim fiSettingsFile = New FileInfo(strSettingsFilePath)
+            If Not fiSettingsFile.Exists Then
+                blnSaveExtendedOptions = True
+            End If
+        Catch
+            'Ignore errors here
         End Try
 
+        ' Pass True to .LoadSettings() to turn off case sensitive matching
+        Try
+            objSettingsFile.LoadSettings(strSettingsFilePath, True)
+        Catch ex As Exception
+            Exit Sub
+        End Try
 
-        With objSettingsFile
-            ' Pass True to .LoadSettings() to turn off case sensitive matching
-            Try
-                .LoadSettings(FileName, True)
-            Catch ex As Exception
-                Exit Sub
-            End Try
+        Try
 
-            Try
-                .SetParam(XML_SECTION_GUI_OPTIONS, "ProteinInputFilePath", txtProteinInputFilePath.Text)
-                .SetParam(XML_SECTION_GUI_OPTIONS, "PeptideInputFilePath", txtPeptideInputFilePath.Text)
-                .SetParam(XML_SECTION_GUI_OPTIONS, "OutputFolderPath", txtOutputFolderPath.Text)
+            objSettingsFile.SetParam(XML_SECTION_GUI_OPTIONS, "ProteinInputFilePath", txtProteinInputFilePath.Text)
+            objSettingsFile.SetParam(XML_SECTION_GUI_OPTIONS, "PeptideInputFilePath", txtPeptideInputFilePath.Text)
+            objSettingsFile.SetParam(XML_SECTION_GUI_OPTIONS, "OutputFolderPath", txtOutputFolderPath.Text)
 
-                If blnSaveExtendedOptions Then
-                    .SetParam(XML_SECTION_GUI_OPTIONS, "ProteinInputFileColumnDelimiterIndex", cboProteinInputFileColumnDelimiter.SelectedIndex)
-                    .SetParam(XML_SECTION_GUI_OPTIONS, "ProteinInputFileColumnDelimiter", txtProteinInputFileColumnDelimiter.Text)
+            If blnSaveExtendedOptions Then
+                objSettingsFile.SetParam(XML_SECTION_GUI_OPTIONS, "ProteinInputFileColumnDelimiterIndex", cboProteinInputFileColumnDelimiter.SelectedIndex)
+                objSettingsFile.SetParam(XML_SECTION_GUI_OPTIONS, "ProteinInputFileColumnDelimiter", txtProteinInputFileColumnDelimiter.Text)
 
-                    .SetParam(XML_SECTION_GUI_OPTIONS, "PeptideInputFileColumnDelimiterIndex", cboPeptideInputFileColumnDelimiter.SelectedIndex)
-                    .SetParam(XML_SECTION_GUI_OPTIONS, "PeptideInputFileColumnDelimiter", txtPeptideInputFileColumnDelimiter.Text)
+                objSettingsFile.SetParam(XML_SECTION_GUI_OPTIONS, "PeptideInputFileColumnDelimiterIndex", cboPeptideInputFileColumnDelimiter.SelectedIndex)
+                objSettingsFile.SetParam(XML_SECTION_GUI_OPTIONS, "PeptideInputFileColumnDelimiter", txtPeptideInputFileColumnDelimiter.Text)
 
-                    .SetParam(XML_SECTION_GUI_OPTIONS, "ProteinSequenceCharactersPerLine", cboCharactersPerLine.SelectedIndex)
-                    .SetParam(XML_SECTION_GUI_OPTIONS, "ProteinSequenceAddSpace", chkAddSpace.Checked)
+                objSettingsFile.SetParam(XML_SECTION_GUI_OPTIONS, "ProteinSequenceCharactersPerLine", cboCharactersPerLine.SelectedIndex)
+                objSettingsFile.SetParam(XML_SECTION_GUI_OPTIONS, "ProteinSequenceAddSpace", chkAddSpace.Checked)
 
-                    .SetParam(XML_SECTION_PROCESSING_OPTIONS, "OutputProteinSequence", chkOutputProteinSequence.Checked)
-                    .SetParam(XML_SECTION_PROCESSING_OPTIONS, "SearchAllProteinsForPeptideSequence", chkSearchAllProteinsForPeptideSequence.Checked)
+                objSettingsFile.SetParam(XML_SECTION_PROCESSING_OPTIONS, "OutputProteinSequence", chkOutputProteinSequence.Checked)
+                objSettingsFile.SetParam(XML_SECTION_PROCESSING_OPTIONS, "SearchAllProteinsForPeptideSequence", chkSearchAllProteinsForPeptideSequence.Checked)
 
-                    .SetParam(XML_SECTION_PROCESSING_OPTIONS, "SaveProteinToPeptideMappingFile", chkSaveProteinToPeptideMappingFile.Checked)
-                    .SetParam(XML_SECTION_PROCESSING_OPTIONS, "SearchAllProteinsSkipCoverageComputationSteps", chkSearchAllProteinsSkipCoverageComputationSteps.Checked)
+                objSettingsFile.SetParam(XML_SECTION_PROCESSING_OPTIONS, "SaveProteinToPeptideMappingFile", chkSaveProteinToPeptideMappingFile.Checked)
+                objSettingsFile.SetParam(XML_SECTION_PROCESSING_OPTIONS, "SearchAllProteinsSkipCoverageComputationSteps", chkSearchAllProteinsSkipCoverageComputationSteps.Checked)
 
-                    .SetParam(XML_SECTION_PROCESSING_OPTIONS, "TrackPeptideCounts", chkTrackPeptideCounts.Checked)
-                    .SetParam(XML_SECTION_PROCESSING_OPTIONS, "RemoveSymbolCharacters", chkRemoveSymbolCharacters.Checked)
-                    .SetParam(XML_SECTION_PROCESSING_OPTIONS, "MatchPeptidePrefixAndSuffixToProtein", chkMatchPeptidePrefixAndSuffixToProtein.Checked)
-                    .SetParam(XML_SECTION_PROCESSING_OPTIONS, "IgnoreILDifferences", chkIgnoreILDifferences.Checked)
+                objSettingsFile.SetParam(XML_SECTION_PROCESSING_OPTIONS, "TrackPeptideCounts", chkTrackPeptideCounts.Checked)
+                objSettingsFile.SetParam(XML_SECTION_PROCESSING_OPTIONS, "RemoveSymbolCharacters", chkRemoveSymbolCharacters.Checked)
+                objSettingsFile.SetParam(XML_SECTION_PROCESSING_OPTIONS, "MatchPeptidePrefixAndSuffixToProtein", chkMatchPeptidePrefixAndSuffixToProtein.Checked)
+                objSettingsFile.SetParam(XML_SECTION_PROCESSING_OPTIONS, "IgnoreILDifferences", chkIgnoreILDifferences.Checked)
 
-                    .SetParam(XML_SECTION_PROCESSING_OPTIONS, "PeptideInputFileDelimiter", LookupColumnDelimiter(cboPeptideInputFileColumnDelimiter, txtPeptideInputFileColumnDelimiter, ControlChars.Tab))
-                    .SetParam(XML_SECTION_PROCESSING_OPTIONS, "PeptideFileFormatCode", cboPeptideInputFileColumnOrdering.SelectedIndex)
-                    .SetParam(XML_SECTION_PROCESSING_OPTIONS, "PeptideFileSkipFirstLine", chkPeptideFileSkipFirstLine.Checked)
+                objSettingsFile.SetParam(XML_SECTION_PROCESSING_OPTIONS, "PeptideInputFileDelimiter", LookupColumnDelimiter(cboPeptideInputFileColumnDelimiter, txtPeptideInputFileColumnDelimiter, ControlChars.Tab))
+                objSettingsFile.SetParam(XML_SECTION_PROCESSING_OPTIONS, "PeptideFileFormatCode", cboPeptideInputFileColumnOrdering.SelectedIndex)
+                objSettingsFile.SetParam(XML_SECTION_PROCESSING_OPTIONS, "PeptideFileSkipFirstLine", chkPeptideFileSkipFirstLine.Checked)
 
-                    .SetParam(XML_SECTION_PROCESSING_OPTIONS, "DelimitedProteinFileDelimiter", LookupColumnDelimiter(cboPeptideInputFileColumnDelimiter, txtPeptideInputFileColumnDelimiter, ControlChars.Tab))
-                    .SetParam(XML_SECTION_PROCESSING_OPTIONS, "DelimitedProteinFileFormatCode", cboProteinInputFileColumnOrdering.SelectedIndex + PROTEIN_INPUT_FILE_INDEX_OFFSET)
-                    .SetParam(XML_SECTION_PROCESSING_OPTIONS, "ProteinFileSkipFirstLine", chkProteinFileSkipFirstLine.Checked)
-                End If
+                objSettingsFile.SetParam(XML_SECTION_PROCESSING_OPTIONS, "DelimitedProteinFileDelimiter", LookupColumnDelimiter(cboPeptideInputFileColumnDelimiter, txtPeptideInputFileColumnDelimiter, ControlChars.Tab))
+                objSettingsFile.SetParam(XML_SECTION_PROCESSING_OPTIONS, "DelimitedProteinFileFormatCode", cboProteinInputFileColumnOrdering.SelectedIndex + PROTEIN_INPUT_FILE_INDEX_OFFSET)
+                objSettingsFile.SetParam(XML_SECTION_PROCESSING_OPTIONS, "ProteinFileSkipFirstLine", chkProteinFileSkipFirstLine.Checked)
+            End If
 
-                .SaveSettings()
-            Catch ex As Exception
-                MessageBox.Show("Error storing parameter in settings file: " & Path.GetFileName(FileName),
-                         "Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
-            End Try
-        End With
+            objSettingsFile.SaveSettings()
+        Catch ex As Exception
+            ShowErrorMessage("Error storing parameter in settings file: " & Path.GetFileName(strSettingsFilePath), "Error")
+        End Try
+
 
     End Sub
 
@@ -2054,7 +2057,7 @@ Public Class GUI
 #End Region
 
     Private Sub GUI_Closing(sender As Object, e As CancelEventArgs) Handles MyBase.Closing
-        IniFileSaveOptions(GetSettingsFilePath())
+        IniFileSaveOptions(GetSettingsFilePath(), mSaveFullSettingsFileOnExit)
     End Sub
 
     Private Sub chkSearchAllProteinsSaveDetails_CheckedChanged(sender As Object, e As EventArgs) Handles chkSaveProteinToPeptideMappingFile.CheckedChanged
