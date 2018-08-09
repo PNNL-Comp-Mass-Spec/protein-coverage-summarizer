@@ -1,5 +1,19 @@
 Option Strict On
 
+' -------------------------------------------------------------------------------
+' Written by Matthew Monroe and Nikša Blonder for the Department of Energy (PNNL, Richland, WA)
+' Program started June 14, 2005
+'
+' E-mail: matthew.monroe@pnnl.gov or proteomics@pnnl.gov
+' Website: https://omics.pnl.gov/ or https://www.pnnl.gov/sysbio/ or https://panomics.pnnl.gov/
+' -------------------------------------------------------------------------------
+'
+' Licensed under the 2-Clause BSD License; you may not use this file except
+' in compliance with the License.  You may obtain a copy of the License at
+' https://opensource.org/licenses/BSD-2-Clause
+'
+' Copyright 2018 Battelle Memorial Institute
+
 Imports System.ComponentModel
 Imports System.Text.RegularExpressions
 Imports Ookii.Dialogs
@@ -7,14 +21,11 @@ Imports PRISM
 Imports ProteinCoverageSummarizer
 Imports ProteinFileReader
 Imports SharedVBNetRoutines
-' This program uses clsProteinCoverageSummarizer to read in a file with protein sequences along with
-' an accompanying file with peptide sequences and compute the percent coverage of each of the proteins
-'
-' Written by Matthew Monroe and Nikša Blonder for the Department of Energy (PNNL, Richland, WA)
-' Copyright 2005, Battelle Memorial Institute.  All Rights Reserved.
-'
-' Started June 2005
 
+''' <summary>
+''' This program uses clsProteinCoverageSummarizer to read in a file with protein sequences along with
+''' an accompanying file with peptide sequences and compute the percent coverage of each of the proteins
+''' </summary>
 Public Class GUI
     Inherits Form
 
@@ -1684,8 +1695,8 @@ Public Class GUI
         strMessage &= "E-mail: matthew.monroe@pnnl.gov or proteomics@pnnl.gov" & ControlChars.NewLine
         strMessage &= "Website: https://omics.pnl.gov or https://panomics.pnl.gov/" & ControlChars.NewLine & ControlChars.NewLine
 
-        strMessage &= "Licensed under the Apache License, Version 2.0; you may not use this file except in compliance with the License.  "
-        strMessage &= "You may obtain a copy of the License at https://www.apache.org/licenses/LICENSE-2.0" & ControlChars.NewLine & ControlChars.NewLine
+        strMessage &= "Licensed under the 2-Clause BSD License; https://opensource.org/licenses/BSD-2-Clause" & ControlChars.NewLine
+        strMessage &= "Copyright 2018 Battelle Memorial Institute" & ControlChars.NewLine & ControlChars.NewLine
 
         MessageBox.Show(strMessage, "About", MessageBoxButtons.OK, MessageBoxIcon.Information)
 
@@ -1746,7 +1757,7 @@ Public Class GUI
         Dim strRtf As String
         Dim reReplaceSymbols As Regex
 
-        ' Define a RegEx to replace all of the non-letter characters
+        ' Define a RegEx to remove whitespace characters
         reReplaceSymbols = New Regex("[ \t\r\n]", RegexOptions.Compiled)
 
         Dim blnInUpperRegion As Boolean

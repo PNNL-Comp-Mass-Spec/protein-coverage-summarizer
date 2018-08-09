@@ -1,29 +1,31 @@
 Option Strict On
 
-Imports System.Runtime.InteropServices
-
-' This program uses clsProteinCoverageSummarizer to read in a file with protein sequences along with
-' an accompanying file with peptide sequences and compute the percent coverage of each of the proteins
-'
-' Example command Line
-' /I:PeptideInputFilePath /R:ProteinInputFilePath /O:OutputFolderPath /P:ParameterFilePath
-
 ' -------------------------------------------------------------------------------
 ' Written by Matthew Monroe and Nikša Blonder for the Department of Energy (PNNL, Richland, WA)
 ' Program started June 14, 2005
 '
 ' E-mail: matthew.monroe@pnnl.gov or proteomics@pnnl.gov
-' Website: https://omics.pnl.gov or https://panomics.pnl.gov/
+' Website: https://omics.pnl.gov/ or https://www.pnnl.gov/sysbio/ or https://panomics.pnnl.gov/
 ' -------------------------------------------------------------------------------
 '
-' Licensed under the Apache License, Version 2.0; you may not use this file except
+' Licensed under the 2-Clause BSD License; you may not use this file except
 ' in compliance with the License.  You may obtain a copy of the License at
-' https://www.apache.org/licenses/LICENSE-2.0
+' https://opensource.org/licenses/BSD-2-Clause
 '
+' Copyright 2018 Battelle Memorial Institute
 
+Imports System.Runtime.InteropServices
+
+''' <summary>
+''' This program uses clsProteinCoverageSummarizer to read in a file with protein sequences along with
+''' an accompanying file with peptide sequences and compute the percent coverage of each of the proteins
+'''
+''' Example command Line
+''' /I:PeptideInputFilePath /R:ProteinInputFilePath /O:OutputFolderPath /P:ParameterFilePath
+''' </summary>
 Public Module modMain
 
-    Public Const PROGRAM_DATE As String = "July 17, 2018"
+    Public Const PROGRAM_DATE As String = "August 8, 2018"
 
     Private mPeptideInputFilePath As String
     Private mProteinInputFilePath As String

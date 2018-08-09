@@ -1,24 +1,26 @@
 Option Strict On
 
+' -------------------------------------------------------------------------------
+' Written by Matthew Monroe for the Department of Energy (PNNL, Richland, WA)
+' Started August 2007
+'
+' E-mail: matthew.monroe@pnnl.gov or proteomics@pnnl.gov
+' Website: https://omics.pnl.gov/ or https://www.pnnl.gov/sysbio/ or https://panomics.pnnl.gov/
+' -------------------------------------------------------------------------------
+'
+' Licensed under the 2-Clause BSD License; you may not use this file except
+' in compliance with the License.  You may obtain a copy of the License at
+' https://opensource.org/licenses/BSD-2-Clause
+'
+' Copyright 2018 Battelle Memorial Institute
+
 Imports System.IO
 Imports System.Text.RegularExpressions
 
-' This class tracks the first n letters of each peptide sent to it, while also
-' tracking the peptides and the location of those peptides in the leader sequence hash table
-'
-' -------------------------------------------------------------------------------
-' Written by Matthew Monroe for the Department of Energy (PNNL, Richland, WA)
-' Class started August 24, 2007
-'
-' E-mail: matthew.monroe@pnnl.gov or proteomics@pnnl.gov
-' Website: https://omics.pnl.gov or https://panomics.pnl.gov/
-' -------------------------------------------------------------------------------
-'
-' Licensed under the Apache License, Version 2.0; you may not use this file except
-' in compliance with the License.  You may obtain a copy of the License at
-' https://www.apache.org/licenses/LICENSE-2.0
-'
-
+''' <summary>
+''' This class tracks the first n letters of each peptide sent to it, while also
+''' tracking the peptides and the location of those peptides in the leader sequence hash table
+''' </summary>
 Public Class clsLeaderSequenceCache
 
     Public Sub New()

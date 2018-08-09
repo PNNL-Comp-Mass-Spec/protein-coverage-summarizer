@@ -1,5 +1,19 @@
 Option Strict On
 
+' -------------------------------------------------------------------------------
+' Written by Matthew Monroe and Nikša Blonder for the Department of Energy (PNNL, Richland, WA)
+' Started June 2005
+'
+' E-mail: matthew.monroe@pnnl.gov or proteomics@pnnl.gov
+' Website: https://omics.pnl.gov/ or https://www.pnnl.gov/sysbio/ or https://panomics.pnnl.gov/
+' -------------------------------------------------------------------------------
+'
+' Licensed under the 2-Clause BSD License; you may not use this file except
+' in compliance with the License.  You may obtain a copy of the License at
+' https://opensource.org/licenses/BSD-2-Clause
+'
+' Copyright 2018 Battelle Memorial Institute
+
 Imports System.Data.SQLite
 Imports System.IO
 Imports System.Text.RegularExpressions
@@ -7,14 +21,10 @@ Imports System.Threading
 Imports PRISM
 Imports ProteinFileReader
 
-' This class will read a protein fasta file or delimited protein info file and
-' store the proteins in memory
-'
-' Written by Matthew Monroe and Nikša Blonder for the Department of Energy (PNNL, Richland, WA)
-' Copyright 2005, Battelle Memorial Institute.  All Rights Reserved.
-'
-' Started June 2005
-
+''' <summary>
+''' This class will read a protein fasta file or delimited protein info file and
+''' store the proteins in memory
+''' </summary>
 <CLSCompliant(True)>
 Public Class clsProteinFileDataCache
     Inherits clsEventNotifier

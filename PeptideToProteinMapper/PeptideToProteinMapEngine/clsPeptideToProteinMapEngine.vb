@@ -1,27 +1,29 @@
 Option Strict On
 
+' -------------------------------------------------------------------------------
+' Written by Matthew Monroe for the Department of Energy (PNNL, Richland, WA)
+' Started September 2008
+'
+' E-mail: matthew.monroe@pnnl.gov or proteomics@pnnl.gov
+' Website: https://omics.pnl.gov/ or https://www.pnnl.gov/sysbio/ or https://panomics.pnnl.gov/
+' -------------------------------------------------------------------------------
+'
+' Licensed under the 2-Clause BSD License; you may not use this file except
+' in compliance with the License.  You may obtain a copy of the License at
+' https://opensource.org/licenses/BSD-2-Clause
+'
+' Copyright 2018 Battelle Memorial Institute
+
 Imports System.IO
 Imports PHRPReader
 Imports ProteinCoverageSummarizer
 Imports ProteinFileReader
 
-' This class uses ProteinCoverageSummarizer.dll to read in a protein fasta file or delimited protein info file along with
-' an accompanying file with peptide sequences to find the proteins that contain each peptide
-' It will also optionally compute the percent coverage of each of the proteins
-'
-' -------------------------------------------------------------------------------
-' Written by Matthew Monroe for the Department of Energy (PNNL, Richland, WA)
-' Program started September 27, 2008
-'
-' E-mail: matthew.monroe@pnnl.gov or proteomics@pnnl.gov
-' Website: https://omics.pnl.gov or https://panomics.pnl.gov/
-' -------------------------------------------------------------------------------
-'
-' Licensed under the Apache License, Version 2.0; you may not use this file except
-' in compliance with the License.  You may obtain a copy of the License at
-' https://www.apache.org/licenses/LICENSE-2.0
-'
-
+''' <summary>
+''' This class uses ProteinCoverageSummarizer.dll to read in a protein fasta file or delimited protein info file along with
+''' an accompanying file with peptide sequences to find the proteins that contain each peptide
+''' It will also optionally compute the percent coverage of each of the proteins
+''' </summary>
 Public Class clsPeptideToProteinMapEngine
     Inherits PRISM.FileProcessor.ProcessFilesBase
 

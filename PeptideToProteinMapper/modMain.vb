@@ -1,27 +1,18 @@
 ﻿Option Strict On
 
-' This program uses PeptideToProteinMapEngine.dll to read in a file with peptide sequences, then
-' searches for the given peptides in a protein sequence file (.Fasta or tab-delimited text)
-' using ProteinCoverageSummarizer.dll
-'
-' This program is similar to the ProteinCoverageSummarizer, but it is a console-only application
-' In addition, this program supports reading Inspect output files
-'
-' Example command Line
-' /I:PeptideInputFilePath /R:ProteinInputFilePath /O:OutputFolderPath /P:ParameterFilePath
-
 ' -------------------------------------------------------------------------------
 ' Written by Matthew Monroe for the Department of Energy (PNNL, Richland, WA)
-' Program started September 27, 2008
+' Started September 2008
 '
 ' E-mail: matthew.monroe@pnnl.gov or proteomics@pnnl.gov
-' Website: https://panomics.pnl.gov/ or https://omics.pnl.gov or http://panomics.pnnl.gov/
+' Website: https://omics.pnl.gov/ or https://www.pnnl.gov/sysbio/ or https://panomics.pnnl.gov/
 ' -------------------------------------------------------------------------------
 '
-' Licensed under the Apache License, Version 2.0; you may not use this file except
+' Licensed under the 2-Clause BSD License; you may not use this file except
 ' in compliance with the License.  You may obtain a copy of the License at
-' http://www.apache.org/licenses/LICENSE-2.0
+' https://opensource.org/licenses/BSD-2-Clause
 '
+' Copyright 2018 Battelle Memorial Institute
 
 Imports System.IO
 Imports System.Reflection
@@ -30,9 +21,20 @@ Imports PeptideToProteinMapEngine
 Imports PeptideToProteinMapEngine.clsPeptideToProteinMapEngine
 Imports PRISM
 
+''' <summary>
+''' This program uses PeptideToProteinMapEngine.dll to read in a file with peptide sequences, then
+''' searches for the given peptides in a protein sequence file (.Fasta or tab-delimited text)
+''' using ProteinCoverageSummarizer.dll
+'''
+''' This program is similar to the ProteinCoverageSummarizer, but it is a console-only application
+''' In addition, this program supports reading Inspect output files
+'''
+''' Example command Line
+''' /I:PeptideInputFilePath /R:ProteinInputFilePath /O:OutputFolderPath /P:ParameterFilePath
+''' </summary>
 Public Module modMain
 
-    Public Const PROGRAM_DATE As String = "July 17, 2018"
+    Public Const PROGRAM_DATE As String = "August 8, 2018"
 
     Private mPeptideInputFilePath As String
     Private mProteinInputFilePath As String
@@ -324,7 +326,7 @@ Public Module modMain
             Console.WriteLine()
 
             Console.WriteLine("E-mail: matthew.monroe@pnnl.gov or proteomics@pnnl.gov")
-            Console.WriteLine("Website: http://omics.pnl.gov/ or http://panomics.pnnl.gov/")
+            Console.WriteLine("Website: https://omics.pnl.gov or https://panomics.pnl.gov/")
             Console.WriteLine()
 
             ' Delay for 750 msec in case the user double clicked this file from within Windows Explorer (or started the program via a shortcut)
