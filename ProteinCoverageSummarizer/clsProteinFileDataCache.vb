@@ -674,13 +674,4 @@ Public Class clsProteinFileDataCache
 
     End Class
 
-    Protected Overrides Sub Finalize()
-        MyBase.Finalize()
-        Try
-            DeleteSQLiteDBFile()
-        Catch ex As Exception
-            ' Ignore errors here
-        End Try
-
-    End Sub
 End Class
