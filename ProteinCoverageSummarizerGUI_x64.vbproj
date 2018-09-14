@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <ProjectType>Local</ProjectType>
@@ -79,10 +79,6 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="ProteinCoverageSummarizer, Version=1.1.5142.26700, Culture=neutral, processorArchitecture=AMD64">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>ProteinCoverageSummarizer\bin\x64\ProteinCoverageSummarizer.dll</HintPath>
-    </Reference>
     <Reference Include="SharedVBNetRoutines, Version=1.0.2797.40342, Culture=neutral">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>Lib\SharedVBNetRoutines.dll</HintPath>
@@ -180,6 +176,12 @@
     <PackageReference Include="System.Data.SQLite.Core">
       <Version>1.0.97</Version>
     </PackageReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="ProteinCoverageSummarizer\ProteinCoverageSummarizer_x64.vbproj">
+      <Project>{af5e35d8-1c45-41f9-82fe-56d4cad8856c}</Project>
+      <Name>ProteinCoverageSummarizer_x64</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.VisualBasic.targets" />
   <PropertyGroup>

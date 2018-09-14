@@ -1,7 +1,11 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual Studio 2010
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.28010.2026
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "ProteinCoverageSummarizerGUI_x64", "ProteinCoverageSummarizerGUI_x64.vbproj", "{2FCC0BA9-9F66-4826-83BD-8750392D6BFF}"
+EndProject
+Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "ProteinCoverageSummarizer_x64", "ProteinCoverageSummarizer\ProteinCoverageSummarizer_x64.vbproj", "{AF5E35D8-1C45-41F9-82FE-56D4CAD8856C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -13,8 +17,15 @@ Global
 		{2FCC0BA9-9F66-4826-83BD-8750392D6BFF}.Debug|x64.Build.0 = Debug|x64
 		{2FCC0BA9-9F66-4826-83BD-8750392D6BFF}.Release|x64.ActiveCfg = Release|x64
 		{2FCC0BA9-9F66-4826-83BD-8750392D6BFF}.Release|x64.Build.0 = Release|x64
+		{AF5E35D8-1C45-41F9-82FE-56D4CAD8856C}.Debug|x64.ActiveCfg = Debug|x64
+		{AF5E35D8-1C45-41F9-82FE-56D4CAD8856C}.Debug|x64.Build.0 = Debug|x64
+		{AF5E35D8-1C45-41F9-82FE-56D4CAD8856C}.Release|x64.ActiveCfg = Release|x64
+		{AF5E35D8-1C45-41F9-82FE-56D4CAD8856C}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {CAFFF7F1-3B49-424F-9186-C5BE9A07163B}
 	EndGlobalSection
 EndGlobal
