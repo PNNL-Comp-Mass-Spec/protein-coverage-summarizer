@@ -25,6 +25,10 @@ Source: ..\bin\ProteinCoverageSummarizerSettings.xml           ; DestDir: {app}
 Source: ..\bin\AnyCPU\x64\SQLite.Interop.dll                   ; DestDir: {app}\x64
 Source: ..\bin\AnyCPU\x86\SQLite.Interop.dll                   ; DestDir: {app}\x86
 
+Source: ..\PeptideToProteinMapper\bin\AnyCPU\PeptideToProteinMapper.exe    ; DestDir: {app}
+Source: ..\PeptideToProteinMapper\bin\AnyCPU\PeptideToProteinMapEngine.dll ; DestDir: {app}
+Source: ..\PeptideToProteinMapper\bin\AnyCPU\PHRPReader.dll                ; DestDir: {app}
+
 Source: ..\bin\BSA_P171_QID1638_TestProteins.fasta                        ; DestDir: {app}
 Source: ..\bin\BSA_P171_QID1638_TestPeptides.txt                          ; DestDir: {app}
 Source: ..\bin\BSA_P171_QID1638_TestPeptides_coverage.txt                 ; DestDir: {app}
