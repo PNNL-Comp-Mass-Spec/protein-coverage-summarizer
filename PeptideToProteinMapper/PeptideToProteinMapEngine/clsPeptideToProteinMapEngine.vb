@@ -45,11 +45,6 @@ Public Class clsPeptideToProteinMapEngine
     Protected Const PERCENT_COMPLETE_RUNNING_PROTEIN_COVERAGE_SUMMARIZER As Single = 5
     Protected Const PERCENT_COMPLETE_POSTPROCESSING As Single = 95
 
-    Public Enum eProteinCoverageErrorCodes
-        NoError = 0
-        UnspecifiedError = -1
-    End Enum
-
     Public Enum ePeptideInputFileFormatConstants
         Unknown = -1
         AutoDetermine = 0
@@ -218,6 +213,7 @@ Public Class clsPeptideToProteinMapEngine
             mProteinCoverageSummarizer.mProteinDataCache.DelimitedFileDelimiter = Value
         End Set
     End Property
+
     Public Property ProteinDataDelimitedFileFormatCode As DelimitedFileReader.eDelimitedFileFormatCode
         Get
             Return mProteinCoverageSummarizer.mProteinDataCache.DelimitedFileFormatCode
@@ -226,6 +222,7 @@ Public Class clsPeptideToProteinMapEngine
             mProteinCoverageSummarizer.mProteinDataCache.DelimitedFileFormatCode = Value
         End Set
     End Property
+
     Public Property ProteinDataDelimitedFileSkipFirstLine As Boolean
         Get
             Return mProteinCoverageSummarizer.mProteinDataCache.DelimitedFileSkipFirstLine
@@ -234,6 +231,7 @@ Public Class clsPeptideToProteinMapEngine
             mProteinCoverageSummarizer.mProteinDataCache.DelimitedFileSkipFirstLine = Value
         End Set
     End Property
+
     Public Property ProteinDataRemoveSymbolCharacters As Boolean
         Get
             Return mProteinCoverageSummarizer.mProteinDataCache.RemoveSymbolCharacters
@@ -242,6 +240,7 @@ Public Class clsPeptideToProteinMapEngine
             mProteinCoverageSummarizer.mProteinDataCache.RemoveSymbolCharacters = Value
         End Set
     End Property
+
     Public Property ProteinDataIgnoreILDifferences As Boolean
         Get
             Return mProteinCoverageSummarizer.mProteinDataCache.IgnoreILDifferences

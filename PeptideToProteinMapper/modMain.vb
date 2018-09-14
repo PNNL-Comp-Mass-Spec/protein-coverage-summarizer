@@ -34,7 +34,7 @@ Imports PRISM
 ''' </summary>
 Public Module modMain
 
-    Public Const PROGRAM_DATE As String = "August 8, 2018"
+    Public Const PROGRAM_DATE As String = "September 14, 2018"
 
     Private mPeptideInputFilePath As String
     Private mProteinInputFilePath As String
@@ -211,7 +211,7 @@ Public Module modMain
         Try
             ' Make sure no invalid parameters are present
             If objParseCommandLine.InvalidParametersPresent(lstValidParameters) Then
-                ShowErrorMessage("Invalid commmand line parameters",
+                ShowErrorMessage("Invalid command line parameters",
                   (From item In objParseCommandLine.InvalidParameters(lstValidParameters) Select "/" + item).ToList())
                 Return False
             Else
@@ -285,18 +285,28 @@ Public Module modMain
     Private Sub ShowProgramHelp()
 
         Try
-            Console.WriteLine("This program reads in a text file containing peptide sequences.  It then searches the specified .fasta or text file containing protein names and sequences (and optionally descriptions)")
-            Console.WriteLine("to find the proteins that contain each peptide.  It will also compute the sequence coverage percent for each protein (disable using /K).")
+            Console.WriteLine(ConsoleMsgUtils.WrapParagraph(
+                "This program reads in a text file containing peptide sequences. " &
+                "It then searches the specified .fasta or text file containing protein names and sequences " &
+                "(and optionally descriptions) to find the proteins that contain each peptide. " &
+                "It will also compute the sequence coverage percent for each protein (disable using /K)."))
             Console.WriteLine()
-            Console.WriteLine("Program syntax:" & ControlChars.NewLine & Path.GetFileName(Assembly.GetExecutingAssembly().Location) &
-             " /I:PeptideInputFilePath /R:ProteinInputFilePath")
+            Console.WriteLine("Program syntax:" & ControlChars.NewLine & Path.GetFileName(Assembly.GetExecutingAssembly().Location))
+            Console.WriteLine(" /I:PeptideInputFilePath /R:ProteinInputFilePath")
             Console.WriteLine(" [/O:OutputFolderName] [/P:ParameterFilePath] [/F:FileFormatCode] ")
             Console.WriteLine(" [/N:InspectParameterFilePath] [/G] [/H] [/K] [/A]")
             Console.WriteLine(" [/L[:LogFilePath]] [/LogFolder:LogFolderPath] [/VerboseLog] [/Q]")
             Console.WriteLine()
-            Console.WriteLine("The input file path can contain the wildcard character *.  If a wildcard is present, then the same protein input file path will be used for each of the peptide input files matched.")
-            Console.WriteLine("The output folder name is optional.  If omitted, the output files will be created in the same folder as the input file.  If included, then a subfolder is created with the name OutputFolderName.")
-            Console.WriteLine("The parameter file path is optional.  If included, it should point to a valid XML parameter file.")
+            Console.WriteLine(ConsoleMsgUtils.WrapParagraph(
+                "The input file path can contain the wildcard character *. If a wildcard is present, " &
+                "the same protein input file path will be used for each of the peptide input files matched."))
+            Console.WriteLine()
+            Console.WriteLine(ConsoleMsgUtils.WrapParagraph("The output folder name is optional. " &
+                              "If omitted, the output files will be created in the same folder as the input file. " &
+                              "If included, then a subfolder is created with the name OutputFolderName."))
+            Console.WriteLine()
+            Console.WriteLine(ConsoleMsgUtils.WrapParagraph("The parameter file path is optional. " &
+                              "If included, it should point to a valid XML parameter file."))
             Console.WriteLine()
 
             Console.WriteLine("Use /F to specify the peptide input file format code.  Options are:")
@@ -305,16 +315,20 @@ Public Module modMain
             Console.WriteLine("   " & ePeptideInputFileFormatConstants.ProteinAndPeptideFile & "=Protein name in 1st column and peptide sequence 2nd column")
             Console.WriteLine("   " & ePeptideInputFileFormatConstants.InspectResultsFile & "=Inspect search results file (peptide sequence in the 3rd column)")
             Console.WriteLine("   " & ePeptideInputFileFormatConstants.MSGFDBResultsFile & "=MS-GF+ search results file (peptide sequence in the column titled 'Peptide'; optionally scan number in the column titled 'Scan')")
-            Console.WriteLine("   " & ePeptideInputFileFormatConstants.PHRPFile & "=Sequest, X!Tandem, Inspect, or MS-GF+ PHRP data file")
+            Console.WriteLine("   " & ePeptideInputFileFormatConstants.PHRPFile & "=SEQUEST, X!Tandem, Inspect, or MS-GF+ PHRP data file")
             Console.WriteLine()
 
-            Console.WriteLine("When processing an Inspect search results file, use /N to specify the Inspect parameter file used (required for determining the mod names embedded in the identified peptides).")
+            Console.WriteLine(ConsoleMsgUtils.WrapParagraph(
+                "When processing an Inspect search results file, use /N to specify the Inspect parameter file used " &
+                "(required for determining the mod names embedded in the identified peptides)."))
             Console.WriteLine()
 
             Console.WriteLine("Use /G to ignore I/L differences when finding peptides in proteins or computing coverage")
             Console.WriteLine("Use /H to suppress (hide) the protein sequence in the _coverage.txt file")
             Console.WriteLine("Use /K to skip the protein coverage computation steps (enabling faster processing)")
-            Console.WriteLine("Use /A to create a copy of the source file, but with a new column listing the mapped protein for each peptide.  If a peptide maps to multiple proteins, then multiple lines will be listed")
+            Console.WriteLine(ConsoleMsgUtils.WrapParagraph(
+                "Use /A to create a copy of the source file, but with a new column listing the mapped protein for each peptide. " &
+                "If a peptide maps to multiple proteins, then multiple lines will be listed"))
 
             Console.WriteLine("Use /L to create a log file, optionally specifying the file name")
             Console.WriteLine("Use /LogFolder to define the folder in which the log file should be created")
