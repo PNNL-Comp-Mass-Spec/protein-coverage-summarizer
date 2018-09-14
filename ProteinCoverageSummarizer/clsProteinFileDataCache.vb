@@ -142,15 +142,18 @@ Public Class clsProteinFileDataCache
     Public Function ConnectToSqlLiteDB(blnDisableJournaling As Boolean) As SQLiteConnection
 
         If mSqlLiteDBConnectionString Is Nothing OrElse mSqlLiteDBConnectionString.Length = 0 Then
+            OnDebugEvent("ConnectToSqlLiteDB: Unable to open the SQLite database because mSqlLiteDBConnectionString is empty")
             Return Nothing
         End If
 
         Dim SQLconnect = New SQLiteConnection(mSqlLiteDBConnectionString, True)
         SQLconnect.Open()
+        OnDebugEvent("Connecting to SQLite DB: " + mSqlLiteDBConnectionString)
 
         ' Turn off Journaling and set Synchronous mode to 0
         ' These changes are required to improve the update speed
         If blnDisableJournaling Then
+            OnDebugEvent("Disabling Journaling and setting Synchronous mode to 0 (improves update speed)")
 
             Using SQLcommand As SQLiteCommand = SQLconnect.CreateCommand
                 SQLcommand.CommandText = "PRAGMA journal_mode = OFF"
@@ -176,6 +179,7 @@ Public Class clsProteinFileDataCache
             strFolderPath = clsProteinCoverageSummarizer.GetAppFolderPath()
 
             strFilePath = Path.Combine(strFolderPath, "TempFileToTestFileIOPermissions.tmp")
+            OnDebugEvent("Checking for write permission by creating file " + strFilePath)
 
             Using swTestFile = New StreamWriter(New FileStream(strFilePath, FileMode.Create, FileAccess.Write, FileShare.Read))
                 swTestFile.WriteLine("Test")
@@ -185,6 +189,7 @@ Public Class clsProteinFileDataCache
 
         Catch ex As Exception
             ' Error creating file; user likely doesn't have write-access
+            OnDebugEvent(" ... unable to create the file: " + ex.Message)
             blnSuccess = False
         End Try
 
@@ -192,11 +197,14 @@ Public Class clsProteinFileDataCache
             Try
                 ' Create a randomly named file in the user's temp folder
                 strFilePath = Path.GetTempFileName
+                OnDebugEvent("Creating file in user's temp directory: " + strFilePath)
+
                 strFolderPath = Path.GetDirectoryName(strFilePath)
                 blnSuccess = True
 
             Catch ex As Exception
                 ' Error creating temp file; user likely doesn't have write-access anywhere on the disk
+                OnDebugEvent(" ... unable to create the file: " + ex.Message)
                 blnSuccess = False
             End Try
         End If
@@ -204,6 +212,7 @@ Public Class clsProteinFileDataCache
         If blnSuccess Then
             Try
                 ' Delete the temporary file
+                OnDebugEvent("Deleting " + strFilePath)
                 File.Delete(strFilePath)
             Catch ex As Exception
                 ' Ignore errors here
@@ -215,6 +224,8 @@ Public Class clsProteinFileDataCache
         Else
             strDBPath = strSqlLiteDBFileName
         End If
+
+        OnDebugEvent(" SQLite DB Path defined: " + strDBPath)
 
         Return strDBPath
 
@@ -230,19 +241,22 @@ Public Class clsProteinFileDataCache
 
         Try
             If Not mSqlLitePersistentConnection Is Nothing Then
+                OnDebugEvent("Closing persistent SQLite connection; calling method: " + callingMethod)
                 mSqlLitePersistentConnection.Close()
             End If
         Catch ex As Exception
             ' Ignore errors here
+            OnDebugEvent(" ... exception: " + ex.Message)
         End Try
 
         Try
 
             If String.IsNullOrEmpty(mSqlLiteDBFilePath) Then
-                ' SqlLiteDBFilePath is not defined or is empty; nothing to do
+                OnDebugEvent("DeleteSQLiteDBFile: SqlLiteDBFilePath is not defined or is empty; nothing to do; calling method: " + callingMethod)
                 Exit Sub
             ElseIf Not File.Exists(mSqlLiteDBFilePath) Then
-                ' File doesn't exist; nothing to do
+                OnDebugEvent(String.Format("DeleteSQLiteDBFile: File doesn't exist; nothing to do ({0}); calling method: {1}",
+                                           mSqlLiteDBFilePath, callingMethod))
                 Exit Sub
             End If
 
@@ -265,6 +279,7 @@ Public Class clsProteinFileDataCache
             Try
                 If Not String.IsNullOrEmpty(mSqlLiteDBFilePath) Then
                     If File.Exists(mSqlLiteDBFilePath) Then
+                        OnDebugEvent("DeleteSQLiteDBFile: Deleting " + mSqlLiteDBFilePath + "; calling method: " + callingMethod)
                         File.Delete(mSqlLiteDBFilePath)
                     End If
                 End If
@@ -277,9 +292,9 @@ Public Class clsProteinFileDataCache
                 Exit For
 
             Catch ex As Exception
-                If intRetryIndex > 0 Then
-                    OnWarningEvent("Error deleting " & mSqlLiteDBFilePath & ": " & ControlChars.NewLine & ex.Message)
-                    OnWarningEvent("  Waiting " & intRetryHoldoffSeconds & " seconds, then trying again")
+                If retryIndex > 0 Then
+                    OnWarningEvent(String.Format("Error deleting {0} (calling method {1}): {2}", mSqlLiteDBFilePath, callingMethod, ex.Message))
+                    OnWarningEvent("  Waiting " & retryHoldOffSeconds & " seconds, then trying again")
                 End If
             End Try
 
@@ -311,6 +326,8 @@ Public Class clsProteinFileDataCache
         Dim SQLcommand As SQLiteCommand
         SQLcommand = mSqlLitePersistentConnection.CreateCommand
         SQLcommand.CommandText = "SELECT * FROM udtProteinInfoType WHERE UniqueSequenceID = " & intIndex.ToString
+
+        OnDebugEvent("GetCachedProteinFromSQLiteDB: running query " + cmd.CommandText)
 
         Dim SQLreader As SQLiteDataReader
         SQLreader = SQLcommand.ExecuteReader()
@@ -354,6 +371,7 @@ Public Class clsProteinFileDataCache
         Dim SQLcommand As SQLiteCommand
         SQLcommand = SQLconnect.CreateCommand
         SQLcommand.CommandText = strSQLQuery
+        OnDebugEvent("GetSQLiteDataReader: running query " + cmd.CommandText)
 
         Dim SQLreader As SQLiteDataReader
         SQLreader = SQLcommand.ExecuteReader()
@@ -399,6 +417,7 @@ Public Class clsProteinFileDataCache
             Try
                 ' If the file exists, we need to delete it
                 If File.Exists(mSqlLiteDBFilePath) Then
+                    OnDebugEvent("InitializeLocalVariables: deleting " + mSqlLiteDBFilePath)
                     File.Delete(mSqlLiteDBFilePath)
                 End If
 
@@ -408,6 +427,7 @@ Public Class clsProteinFileDataCache
 
             Catch ex As Exception
                 ' Error deleting the file
+                OnWarningEvent("Exception in InitializeLocalVariables: " + ex.Message)
             End Try
 
             intFileAttemptCount += 1
@@ -448,7 +468,10 @@ Public Class clsProteinFileDataCache
                                     "sequence TEXT, " &
                                     "UniquesequenceID INTEGER PRIMARY KEY, " &
                                     "PercentCoverage REAL);" ', NonUniquePeptideCount INTEGER, UniquePeptideCount INTEGER);"
-        SQLcommand.ExecuteNonQuery()
+
+        OnDebugEvent("ParseProteinFile: Creating table with " + cmd.CommandText)
+
+        cmd.ExecuteNonQuery()
 
         ' Define a RegEx to replace all of the non-letter characters
         Dim reReplaceSymbols = New Regex("[^A-Za-z]", RegexOptions.Compiled)
@@ -460,7 +483,7 @@ Public Class clsProteinFileDataCache
         Try
 
             If strProteinInputFilePath Is Nothing OrElse strProteinInputFilePath.Length = 0 Then
-                mStatusMessage = "Empty protein input file path"
+                ReportError("Empty protein input file path")
                 blnSuccess = False
             Else
 
@@ -489,14 +512,14 @@ Public Class clsProteinFileDataCache
 
                 ' Verify that the input file exists
                 If Not File.Exists(strProteinInputFilePath) Then
-                    mStatusMessage = "Protein input file not found: " & strProteinInputFilePath
+                    ReportError("Protein input file not found: " & strProteinInputFilePath)
                     blnSuccess = False
                     Exit Try
                 End If
 
                 ' Attempt to open the input file
                 If Not objProteinFileReader.OpenFile(strProteinInputFilePath) Then
-                    mStatusMessage = "Error opening protein input file: " & strProteinInputFilePath
+                    ReportError("Error opening protein input file: " & strProteinInputFilePath)
                     blnSuccess = False
                     Exit Try
                 End If
@@ -505,7 +528,7 @@ Public Class clsProteinFileDataCache
             End If
 
         Catch ex As Exception
-            mStatusMessage = "Error opening protein input file (" & strProteinInputFilePath & "): " & ex.Message
+            ReportError("Error opening protein input file (" & strProteinInputFilePath & "): " & ex.Message, ex)
             blnSuccess = False
         End Try
 
@@ -626,13 +649,18 @@ Public Class clsProteinFileDataCache
             End If
 
         Catch ex As Exception
-            mStatusMessage = "Error reading protein input file (" & strProteinInputFilePath & "): " & ex.Message
+            ReportError("Error reading protein input file (" & strProteinInputFilePath & "): " & ex.Message, ex)
             blnSuccess = False
         End Try
 
         Return blnSuccess
 
     End Function
+
+    Private Sub ReportError(errorMessage As String, Optional ex As Exception = Nothing)
+        OnErrorEvent(errorMessage, ex)
+        mStatusMessage = errorMessage
+    End Sub
 
     ' Options class
     Public Class FastaFileOptionsClass

@@ -2082,6 +2082,7 @@ Public Class GUI
     End Sub
 
     Private Sub mProteinCoverageSummarizer_StatusEvent(message As String)
+        Console.WriteLine(message)
         If lblProgress.Text.StartsWith(message) Then
             lblStatus.Text = ""
         Else
@@ -2091,10 +2092,12 @@ Public Class GUI
     End Sub
 
     Private Sub mProteinCoverageSummarizer_WarningEvent(message As String)
+        ConsoleMsgUtils.ShowWarning(message)
         lblStatus.Text = message
     End Sub
 
     Private Sub mProteinCoverageSummarizer_ErrorEvent(message As String, ex As Exception)
+        ConsoleMsgUtils.ShowError(message, ex)
         lblStatus.Text = message
     End Sub
 

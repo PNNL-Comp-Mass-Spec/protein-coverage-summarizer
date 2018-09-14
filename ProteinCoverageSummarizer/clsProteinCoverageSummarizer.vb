@@ -623,7 +623,7 @@ Public Class clsProteinCoverageSummarizer
             End Using
 
         Catch ex As Exception
-            SetErrorMessage("Error in DetermineLineTerminatorSize: " & ex.Message)
+            SetErrorMessage("Error in DetermineLineTerminatorSize: " & ex.Message, ex)
         End Try
 
         Return intTerminatorSize
@@ -770,7 +770,7 @@ Public Class clsProteinCoverageSummarizer
             Loop While intStartIndex < mProteinDataCache.GetProteinCountCached()
 
         Catch ex As Exception
-            SetErrorMessage("Error in FindSequenceMatch:" & ControlChars.NewLine & ex.Message)
+            SetErrorMessage("Error in FindSequenceMatch:" & ControlChars.NewLine & ex.Message, ex)
         End Try
 
     End Sub
@@ -813,7 +813,7 @@ Public Class clsProteinCoverageSummarizer
             SQLconnect.Dispose()
 
         Catch ex As Exception
-            SetErrorMessage("Error in UpdateSequenceDbDataValues: " & ex.Message)
+            SetErrorMessage("Error in UpdateSequenceDbDataValues: " & ex.Message, ex)
         End Try
 
     End Sub
@@ -1005,7 +1005,7 @@ Public Class clsProteinCoverageSummarizer
             SQLconnect.Dispose()
 
         Catch ex As Exception
-            SetErrorMessage("Error in UpdatePercentCoveragesDbDataValues: " & ex.Message)
+            SetErrorMessage("Error in UpdatePercentCoveragesDbDataValues: " & ex.Message, ex)
         End Try
 
     End Sub
@@ -1133,7 +1133,7 @@ Public Class clsProteinCoverageSummarizer
             End If
 
         Catch ex As Exception
-            SetErrorMessage("Error in LoadParameterFileSettings:" & ex.Message)
+            SetErrorMessage("Error in LoadParameterFileSettings:" & ex.Message, ex)
             SetErrorCode(eProteinCoverageErrorCodes.ErrorReadingParameterFile)
             Return False
         End Try
@@ -1388,7 +1388,7 @@ Public Class clsProteinCoverageSummarizer
             End If
 
         Catch ex As Exception
-            SetErrorMessage("Error in ParsePeptideInputFile: " & ex.Message)
+            SetErrorMessage("Error in ParsePeptideInputFile: " & ex.Message, ex)
         End Try
 
         Return Not mAbortProcessing
@@ -1436,7 +1436,7 @@ Public Class clsProteinCoverageSummarizer
             End With
 
         Catch ex As Exception
-            SetErrorMessage("Error in ParseProteinInputFile: " & ex.Message)
+            SetErrorMessage("Error in ParseProteinInputFile: " & ex.Message, ex)
         End Try
 
         Return blnSuccess
@@ -1536,7 +1536,7 @@ Public Class clsProteinCoverageSummarizer
             End If
 
         Catch ex As Exception
-            SetErrorMessage("Error in ProcessFile:" & ControlChars.NewLine & ex.Message)
+            SetErrorMessage("Error in ProcessFile:" & ControlChars.NewLine & ex.Message, ex)
             blnSuccess = False
         End Try
 
@@ -1699,7 +1699,7 @@ Public Class clsProteinCoverageSummarizer
             End Using
 
         Catch ex As Exception
-            SetErrorMessage("Error in SaveDataPlusAllProteinsFile: " & ex.Message)
+            SetErrorMessage("Error in SaveDataPlusAllProteinsFile: " & ex.Message, ex)
         End Try
     End Sub
 
@@ -1896,7 +1896,7 @@ Public Class clsProteinCoverageSummarizer
             Loop While intStartIndex < mProteinDataCache.GetProteinCountCached()
 
         Catch ex As Exception
-            SetErrorMessage("Error in SearchProteinsUsingLeaderSequences: " & ex.Message)
+            SetErrorMessage("Error in SearchProteinsUsingLeaderSequences: " & ex.Message, ex)
         End Try
 
     End Sub
@@ -2064,15 +2064,15 @@ Public Class clsProteinCoverageSummarizer
         End If
     End Sub
 
-    Protected Sub SetErrorMessage(strMessage As String)
+    Protected Sub SetErrorMessage(strMessage As String, Optional ex As Exception = Nothing)
         If strMessage Is Nothing Then
             mErrorMessage = String.Empty
         Else
-            mErrorMessage = String.Copy(strMessage)
+            mErrorMessage = strMessage
         End If
 
         If mErrorMessage.Length > 0 Then
-            OnErrorEvent(mErrorMessage)
+            OnErrorEvent(mErrorMessage, ex)
             UpdateProgress(mErrorMessage)
         End If
     End Sub
