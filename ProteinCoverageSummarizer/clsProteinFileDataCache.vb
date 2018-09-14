@@ -38,13 +38,6 @@ Public Class clsProteinFileDataCache
 
     Protected Const SQL_LITE_PROTEIN_CACHE_FILENAME As String = "tmpProteinInfoCache.db3"
 
-    Public Enum DelimiterCharConstants
-        Space = 0
-        Tab = 1
-        Comma = 2
-        Other = 3
-    End Enum
-
 #End Region
 
 #Region "Structures"
@@ -672,7 +665,6 @@ Public Class clsProteinFileDataCache
         End Sub
 
 #Region "Classwide Variables"
-        Private mReadonlyClass As Boolean
 
         Private mProteinLineStartChar As Char
         Private mProteinLineAccessionEndChar As Char
@@ -680,23 +672,13 @@ Public Class clsProteinFileDataCache
 #End Region
 
 #Region "Processing Options Interface Functions"
-        Public Property ReadonlyClass As Boolean
-            Get
-                Return mReadonlyClass
-            End Get
-            Set
-                If Not mReadonlyClass Then
-                    mReadonlyClass = Value
-                End If
-            End Set
-        End Property
 
         Public Property ProteinLineStartChar As Char
             Get
                 Return mProteinLineStartChar
             End Get
             Set
-                If Not Value = Nothing AndAlso Not mReadonlyClass Then
+                If Not Value = Nothing Then
                     mProteinLineStartChar = Value
                 End If
             End Set
@@ -707,7 +689,7 @@ Public Class clsProteinFileDataCache
                 Return mProteinLineAccessionEndChar
             End Get
             Set
-                If Not Value = Nothing AndAlso Not mReadonlyClass Then
+                If Not Value = Nothing Then
                     mProteinLineAccessionEndChar = Value
                 End If
             End Set

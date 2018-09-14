@@ -40,19 +40,10 @@ Public Class clsProteinCoverageSummarizer
     Public Const OUTPUT_FILE_PROTEIN_DESCRIPTION_COLUMN_NUMBER As Integer = 3
     Public Const OUTPUT_FILE_PROTEIN_SEQUENCE_COLUMN_NUMBER As Integer = 7
 
-    Public Const NEW_PROTEINS_CACHE_MEMORY_RESERVE_COUNT As Integer = 500
-
     Public Const FILENAME_SUFFIX_PROTEIN_TO_PEPTIDE_MAPPING As String = "_ProteinToPeptideMapping.txt"
     Public Const FILENAME_SUFFIX_SOURCE_PLUS_ALL_PROTEINS As String = "_AllProteins.txt"
 
     Protected Const PROTEIN_CHUNK_COUNT As Integer = 50000
-
-    Public Enum DelimiterCharConstants
-        Space = 0
-        Tab = 1
-        Comma = 2
-        Other = 3
-    End Enum
 
     Public Enum ePeptideFileColumnOrderingCode As Integer
         SequenceOnly = 0
