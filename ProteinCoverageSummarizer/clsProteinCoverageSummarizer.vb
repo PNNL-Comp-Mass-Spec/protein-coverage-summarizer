@@ -123,6 +123,14 @@ Public Class clsProteinCoverageSummarizer
     Protected mCurrentProcessingStep As eProteinCoverageProcessingSteps = eProteinCoverageProcessingSteps.Starting
     Protected mProgressStepDescription As String = String.Empty
 
+    ''' <summary>
+    ''' Percent complete
+    ''' </summary>
+    ''' <remarks>
+    ''' Ranges from 0 to 100, but can contain decimal percentage values
+    ''' </remarks>
+    Protected mProgressPercentComplete As Single
+
 #End Region
 
 #Region "Properties"

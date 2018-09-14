@@ -45,7 +45,19 @@ Public Class clsProteinFileDataCache
         Public Name As String
         Public Description As String
         Public Sequence As String
-        Public UniqueSequenceID As Integer              ' Index number applied to the proteins stored in the SQL Lite DB; the first protein has UniqueSequenceID = 0
+
+        ''' <summary>
+        ''' Unique sequence ID
+        ''' </summary>
+        ''' <remarks>
+        ''' Index number applied to the proteins stored in the SQL Lite DB; the first protein has UniqueSequenceID = 0
+        ''' </remarks>
+        Public UniqueSequenceID As Integer
+
+        ''' <summary>
+        ''' Percent coverage
+        ''' </summary>
+        ''' <remarks>Value between 0 and 1</remarks>
         Public PercentCoverage As Double
     End Structure
 
