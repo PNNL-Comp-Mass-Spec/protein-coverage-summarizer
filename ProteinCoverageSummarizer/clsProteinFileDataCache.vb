@@ -116,12 +116,6 @@ Public Class clsProteinFileDataCache
     ''' </summary>
     Public Property KeepDB As Boolean
 
-    Public ReadOnly Property ParsedFileIsFastaFile As Boolean
-        Get
-            Return mParsedFileIsFastaFile
-        End Get
-    End Property
-
     Public Property RemoveSymbolCharacters As Boolean
 
     Public ReadOnly Property StatusMessage As String
@@ -298,14 +292,6 @@ Public Class clsProteinFileDataCache
 
     Public Function GetProteinCountCached() As Integer
         Return mProteinCount
-    End Function
-
-    Public Function GetCachedProtein(intIndex As Integer) As udtProteinInfoType
-        If intIndex >= 0 And intIndex < mProteinCount Then
-            Return GetCachedProteinFromSQLiteDB(intIndex)
-        Else
-            Return New udtProteinInfoType
-        End If
     End Function
 
     Protected Function GetCachedProteinFromSQLiteDB(intIndex As Integer) As udtProteinInfoType

@@ -29,21 +29,8 @@ Public Class clsProteinCoverageSummarizerRunner
         InitializeVariables()
     End Sub
 
-#Region "Constants and Enums"
-    Public Enum eProteinCoverageErrorCodes
-        NoError = 0
-        UnspecifiedError = -1
-    End Enum
-#End Region
-
-#Region "Structures"
-
-#End Region
-
 #Region "Classwide variables"
     Private mProteinCoverageSummarizer As clsProteinCoverageSummarizer
-
-    Private mCallingAppHandlesEvents As Boolean
 
     Private mStatusMessage As String
 
@@ -52,13 +39,6 @@ Public Class clsProteinCoverageSummarizerRunner
 #Region "Properties"
 
     Public Property CallingAppHandlesEvents As Boolean
-        Get
-            Return mCallingAppHandlesEvents
-        End Get
-        Set
-            mCallingAppHandlesEvents = Value
-        End Set
-    End Property
 
     Public Property IgnoreILDifferences As Boolean
         Get

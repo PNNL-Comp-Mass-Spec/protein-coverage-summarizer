@@ -163,10 +163,6 @@ Public Class clsLeaderSequenceCache
         mAbortProcessing = True
     End Sub
 
-    Public Function CachePeptide(strPeptideSequence As String, chPrefixResidue As Char, chSuffixResidue As Char) As Boolean
-        Return CachePeptide(strPeptideSequence, Nothing, chPrefixResidue, chSuffixResidue)
-    End Function
-
     ''' <summary>
     ''' Caches the peptide and updates mLeaderSequences
     ''' </summary>

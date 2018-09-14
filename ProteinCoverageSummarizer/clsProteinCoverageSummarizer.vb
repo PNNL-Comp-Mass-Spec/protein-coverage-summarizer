@@ -79,10 +79,6 @@ Public Class clsProteinCoverageSummarizer
         Public NonUniquePeptideCount As Integer
     End Structure
 
-    Protected Structure udtSequence
-        Public KeyRecord As Integer
-        Public NewSequenceValue As String
-    End Structure
 #End Region
 
 #Region "Classwide variables"
@@ -124,16 +120,9 @@ Public Class clsProteinCoverageSummarizer
     Public Event ProgressReset()
     Public Event ProgressChanged(taskDescription As String, percentComplete As Single)     ' PercentComplete ranges from 0 to 100, but can contain decimal percentage values
 
-    ' Note: These events are no longer used
-    ''Public Event SubtaskProgressChanged(taskDescription As String, percentComplete As Single)     ' PercentComplete ranges from 0 to 100, but can contain decimal percentage values
-    ''Public Event SubtaskProgressComplete()
-
     Protected mCurrentProcessingStep As eProteinCoverageProcessingSteps = eProteinCoverageProcessingSteps.Starting
     Protected mProgressStepDescription As String = String.Empty
-    Protected mProgressPercentComplete As Single        ' Ranges from 0 to 100, but can contain decimal percentage values
 
-    ''Protected mSubtaskStepDescription As String = String.Empty
-    ''Protected mSubtaskPercentComplete As Single        ' Ranges from 0 to 100, but can contain decimal percentage values
 #End Region
 
 #Region "Properties"
@@ -222,18 +211,6 @@ Public Class clsProteinCoverageSummarizer
             Return mErrorMessage
         End Get
     End Property
-
-    ''Public ReadOnly Property SubtaskStepDescription() As String
-    ''    Get
-    ''        Return mSubtaskStepDescription
-    ''    End Get
-    ''End Property
-
-    ''Public ReadOnly Property SubtaskPercentComplete() As Single
-    ''    Get
-    ''        Return mSubtaskPercentComplete
-    ''    End Get
-    ''End Property
 
     Public Property TrackPeptideCounts As Boolean
 
@@ -2096,22 +2073,6 @@ Public Class clsProteinCoverageSummarizer
 
         RaiseEvent ProgressChanged(ProgressStepDescription, ProgressPercentComplete)
     End Sub
-
-    ''Protected Sub UpdateSubtaskProgress(sngPercentComplete As Single)
-    ''    UpdateSubtaskProgress(mSubtaskStepDescription, sngPercentComplete)
-    ''End Sub
-
-    ''Protected Sub UpdateSubtaskProgress(strSubtaskStepDescription As String, sngPercentComplete As Single)
-    ''    mSubtaskStepDescription = String.Copy(strSubtaskStepDescription)
-    ''    If sngPercentComplete < 0 Then
-    ''        sngPercentComplete = 0
-    ''    ElseIf sngPercentComplete > 100 Then
-    ''        sngPercentComplete = 100
-    ''    End If
-    ''    mSubtaskPercentComplete = sngPercentComplete
-
-    ''    RaiseEvent SubtaskProgressChanged(SubtaskStepDescription, SubtaskPercentComplete)
-    ''End Sub
 
     Private Sub mLeaderSequenceCache_ProgressChanged(taskDescription As String, percentComplete As Single) Handles mLeaderSequenceCache.ProgressChanged
         UpdateProgress(percentComplete, eProteinCoverageProcessingSteps.DetermineShortestPeptideLength)

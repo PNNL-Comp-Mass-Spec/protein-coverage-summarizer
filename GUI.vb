@@ -1939,12 +1939,6 @@ Public Class GUI
 
     End Sub
 
-    Private Sub ValidateTextbox(ByRef ThisTextBox As TextBox, strDefaultText As String)
-        If ThisTextBox.TextLength = 0 Then
-            ThisTextBox.Text = strDefaultText
-        End If
-    End Sub
-
 #Region "Command Handlers"
 
     Private Sub chkSearchAllProteinsForPeptideSequence_CheckedChanged(sender As Object, e As EventArgs) Handles chkSearchAllProteinsForPeptideSequence.CheckedChanged
