@@ -15,23 +15,32 @@ in the peptide input file, and providing sequence coverage stats for each protei
 
 ```
 ProteinCoverageSummarizerGUI.exe
-  /I:PeptideInputFilePath /R:ProteinInputFilePath [/O:OutputFolderName] [/P:ParameterFilePath] 
-  [/G] [/H] [/M] [/K] [/Q]
+  /I:PeptideInputFilePath /R:ProteinInputFilePath [/O:OutputFolderName]
+  [/P:ParameterFilePath] [/G] [/H] [/M] [/K] [/Debug] [/KeepDB]
 ```
 
-The input file path can contain the wildcard character *.  If a wildcard is present, the same 
-protein input file path will be used for each of the peptide input files matched.
+The input file path can contain the wildcard character *. If a wildcard is
+present, the same protein input file path will be used for each of the peptide
+input files matched.
 
-The output folder name is optional. If omitted, the output files will be created in the same folder as the input file.
-If included, then a subfolder is created with the name OutputFolderName.
+The output folder name is optional. If omitted, the output files will be created
+in the same folder as the input file. If included, a subfolder is created with
+the name OutputFolderName.
 
-The parameter file path is optional.  If included, it should point to a valid XML parameter file.
+The parameter file path is optional. If included, it should point to a valid XML
+parameter file.
 
 Use /G to ignore I/L differences when finding peptides in proteins or computing coverage.
 
 Use /H to suppress (hide) the protein sequence in the _coverage.txt file.
 
 Use /M to enable the creation of a protein to peptide mapping file.
+
+Use /K to skip protein coverage computation steps
+
+Use /Debug to keep the console open to see additional debug messages
+
+Use /KeepDB to keep the SQLite database after processing (by default it is deleted)
 
 ## Contacts
 
