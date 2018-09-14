@@ -46,7 +46,7 @@ Use /KeepDB to keep the SQLite database after processing (by default it is delet
 
 Written by Matthew Monroe and Nikša Blonder for the Department of Energy (PNNL, Richland, WA) in 2005 \
 E-mail: matthew.monroe@pnnl.gov or proteomics@pnnl.gov \
-Website: https://panomics.pnl.gov/ or https://omics.pnl.gov
+Website: https://omics.pnl.gov or https://panomics.pnl.gov/
 
 ## License
 
