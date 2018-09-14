@@ -490,54 +490,40 @@ Public Class clsProteinCoverageSummarizer
             End If
 
             ' Query the SqlLite DB to extract the protein information
-            Dim proteinReader = mProteinDataCache.GetSQLiteDataReader("SELECT * FROM udtProteinInfoType")
-
-            Dim proteinIndex = 0
-            While proteinReader.Read()
-                ' Column names in table udtProteinInfoType:
-                '  Name TEXT,
-                '  Description TEXT,
-                '  Sequence TEXT,
-                '  UniqueSequenceID INTEGER,
-                '  PercentCoverage REAL,
-                '  NonUniquePeptideCount INTEGER,
-                '  UniquePeptideCount INTEGER
-
-                Dim proteinID = CInt(proteinReader("UniqueSequenceID"))
+            Dim proteinsProcessed = 0
+            For Each udtProtein In mProteinDataCache.GetCachedProteins()
 
                 Dim uniquePeptideCount = 0
                 Dim nonUniquePeptideCount = 0
 
                 If TrackPeptideCounts Then
                     Dim targetIndex As Integer
-                    If proteinIDLookup.TryGetValue(proteinID, targetIndex) Then
+                    If proteinIDLookup.TryGetValue(udtProtein.UniqueSequenceID, targetIndex) Then
                         uniquePeptideCount = udtPeptideStats(targetIndex).UniquePeptideCount
                         nonUniquePeptideCount = udtPeptideStats(targetIndex).NonUniquePeptideCount
                     End If
                 End If
 
-                strLineOut = CStr(proteinReader("Name")) & ControlChars.Tab &
-                     Math.Round(CDbl(proteinReader("PercentCoverage")) * 100, 3) & ControlChars.Tab &
-                     CStr(proteinReader("Description")) & ControlChars.Tab &
+                dataLine = udtProtein.Name & ControlChars.Tab &
+                     Math.Round(udtProtein.PercentCoverage * 100, 3) & ControlChars.Tab &
+                     udtProtein.Description & ControlChars.Tab &
                      nonUniquePeptideCount & ControlChars.Tab &
                      uniquePeptideCount & ControlChars.Tab &
-                     CStr(proteinReader("Sequence")).Length
+                     udtProtein.Sequence.Length
 
                 If OutputProteinSequence Then
-                    strLineOut &= ControlChars.Tab & CStr(proteinReader("Sequence"))
+                    dataLine &= ControlChars.Tab & CStr(udtProtein.Sequence)
                 End If
-                swOutputFile.WriteLine(strLineOut)
+                writer.WriteLine(dataLine)
 
-                If proteinIndex Mod 25 = 0 Then
-                    UpdateProgress(proteinIndex / CSng(mProteinDataCache.GetProteinCountCached()) * 100, eProteinCoverageProcessingSteps.WriteProteinCoverageFile)
+                If proteinsProcessed Mod 25 = 0 Then
+                    UpdateProgress(proteinsProcessed / CSng(mProteinDataCache.GetProteinCountCached()) * 100,
+                                   eProteinCoverageProcessingSteps.WriteProteinCoverageFile)
                 End If
 
-                If mAbortProcessing Then Exit While
-                proteinIndex += 1
-            End While
-
-            ' Close the SQL Reader
-            proteinReader.Close()
+                If mAbortProcessing Then Exit For
+                proteinsProcessed += 1
+            Next
 
         End Using
 
@@ -1538,34 +1524,25 @@ Public Class clsProteinCoverageSummarizer
         ' Extract up to PROTEIN_CHUNK_COUNT proteins from the Sql Lite database
         ' Store the information in the four local arrays
 
-        Dim strSqlCommand As String
-        strSqlCommand = " SELECT UniqueSequenceID, Name, Description, Sequence, PercentCoverage" &
-         " FROM udtProteinInfoType" &
-         " WHERE UniqueSequenceID BETWEEN " & CStr(intStartIndex) & " AND " & CStr(intStartIndex + PROTEIN_CHUNK_COUNT - 1)
+        Dim endIndex = startIndex + PROTEIN_CHUNK_COUNT - 1
 
-        Dim SQLreader As SQLiteDataReader
-        SQLreader = mProteinDataCache.GetSQLiteDataReader(strSqlCommand)
-
-        mCachedProteinInfoStartIndex = intStartIndex
+        mCachedProteinInfoStartIndex = startIndex
         mCachedProteinInfoCount = 0
         If mCachedProteinInfo Is Nothing Then
             ReDim mCachedProteinInfo(PROTEIN_CHUNK_COUNT - 1)
         End If
 
-        While SQLreader.Read
+        For Each udtProtein In mProteinDataCache.GetCachedProteins(startIndex, endIndex)
             With mCachedProteinInfo(mCachedProteinInfoCount)
-                .UniqueSequenceID = CInt(SQLreader("UniqueSequenceID"))
-                .Description = CStr(SQLreader("Description"))
-                .Name = CStr(SQLreader("Name"))
-                .Sequence = CStr(SQLreader("Sequence"))
-                .PercentCoverage = CDbl(SQLreader("PercentCoverage"))
+                .UniqueSequenceID = udtProtein.UniqueSequenceID
+                .Description = udtProtein.Description
+                .Name = udtProtein.Name
+                .Sequence = udtProtein.Sequence
+                .PercentCoverage = udtProtein.PercentCoverage
             End With
 
             mCachedProteinInfoCount += 1
-        End While
-
-        ' Close the Sql Reader
-        SQLreader.Close()
+        Next
 
         Return mCachedProteinInfoCount
 

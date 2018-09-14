@@ -294,23 +294,33 @@ Public Class clsProteinFileDataCache
         Return mProteinCount
     End Function
 
-    Protected Function GetCachedProteinFromSQLiteDB(intIndex As Integer) As udtProteinInfoType
+    Public Iterator Function GetCachedProteins(Optional startIndex As Integer = -1, Optional endIndex As Integer = -1) As IEnumerable(Of udtProteinInfoType)
         Dim udtProteinInfo = New udtProteinInfoType
 
         If mSqlLitePersistentConnection Is Nothing Then
             mSqlLitePersistentConnection = ConnectToSqlLiteDB(False)
         End If
 
+        Dim sqlQuery =
+            " SELECT UniqueSequenceID, Name, Description, Sequence, PercentCoverage" &
+            " FROM udtProteinInfoType"
+
+        If startIndex >= 0 AndAlso endIndex < 0 Then
+            sqlQuery &= " WHERE UniqueSequenceID >= " & CStr(startIndex)
+        ElseIf startIndex >= 0 AndAlso endIndex >= 0 Then
+            sqlQuery &= " WHERE UniqueSequenceID BETWEEN " & CStr(startIndex) & " AND " & CStr(endIndex)
+        End If
+
         Dim cmd As SQLiteCommand
         cmd = mSqlLitePersistentConnection.CreateCommand
-        cmd.CommandText = "SELECT * FROM udtProteinInfoType WHERE UniqueSequenceID = " & intIndex.ToString
+        cmd.CommandText = sqlQuery
 
         OnDebugEvent("GetCachedProteinFromSQLiteDB: running query " + cmd.CommandText)
 
         Dim reader As SQLiteDataReader
         reader = cmd.ExecuteReader()
 
-        If reader.Read() Then
+        While reader.Read()
             ' Column names in table udtProteinInfoType:
             '  Name TEXT,
             '  Description TEXT,
@@ -330,32 +340,11 @@ Public Class clsProteinFileDataCache
                 .Sequence = CStr(reader("Sequence"))
             End With
 
-        End If
+            Yield udtProteinInfo
+        End While
 
+        ' Close the SQL Reader
         reader.Close()
-
-        Return udtProteinInfo
-
-    End Function
-
-    Public Function GetSQLiteDataReader(strSQLQuery As String) As SQLiteDataReader
-
-        If mSqlLiteDBConnectionString Is Nothing OrElse mSqlLiteDBConnectionString.Length = 0 Then
-            Return Nothing
-        End If
-
-        Dim sqlConnection = ConnectToSqlLiteDB(False)
-
-        Dim cmd As SQLiteCommand
-        cmd = sqlConnection.CreateCommand
-        cmd.CommandText = strSQLQuery
-
-        OnDebugEvent("GetSQLiteDataReader: running query " + cmd.CommandText)
-
-        Dim reader As SQLiteDataReader
-        reader = cmd.ExecuteReader()
-
-        Return reader
 
     End Function
 
