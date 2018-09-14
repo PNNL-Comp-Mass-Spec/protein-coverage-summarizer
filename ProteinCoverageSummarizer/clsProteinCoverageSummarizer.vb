@@ -222,109 +222,109 @@ Public Class clsProteinCoverageSummarizer
         End If
     End Sub
 
-    Private Function BooleanArrayContainsTrueEntries(blnArrayToCheck As IList(Of Boolean), intArrayLength As Integer) As Boolean
+    Private Function BooleanArrayContainsTrueEntries(arrayToCheck As IList(Of Boolean), arrayLength As Integer) As Boolean
 
-        Dim blnContainsTrueEntries = False
+        Dim containsTrueEntries = False
 
-        For intIndex = 0 To intArrayLength - 1
-            If blnArrayToCheck(intIndex) Then
-                blnContainsTrueEntries = True
+        For index = 0 To arrayLength - 1
+            If arrayToCheck(index) Then
+                containsTrueEntries = True
                 Exit For
             End If
         Next
 
-        Return blnContainsTrueEntries
+        Return containsTrueEntries
 
     End Function
 
     Private Function CapitalizeMatchingProteinSequenceLetters(
-      strProteinSequence As String,
-      strPeptideSequence As String,
+      proteinSequence As String,
+      peptideSequence As String,
       proteinPeptideKey As String,
-      chPrefixResidue As Char,
-      chSuffixResidue As Char,
-      <Out> ByRef blnMatchFound As Boolean,
-      <Out> ByRef blnMatchIsNew As Boolean,
-      <Out> ByRef intStartResidue As Integer,
-      <Out> ByRef intEndResidue As Integer) As String
+      prefixResidue As Char,
+      suffixResidue As Char,
+      <Out> ByRef matchFound As Boolean,
+      <Out> ByRef matchIsNew As Boolean,
+      <Out> ByRef startResidue As Integer,
+      <Out> ByRef endResidue As Integer) As String
 
-        ' Note: this function assumes strPeptideSequence, chPrefix, and chSuffix have all uppercase letters
-        ' chPrefix and chSuffix are only used if mMatchPeptidePrefixAndSuffixToProtein = true
+        ' Note: this function assumes peptideSequence, prefix, and suffix have all uppercase letters
+        ' prefix and suffix are only used if mMatchPeptidePrefixAndSuffixToProtein = true
 
         ' Note: This is a count of the number of times the peptide is present in the protein sequence (typically 1); this value is not stored anywhere
-        Dim intPeptideCount = 0
+        Dim peptideCount = 0
 
-        Dim blnCurrentMatchValid As Boolean
+        Dim currentMatchValid As Boolean
 
-        blnMatchFound = False
-        blnMatchIsNew = False
+        matchFound = False
+        matchIsNew = False
 
-        intStartResidue = 0
-        intEndResidue = 0
+        startResidue = 0
+        endResidue = 0
 
-        Dim intCharIndex As Integer
+        Dim charIndex As Integer
 
         If SearchAllProteinsSkipCoverageComputationSteps Then
-            ' No need to capitalize strProteinSequence since it's already capitalized
-            intCharIndex = strProteinSequence.IndexOf(strPeptideSequence, StringComparison.Ordinal)
+            ' No need to capitalize proteinSequence since it's already capitalized
+            charIndex = proteinSequence.IndexOf(peptideSequence, StringComparison.Ordinal)
         Else
-            ' Need to change strProteinSequence to all caps when searching for strPeptideSequence
-            intCharIndex = strProteinSequence.ToUpper().IndexOf(strPeptideSequence, StringComparison.Ordinal)
+            ' Need to change proteinSequence to all caps when searching for peptideSequence
+            charIndex = proteinSequence.ToUpper().IndexOf(peptideSequence, StringComparison.Ordinal)
         End If
 
-        If intCharIndex >= 0 Then
-            intStartResidue = intCharIndex + 1
-            intEndResidue = intStartResidue + strPeptideSequence.Length - 1
+        If charIndex >= 0 Then
+            startResidue = charIndex + 1
+            endResidue = startResidue + peptideSequence.Length - 1
 
-            blnMatchFound = True
+            matchFound = True
 
             If MatchPeptidePrefixAndSuffixToProtein Then
-                blnCurrentMatchValid = ValidatePrefixAndSuffix(strProteinSequence, chPrefixResidue, chSuffixResidue, intCharIndex, intEndResidue - 1)
+                currentMatchValid = ValidatePrefixAndSuffix(proteinSequence, prefixResidue, suffixResidue, charIndex, endResidue - 1)
             Else
-                blnCurrentMatchValid = True
+                currentMatchValid = True
             End If
 
-            If blnCurrentMatchValid Then
-                intPeptideCount += 1
+            If currentMatchValid Then
+                peptideCount += 1
             Else
-                intStartResidue = 0
-                intEndResidue = 0
+                startResidue = 0
+                endResidue = 0
             End If
         Else
-            blnCurrentMatchValid = False
+            currentMatchValid = False
         End If
 
-        If blnMatchFound AndAlso Not SearchAllProteinsSkipCoverageComputationSteps Then
-            Do While intCharIndex >= 0
+        If matchFound AndAlso Not SearchAllProteinsSkipCoverageComputationSteps Then
+            Do While charIndex >= 0
 
-                If blnCurrentMatchValid Then
-                    Dim intNextStartIndex = intCharIndex + strPeptideSequence.Length
+                If currentMatchValid Then
+                    Dim nextStartIndex = charIndex + peptideSequence.Length
 
-                    Dim strNewProteinSequence = String.Empty
-                    If intCharIndex > 0 Then
-                        strNewProteinSequence = strProteinSequence.Substring(0, intCharIndex)
+                    Dim newProteinSequence = String.Empty
+                    If charIndex > 0 Then
+                        newProteinSequence = proteinSequence.Substring(0, charIndex)
                     End If
-                    strNewProteinSequence &= strProteinSequence.Substring(intCharIndex, intNextStartIndex - intCharIndex).ToUpper
-                    strNewProteinSequence &= strProteinSequence.Substring(intNextStartIndex)
-                    strProteinSequence = String.Copy(strNewProteinSequence)
+                    newProteinSequence &= proteinSequence.Substring(charIndex, nextStartIndex - charIndex).ToUpper
+                    newProteinSequence &= proteinSequence.Substring(nextStartIndex)
+                    proteinSequence = String.Copy(newProteinSequence)
                 End If
 
-                ' Look for another occurrence of strPeptideSequence in this protein
-                intCharIndex = strProteinSequence.ToUpper().IndexOf(strPeptideSequence, intCharIndex + 1, StringComparison.Ordinal)
+                ' Look for another occurrence of peptideSequence in this protein
+                charIndex = proteinSequence.ToUpper().IndexOf(peptideSequence, charIndex + 1, StringComparison.Ordinal)
 
-                If intCharIndex >= 0 Then
+                If charIndex >= 0 Then
                     If MatchPeptidePrefixAndSuffixToProtein Then
-                        blnCurrentMatchValid = ValidatePrefixAndSuffix(strProteinSequence, chPrefixResidue, chSuffixResidue, intCharIndex, intCharIndex + strPeptideSequence.Length - 1)
+                        currentMatchValid = ValidatePrefixAndSuffix(proteinSequence, prefixResidue, suffixResidue, charIndex, charIndex + peptideSequence.Length - 1)
                     Else
-                        blnCurrentMatchValid = True
+                        currentMatchValid = True
                     End If
 
-                    If blnCurrentMatchValid Then
-                        intPeptideCount += 1
+                    If currentMatchValid Then
+                        peptideCount += 1
 
-                        If intStartResidue = 0 Then
-                            intStartResidue = intCharIndex + 1
-                            intEndResidue = intStartResidue + strPeptideSequence.Length - 1
+                        If startResidue = 0 Then
+                            startResidue = charIndex + 1
+                            endResidue = startResidue + peptideSequence.Length - 1
                         End If
                     End If
                 End If
@@ -332,19 +332,19 @@ Public Class clsProteinCoverageSummarizer
         End If
 
 
-        If blnMatchFound Then
-            If intPeptideCount = 0 Then
-                ' The protein contained strPeptideSequence, but mMatchPeptidePrefixAndSuffixToProtein = true and either chPrefixResidue or chSuffixResidue doesn't match
-                blnMatchFound = False
+        If matchFound Then
+            If peptideCount = 0 Then
+                ' The protein contained peptideSequence, but mMatchPeptidePrefixAndSuffixToProtein = true and either prefixResidue or suffixResidue doesn't match
+                matchFound = False
             ElseIf TrackPeptideCounts Then
-                blnMatchIsNew = IncrementCountByKey(mProteinPeptideStats, proteinPeptideKey)
+                matchIsNew = IncrementCountByKey(mProteinPeptideStats, proteinPeptideKey)
             Else
                 ' Must always assume the match is new since not tracking peptide counts
-                blnMatchIsNew = True
+                matchIsNew = True
             End If
         End If
 
-        Return strProteinSequence
+        Return proteinSequence
 
     End Function
 
@@ -379,54 +379,54 @@ Public Class clsProteinCoverageSummarizer
 
     End Function
 
-    Private Function ConstructPeptideSequenceForKey(strPeptideSequence As String, chPrefixResidue As Char, chSuffixResidue As Char) As String
-        Dim strPeptideSequenceForKey As String
+    Private Function ConstructPeptideSequenceForKey(peptideSequence As String, prefixResidue As Char, suffixResidue As Char) As String
+        Dim peptideSequenceForKey As String
 
-        If Convert.ToInt32(chPrefixResidue) = 0 AndAlso Convert.ToInt32(chSuffixResidue) = 0 Then
-            strPeptideSequenceForKey = String.Copy(strPeptideSequence)
+        If Convert.ToInt32(prefixResidue) = 0 AndAlso Convert.ToInt32(suffixResidue) = 0 Then
+            peptideSequenceForKey = String.Copy(peptideSequence)
         Else
-            If Char.IsLetter(chPrefixResidue) Then
-                chPrefixResidue = Char.ToUpper(chPrefixResidue)
-                strPeptideSequenceForKey = chPrefixResidue & "."c & strPeptideSequence
+            If Char.IsLetter(prefixResidue) Then
+                prefixResidue = Char.ToUpper(prefixResidue)
+                peptideSequenceForKey = prefixResidue & "."c & peptideSequence
             Else
-                strPeptideSequenceForKey = "-." & strPeptideSequence
+                peptideSequenceForKey = "-." & peptideSequence
             End If
 
-            If Char.IsLetter(chSuffixResidue) Then
-                chSuffixResidue = Char.ToUpper(chSuffixResidue)
-                strPeptideSequenceForKey &= "."c & chSuffixResidue
+            If Char.IsLetter(suffixResidue) Then
+                suffixResidue = Char.ToUpper(suffixResidue)
+                peptideSequenceForKey &= "."c & suffixResidue
             Else
-                strPeptideSequenceForKey &= ".-"
+                peptideSequenceForKey &= ".-"
             End If
         End If
 
-        Return strPeptideSequenceForKey
+        Return peptideSequenceForKey
     End Function
 
-    Private Sub CreateProteinCoverageFile(strPeptideInputFilePath As String, strOutputFolderPath As String, outputFileBaseName As String)
+    Private Sub CreateProteinCoverageFile(peptideInputFilePath As String, outputFolderPath As String, outputFileBaseName As String)
         Const INITIAL_PROTEIN_COUNT_RESERVE = 5000
 
-        ' The data in mProteinPeptideStats is copied into array udtPeptideStats for fast lookup
+        ' The data in mProteinPeptideStats is copied into array peptideStats for fast lookup
         ' This is necessary since use of the enumerator returned by mProteinPeptideStats.GetEnumerator
         '  for every protein in mProteinDataCache.mProteins leads to very slow program performance
-        Dim intPeptideStatsCount = 0
+        Dim peptideStatsCount = 0
         Dim udtPeptideStats() As udtPeptideCountStatsType
 
         If mResultsFilePath = Nothing OrElse mResultsFilePath.Length = 0 Then
-            If strPeptideInputFilePath.Length > 0 Then
-                mResultsFilePath = ConstructOutputFilePath(strPeptideInputFilePath, "_coverage.txt", strOutputFolderPath, outputFileBaseName)
+            If peptideInputFilePath.Length > 0 Then
+                mResultsFilePath = ConstructOutputFilePath(peptideInputFilePath, "_coverage.txt", outputFolderPath, outputFileBaseName)
             Else
-                mResultsFilePath = Path.Combine(GetOutputFolderPath(strOutputFolderPath, String.Empty), "Peptide_coverage.txt")
+                mResultsFilePath = Path.Combine(GetOutputFolderPath(outputFolderPath, String.Empty), "Peptide_coverage.txt")
             End If
         End If
 
         UpdateProgress("Creating the protein coverage file: " & Path.GetFileName(mResultsFilePath), 0,
            eProteinCoverageProcessingSteps.WriteProteinCoverageFile)
 
-        Using swOutputFile = New StreamWriter(New FileStream(mResultsFilePath, FileMode.Create, FileAccess.Write, FileShare.Read))
+        Using writer = New StreamWriter(New FileStream(mResultsFilePath, FileMode.Create, FileAccess.Write, FileShare.Read))
 
             ' Note: If the column ordering is changed, be sure to update OUTPUT_FILE_PROTEIN_DESCRIPTION_COLUMN_NUMBER and OUTPUT_FILE_PROTEIN_SEQUENCE_COLUMN_NUMBER
-            Dim strLineOut = "Protein Name" & ControlChars.Tab &
+            Dim dataLine = "Protein Name" & ControlChars.Tab &
              "Percent Coverage" & ControlChars.Tab &
              "Protein Description" & ControlChars.Tab &
              "Non Unique Peptide Count" & ControlChars.Tab &
@@ -434,9 +434,9 @@ Public Class clsProteinCoverageSummarizer
              "Protein Residue Count"
 
             If OutputProteinSequence Then
-                strLineOut &= ControlChars.Tab & "Protein Sequence"
+                dataLine &= ControlChars.Tab & "Protein Sequence"
             End If
-            swOutputFile.WriteLine(strLineOut)
+            writer.WriteLine(dataLine)
 
             ' Contains pointers to entries in udtPeptideStats()
             Dim proteinIDLookup = New Dictionary(Of Integer, Integer)
@@ -451,39 +451,39 @@ Public Class clsProteinCoverageSummarizer
                 While myEnumerator.MoveNext()
                     Dim proteinPeptideKey = myEnumerator.Current.Key
 
-                    ' strKey will be of the form 1234::K.ABCDEFR.A
+                    ' proteinPeptideKey will be of the form 1234::K.ABCDEFR.A
                     ' Look for the first colon
-                    Dim intColonIndex = proteinPeptideKey.IndexOf(":"c)
+                    Dim colonIndex = proteinPeptideKey.IndexOf(":"c)
 
-                    If intColonIndex > 0 Then
-                        Dim intProteinID = CInt(proteinPeptideKey.Substring(0, intColonIndex))
-                        Dim intTargetIndex As Integer
+                    If colonIndex > 0 Then
+                        Dim proteinID = CInt(proteinPeptideKey.Substring(0, colonIndex))
+                        Dim targetIndex As Integer
 
-                        If Not proteinIDLookup.TryGetValue(intProteinID, intTargetIndex) Then
+                        If Not proteinIDLookup.TryGetValue(proteinID, targetIndex) Then
                             ' ID not found; so add it
 
-                            intTargetIndex = intPeptideStatsCount
-                            intPeptideStatsCount += 1
+                            targetIndex = peptideStatsCount
+                            peptideStatsCount += 1
 
-                            proteinIDLookup.Add(intProteinID, intTargetIndex)
+                            proteinIDLookup.Add(proteinID, targetIndex)
 
-                            If intTargetIndex >= udtPeptideStats.Length Then
+                            If targetIndex >= udtPeptideStats.Length Then
                                 ' Reserve more space in the arrays
                                 ReDim Preserve udtPeptideStats(udtPeptideStats.Length * 2 - 1)
                             End If
                         End If
 
 
-                        ' Update the protein counts at intTargetIndex
-                        udtPeptideStats(intTargetIndex).UniquePeptideCount += 1
-                        udtPeptideStats(intTargetIndex).NonUniquePeptideCount += myEnumerator.Current.Value
+                        ' Update the protein counts at targetIndex
+                        udtPeptideStats(targetIndex).UniquePeptideCount += 1
+                        udtPeptideStats(targetIndex).NonUniquePeptideCount += myEnumerator.Current.Value
 
                     End If
                 End While
 
                 ' Shrink udtPeptideStats
-                If intPeptideStatsCount < udtPeptideStats.Length Then
-                    ReDim Preserve udtPeptideStats(intPeptideStatsCount - 1)
+                If peptideStatsCount < udtPeptideStats.Length Then
+                    ReDim Preserve udtPeptideStats(peptideStatsCount - 1)
                 End If
             Else
                 ReDim udtPeptideStats(-1)
@@ -529,13 +529,13 @@ Public Class clsProteinCoverageSummarizer
 
     End Sub
 
-    Private Function DetermineLineTerminatorSize(strInputFilePath As String) As Integer
+    Private Function DetermineLineTerminatorSize(inputFilePath As String) As Integer
 
-        Dim intTerminatorSize = 2
+        Dim terminatorSize = 2
 
         Try
             ' Open the input file and look for the first carriage return or line feed
-            Using fsInFile = New FileStream(strInputFilePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite)
+            Using fsInFile = New FileStream(inputFilePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite)
 
                 Do While fsInFile.Position < fsInFile.Length AndAlso fsInFile.Position < 100000
 
@@ -547,13 +547,13 @@ Public Class clsProteinCoverageSummarizer
                             intByte = fsInFile.ReadByte()
                             If intByte = 13 Then
                                 ' LfCr
-                                intTerminatorSize = 2
+                                terminatorSize = 2
                             Else
                                 ' Lf only
-                                intTerminatorSize = 1
+                                terminatorSize = 1
                             End If
                         Else
-                            intTerminatorSize = 1
+                            terminatorSize = 1
                         End If
                         Exit Do
                     ElseIf intByte = 13 Then
@@ -562,13 +562,13 @@ Public Class clsProteinCoverageSummarizer
                             intByte = fsInFile.ReadByte()
                             If intByte = 10 Then
                                 ' CrLf
-                                intTerminatorSize = 2
+                                terminatorSize = 2
                             Else
                                 ' Cr only
-                                intTerminatorSize = 1
+                                terminatorSize = 1
                             End If
                         Else
-                            intTerminatorSize = 1
+                            terminatorSize = 1
                         End If
                         Exit Do
                     End If
@@ -580,148 +580,148 @@ Public Class clsProteinCoverageSummarizer
             SetErrorMessage("Error in DetermineLineTerminatorSize: " & ex.Message, ex)
         End Try
 
-        Return intTerminatorSize
+        Return terminatorSize
 
     End Function
 
     ''' <summary>
     ''' Searches for proteins that contain the peptides in peptideList
-    ''' If strProteinNameForPeptide is blank or mSearchAllProteinsForPeptideSequence=True then searches all proteins
-    ''' Otherwise, only searches protein strProteinNameForPeptide
+    ''' If proteinNameForPeptide is blank or mSearchAllProteinsForPeptideSequence=True then searches all proteins
+    ''' Otherwise, only searches protein proteinNameForPeptide
     ''' </summary>
     ''' <param name="peptideList">Dictionary containing the peptides to search; peptides must be in the format Prefix.Peptide.Suffix where Prefix and Suffix are single characters; peptides are assumed to only contain letters (no symbols)</param>
-    ''' <param name="strProteinNameForPeptides">The protein to search; only used if mSearchAllProteinsForPeptideSequence=False</param>
+    ''' <param name="proteinNameForPeptides">The protein to search; only used if mSearchAllProteinsForPeptideSequence=False</param>
     ''' <remarks></remarks>
     Private Sub FindSequenceMatchForPeptideList(peptideList As IDictionary(Of String, Integer),
-      strProteinNameForPeptides As String)
+      proteinNameForPeptides As String)
 
-        Dim blnProteinUpdated(PROTEIN_CHUNK_COUNT - 1) As Boolean
+        Dim proteinUpdated(PROTEIN_CHUNK_COUNT - 1) As Boolean
 
         Try
-            ' Make sure strProteinNameForPeptide is a valid string
-            If strProteinNameForPeptides Is Nothing Then
-                strProteinNameForPeptides = String.Empty
+            ' Make sure proteinNameForPeptide is a valid string
+            If proteinNameForPeptides Is Nothing Then
+                proteinNameForPeptides = String.Empty
             End If
 
-            Dim intExpectedPeptideIterations = CInt(Math.Ceiling(mProteinDataCache.GetProteinCountCached / PROTEIN_CHUNK_COUNT)) * peptideList.Count
-            If intExpectedPeptideIterations < 1 Then intExpectedPeptideIterations = 1
+            Dim expectedPeptideIterations = CInt(Math.Ceiling(mProteinDataCache.GetProteinCountCached / PROTEIN_CHUNK_COUNT)) * peptideList.Count
+            If expectedPeptideIterations < 1 Then expectedPeptideIterations = 1
 
             UpdateProgress("Finding matching proteins for peptide list", 0,
                eProteinCoverageProcessingSteps.SearchProteinsAgainstShortPeptides)
 
-            Dim intStartIndex = 0
+            Dim startIndex = 0
             Do
                 ' Extract up to PROTEIN_CHUNK_COUNT proteins from the SQL Lite database
                 ' Store the information in the four local arrays
-                Dim intProteinCount = ReadProteinInfoChunk(intStartIndex, blnProteinUpdated, False)
+                Dim proteinCount = ReadProteinInfoChunk(startIndex, proteinUpdated, False)
 
-                Dim intPeptideIterationsComplete = 0
+                Dim peptideIterationsComplete = 0
 
                 ' Iterate through the peptides in peptideList
                 Dim myEnumerator = peptideList.GetEnumerator
 
                 Do While myEnumerator.MoveNext
 
-                    Dim chPrefixResidue As Char
-                    Dim chSuffixResidue As Char
+                    Dim prefixResidue As Char
+                    Dim suffixResidue As Char
 
                     ' Retrieve the next peptide from peptideList
-                    ' Use GetCleanPeptideSequence() to extract out the sequence, prefix, and suffix letters (we're setting blnRemoveSymbolCharacters to False since that should have been done before the peptides were stored in peptideList)
+                    ' Use GetCleanPeptideSequence() to extract out the sequence, prefix, and suffix letters (we're setting removeSymbolCharacters to False since that should have been done before the peptides were stored in peptideList)
                     ' Make sure the peptide sequence has uppercase letters
-                    Dim strPeptideSequenceClean = GetCleanPeptideSequence(myEnumerator.Current.Key, chPrefixResidue, chSuffixResidue, False).ToUpper
+                    Dim peptideSequenceClean = GetCleanPeptideSequence(myEnumerator.Current.Key, prefixResidue, suffixResidue, False).ToUpper
 
-                    Dim strPeptideSequenceForKeySource As String
-                    Dim strPeptideSequenceForKey As String
-                    Dim strPeptideSequenceToSearchOn As String
+                    Dim peptideSequenceForKeySource As String
+                    Dim peptideSequenceForKey As String
+                    Dim peptideSequenceToSearchOn As String
 
                     If MatchPeptidePrefixAndSuffixToProtein Then
-                        strPeptideSequenceForKeySource = ConstructPeptideSequenceForKey(strPeptideSequenceClean, chPrefixResidue, chSuffixResidue)
+                        peptideSequenceForKeySource = ConstructPeptideSequenceForKey(peptideSequenceClean, prefixResidue, suffixResidue)
                     Else
-                        strPeptideSequenceForKeySource = String.Copy(strPeptideSequenceClean)
+                        peptideSequenceForKeySource = String.Copy(peptideSequenceClean)
                     End If
 
                     If IgnoreILDifferences Then
                         ' Replace all L characters with I
-                        strPeptideSequenceForKey = strPeptideSequenceForKeySource.Replace("L"c, "I"c)
+                        peptideSequenceForKey = peptideSequenceForKeySource.Replace("L"c, "I"c)
 
-                        strPeptideSequenceToSearchOn = strPeptideSequenceClean.Replace("L"c, "I"c)
+                        peptideSequenceToSearchOn = peptideSequenceClean.Replace("L"c, "I"c)
 
-                        If chPrefixResidue = "L"c Then chPrefixResidue = "I"c
-                        If chSuffixResidue = "L"c Then chSuffixResidue = "I"c
+                        If prefixResidue = "L"c Then prefixResidue = "I"c
+                        If suffixResidue = "L"c Then suffixResidue = "I"c
                     Else
-                        strPeptideSequenceToSearchOn = String.Copy(strPeptideSequenceClean)
+                        peptideSequenceToSearchOn = String.Copy(peptideSequenceClean)
 
                         ' I'm purposely not using String.Copy() here in order to obtain increased speed
-                        strPeptideSequenceForKey = strPeptideSequenceForKeySource
+                        peptideSequenceForKey = peptideSequenceForKeySource
                     End If
 
-                    ' Search for strPeptideSequence in the protein sequences
-                    For intProteinIndex = 0 To intProteinCount - 1
-                        Dim blnMatchFound = False
-                        Dim blnMatchIsNew As Boolean
-                        Dim intStartResidue As Integer
-                        Dim intEndResidue As Integer
+                    ' Search for peptideSequence in the protein sequences
+                    For proteinIndex = 0 To proteinCount - 1
+                        Dim matchFound = False
+                        Dim matchIsNew As Boolean
+                        Dim startResidue As Integer
+                        Dim endResidue As Integer
 
-                        If SearchAllProteinsForPeptideSequence OrElse strProteinNameForPeptides.Length = 0 Then
+                        If SearchAllProteinsForPeptideSequence OrElse proteinNameForPeptides.Length = 0 Then
                             ' Search through all Protein sequences and capitalize matches for Peptide Sequence
 
-                            Dim strKey = CStr(mCachedProteinInfo(intProteinIndex).UniqueSequenceID) & "::" & strPeptideSequenceForKey
-                            mCachedProteinInfo(intProteinIndex).Sequence = CapitalizeMatchingProteinSequenceLetters(
-                                mCachedProteinInfo(intProteinIndex).Sequence, strPeptideSequenceToSearchOn,
-                                strKey, chPrefixResidue, chSuffixResidue,
-                                blnMatchFound, blnMatchIsNew,
-                                intStartResidue, intEndResidue)
+                            Dim proteinPeptideKey = CStr(mCachedProteinInfo(proteinIndex).UniqueSequenceID) & "::" & peptideSequenceForKey
+                            mCachedProteinInfo(proteinIndex).Sequence = CapitalizeMatchingProteinSequenceLetters(
+                                mCachedProteinInfo(proteinIndex).Sequence, peptideSequenceToSearchOn,
+                                proteinPeptideKey, prefixResidue, suffixResidue,
+                                matchFound, matchIsNew,
+                                startResidue, endResidue)
                         Else
-                            ' Only search protein strProteinNameForPeptide
-                            If mCachedProteinInfo(intProteinIndex).Name = strProteinNameForPeptides Then
+                            ' Only search protein proteinNameForPeptide
+                            If mCachedProteinInfo(proteinIndex).Name = proteinNameForPeptides Then
 
                                 ' Define the peptide match key using the Unique Sequence ID, two colons, and the peptide sequence
-                                Dim strKey = CStr(mCachedProteinInfo(intProteinIndex).UniqueSequenceID) & "::" & strPeptideSequenceForKey
+                                Dim proteinPeptideKey = CStr(mCachedProteinInfo(proteinIndex).UniqueSequenceID) & "::" & peptideSequenceForKey
 
                                 ' Capitalize matching residues in sequence
-                                mCachedProteinInfo(intProteinIndex).Sequence = CapitalizeMatchingProteinSequenceLetters(
-                                    mCachedProteinInfo(intProteinIndex).Sequence, strPeptideSequenceToSearchOn,
-                                    strKey, chPrefixResidue, chSuffixResidue,
-                                    blnMatchFound, blnMatchIsNew,
-                                    intStartResidue, intEndResidue)
+                                mCachedProteinInfo(proteinIndex).Sequence = CapitalizeMatchingProteinSequenceLetters(
+                                    mCachedProteinInfo(proteinIndex).Sequence, peptideSequenceToSearchOn,
+                                    proteinPeptideKey, prefixResidue, suffixResidue,
+                                    matchFound, matchIsNew,
+                                    startResidue, endResidue)
                             End If
                         End If
 
-                        If blnMatchFound Then
+                        If matchFound Then
                             If Not SearchAllProteinsSkipCoverageComputationSteps Then
-                                blnProteinUpdated(intProteinIndex) = True
+                                proteinUpdated(proteinIndex) = True
                             End If
 
-                            If blnMatchIsNew Then
+                            If matchIsNew Then
                                 If SaveProteinToPeptideMappingFile Then
-                                    WriteEntryToProteinToPeptideMappingFile(mCachedProteinInfo(intProteinIndex).Name, strPeptideSequenceForKeySource, intStartResidue, intEndResidue)
+                                    WriteEntryToProteinToPeptideMappingFile(mCachedProteinInfo(proteinIndex).Name, peptideSequenceForKeySource, startResidue, endResidue)
                                 End If
 
                                 If SaveSourceDataPlusProteinsFile Then
-                                    StorePeptideToProteinMatch(strPeptideSequenceClean, mCachedProteinInfo(intProteinIndex).Name)
+                                    StorePeptideToProteinMatch(peptideSequenceClean, mCachedProteinInfo(proteinIndex).Name)
                                 End If
 
                             End If
                         End If
 
-                    Next intProteinIndex
+                    Next proteinIndex
 
-                    intPeptideIterationsComplete += 1
+                    peptideIterationsComplete += 1
 
-                    If intPeptideIterationsComplete Mod 10 = 0 Then
-                        UpdateProgress(CSng((intPeptideIterationsComplete / intExpectedPeptideIterations) * 100),
+                    If peptideIterationsComplete Mod 10 = 0 Then
+                        UpdateProgress(CSng((peptideIterationsComplete / expectedPeptideIterations) * 100),
                            eProteinCoverageProcessingSteps.SearchProteinsAgainstShortPeptides)
 
                     End If
                 Loop
 
                 ' Store the updated protein sequence information in the database
-                UpdateSequenceDbDataValues(blnProteinUpdated, intProteinCount)
+                UpdateSequenceDbDataValues(proteinUpdated, proteinCount)
 
-                ' Increment intStartIndex to obtain the next chunk of proteins
-                intStartIndex += PROTEIN_CHUNK_COUNT
+                ' Increment startIndex to obtain the next chunk of proteins
+                startIndex += PROTEIN_CHUNK_COUNT
 
-            Loop While intStartIndex < mProteinDataCache.GetProteinCountCached()
+            Loop While startIndex < mProteinDataCache.GetProteinCountCached()
 
         Catch ex As Exception
             SetErrorMessage("Error in FindSequenceMatch:" & ControlChars.NewLine & ex.Message, ex)
@@ -729,10 +729,10 @@ Public Class clsProteinCoverageSummarizer
 
     End Sub
 
-    Private Sub UpdateSequenceDbDataValues(blnProteinUpdated As IList(Of Boolean), intProteinCount As Integer)
+    Private Sub UpdateSequenceDbDataValues(proteinUpdated As IList(Of Boolean), proteinCount As Integer)
         Try
-            If Not BooleanArrayContainsTrueEntries(blnProteinUpdated, intProteinCount) Then
-                ' All of the entries in blnProteinUpdated() are False; nothing to update
+            If Not BooleanArrayContainsTrueEntries(proteinUpdated, proteinCount) Then
+                ' All of the entries in proteinUpdated() are False; nothing to update
                 Exit Sub
             End If
 
@@ -750,11 +750,11 @@ Public Class clsProteinCoverageSummarizer
                     cmd.Parameters.Add(SequenceFld)
                     cmd.Parameters.Add(UniqueSequenceIDFld)
 
-                    ' Update each protein that has blnProteinUpdated(intProteinIndex) = True
-                    For intProteinIndex = 0 To intProteinCount - 1
-                        If blnProteinUpdated(intProteinIndex) Then
-                            UniqueSequenceIDFld.Value = mCachedProteinInfo(intProteinIndex).UniqueSequenceID
-                            SequenceFld.Value = mCachedProteinInfo(intProteinIndex).Sequence
+                    ' Update each protein that has proteinUpdated(proteinIndex) = True
+                    For proteinIndex = 0 To proteinCount - 1
+                        If proteinUpdated(proteinIndex) Then
+                            UniqueSequenceIDFld.Value = mCachedProteinInfo(proteinIndex).UniqueSequenceID
+                            SequenceFld.Value = mCachedProteinInfo(proteinIndex).Sequence
                             cmd.ExecuteNonQuery()
                         End If
                     Next
@@ -777,154 +777,154 @@ Public Class clsProteinCoverageSummarizer
         Return Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)
     End Function
 
-    Public Shared Function GetCleanPeptideSequence(strPeptideSequence As String,
-      <Out> ByRef chPrefixResidue As Char,
-      <Out> ByRef chSuffixResidue As Char,
-      blnRemoveSymbolCharacters As Boolean) As String
+    Public Shared Function GetCleanPeptideSequence(peptideSequence As String,
+      <Out> ByRef prefixResidue As Char,
+      <Out> ByRef suffixResidue As Char,
+      removeSymbolCharacters As Boolean) As String
 
         Static reReplaceSymbols As Regex = New Regex("[^A-Za-z]", RegexOptions.Compiled)
 
-        chPrefixResidue = Nothing
-        chSuffixResidue = Nothing
+        prefixResidue = Nothing
+        suffixResidue = Nothing
 
-        If strPeptideSequence.Length >= 4 Then
-            If strPeptideSequence.Chars(1) = "."c AndAlso strPeptideSequence.Chars(strPeptideSequence.Length - 2) = "."c Then
-                chPrefixResidue = strPeptideSequence.Chars(0)
-                chSuffixResidue = strPeptideSequence.Chars(strPeptideSequence.Length - 1)
-                strPeptideSequence = strPeptideSequence.Substring(2, strPeptideSequence.Length - 4)
+        If peptideSequence.Length >= 4 Then
+            If peptideSequence.Chars(1) = "."c AndAlso peptideSequence.Chars(peptideSequence.Length - 2) = "."c Then
+                prefixResidue = peptideSequence.Chars(0)
+                suffixResidue = peptideSequence.Chars(peptideSequence.Length - 1)
+                peptideSequence = peptideSequence.Substring(2, peptideSequence.Length - 4)
             End If
         End If
 
-        If blnRemoveSymbolCharacters Then
-            strPeptideSequence = reReplaceSymbols.Replace(strPeptideSequence, String.Empty)
+        If removeSymbolCharacters Then
+            peptideSequence = reReplaceSymbols.Replace(peptideSequence, String.Empty)
         End If
 
-        Return strPeptideSequence
+        Return peptideSequence
 
     End Function
 
     Public Function GetErrorMessage() As String
         ' Returns String.Empty if no error
 
-        Dim strMessage As String
+        Dim message As String
 
         Select Case ErrorCode
             Case eProteinCoverageErrorCodes.NoError
-                strMessage = String.Empty
+                message = String.Empty
             Case eProteinCoverageErrorCodes.InvalidInputFilePath
-                strMessage = "Invalid input file path"
+                message = "Invalid input file path"
                 ''Case eProteinCoverageErrorCodes.InvalidOutputFolderPath
-                ''    strMessage = "Invalid output folder path"
+                ''    message = "Invalid output folder path"
                 ''Case eProteinCoverageErrorCodes.ParameterFileNotFound
-                ''    strMessage = "Parameter file not found"
+                ''    message = "Parameter file not found"
 
                 ''Case eProteinCoverageErrorCodes.ErrorReadingInputFile
-                ''    strMessage = "Error reading input file"
+                ''    message = "Error reading input file"
                 ''Case eProteinCoverageErrorCodes.ErrorCreatingOutputFiles
-                ''    strMessage = "Error creating output files"
+                ''    message = "Error creating output files"
 
             Case eProteinCoverageErrorCodes.ErrorReadingParameterFile
-                strMessage = "Invalid parameter file"
+                message = "Invalid parameter file"
 
             Case eProteinCoverageErrorCodes.FilePathError
-                strMessage = "General file path error"
+                message = "General file path error"
             Case eProteinCoverageErrorCodes.UnspecifiedError
-                strMessage = "Unspecified error"
+                message = "Unspecified error"
             Case Else
                 ' This shouldn't happen
-                strMessage = "Unknown error state"
+                message = "Unknown error state"
         End Select
 
         If mErrorMessage.Length > 0 Then
-            If strMessage.Length > 0 Then
-                strMessage &= "; "
+            If message.Length > 0 Then
+                message &= "; "
             End If
-            strMessage &= mErrorMessage
+            message &= mErrorMessage
         End If
 
-        Return strMessage
+        Return message
     End Function
 
     ''' <summary>
     ''' Determine the output folder path
-    ''' Uses strOutputFolderPath if defined
-    ''' Otherwise uses the folder where strOutputFilePath resides
+    ''' Uses outputFolderPath if defined
+    ''' Otherwise uses the folder where outputFilePath resides
     ''' </summary>
-    ''' <param name="strOutputFolderPath"></param>
-    ''' <param name="strOutputFilePath"></param>
+    ''' <param name="outputFolderPath"></param>
+    ''' <param name="outputFilePath"></param>
     ''' <returns></returns>
     ''' <remarks>If an error, or unable to determine a folder, returns the folder with the application files</remarks>
-    Public Shared Function GetOutputFolderPath(strOutputFolderPath As String, strOutputFilePath As String) As String
+    Public Shared Function GetOutputFolderPath(outputFolderPath As String, outputFilePath As String) As String
 
         Try
-            If Not String.IsNullOrWhiteSpace(strOutputFolderPath) Then
-                strOutputFolderPath = Path.GetFullPath(strOutputFolderPath)
+            If Not String.IsNullOrWhiteSpace(outputFolderPath) Then
+                outputFolderPath = Path.GetFullPath(outputFolderPath)
             Else
-                strOutputFolderPath = Path.GetDirectoryName(strOutputFilePath)
+                outputFolderPath = Path.GetDirectoryName(outputFilePath)
             End If
 
-            If Not Directory.Exists(strOutputFolderPath) Then
-                Directory.CreateDirectory(strOutputFolderPath)
+            If Not Directory.Exists(outputFolderPath) Then
+                Directory.CreateDirectory(outputFolderPath)
             End If
 
         Catch ex As Exception
-            strOutputFolderPath = GetAppFolderPath()
+            outputFolderPath = GetAppFolderPath()
         End Try
 
-        Return strOutputFolderPath
+        Return outputFolderPath
 
     End Function
 
     Private Sub GetPercentCoverage()
 
-        Dim blnProteinUpdated(PROTEIN_CHUNK_COUNT - 1) As Boolean
+        Dim proteinUpdated(PROTEIN_CHUNK_COUNT - 1) As Boolean
 
         UpdateProgress("Computing percent coverage", 0,
            eProteinCoverageProcessingSteps.ComputePercentCoverage)
 
-        Dim intStartIndex = 0
-        Dim intIndex = 0
+        Dim startIndex = 0
+        Dim index = 0
         Do
             ' Extract up to PROTEIN_CHUNK_COUNT proteins from the Sql Lite database
             ' Store the information in the four local arrays
-            Dim intProteinCount = ReadProteinInfoChunk(intStartIndex, blnProteinUpdated, False)
+            Dim proteinCount = ReadProteinInfoChunk(startIndex, proteinUpdated, False)
 
-            For intProteinIndex = 0 To intProteinCount - 1
+            For proteinIndex = 0 To proteinCount - 1
 
-                If Not mCachedProteinInfo(intProteinIndex).Sequence Is Nothing Then
-                    Dim charArray = mCachedProteinInfo(intProteinIndex).Sequence.ToCharArray()
-                    Dim intCapitalLetterCount = 0
+                If Not mCachedProteinInfo(proteinIndex).Sequence Is Nothing Then
+                    Dim charArray = mCachedProteinInfo(proteinIndex).Sequence.ToCharArray()
+                    Dim capitalLetterCount = 0
                     For Each character In charArray
-                        If Char.IsUpper(character) Then intCapitalLetterCount += 1
+                        If Char.IsUpper(character) Then capitalLetterCount += 1
                     Next
 
-                    mCachedProteinInfo(intProteinIndex).PercentCoverage = intCapitalLetterCount / mCachedProteinInfo(intProteinIndex).Sequence.Length
-                    If mCachedProteinInfo(intProteinIndex).PercentCoverage > 0 Then
-                        blnProteinUpdated(intProteinIndex) = True
+                    mCachedProteinInfo(proteinIndex).PercentCoverage = capitalLetterCount / mCachedProteinInfo(proteinIndex).Sequence.Length
+                    If mCachedProteinInfo(proteinIndex).PercentCoverage > 0 Then
+                        proteinUpdated(proteinIndex) = True
                     End If
                 End If
 
-                If intIndex Mod 100 = 0 Then
-                    UpdateProgress(intIndex / CSng(mProteinDataCache.GetProteinCountCached()) * 100,
+                If index Mod 100 = 0 Then
+                    UpdateProgress(index / CSng(mProteinDataCache.GetProteinCountCached()) * 100,
                        eProteinCoverageProcessingSteps.ComputePercentCoverage)
                 End If
 
-                intIndex += 1
+                index += 1
             Next
 
-            UpdatePercentCoveragesDbDataValues(blnProteinUpdated, intProteinCount)
+            UpdatePercentCoveragesDbDataValues(proteinUpdated, proteinCount)
 
-            ' Increment intStartIndex to obtain the next chunk of proteins
-            intStartIndex += PROTEIN_CHUNK_COUNT
+            ' Increment startIndex to obtain the next chunk of proteins
+            startIndex += PROTEIN_CHUNK_COUNT
 
-        Loop While intStartIndex < mProteinDataCache.GetProteinCountCached()
+        Loop While startIndex < mProteinDataCache.GetProteinCountCached()
 
     End Sub
 
-    Private Sub UpdatePercentCoveragesDbDataValues(blnProteinUpdated As IList(Of Boolean), intProteinCount As Integer)
+    Private Sub UpdatePercentCoveragesDbDataValues(proteinUpdated As IList(Of Boolean), proteinCount As Integer)
         Try
-            If Not BooleanArrayContainsTrueEntries(blnProteinUpdated, intProteinCount) Then
-                ' All of the entries in blnProteinUpdated() are False; nothing to update
+            If Not BooleanArrayContainsTrueEntries(proteinUpdated, proteinCount) Then
+                ' All of the entries in proteinUpdated() are False; nothing to update
                 Exit Sub
             End If
 
@@ -942,11 +942,11 @@ Public Class clsProteinCoverageSummarizer
                     cmd.Parameters.Add(PercentCoverageFld)
                     cmd.Parameters.Add(UniqueSequenceIDFld)
 
-                    ' Update each protein that has blnProteinUpdated(intProteinIndex) = True
-                    For intProteinIndex = 0 To intProteinCount - 1
-                        If blnProteinUpdated(intProteinIndex) Then
-                            UniqueSequenceIDFld.Value = mCachedProteinInfo(intProteinIndex).UniqueSequenceID
-                            PercentCoverageFld.Value = mCachedProteinInfo(intProteinIndex).PercentCoverage
+                    ' Update each protein that has proteinUpdated(proteinIndex) = True
+                    For proteinIndex = 0 To proteinCount - 1
+                        If proteinUpdated(proteinIndex) Then
+                            UniqueSequenceIDFld.Value = mCachedProteinInfo(proteinIndex).UniqueSequenceID
+                            PercentCoverageFld.Value = mCachedProteinInfo(proteinIndex).PercentCoverage
                             cmd.ExecuteNonQuery()
                         End If
                     Next
@@ -969,16 +969,16 @@ Public Class clsProteinCoverageSummarizer
     ''' If the key is not defined, add it
     ''' </summary>
     ''' <param name="oDictionary"></param>
-    ''' <param name="key"></param>
+    ''' <param name="keyName"></param>
     ''' <returns>True if the protein is new and was added tomProteinPeptideStats </returns>
-    Private Function IncrementCountByKey(oDictionary As IDictionary(Of String, Integer), key As String) As Boolean
+    Private Function IncrementCountByKey(oDictionary As IDictionary(Of String, Integer), keyName As String) As Boolean
         Dim value As Integer
 
-        If oDictionary.TryGetValue(key, value) Then
-            oDictionary(key) = value + 1
+        If oDictionary.TryGetValue(keyName, value) Then
+            oDictionary(keyName) = value + 1
             Return False
         Else
-            oDictionary.Add(key, 1)
+            oDictionary.Add(keyName, 1)
             Return True
         End If
     End Function
@@ -1033,56 +1033,56 @@ Public Class clsProteinCoverageSummarizer
 
     End Sub
 
-    Public Function LoadParameterFileSettings(strParameterFilePath As String) As Boolean
+    Public Function LoadParameterFileSettings(parameterFilePath As String) As Boolean
 
         Try
 
-            If String.IsNullOrWhiteSpace(strParameterFilePath) Then
+            If String.IsNullOrWhiteSpace(parameterFilePath) Then
                 ' No parameter file specified; default settings will be used
                 Return True
             End If
 
-            If Not File.Exists(strParameterFilePath) Then
-                ' See if strParameterFilePath points to a file in the same directory as the application
-                Dim strAlternateFilePath = Path.Combine(GetAppFolderPath(), Path.GetFileName(strParameterFilePath))
-                If Not File.Exists(strAlternateFilePath) Then
+            If Not File.Exists(parameterFilePath) Then
+                ' See if parameterFilePath points to a file in the same directory as the application
+                Dim alternateFilePath = Path.Combine(GetAppFolderPath(), Path.GetFileName(parameterFilePath))
+                If Not File.Exists(alternateFilePath) Then
                     ' Parameter file still not found
-                    SetErrorMessage("Parameter file not found: " & strParameterFilePath)
+                    SetErrorMessage("Parameter file not found: " & parameterFilePath)
                     Return False
                 Else
-                    strParameterFilePath = String.Copy(strAlternateFilePath)
+                    parameterFilePath = String.Copy(alternateFilePath)
                 End If
             End If
 
-            Dim objSettingsFile = New XmlSettingsFileAccessor()
+            Dim settingsFileReader = New XmlSettingsFileAccessor()
 
-            If objSettingsFile.LoadSettings(strParameterFilePath) Then
+            If settingsFileReader.LoadSettings(parameterFilePath) Then
 
-                If Not objSettingsFile.SectionPresent(XML_SECTION_PROCESSING_OPTIONS) Then
-                    OnWarningEvent("The node '<section name=""" & XML_SECTION_PROCESSING_OPTIONS & """> was not found in the parameter file: " & strParameterFilePath)
+                If Not settingsFileReader.SectionPresent(XML_SECTION_PROCESSING_OPTIONS) Then
+                    OnWarningEvent("The node '<section name=""" & XML_SECTION_PROCESSING_OPTIONS & """> was not found in the parameter file: " & parameterFilePath)
                 Else
-                    OutputProteinSequence = objSettingsFile.GetParam(XML_SECTION_PROCESSING_OPTIONS, "OutputProteinSequence", OutputProteinSequence)
-                    SearchAllProteinsForPeptideSequence = objSettingsFile.GetParam(XML_SECTION_PROCESSING_OPTIONS, "SearchAllProteinsForPeptideSequence", SearchAllProteinsForPeptideSequence)
-                    SaveProteinToPeptideMappingFile = objSettingsFile.GetParam(XML_SECTION_PROCESSING_OPTIONS, "SaveProteinToPeptideMappingFile", SaveProteinToPeptideMappingFile)
-                    SaveSourceDataPlusProteinsFile = objSettingsFile.GetParam(XML_SECTION_PROCESSING_OPTIONS, "mSaveSourceDataPlusProteinsFile", SaveSourceDataPlusProteinsFile)
+                    OutputProteinSequence = settingsFileReader.GetParam(XML_SECTION_PROCESSING_OPTIONS, "OutputProteinSequence", OutputProteinSequence)
+                    SearchAllProteinsForPeptideSequence = settingsFileReader.GetParam(XML_SECTION_PROCESSING_OPTIONS, "SearchAllProteinsForPeptideSequence", SearchAllProteinsForPeptideSequence)
+                    SaveProteinToPeptideMappingFile = settingsFileReader.GetParam(XML_SECTION_PROCESSING_OPTIONS, "SaveProteinToPeptideMappingFile", SaveProteinToPeptideMappingFile)
+                    SaveSourceDataPlusProteinsFile = settingsFileReader.GetParam(XML_SECTION_PROCESSING_OPTIONS, "SaveSourceDataPlusProteinsFile", SaveSourceDataPlusProteinsFile)
 
-                    TrackPeptideCounts = objSettingsFile.GetParam(XML_SECTION_PROCESSING_OPTIONS, "TrackPeptideCounts", TrackPeptideCounts)
-                    RemoveSymbolCharacters = objSettingsFile.GetParam(XML_SECTION_PROCESSING_OPTIONS, "RemoveSymbolCharacters", RemoveSymbolCharacters)
-                    MatchPeptidePrefixAndSuffixToProtein = objSettingsFile.GetParam(XML_SECTION_PROCESSING_OPTIONS, "MatchPeptidePrefixAndSuffixToProtein", MatchPeptidePrefixAndSuffixToProtein)
-                    IgnoreILDifferences = objSettingsFile.GetParam(XML_SECTION_PROCESSING_OPTIONS, "IgnoreILDifferences", IgnoreILDifferences)
+                    TrackPeptideCounts = settingsFileReader.GetParam(XML_SECTION_PROCESSING_OPTIONS, "TrackPeptideCounts", TrackPeptideCounts)
+                    RemoveSymbolCharacters = settingsFileReader.GetParam(XML_SECTION_PROCESSING_OPTIONS, "RemoveSymbolCharacters", RemoveSymbolCharacters)
+                    MatchPeptidePrefixAndSuffixToProtein = settingsFileReader.GetParam(XML_SECTION_PROCESSING_OPTIONS, "MatchPeptidePrefixAndSuffixToProtein", MatchPeptidePrefixAndSuffixToProtein)
+                    IgnoreILDifferences = settingsFileReader.GetParam(XML_SECTION_PROCESSING_OPTIONS, "IgnoreILDifferences", IgnoreILDifferences)
 
-                    PeptideFileSkipFirstLine = objSettingsFile.GetParam(XML_SECTION_PROCESSING_OPTIONS, "PeptideFileSkipFirstLine", PeptideFileSkipFirstLine)
-                    PeptideInputFileDelimiter = objSettingsFile.GetParam(XML_SECTION_PROCESSING_OPTIONS, "PeptideInputFileDelimiter", PeptideInputFileDelimiter).Chars(0)
-                    PeptideFileFormatCode = CType(objSettingsFile.GetParam(XML_SECTION_PROCESSING_OPTIONS, "PeptideFileFormatCode", PeptideFileFormatCode), ePeptideFileColumnOrderingCode)
+                    PeptideFileSkipFirstLine = settingsFileReader.GetParam(XML_SECTION_PROCESSING_OPTIONS, "PeptideFileSkipFirstLine", PeptideFileSkipFirstLine)
+                    PeptideInputFileDelimiter = settingsFileReader.GetParam(XML_SECTION_PROCESSING_OPTIONS, "PeptideInputFileDelimiter", PeptideInputFileDelimiter).Chars(0)
+                    PeptideFileFormatCode = CType(settingsFileReader.GetParam(XML_SECTION_PROCESSING_OPTIONS, "PeptideFileFormatCode", PeptideFileFormatCode), ePeptideFileColumnOrderingCode)
 
-                    mProteinDataCache.DelimitedFileSkipFirstLine = objSettingsFile.GetParam(XML_SECTION_PROCESSING_OPTIONS, "ProteinFileSkipFirstLine", mProteinDataCache.DelimitedFileSkipFirstLine)
-                    mProteinDataCache.DelimitedFileDelimiter = objSettingsFile.GetParam(XML_SECTION_PROCESSING_OPTIONS, "DelimitedProteinFileDelimiter", mProteinDataCache.DelimitedFileDelimiter).Chars(0)
-                    mProteinDataCache.DelimitedFileFormatCode = CType(objSettingsFile.GetParam(XML_SECTION_PROCESSING_OPTIONS, "DelimitedProteinFileFormatCode", mProteinDataCache.DelimitedFileFormatCode), DelimitedFileReader.eDelimitedFileFormatCode)
+                    mProteinDataCache.DelimitedFileSkipFirstLine = settingsFileReader.GetParam(XML_SECTION_PROCESSING_OPTIONS, "ProteinFileSkipFirstLine", mProteinDataCache.DelimitedFileSkipFirstLine)
+                    mProteinDataCache.DelimitedFileDelimiter = settingsFileReader.GetParam(XML_SECTION_PROCESSING_OPTIONS, "DelimitedProteinFileDelimiter", mProteinDataCache.DelimitedFileDelimiter).Chars(0)
+                    mProteinDataCache.DelimitedFileFormatCode = CType(settingsFileReader.GetParam(XML_SECTION_PROCESSING_OPTIONS, "DelimitedProteinFileFormatCode", mProteinDataCache.DelimitedFileFormatCode), DelimitedFileReader.eDelimitedFileFormatCode)
 
                 End If
 
             Else
-                SetErrorMessage("Error calling objSettingsFile.LoadSettings for " & strParameterFilePath)
+                SetErrorMessage("Error calling settingsFileReader.LoadSettings for " & parameterFilePath)
                 Return False
             End If
 
@@ -1097,18 +1097,18 @@ Public Class clsProteinCoverageSummarizer
     End Function
 
     Private Function ParsePeptideInputFile(
-      strPeptideInputFilePath As String,
-      strOutputFolderPath As String,
+      peptideInputFilePath As String,
+      outputFolderPath As String,
       outputFileBaseName As String,
-      <Out> ByRef strProteinToPeptideMappingFilePath As String) As Boolean
+      <Out> ByRef proteinToPepMapFilePath As String) As Boolean
 
         Const MAX_SHORT_PEPTIDES_TO_CACHE = 1000000
 
-        strProteinToPeptideMappingFilePath = String.Empty
+        proteinToPepMapFilePath = String.Empty
 
         Try
-            ' Initialize chSepChars
-            Dim chSepChars = New Char() {PeptideInputFileDelimiter}
+            ' Initialize sepChars
+            Dim sepChars = New Char() {PeptideInputFileDelimiter}
 
             ' Initialize some dictionaries
 
@@ -1126,33 +1126,33 @@ Public Class clsProteinCoverageSummarizer
                 mPeptideToProteinMapResults.Clear()
             End If
 
-            If Not File.Exists(strPeptideInputFilePath) Then
-                SetErrorMessage("File not found: " & strPeptideInputFilePath)
+            If Not File.Exists(peptideInputFilePath) Then
+                SetErrorMessage("File not found: " & peptideInputFilePath)
                 Return False
             End If
 
-            Dim strProgressMessageBase = "Reading peptides from " & Path.GetFileName(strPeptideInputFilePath)
+            Dim progressMessageBase = "Reading peptides from " & Path.GetFileName(peptideInputFilePath)
             If UseLeaderSequenceHashTable Then
-                strProgressMessageBase &= " and finding leader sequences"
+                progressMessageBase &= " and finding leader sequences"
             Else
                 If Not SearchAllProteinsSkipCoverageComputationSteps Then
-                    strProgressMessageBase &= " and computing coverage"
+                    progressMessageBase &= " and computing coverage"
                 End If
             End If
 
-            mProgressStepDescription = String.Copy(strProgressMessageBase)
+            mProgressStepDescription = String.Copy(progressMessageBase)
             Console.WriteLine()
-            OnStatusEvent("Parsing " & Path.GetFileName(strPeptideInputFilePath))
+            OnStatusEvent("Parsing " & Path.GetFileName(peptideInputFilePath))
 
             UpdateProgress(mProgressStepDescription, 0,
                eProteinCoverageProcessingSteps.DetermineShortestPeptideLength)
 
             ' Open the file and read, at most, the first 100,000 characters to see if it contains CrLf or just Lf
-            Dim intTerminatorSize = DetermineLineTerminatorSize(strPeptideInputFilePath)
+            Dim terminatorSize = DetermineLineTerminatorSize(peptideInputFilePath)
 
             ' Possibly open the file and read the first few line to make sure the number of columns is appropriate
-            Dim blnSuccess = ValidateColumnCountInInputFile(strPeptideInputFilePath)
-            If Not blnSuccess Then
+            Dim success = ValidateColumnCountInInputFile(peptideInputFilePath)
+            If Not success Then
                 Return False
             End If
 
@@ -1170,37 +1170,37 @@ Public Class clsProteinCoverageSummarizer
                 End If
                 mLeaderSequenceCache.IgnoreILDifferences = IgnoreILDifferences
 
-                Dim intColumnNumWithPeptideSequence As Integer
+                Dim columnNumWithPeptideSequence As Integer
                 Select Case PeptideFileFormatCode
                     Case ePeptideFileColumnOrderingCode.ProteinName_PeptideSequence
-                        intColumnNumWithPeptideSequence = 2
+                        columnNumWithPeptideSequence = 2
                     Case Else
                         ' Includes ePeptideFileColumnOrderingCode.SequenceOnly
-                        intColumnNumWithPeptideSequence = 1
+                        columnNumWithPeptideSequence = 1
                 End Select
 
-                mLeaderSequenceCache.DetermineShortestPeptideLengthInFile(strPeptideInputFilePath, intTerminatorSize, PeptideFileSkipFirstLine, PeptideInputFileDelimiter, intColumnNumWithPeptideSequence)
+                mLeaderSequenceCache.DetermineShortestPeptideLengthInFile(peptideInputFilePath, terminatorSize, PeptideFileSkipFirstLine, PeptideInputFileDelimiter, columnNumWithPeptideSequence)
 
                 If mAbortProcessing Then
                     Return False
                 Else
-                    strProgressMessageBase &= " (leader seq length = " & mLeaderSequenceCache.LeaderSequenceMinimumLength.ToString & ")"
+                    progressMessageBase &= " (leader seq length = " & mLeaderSequenceCache.LeaderSequenceMinimumLength.ToString & ")"
 
-                    UpdateProgress(strProgressMessageBase)
+                    UpdateProgress(progressMessageBase)
                 End If
             End If
 
-            Dim intInvalidLineCount = 0
+            Dim invalidLineCount = 0
 
             ' Open the peptide file and read in the lines
-            Using srInFile = New StreamReader(New FileStream(strPeptideInputFilePath, FileMode.Open, FileAccess.Read, FileShare.Read))
+            Using reader = New StreamReader(New FileStream(peptideInputFilePath, FileMode.Open, FileAccess.Read, FileShare.Read))
 
                 ' Create the protein to peptide match details file
-                mProteinToPeptideMappingFilePath = ConstructOutputFilePath(strPeptideInputFilePath, FILENAME_SUFFIX_PROTEIN_TO_PEPTIDE_MAPPING,
-                                                                           strOutputFolderPath, outputFileBaseName)
+                mProteinToPeptideMappingFilePath = ConstructOutputFilePath(peptideInputFilePath, FILENAME_SUFFIX_PROTEIN_TO_PEPTIDE_MAPPING,
+                                                                           outputFolderPath, outputFileBaseName)
 
                 If SaveProteinToPeptideMappingFile Then
-                    strProteinToPeptideMappingFilePath = String.Copy(mProteinToPeptideMappingFilePath)
+                    proteinToPepMapFilePath = String.Copy(mProteinToPeptideMappingFilePath)
 
                     UpdateProgress("Creating the protein to peptide mapping file: " & Path.GetFileName(mProteinToPeptideMappingFilePath))
 
@@ -1211,66 +1211,66 @@ Public Class clsProteinCoverageSummarizer
                     mProteinToPeptideMappingOutputFile.WriteLine("Protein Name" & ControlChars.Tab & "Peptide Sequence" & ControlChars.Tab & "Residue Start" & ControlChars.Tab & "Residue End")
                 End If
 
-                Dim intCurrentLine = 1
+                Dim currentLine = 1
                 Dim bytesRead As Long = 0
 
-                Do While Not srInFile.EndOfStream
+                Do While Not reader.EndOfStream
                     If mAbortProcessing Then Exit Do
 
-                    Dim strLineIn = srInFile.ReadLine()
-                    If strLineIn Is Nothing Then Continue Do
+                    Dim dataLine = reader.ReadLine()
+                    If dataLine Is Nothing Then Continue Do
 
-                    bytesRead += strLineIn.Length + intTerminatorSize
+                    bytesRead += dataLine.Length + terminatorSize
 
-                    strLineIn = strLineIn.TrimEnd()
+                    dataLine = dataLine.TrimEnd()
 
-                    If intCurrentLine Mod 500 = 0 Then
-                        UpdateProgress("Reading peptide input file", CSng((bytesRead / srInFile.BaseStream.Length) * 100),
+                    If currentLine Mod 500 = 0 Then
+                        UpdateProgress("Reading peptide input file", CSng((bytesRead / reader.BaseStream.Length) * 100),
                            eProteinCoverageProcessingSteps.CachePeptides)
                     End If
 
-                    If intCurrentLine = 1 AndAlso PeptideFileSkipFirstLine Then
+                    If currentLine = 1 AndAlso PeptideFileSkipFirstLine Then
                         ' do nothing, skip the first line
-                    ElseIf strLineIn.Length > 0 Then
+                    ElseIf dataLine.Length > 0 Then
 
-                        Dim blnValidLine = False
-                        Dim strProteinName = ""
-                        Dim strPeptideSequence = ""
+                        Dim validLine = False
+                        Dim proteinName = ""
+                        Dim peptideSequence = ""
 
                         Try
 
                             ' Split the line, but for efficiency purposes, only parse out the first 3 columns
-                            Dim strSplitLine = strLineIn.Split(chSepChars, 3)
+                            Dim dataCols = dataLine.Split(sepChars, 3)
 
                             Select Case PeptideFileFormatCode
                                 Case ePeptideFileColumnOrderingCode.ProteinName_PeptideSequence
-                                    strProteinName = strSplitLine(0)
+                                    proteinName = dataCols(0)
 
-                                    If strSplitLine.Length > 1 AndAlso Not String.IsNullOrWhiteSpace(strSplitLine(1)) Then
-                                        strPeptideSequence = strSplitLine(1)
-                                        blnValidLine = True
+                                    If dataCols.Length > 1 AndAlso Not String.IsNullOrWhiteSpace(dataCols(1)) Then
+                                        peptideSequence = dataCols(1)
+                                        validLine = True
                                     End If
                                 Case Else
                                     ' Includes ePeptideFileColumnOrderingCode.SequenceOnly
-                                    strPeptideSequence = strSplitLine(0)
-                                    strProteinName = String.Empty
-                                    blnValidLine = True
+                                    peptideSequence = dataCols(0)
+                                    proteinName = String.Empty
+                                    validLine = True
                             End Select
 
                         Catch ex As Exception
-                            blnValidLine = False
+                            validLine = False
                         End Try
 
-                        If blnValidLine Then
+                        If validLine Then
                             ' Check for and remove prefix and suffix letters
                             ' Also possibly remove symbol characters
 
-                            Dim chPrefixResidue As Char
-                            Dim chSuffixResidue As Char
-                            strPeptideSequence = GetCleanPeptideSequence(strPeptideSequence, chPrefixResidue, chSuffixResidue, RemoveSymbolCharacters)
+                            Dim prefixResidue As Char
+                            Dim suffixResidue As Char
+                            peptideSequence = GetCleanPeptideSequence(peptideSequence, prefixResidue, suffixResidue, RemoveSymbolCharacters)
 
                             If UseLeaderSequenceHashTable AndAlso
-                             strPeptideSequence.Length >= mLeaderSequenceCache.LeaderSequenceMinimumLength Then
+                             peptideSequence.Length >= mLeaderSequenceCache.LeaderSequenceMinimumLength Then
 
                                 If mLeaderSequenceCache.CachedPeptideCount >= clsLeaderSequenceCache.MAX_LEADER_SEQUENCE_COUNT Then
                                     ' Need to step through the proteins and match them to the data in mLeaderSequenceCache
@@ -1278,7 +1278,7 @@ Public Class clsProteinCoverageSummarizer
                                     mLeaderSequenceCache.InitializeCachedPeptides()
                                 End If
 
-                                mLeaderSequenceCache.CachePeptide(strPeptideSequence, strProteinName, chPrefixResidue, chSuffixResidue)
+                                mLeaderSequenceCache.CachePeptide(peptideSequence, proteinName, prefixResidue, suffixResidue)
                             Else
                                 ' Either mUseLeaderSequenceHashTable is false, or the peptide sequence is less than MINIMUM_LEADER_SEQUENCE_LENGTH residues long
                                 ' We must search all proteins for the given peptide
@@ -1290,17 +1290,17 @@ Public Class clsProteinCoverageSummarizer
                                     shortPeptideCache.Clear()
                                 End If
 
-                                Dim strPeptideSequenceToCache = chPrefixResidue & "." & strPeptideSequence & "." & chSuffixResidue
+                                Dim peptideSequenceToCache = prefixResidue & "." & peptideSequence & "." & suffixResidue
 
-                                IncrementCountByKey(shortPeptideCache, strPeptideSequenceToCache)
+                                IncrementCountByKey(shortPeptideCache, peptideSequenceToCache)
                             End If
 
                         Else
-                            intInvalidLineCount += 1
+                            invalidLineCount += 1
                         End If
 
                     End If
-                    intCurrentLine += 1
+                    currentLine += 1
 
                 Loop
 
@@ -1328,16 +1328,16 @@ Public Class clsProteinCoverageSummarizer
 
             If SaveSourceDataPlusProteinsFile Then
                 ' Create a new version of the input file, but with all of the proteins listed
-                SaveDataPlusAllProteinsFile(strPeptideInputFilePath, strOutputFolderPath, outputFileBaseName, chSepChars, intTerminatorSize)
+                SaveDataPlusAllProteinsFile(peptideInputFilePath, outputFolderPath, outputFileBaseName, sepChars, terminatorSize)
 
             End If
 
-            If intInvalidLineCount > 0 Then
+            If invalidLineCount > 0 Then
                 Select Case PeptideFileFormatCode
                     Case ePeptideFileColumnOrderingCode.ProteinName_PeptideSequence
-                        OnWarningEvent("Found " & intInvalidLineCount & " lines that did not have two columns (Protein Name and Peptide Sequence).  Those line(s) have been skipped.")
+                        OnWarningEvent("Found " & invalidLineCount & " lines that did not have two columns (Protein Name and Peptide Sequence).  Those line(s) have been skipped.")
                     Case Else
-                        OnWarningEvent("Found " & intInvalidLineCount & " lines that did not contain a peptide sequence.  Those line(s) have been skipped.")
+                        OnWarningEvent("Found " & invalidLineCount & " lines that did not contain a peptide sequence.  Those line(s) have been skipped.")
                 End Select
             End If
 
@@ -1350,7 +1350,7 @@ Public Class clsProteinCoverageSummarizer
     End Function
 
     Private Function ParseProteinInputFile() As Boolean
-        Dim blnSuccess = False
+        Dim success = False
 
         Try
             mProgressStepDescription = "Reading protein input file"
@@ -1377,13 +1377,13 @@ Public Class clsProteinCoverageSummarizer
                     .ChangeProteinSequencesToUppercase = False
                 End If
 
-                blnSuccess = .ParseProteinFile(ProteinInputFilePath)
+                success = .ParseProteinFile(ProteinInputFilePath)
 
-                If Not blnSuccess Then
+                If Not success Then
                     SetErrorMessage("Error parsing protein file: " & .StatusMessage)
                 Else
                     If .GetProteinCountCached = 0 Then
-                        blnSuccess = False
+                        success = False
                         SetErrorMessage("Error parsing protein file: no protein entries were found in the file.  Please verify that the column order defined for the proteins file is correct.")
                     End If
                 End If
@@ -1393,38 +1393,38 @@ Public Class clsProteinCoverageSummarizer
             SetErrorMessage("Error in ParseProteinInputFile: " & ex.Message, ex)
         End Try
 
-        Return blnSuccess
+        Return success
     End Function
 
-    Public Function ProcessFile(strInputFilePath As String,
-      strOutputFolderPath As String,
-      strParameterFilePath As String,
-      blnResetErrorCode As Boolean) As Boolean
+    Public Function ProcessFile(inputFilePath As String,
+      outputFolderPath As String,
+      parameterFilePath As String,
+      resetErrorCode As Boolean) As Boolean
 
-        Dim strProteinToPeptideMappingFilePath As String = String.Empty
+        Dim proteinToPepMapFilePath As String = String.Empty
 
-        Return ProcessFile(strInputFilePath, strOutputFolderPath, strParameterFilePath, blnResetErrorCode, strProteinToPeptideMappingFilePath)
+        Return ProcessFile(inputFilePath, outputFolderPath, parameterFilePath, resetErrorCode, proteinToPepMapFilePath)
     End Function
 
     Public Function ProcessFile(
-      strInputFilePath As String,
-      strOutputFolderPath As String,
-      strParameterFilePath As String,
-      blnResetErrorCode As Boolean,
-      <Out> ByRef strProteinToPeptideMappingFilePath As String,
+      inputFilePath As String,
+      outputFolderPath As String,
+      parameterFilePath As String,
+      resetErrorCode As Boolean,
+      <Out> ByRef proteinToPepMapFilePath As String,
       Optional outputFileBaseName As String = "") As Boolean
 
-        Dim blnSuccess As Boolean
+        Dim success As Boolean
 
-        If blnResetErrorCode Then
+        If resetErrorCode Then
             SetErrorCode(eProteinCoverageErrorCodes.NoError)
         End If
 
         OnStatusEvent("Initializing")
-        strProteinToPeptideMappingFilePath = String.Empty
+        proteinToPepMapFilePath = String.Empty
 
-        If Not LoadParameterFileSettings(strParameterFilePath) Then
-            SetErrorMessage("Parameter file load error: " & strParameterFilePath)
+        If Not LoadParameterFileSettings(parameterFilePath) Then
+            SetErrorMessage("Parameter file load error: " & parameterFilePath)
 
             If mErrorCode = eProteinCoverageErrorCodes.NoError Then
                 SetErrorCode(eProteinCoverageErrorCodes.ErrorReadingParameterFile)
@@ -1440,7 +1440,7 @@ Public Class clsProteinCoverageSummarizer
                 .IgnoreILDifferences = IgnoreILDifferences
             End With
 
-            If String.IsNullOrWhiteSpace(strInputFilePath) Then
+            If String.IsNullOrWhiteSpace(inputFilePath) Then
                 OnErrorEvent("Input file name is empty")
                 SetErrorCode(eProteinCoverageErrorCodes.InvalidInputFilePath)
                 Return False
@@ -1465,17 +1465,17 @@ Public Class clsProteinCoverageSummarizer
             mProgressStepDescription = "Reading protein input file: " & Path.GetFileName(ProteinInputFilePath)
             UpdateProgress(mProgressStepDescription, 0, eProteinCoverageProcessingSteps.CacheProteins)
 
-            blnSuccess = ParseProteinInputFile()
+            success = ParseProteinInputFile()
 
-            If blnSuccess Then
+            If success Then
                 mProgressStepDescription = "Complete reading protein input file: " & Path.GetFileName(ProteinInputFilePath)
                 UpdateProgress(mProgressStepDescription, 100, eProteinCoverageProcessingSteps.CacheProteins)
 
                 ' Now read the peptide input file
-                blnSuccess = ParsePeptideInputFile(strInputFilePath, strOutputFolderPath, outputFileBaseName, strProteinToPeptideMappingFilePath)
+                success = ParsePeptideInputFile(inputFilePath, outputFolderPath, outputFileBaseName, proteinToPepMapFilePath)
 
-                If blnSuccess And Not SearchAllProteinsSkipCoverageComputationSteps Then
-                    CreateProteinCoverageFile(strInputFilePath, strOutputFolderPath, outputFileBaseName)
+                If success And Not SearchAllProteinsSkipCoverageComputationSteps Then
+                    CreateProteinCoverageFile(inputFilePath, outputFolderPath, outputFileBaseName)
                 End If
 
                 UpdateProgress("Processing complete; deleting the temporary SqlLite database", 100,
@@ -1491,10 +1491,10 @@ Public Class clsProteinCoverageSummarizer
 
         Catch ex As Exception
             SetErrorMessage("Error in ProcessFile:" & ControlChars.NewLine & ex.Message, ex)
-            blnSuccess = False
+            success = False
         End Try
 
-        Return blnSuccess
+        Return success
 
     End Function
 
@@ -1503,18 +1503,18 @@ Public Class clsProteinCoverageSummarizer
     ''' </summary>
     ''' <returns>The number of records read</returns>
     ''' <remarks></remarks>
-    Private Function ReadProteinInfoChunk(intStartIndex As Integer, blnProteinUpdated() As Boolean, blnForceReload As Boolean) As Integer
+    Private Function ReadProteinInfoChunk(startIndex As Integer, proteinUpdated() As Boolean, forceReload As Boolean) As Integer
 
         ' We use a SQLLite database to store the protein sequences (to avoid running out of memory when parsing large protein lists)
         ' However, we will store the most recently loaded peptides in mCachedProteinInfoCount() and
-        ' will only reload them if intStartIndex is different than mCachedProteinInfoStartIndex
+        ' will only reload them if startIndex is different than mCachedProteinInfoStartIndex
 
-        ' Reset the values in blnProteinUpdated()
-        Array.Clear(blnProteinUpdated, 0, blnProteinUpdated.Length)
+        ' Reset the values in proteinUpdated()
+        Array.Clear(proteinUpdated, 0, proteinUpdated.Length)
 
-        If Not blnForceReload AndAlso
+        If Not forceReload AndAlso
            mCachedProteinInfoStartIndex >= 0 AndAlso
-           mCachedProteinInfoStartIndex = intStartIndex AndAlso
+           mCachedProteinInfoStartIndex = startIndex AndAlso
            Not mCachedProteinInfo Is Nothing Then
 
             ' The data loaded in memory is already valid; no need to reload
@@ -1549,93 +1549,95 @@ Public Class clsProteinCoverageSummarizer
     End Function
 
     Private Sub SaveDataPlusAllProteinsFile(
-      strPeptideInputFilePath As String,
-      strOutputFolderPath As String,
+      peptideInputFilePath As String,
+      outputFolderPath As String,
       outputFileBaseName As String,
-      chSepChars() As Char,
-      intTerminatorSize As Integer)
+      sepChars() As Char,
+      terminatorSize As Integer)
 
         Try
-            Dim strDataPlusAllProteinsFile = ConstructOutputFilePath(strPeptideInputFilePath, FILENAME_SUFFIX_SOURCE_PLUS_ALL_PROTEINS,
-                                                                 strOutputFolderPath, outputFileBaseName)
+            Dim dataPlusAllProteinsFile = ConstructOutputFilePath(peptideInputFilePath, FILENAME_SUFFIX_SOURCE_PLUS_ALL_PROTEINS,
+                                                                 outputFolderPath, outputFileBaseName)
 
-            UpdateProgress("Creating the data plus all-proteins output file: " & Path.GetFileName(strDataPlusAllProteinsFile))
+            UpdateProgress("Creating the data plus all-proteins output file: " & Path.GetFileName(dataPlusAllProteinsFile))
 
-            Using swDataPlusAllProteinsFile = New StreamWriter(New FileStream(strDataPlusAllProteinsFile, FileMode.Create, FileAccess.Write, FileShare.Read))
+            Using dataPlusProteinsWriter = New StreamWriter(New FileStream(dataPlusAllProteinsFile, FileMode.Create, FileAccess.Write, FileShare.Read))
 
-                Dim intCurrentLine = 1
+                Dim currentLine = 1
                 Dim bytesRead As Long = 0
 
-                Using srInFile = New StreamReader(New FileStream(strPeptideInputFilePath, FileMode.Open, FileAccess.Read, FileShare.Read))
-                    Do While Not srInFile.EndOfStream
-                        Dim strLineIn = srInFile.ReadLine()
-                        If strLineIn Is Nothing Then Continue Do
+                Using reader = New StreamReader(New FileStream(peptideInputFilePath, FileMode.Open, FileAccess.Read, FileShare.Read))
+                    Do While Not reader.EndOfStream
+                        Dim dataLine = reader.ReadLine()
+                        If dataLine Is Nothing Then Continue Do
 
-                        bytesRead += strLineIn.Length + intTerminatorSize
-                        strLineIn = strLineIn.TrimEnd()
+                        bytesRead += dataLine.Length + terminatorSize
+                        dataLine = dataLine.TrimEnd()
 
-                        If intCurrentLine Mod 500 = 0 Then
-                            UpdateProgress("Creating the data plus all-proteins output file", CSng((bytesRead / srInFile.BaseStream.Length) * 100), eProteinCoverageProcessingSteps.SaveAllProteinsVersionOfInputFile)
+                        If currentLine Mod 500 = 0 Then
+                            UpdateProgress("Creating the data plus all-proteins output file", CSng((bytesRead / reader.BaseStream.Length) * 100), eProteinCoverageProcessingSteps.SaveAllProteinsVersionOfInputFile)
                         End If
 
-                        If intCurrentLine = 1 AndAlso PeptideFileSkipFirstLine Then
+                        If currentLine = 1 AndAlso PeptideFileSkipFirstLine Then
                             ' Print out the first line, but append a new column name
-                            swDataPlusAllProteinsFile.WriteLine(strLineIn & ControlChars.Tab & "Protein_Name")
+                            dataPlusProteinsWriter.WriteLine(dataLine & ControlChars.Tab & "Protein_Name")
 
-                        ElseIf strLineIn.Length > 0 Then
+                        ElseIf dataLine.Length > 0 Then
 
-                            Dim blnValidLine = False
-                            Dim strPeptideSequence = ""
+                            Dim validLine = False
+                            Dim peptideSequence = ""
 
                             Try
 
                                 ' Split the line, but for efficiency purposes, only parse out the first 3 columns
-                                Dim strSplitLine = strLineIn.Split(chSepChars, 3)
+                                Dim dataCols = dataLine.Split(sepChars, 3)
 
                                 Select Case PeptideFileFormatCode
                                     Case ePeptideFileColumnOrderingCode.ProteinName_PeptideSequence
-                                        ' strProteinName = strSplitLine(0)
+                                        ' proteinName = dataCols(0)
 
-                                        If strSplitLine.Length > 1 AndAlso Not String.IsNullOrWhiteSpace(strSplitLine(1)) Then
-                                            strPeptideSequence = strSplitLine(1)
-                                            blnValidLine = True
+                                        If dataCols.Length > 1 AndAlso Not String.IsNullOrWhiteSpace(dataCols(1)) Then
+                                            peptideSequence = dataCols(1)
+                                            validLine = True
                                         End If
                                     Case Else
                                         ' Includes ePeptideFileColumnOrderingCode.SequenceOnly
-                                        strPeptideSequence = strSplitLine(0)
-                                        ' strProteinName = String.Empty
-                                        blnValidLine = True
+                                        peptideSequence = dataCols(0)
+                                        ' proteinName = String.Empty
+                                        validLine = True
                                 End Select
 
                             Catch ex As Exception
-                                blnValidLine = False
+                                validLine = False
                             End Try
 
-                            If Not blnValidLine Then
-                                swDataPlusAllProteinsFile.WriteLine(strLineIn & ControlChars.Tab & "?")
+                            If Not validLine Then
+                                dataPlusProteinsWriter.WriteLine(dataLine & ControlChars.Tab & "?")
                             Else
-                                Dim chPrefixResidue As Char
-                                Dim chSuffixResidue As Char
-                                strPeptideSequence = GetCleanPeptideSequence(strPeptideSequence, chPrefixResidue, chSuffixResidue, RemoveSymbolCharacters)
+                                Dim prefixResidue As Char
+                                Dim suffixResidue As Char
+                                peptideSequence = GetCleanPeptideSequence(peptideSequence, prefixResidue, suffixResidue, RemoveSymbolCharacters)
 
-                                Dim lstProteins As List(Of String) = Nothing
-                                If mPeptideToProteinMapResults.TryGetValue(strPeptideSequence, lstProteins) Then
+                                Dim proteins As List(Of String) = Nothing
+                                If mPeptideToProteinMapResults.TryGetValue(peptideSequence, proteins) Then
 
-                                    For Each strProtein As String In lstProteins
-                                        swDataPlusAllProteinsFile.WriteLine(strLineIn & ControlChars.Tab & strProtein)
+                                    For Each protein As String In proteins
+                                        dataPlusProteinsWriter.WriteLine(dataLine & ControlChars.Tab & protein)
                                     Next
                                 Else
-                                    If intCurrentLine = 1 Then
+                                    If currentLine = 1 Then
                                         ' This is likely a header line
-                                        swDataPlusAllProteinsFile.WriteLine(strLineIn & ControlChars.Tab & "Protein_Name")
+                                        dataPlusProteinsWriter.WriteLine(dataLine & ControlChars.Tab & "Protein_Name")
                                     Else
-                                        swDataPlusAllProteinsFile.WriteLine(strLineIn & ControlChars.Tab & "?")
+                                        dataPlusProteinsWriter.WriteLine(dataLine & ControlChars.Tab & "?")
                                     End If
                                 End If
                             End If
                         Else
-                            swDataPlusAllProteinsFile.WriteLine()
+                            dataPlusProteinsWriter.WriteLine()
                         End If
+
+                        currentLine += 1
                     Loop
 
 
@@ -1650,161 +1652,161 @@ Public Class clsProteinCoverageSummarizer
 
     Private Sub SearchProteinsUsingLeaderSequences()
 
-        Dim intLeaderSequenceMinimumLength As Integer = mLeaderSequenceCache.LeaderSequenceMinimumLength
+        Dim leaderSequenceMinimumLength As Integer = mLeaderSequenceCache.LeaderSequenceMinimumLength
 
-        Dim blnProteinUpdated(PROTEIN_CHUNK_COUNT - 1) As Boolean
+        Dim proteinUpdated(PROTEIN_CHUNK_COUNT - 1) As Boolean
 
         ' Step through the proteins in memory and compare the residues for each to mLeaderSequenceHashTable
         ' If mSearchAllProteinsForPeptideSequence = False, then require that the protein name in the peptide input file matches the protein being examined
 
         Try
-            Dim strProgressMessageBase = "Comparing proteins to peptide leader sequences"
-            OnStatusEvent(strProgressMessageBase)
+            Dim progressMessageBase = "Comparing proteins to peptide leader sequences"
+            OnStatusEvent(progressMessageBase)
 
-            Dim intProteinProcessIterations = 0
-            Dim intProteinProcessIterationsExpected = CInt(Math.Ceiling(mProteinDataCache.GetProteinCountCached / PROTEIN_CHUNK_COUNT)) * PROTEIN_CHUNK_COUNT
-            If intProteinProcessIterationsExpected < 1 Then intProteinProcessIterationsExpected = 1
+            Dim proteinProcessIterations = 0
+            Dim proteinProcessIterationsExpected = CInt(Math.Ceiling(mProteinDataCache.GetProteinCountCached / PROTEIN_CHUNK_COUNT)) * PROTEIN_CHUNK_COUNT
+            If proteinProcessIterationsExpected < 1 Then proteinProcessIterationsExpected = 1
 
-            UpdateProgress(strProgressMessageBase, 0,
+            UpdateProgress(progressMessageBase, 0,
                eProteinCoverageProcessingSteps.SearchProteinsUsingLeaderSequences)
 
-            Dim intStartIndex = 0
+            Dim startIndex = 0
             Do
                 ' Extract up to PROTEIN_CHUNK_COUNT proteins from the Sql Lite database
                 ' Store the information in the four local arrays
-                Dim intProteinCount = ReadProteinInfoChunk(intStartIndex, blnProteinUpdated, False)
+                Dim proteinCount = ReadProteinInfoChunk(startIndex, proteinUpdated, False)
 
-                For intProteinIndex = 0 To intProteinCount - 1
+                For proteinIndex = 0 To proteinCount - 1
 
-                    Dim strProteinSequence = String.Copy(mCachedProteinInfo(intProteinIndex).Sequence)
-                    Dim blnProteinSequenceUpdated = False
+                    Dim proteinSequence = String.Copy(mCachedProteinInfo(proteinIndex).Sequence)
+                    Dim proteinSequenceUpdated = False
 
-                    For intProteinSeqCharIndex = 0 To strProteinSequence.Length - intLeaderSequenceMinimumLength
+                    For proteinSeqCharIndex = 0 To proteinSequence.Length - leaderSequenceMinimumLength
 
-                        Dim intCachedPeptideMatchIndex As Integer
+                        Dim cachedPeptideMatchIndex As Integer
 
-                        ' Call .GetFirstPeptideIndexForLeaderSequence to see if the sequence cache contains the intLeaderSequenceMinimumLength residues starting at intProteinSeqCharIndex
+                        ' Call .GetFirstPeptideIndexForLeaderSequence to see if the sequence cache contains the leaderSequenceMinimumLength residues starting at proteinSeqCharIndex
                         If SearchAllProteinsSkipCoverageComputationSteps Then
-                            ' No need to capitalize strProteinSequence since it's already capitalized
-                            intCachedPeptideMatchIndex = mLeaderSequenceCache.GetFirstPeptideIndexForLeaderSequence(strProteinSequence.Substring(intProteinSeqCharIndex, intLeaderSequenceMinimumLength))
+                            ' No need to capitalize proteinSequence since it's already capitalized
+                            cachedPeptideMatchIndex = mLeaderSequenceCache.GetFirstPeptideIndexForLeaderSequence(proteinSequence.Substring(proteinSeqCharIndex, leaderSequenceMinimumLength))
                         Else
-                            ' Need to change strProteinSequence to all caps when calling GetFirstPeptideIndexForLeaderSequence
-                            intCachedPeptideMatchIndex = mLeaderSequenceCache.GetFirstPeptideIndexForLeaderSequence(strProteinSequence.Substring(intProteinSeqCharIndex, intLeaderSequenceMinimumLength).ToUpper)
+                            ' Need to change proteinSequence to all caps when calling GetFirstPeptideIndexForLeaderSequence
+                            cachedPeptideMatchIndex = mLeaderSequenceCache.GetFirstPeptideIndexForLeaderSequence(proteinSequence.Substring(proteinSeqCharIndex, leaderSequenceMinimumLength).ToUpper)
                         End If
 
 
-                        If intCachedPeptideMatchIndex >= 0 Then
-                            ' mLeaderSequenceCache contains 1 or more peptides that start with strProteinSequence.Substring(intProteinSeqCharIndex, intLeaderSequenceMinimumLength)
+                        If cachedPeptideMatchIndex >= 0 Then
+                            ' mLeaderSequenceCache contains 1 or more peptides that start with proteinSequence.Substring(proteinSeqCharIndex, leaderSequenceMinimumLength)
                             ' Test each of the peptides against this protein
 
                             Do
-                                Dim blnTestPeptide As Boolean
+                                Dim testPeptide As Boolean
 
                                 If SearchAllProteinsForPeptideSequence Then
-                                    blnTestPeptide = True
+                                    testPeptide = True
                                 Else
-                                    ' Make sure that the protein for intCachedPeptideMatchIndex matches this protein name
-                                    If String.Equals(mLeaderSequenceCache.mCachedPeptideSeqInfo(intCachedPeptideMatchIndex).ProteinName,
-                                                     mCachedProteinInfo(intProteinIndex).Name, StringComparison.CurrentCultureIgnoreCase) Then
-                                        blnTestPeptide = True
+                                    ' Make sure that the protein for cachedPeptideMatchIndex matches this protein name
+                                    If String.Equals(mLeaderSequenceCache.mCachedPeptideSeqInfo(cachedPeptideMatchIndex).ProteinName,
+                                                     mCachedProteinInfo(proteinIndex).Name, StringComparison.CurrentCultureIgnoreCase) Then
+                                        testPeptide = True
                                     Else
-                                        blnTestPeptide = False
+                                        testPeptide = False
                                     End If
                                 End If
 
-                                ' Cache the peptide length in intPeptideLength
-                                Dim intPeptideLength = mLeaderSequenceCache.mCachedPeptideSeqInfo(intCachedPeptideMatchIndex).PeptideSequence.Length
+                                ' Cache the peptide length in peptideLength
+                                Dim peptideLength = mLeaderSequenceCache.mCachedPeptideSeqInfo(cachedPeptideMatchIndex).PeptideSequence.Length
 
                                 ' Only compare the full sequence to the protein if:
                                 '  a) the protein name matches (or mSearchAllProteinsForPeptideSequence = True) and
                                 '  b) the peptide sequence doesn't pass the end of the protein
-                                If blnTestPeptide AndAlso intProteinSeqCharIndex + intPeptideLength <= strProteinSequence.Length Then
+                                If testPeptide AndAlso proteinSeqCharIndex + peptideLength <= proteinSequence.Length Then
 
                                     ' See if the full sequence matches the protein
-                                    Dim blnMatchFound = False
+                                    Dim matchFound = False
                                     If SearchAllProteinsSkipCoverageComputationSteps Then
-                                        ' No need to capitalize strProteinSequence since it's already capitalized
+                                        ' No need to capitalize proteinSequence since it's already capitalized
                                         If IgnoreILDifferences Then
-                                            If strProteinSequence.Substring(intProteinSeqCharIndex, intPeptideLength) = mLeaderSequenceCache.mCachedPeptideSeqInfo(intCachedPeptideMatchIndex).PeptideSequenceLtoI Then
-                                                blnMatchFound = True
+                                            If proteinSequence.Substring(proteinSeqCharIndex, peptideLength) = mLeaderSequenceCache.mCachedPeptideSeqInfo(cachedPeptideMatchIndex).PeptideSequenceLtoI Then
+                                                matchFound = True
                                             End If
                                         Else
-                                            If strProteinSequence.Substring(intProteinSeqCharIndex, intPeptideLength) = mLeaderSequenceCache.mCachedPeptideSeqInfo(intCachedPeptideMatchIndex).PeptideSequence Then
-                                                blnMatchFound = True
+                                            If proteinSequence.Substring(proteinSeqCharIndex, peptideLength) = mLeaderSequenceCache.mCachedPeptideSeqInfo(cachedPeptideMatchIndex).PeptideSequence Then
+                                                matchFound = True
                                             End If
                                         End If
                                     Else
-                                        ' Need to change strProteinSequence to all caps when comparing to .PeptideSequence
+                                        ' Need to change proteinSequence to all caps when comparing to .PeptideSequence
                                         If IgnoreILDifferences Then
-                                            If strProteinSequence.Substring(intProteinSeqCharIndex, intPeptideLength).ToUpper = mLeaderSequenceCache.mCachedPeptideSeqInfo(intCachedPeptideMatchIndex).PeptideSequenceLtoI Then
-                                                blnMatchFound = True
+                                            If proteinSequence.Substring(proteinSeqCharIndex, peptideLength).ToUpper = mLeaderSequenceCache.mCachedPeptideSeqInfo(cachedPeptideMatchIndex).PeptideSequenceLtoI Then
+                                                matchFound = True
                                             End If
                                         Else
-                                            If strProteinSequence.Substring(intProteinSeqCharIndex, intPeptideLength).ToUpper = mLeaderSequenceCache.mCachedPeptideSeqInfo(intCachedPeptideMatchIndex).PeptideSequence Then
-                                                blnMatchFound = True
+                                            If proteinSequence.Substring(proteinSeqCharIndex, peptideLength).ToUpper = mLeaderSequenceCache.mCachedPeptideSeqInfo(cachedPeptideMatchIndex).PeptideSequence Then
+                                                matchFound = True
                                             End If
                                         End If
 
                                     End If
 
-                                    If blnMatchFound Then
-                                        Dim intEndIndex = intProteinSeqCharIndex + intPeptideLength - 1
+                                    If matchFound Then
+                                        Dim endIndex = proteinSeqCharIndex + peptideLength - 1
                                         If MatchPeptidePrefixAndSuffixToProtein Then
-                                            blnMatchFound = ValidatePrefixAndSuffix(strProteinSequence, mLeaderSequenceCache.mCachedPeptideSeqInfo(intCachedPeptideMatchIndex).PrefixLtoI, mLeaderSequenceCache.mCachedPeptideSeqInfo(intCachedPeptideMatchIndex).SuffixLtoI, intProteinSeqCharIndex, intEndIndex)
+                                            matchFound = ValidatePrefixAndSuffix(proteinSequence, mLeaderSequenceCache.mCachedPeptideSeqInfo(cachedPeptideMatchIndex).PrefixLtoI, mLeaderSequenceCache.mCachedPeptideSeqInfo(cachedPeptideMatchIndex).SuffixLtoI, proteinSeqCharIndex, endIndex)
                                         End If
 
-                                        If blnMatchFound Then
-                                            Dim strPeptideSequenceForKeySource As String
-                                            Dim strPeptideSequenceForKey As String
+                                        If matchFound Then
+                                            Dim peptideSequenceForKeySource As String
+                                            Dim peptideSequenceForKey As String
 
                                             If MatchPeptidePrefixAndSuffixToProtein Then
-                                                strPeptideSequenceForKeySource = ConstructPeptideSequenceForKey(mLeaderSequenceCache.mCachedPeptideSeqInfo(intCachedPeptideMatchIndex).PeptideSequence, mLeaderSequenceCache.mCachedPeptideSeqInfo(intCachedPeptideMatchIndex).Prefix, mLeaderSequenceCache.mCachedPeptideSeqInfo(intCachedPeptideMatchIndex).Suffix)
+                                                peptideSequenceForKeySource = ConstructPeptideSequenceForKey(mLeaderSequenceCache.mCachedPeptideSeqInfo(cachedPeptideMatchIndex).PeptideSequence, mLeaderSequenceCache.mCachedPeptideSeqInfo(cachedPeptideMatchIndex).Prefix, mLeaderSequenceCache.mCachedPeptideSeqInfo(cachedPeptideMatchIndex).Suffix)
                                             Else
                                                 ' I'm purposely not using String.Copy() here in order to obtain increased speed
-                                                strPeptideSequenceForKeySource = mLeaderSequenceCache.mCachedPeptideSeqInfo(intCachedPeptideMatchIndex).PeptideSequence
+                                                peptideSequenceForKeySource = mLeaderSequenceCache.mCachedPeptideSeqInfo(cachedPeptideMatchIndex).PeptideSequence
                                             End If
 
                                             If IgnoreILDifferences Then
                                                 ' Replace all L characters with I
-                                                strPeptideSequenceForKey = strPeptideSequenceForKeySource.Replace("L"c, "I"c)
+                                                peptideSequenceForKey = peptideSequenceForKeySource.Replace("L"c, "I"c)
                                             Else
                                                 ' I'm purposely not using String.Copy() here in order to obtain increased speed
-                                                strPeptideSequenceForKey = strPeptideSequenceForKeySource
+                                                peptideSequenceForKey = peptideSequenceForKeySource
                                             End If
 
                                             If Not SearchAllProteinsSkipCoverageComputationSteps Then
                                                 ' Capitalize the protein sequence letters where this peptide matched
-                                                Dim intNextStartIndex = intEndIndex + 1
+                                                Dim nextStartIndex = endIndex + 1
 
-                                                Dim strNewProteinSequence = String.Empty
-                                                If intProteinSeqCharIndex > 0 Then
-                                                    strNewProteinSequence = strProteinSequence.Substring(0, intProteinSeqCharIndex)
+                                                Dim newProteinSequence = String.Empty
+                                                If proteinSeqCharIndex > 0 Then
+                                                    newProteinSequence = proteinSequence.Substring(0, proteinSeqCharIndex)
                                                 End If
-                                                strNewProteinSequence &= strProteinSequence.Substring(intProteinSeqCharIndex, intNextStartIndex - intProteinSeqCharIndex).ToUpper
-                                                strNewProteinSequence &= strProteinSequence.Substring(intNextStartIndex)
-                                                strProteinSequence = String.Copy(strNewProteinSequence)
+                                                newProteinSequence &= proteinSequence.Substring(proteinSeqCharIndex, nextStartIndex - proteinSeqCharIndex).ToUpper
+                                                newProteinSequence &= proteinSequence.Substring(nextStartIndex)
+                                                proteinSequence = String.Copy(newProteinSequence)
 
-                                                blnProteinSequenceUpdated = True
+                                                proteinSequenceUpdated = True
                                             End If
 
-                                            Dim blnMatchIsNew As Boolean
+                                            Dim matchIsNew As Boolean
 
                                             If TrackPeptideCounts Then
-                                                Dim proteinPeptideKey = CStr(mCachedProteinInfo(intProteinIndex).UniqueSequenceID) & "::" & strPeptideSequenceForKey
+                                                Dim proteinPeptideKey = CStr(mCachedProteinInfo(proteinIndex).UniqueSequenceID) & "::" & peptideSequenceForKey
 
-                                                blnMatchIsNew = IncrementCountByKey(mProteinPeptideStats, proteinPeptideKey)
+                                                matchIsNew = IncrementCountByKey(mProteinPeptideStats, proteinPeptideKey)
                                             Else
                                                 ' Must always assume the match is new since not tracking peptide counts
-                                                blnMatchIsNew = True
+                                                matchIsNew = True
                                             End If
 
-                                            If blnMatchIsNew Then
+                                            If matchIsNew Then
                                                 If SaveProteinToPeptideMappingFile Then
-                                                    WriteEntryToProteinToPeptideMappingFile(mCachedProteinInfo(intProteinIndex).Name, strPeptideSequenceForKeySource, intProteinSeqCharIndex + 1, intEndIndex + 1)
+                                                    WriteEntryToProteinToPeptideMappingFile(mCachedProteinInfo(proteinIndex).Name, peptideSequenceForKeySource, proteinSeqCharIndex + 1, endIndex + 1)
                                                 End If
 
                                                 If SaveSourceDataPlusProteinsFile Then
-                                                    StorePeptideToProteinMatch(mLeaderSequenceCache.mCachedPeptideSeqInfo(intCachedPeptideMatchIndex).PeptideSequence, mCachedProteinInfo(intProteinIndex).Name)
+                                                    StorePeptideToProteinMatch(mLeaderSequenceCache.mCachedPeptideSeqInfo(cachedPeptideMatchIndex).PeptideSequence, mCachedProteinInfo(proteinIndex).Name)
                                                 End If
 
                                             End If
@@ -1812,19 +1814,19 @@ Public Class clsProteinCoverageSummarizer
                                     End If
                                 End If
 
-                                intCachedPeptideMatchIndex = mLeaderSequenceCache.GetNextPeptideWithLeaderSequence(intCachedPeptideMatchIndex)
-                            Loop While intCachedPeptideMatchIndex >= 0
+                                cachedPeptideMatchIndex = mLeaderSequenceCache.GetNextPeptideWithLeaderSequence(cachedPeptideMatchIndex)
+                            Loop While cachedPeptideMatchIndex >= 0
                         End If
-                    Next intProteinSeqCharIndex
+                    Next proteinSeqCharIndex
 
-                    If blnProteinSequenceUpdated Then
-                        mCachedProteinInfo(intProteinIndex).Sequence = String.Copy(strProteinSequence)
-                        blnProteinUpdated(intProteinIndex) = True
+                    If proteinSequenceUpdated Then
+                        mCachedProteinInfo(proteinIndex).Sequence = String.Copy(proteinSequence)
+                        proteinUpdated(proteinIndex) = True
                     End If
 
-                    intProteinProcessIterations += 1
-                    If intProteinProcessIterations Mod 100 = 0 Then
-                        UpdateProgress(CSng(intProteinProcessIterations / intProteinProcessIterationsExpected * 100),
+                    proteinProcessIterations += 1
+                    If proteinProcessIterations Mod 100 = 0 Then
+                        UpdateProgress(CSng(proteinProcessIterations / proteinProcessIterationsExpected * 100),
                            eProteinCoverageProcessingSteps.SearchProteinsUsingLeaderSequences)
                     End If
 
@@ -1833,12 +1835,12 @@ Public Class clsProteinCoverageSummarizer
                 Next
 
                 ' Store the updated protein sequence information in the SQL Lite DB
-                UpdateSequenceDbDataValues(blnProteinUpdated, intProteinCount)
+                UpdateSequenceDbDataValues(proteinUpdated, proteinCount)
 
-                ' Increment intStartIndex to obtain the next chunk of proteins
-                intStartIndex += PROTEIN_CHUNK_COUNT
+                ' Increment startIndex to obtain the next chunk of proteins
+                startIndex += PROTEIN_CHUNK_COUNT
 
-            Loop While intStartIndex < mProteinDataCache.GetProteinCountCached()
+            Loop While startIndex < mProteinDataCache.GetProteinCountCached()
 
         Catch ex As Exception
             SetErrorMessage("Error in SearchProteinsUsingLeaderSequences: " & ex.Message, ex)
@@ -1857,23 +1859,23 @@ Public Class clsProteinCoverageSummarizer
 
     End Sub
 
-    Private Sub StorePeptideToProteinMatch(strCleanPeptideSequence As String, strProteinName As String)
+    Private Sub StorePeptideToProteinMatch(cleanPeptideSequence As String, proteinName As String)
 
         ' Store the mapping between peptide sequence and protein name
-        Dim lstProteins As List(Of String) = Nothing
-        If mPeptideToProteinMapResults.TryGetValue(strCleanPeptideSequence, lstProteins) Then
-            lstProteins.Add(strProteinName)
+        Dim proteins As List(Of String) = Nothing
+        If mPeptideToProteinMapResults.TryGetValue(cleanPeptideSequence, proteins) Then
+            proteins.Add(proteinName)
         Else
-            lstProteins = New List(Of String)
-            lstProteins.Add(strProteinName)
-            mPeptideToProteinMapResults.Add(strCleanPeptideSequence, lstProteins)
+            proteins = New List(Of String)
+            proteins.Add(proteinName)
+            mPeptideToProteinMapResults.Add(cleanPeptideSequence, proteins)
         End If
 
     End Sub
 
-    Private Function ValidateColumnCountInInputFile(strPeptideInputFilePath As String) As Boolean
+    Private Function ValidateColumnCountInInputFile(peptideInputFilePath As String) As Boolean
 
-        Dim blnSuccess As Boolean
+        Dim success As Boolean
 
         If PeptideFileFormatCode = ePeptideFileColumnOrderingCode.SequenceOnly Then
             ' Simply return true; don't even pre-read the file
@@ -1884,16 +1886,16 @@ Public Class clsProteinCoverageSummarizer
             Return True
         End If
 
-        blnSuccess = ValidateColumnCountInInputFile(strPeptideInputFilePath, PeptideFileFormatCode, PeptideFileSkipFirstLine, PeptideInputFileDelimiter)
+        success = ValidateColumnCountInInputFile(peptideInputFilePath, PeptideFileFormatCode, PeptideFileSkipFirstLine, PeptideInputFileDelimiter)
 
-        If blnSuccess Then
+        If success Then
             If PeptideFileFormatCode = ePeptideFileColumnOrderingCode.SequenceOnly Then
                 ' Need to auto-switch to search all proteins
                 SearchAllProteinsForPeptideSequence = True
             End If
         End If
 
-        Return blnSuccess
+        Return success
     End Function
 
     ''' <summary>
@@ -1901,36 +1903,36 @@ Public Class clsProteinCoverageSummarizer
     ''' specified mPeptideFileColumnOrdering = ePeptideFileColumnOrderingCode.ProteinName_PeptideSequence
     ''' If mPeptideFileColumnOrdering = ePeptideFileColumnOrderingCode.SequenceOnly, the file isn't even opened
     ''' </summary>
-    ''' <param name="strPeptideInputFilePath"></param>
+    ''' <param name="peptideInputFilePath"></param>
     ''' <param name="ePeptideFileColumnOrdering">Input / Output parameter</param>
-    ''' <param name="blnSkipFirstLine"></param>
-    ''' <param name="chColumnDelimiter"></param>
+    ''' <param name="skipFirstLine"></param>
+    ''' <param name="columnDelimiter"></param>
     ''' <returns>True if no problems; False if the user chooses to abort</returns>
     Public Shared Function ValidateColumnCountInInputFile(
-      strPeptideInputFilePath As String,
+      peptideInputFilePath As String,
       ByRef ePeptideFileColumnOrdering As ePeptideFileColumnOrderingCode,
-      blnSkipFirstLine As Boolean,
-      chColumnDelimiter As Char) As Boolean
+      skipFirstLine As Boolean,
+      columnDelimiter As Char) As Boolean
 
         ' Open the file and read in the lines
-        Using srInFile = New StreamReader(New FileStream(strPeptideInputFilePath, FileMode.Open, FileAccess.Read, FileShare.Read))
+        Using reader = New StreamReader(New FileStream(peptideInputFilePath, FileMode.Open, FileAccess.Read, FileShare.Read))
 
-            Dim intCurrentLine = 1
-            Do While Not srInFile.EndOfStream AndAlso intCurrentLine < 3
-                Dim strLineIn = srInFile.ReadLine
-                If strLineIn Is Nothing Then Continue Do
+            Dim currentLine = 1
+            Do While Not reader.EndOfStream AndAlso currentLine < 3
+                Dim lineIn = reader.ReadLine
+                If lineIn Is Nothing Then Continue Do
 
-                Dim dataLine = strLineIn.TrimEnd()
+                Dim dataLine = lineIn.TrimEnd()
 
-                If intCurrentLine = 1 AndAlso blnSkipFirstLine Then
+                If currentLine = 1 AndAlso skipFirstLine Then
                     ' do nothing, skip the first line
                 ElseIf dataLine.Length > 0 Then
                     Try
-                        Dim strSplitLine = dataLine.Split(chColumnDelimiter)
+                        Dim dataCols = dataLine.Split(columnDelimiter)
 
-                        If (Not blnSkipFirstLine AndAlso intCurrentLine = 1) OrElse
-                           (blnSkipFirstLine AndAlso intCurrentLine = 2) Then
-                            If strSplitLine.Length = 1 AndAlso ePeptideFileColumnOrdering = ePeptideFileColumnOrderingCode.ProteinName_PeptideSequence Then
+                        If (Not skipFirstLine AndAlso currentLine = 1) OrElse
+                           (skipFirstLine AndAlso currentLine = 2) Then
+                            If dataCols.Length = 1 AndAlso ePeptideFileColumnOrdering = ePeptideFileColumnOrderingCode.ProteinName_PeptideSequence Then
                                 ' Auto switch to ePeptideFileColumnOrderingCode.SequenceOnly
                                 ePeptideFileColumnOrdering = ePeptideFileColumnOrderingCode.SequenceOnly
                             End If
@@ -1940,7 +1942,7 @@ Public Class clsProteinCoverageSummarizer
                         ' Ignore the error
                     End Try
                 End If
-                intCurrentLine += 1
+                currentLine += 1
             Loop
 
         End Using
@@ -1949,50 +1951,46 @@ Public Class clsProteinCoverageSummarizer
 
     End Function
 
-    Private Function ValidatePrefixAndSuffix(strProteinSequence As String, chPrefixResidue As Char, chSuffixResidue As Char, intStartIndex As Integer, intEndIndex As Integer) As Boolean
+    Private Function ValidatePrefixAndSuffix(proteinSequence As String, prefixResidue As Char, suffixResidue As Char, startIndex As Integer, endIndex As Integer) As Boolean
 
-        Dim blnMatchValid = True
+        Dim matchValid = True
 
-        If Char.IsLetter(chPrefixResidue) Then
-            If intStartIndex >= 1 Then
-                If Char.ToUpper(strProteinSequence.Chars(intStartIndex - 1)) <> chPrefixResidue Then
-                    blnMatchValid = False
+        If Char.IsLetter(prefixResidue) Then
+            If startIndex >= 1 Then
+                If Char.ToUpper(proteinSequence.Chars(startIndex - 1)) <> prefixResidue Then
+                    matchValid = False
                 End If
             End If
-        ElseIf chPrefixResidue = "-"c AndAlso intStartIndex <> 0 Then
-            blnMatchValid = False
+        ElseIf prefixResidue = "-"c AndAlso startIndex <> 0 Then
+            matchValid = False
         End If
 
-        If blnMatchValid Then
-            If Char.IsLetter(chSuffixResidue) Then
-                If intEndIndex < strProteinSequence.Length - 1 Then
-                    If Char.ToUpper(strProteinSequence.Chars(intEndIndex + 1)) <> chSuffixResidue Then
-                        blnMatchValid = False
+        If matchValid Then
+            If Char.IsLetter(suffixResidue) Then
+                If endIndex < proteinSequence.Length - 1 Then
+                    If Char.ToUpper(proteinSequence.Chars(endIndex + 1)) <> suffixResidue Then
+                        matchValid = False
                     End If
                 Else
-                    blnMatchValid = False
+                    matchValid = False
                 End If
-            ElseIf chSuffixResidue = "-"c AndAlso intEndIndex < strProteinSequence.Length - 1 Then
-                blnMatchValid = False
+            ElseIf suffixResidue = "-"c AndAlso endIndex < proteinSequence.Length - 1 Then
+                matchValid = False
             End If
         End If
 
-        Return blnMatchValid
+        Return matchValid
 
     End Function
 
-    Private Sub WriteEntryToProteinToPeptideMappingFile(strProteinName As String, strPeptideSequenceForKey As String, intStartResidue As Integer, intEndResidue As Integer)
+    Private Sub WriteEntryToProteinToPeptideMappingFile(proteinName As String, peptideSequenceForKey As String, startResidue As Integer, endResidue As Integer)
         If SaveProteinToPeptideMappingFile AndAlso Not mProteinToPeptideMappingOutputFile Is Nothing Then
-            mProteinToPeptideMappingOutputFile.WriteLine(strProteinName & ControlChars.Tab & strPeptideSequenceForKey & ControlChars.Tab & intStartResidue & ControlChars.Tab & intEndResidue)
+            mProteinToPeptideMappingOutputFile.WriteLine(proteinName & ControlChars.Tab & peptideSequenceForKey & ControlChars.Tab & startResidue & ControlChars.Tab & endResidue)
         End If
     End Sub
 
-    Protected Sub ResetProgress()
-        ResetProgress(String.Empty)
-    End Sub
-
-    Protected Sub ResetProgress(strProgressStepDescription As String)
-        mProgressStepDescription = String.Copy(strProgressStepDescription)
+    Protected Sub ResetProgress(stepDescription As String)
+        mProgressStepDescription = String.Copy(stepDescription)
         mProgressPercentComplete = 0
         RaiseEvent ProgressReset()
     End Sub
@@ -2001,19 +1999,19 @@ Public Class clsProteinCoverageSummarizer
         SetErrorCode(eNewErrorCode, False)
     End Sub
 
-    Protected Sub SetErrorCode(eNewErrorCode As eProteinCoverageErrorCodes, blnLeaveExistingErrorCodeUnchanged As Boolean)
-        If blnLeaveExistingErrorCodeUnchanged AndAlso mErrorCode <> eProteinCoverageErrorCodes.NoError Then
+    Protected Sub SetErrorCode(eNewErrorCode As eProteinCoverageErrorCodes, leaveExistingErrorCodeUnchanged As Boolean)
+        If leaveExistingErrorCodeUnchanged AndAlso mErrorCode <> eProteinCoverageErrorCodes.NoError Then
             ' An error code is already defined; do not change it
         Else
             mErrorCode = eNewErrorCode
         End If
     End Sub
 
-    Protected Sub SetErrorMessage(strMessage As String, Optional ex As Exception = Nothing)
-        If strMessage Is Nothing Then
+    Protected Sub SetErrorMessage(message As String, Optional ex As Exception = Nothing)
+        If message Is Nothing Then
             mErrorMessage = String.Empty
         Else
-            mErrorMessage = strMessage
+            mErrorMessage = message
         End If
 
         If mErrorMessage.Length > 0 Then
@@ -2022,31 +2020,31 @@ Public Class clsProteinCoverageSummarizer
         End If
     End Sub
 
-    Protected Sub UpdateProgress(strProgressStepDescription As String)
-        mProgressStepDescription = String.Copy(strProgressStepDescription)
+    Protected Sub UpdateProgress(stepDescription As String)
+        mProgressStepDescription = String.Copy(stepDescription)
         RaiseEvent ProgressChanged(ProgressStepDescription, ProgressPercentComplete)
     End Sub
 
-    Protected Sub UpdateProgress(sngPercentComplete As Single, eCurrentProcessingStep As eProteinCoverageProcessingSteps)
-        UpdateProgress(ProgressStepDescription, sngPercentComplete, eCurrentProcessingStep)
+    Protected Sub UpdateProgress(percentComplete As Single, eCurrentProcessingStep As eProteinCoverageProcessingSteps)
+        UpdateProgress(ProgressStepDescription, percentComplete, eCurrentProcessingStep)
     End Sub
 
-    Protected Sub UpdateProgress(strProgressStepDescription As String, sngPercentComplete As Single, eCurrentProcessingStep As eProteinCoverageProcessingSteps)
+    Protected Sub UpdateProgress(stepDescription As String, percentComplete As Single, eCurrentProcessingStep As eProteinCoverageProcessingSteps)
 
-        mProgressStepDescription = String.Copy(strProgressStepDescription)
+        mProgressStepDescription = String.Copy(stepDescription)
         mCurrentProcessingStep = eCurrentProcessingStep
 
-        If sngPercentComplete < 0 Then
-            sngPercentComplete = 0
-        ElseIf sngPercentComplete > 100 Then
-            sngPercentComplete = 100
+        If percentComplete < 0 Then
+            percentComplete = 0
+        ElseIf percentComplete > 100 Then
+            percentComplete = 100
         End If
 
-        Dim sngStartPercent = mPercentCompleteStartLevels(eCurrentProcessingStep)
-        Dim sngEndPercent = mPercentCompleteStartLevels(eCurrentProcessingStep + 1)
+        Dim startPercent = mPercentCompleteStartLevels(eCurrentProcessingStep)
+        Dim endPercent = mPercentCompleteStartLevels(eCurrentProcessingStep + 1)
 
-        ' Use the start and end percent complete values for the specified processing step to convert sngPercentComplete to an overall percent complete value
-        mProgressPercentComplete = sngStartPercent + CSng(sngPercentComplete / 100.0 * (sngEndPercent - sngStartPercent))
+        ' Use the start and end percent complete values for the specified processing step to convert percentComplete to an overall percent complete value
+        mProgressPercentComplete = startPercent + CSng(percentComplete / 100.0 * (endPercent - startPercent))
 
         RaiseEvent ProgressChanged(ProgressStepDescription, ProgressPercentComplete)
     End Sub
@@ -2059,17 +2057,17 @@ Public Class clsProteinCoverageSummarizer
         UpdateProgress(100, eProteinCoverageProcessingSteps.DetermineShortestPeptideLength)
     End Sub
 
-    Private Sub mProteinDataCache_ProteinCachedWithProgress(intProteinsCached As Integer, sngPercentFileProcessed As Single) Handles mProteinDataCache.ProteinCachedWithProgress
+    Private Sub mProteinDataCache_ProteinCachedWithProgress(proteinsCached As Integer, percentFileProcessed As Single) Handles mProteinDataCache.ProteinCachedWithProgress
         Const CONSOLE_UPDATE_INTERVAL_SECONDS = 3
 
-        Static dtLastUpdate As DateTime = DateTime.UtcNow
+        Static lastUpdate As DateTime = DateTime.UtcNow
 
-        If DateTime.UtcNow.Subtract(dtLastUpdate).TotalSeconds >= CONSOLE_UPDATE_INTERVAL_SECONDS Then
-            dtLastUpdate = DateTime.UtcNow
+        If DateTime.UtcNow.Subtract(lastUpdate).TotalSeconds >= CONSOLE_UPDATE_INTERVAL_SECONDS Then
+            lastUpdate = DateTime.UtcNow
             Console.Write(".")
         End If
 
-        UpdateProgress(sngPercentFileProcessed, eProteinCoverageProcessingSteps.CacheProteins)
+        UpdateProgress(percentFileProcessed, eProteinCoverageProcessingSteps.CacheProteins)
 
     End Sub
 

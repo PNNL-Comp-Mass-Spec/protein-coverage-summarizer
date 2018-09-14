@@ -69,8 +69,8 @@ Public Class clsProteinFileDataCache
     Private mSqlLitePersistentConnection As SQLiteConnection
 
     Public Event ProteinCachingStart()
-    Public Event ProteinCached(intProteinsCached As Integer)
-    Public Event ProteinCachedWithProgress(intProteinsCached As Integer, sngPercentFileProcessed As Single)
+    Public Event ProteinCached(proteinsCached As Integer)
+    Public Event ProteinCachedWithProgress(proteinsCached As Integer, percentFileProcessed As Single)
     Public Event ProteinCachingComplete()
 
 #End Region
@@ -126,7 +126,7 @@ Public Class clsProteinFileDataCache
 
 #End Region
 
-    Public Function ConnectToSqlLiteDB(blnDisableJournaling As Boolean) As SQLiteConnection
+    Public Function ConnectToSqlLiteDB(disableJournaling As Boolean) As SQLiteConnection
 
         If mSqlLiteDBConnectionString Is Nothing OrElse mSqlLiteDBConnectionString.Length = 0 Then
             OnDebugEvent("ConnectToSqlLiteDB: Unable to open the SQLite database because mSqlLiteDBConnectionString is empty")
@@ -138,7 +138,7 @@ Public Class clsProteinFileDataCache
         Dim sqlConnection = New SQLiteConnection(mSqlLiteDBConnectionString, True)
         sqlConnection.Open()
 
-        If blnDisableJournaling Then
+        If disableJournaling Then
             OnDebugEvent("Disabling Journaling and setting Synchronous mode to 0 (improves update speed)")
 
             Using cmd As SQLiteCommand = sqlConnection.CreateCommand
@@ -153,67 +153,67 @@ Public Class clsProteinFileDataCache
 
     End Function
 
-    Private Function DefineSqlLiteDBPath(strSqlLiteDBFileName As String) As String
-        Dim strDBPath As String
-        Dim strFolderPath As String = String.Empty
-        Dim strFilePath As String = String.Empty
+    Private Function DefineSqlLiteDBPath(sqlLiteDBFileName As String) As String
+        Dim dbPath As String
+        Dim folderPath As String = String.Empty
+        Dim filePath As String = String.Empty
 
-        Dim blnSuccess As Boolean
+        Dim success As Boolean
 
         Try
             ' See if we can create files in the folder that contains this .Dll
-            strFolderPath = clsProteinCoverageSummarizer.GetAppFolderPath()
+            folderPath = clsProteinCoverageSummarizer.GetAppFolderPath()
 
-            strFilePath = Path.Combine(strFolderPath, "TempFileToTestFileIOPermissions.tmp")
-            OnDebugEvent("Checking for write permission by creating file " + strFilePath)
+            filePath = Path.Combine(folderPath, "TempFileToTestFileIOPermissions.tmp")
+            OnDebugEvent("Checking for write permission by creating file " + filePath)
 
-            Using writer = New StreamWriter(New FileStream(strFilePath, FileMode.Create, FileAccess.Write, FileShare.Read))
+            Using writer = New StreamWriter(New FileStream(filePath, FileMode.Create, FileAccess.Write, FileShare.Read))
                 writer.WriteLine("Test")
             End Using
 
-            blnSuccess = True
+            success = True
 
         Catch ex As Exception
             ' Error creating file; user likely doesn't have write-access
             OnDebugEvent(" ... unable to create the file: " + ex.Message)
-            blnSuccess = False
+            success = False
         End Try
 
-        If Not blnSuccess Then
+        If Not success Then
             Try
                 ' Create a randomly named file in the user's temp folder
-                strFilePath = Path.GetTempFileName
-                OnDebugEvent("Creating file in user's temp directory: " + strFilePath)
+                filePath = Path.GetTempFileName
+                OnDebugEvent("Creating file in user's temp directory: " + filePath)
 
-                strFolderPath = Path.GetDirectoryName(strFilePath)
-                blnSuccess = True
+                folderPath = Path.GetDirectoryName(filePath)
+                success = True
 
             Catch ex As Exception
                 ' Error creating temp file; user likely doesn't have write-access anywhere on the disk
                 OnDebugEvent(" ... unable to create the file: " + ex.Message)
-                blnSuccess = False
+                success = False
             End Try
         End If
 
-        If blnSuccess Then
+        If success Then
             Try
                 ' Delete the temporary file
-                OnDebugEvent("Deleting " + strFilePath)
-                File.Delete(strFilePath)
+                OnDebugEvent("Deleting " + filePath)
+                File.Delete(filePath)
             Catch ex As Exception
                 ' Ignore errors here
             End Try
         End If
 
-        If blnSuccess Then
-            strDBPath = Path.Combine(strFolderPath, strSqlLiteDBFileName)
+        If success Then
+            dbPath = Path.Combine(folderPath, sqlLiteDBFileName)
         Else
-            strDBPath = strSqlLiteDBFileName
+            dbPath = sqlLiteDBFileName
         End If
 
-        OnDebugEvent(" SQLite DB Path defined: " + strDBPath)
+        OnDebugEvent(" SQLite DB Path defined: " + dbPath)
 
-        Return strDBPath
+        Return dbPath
 
     End Function
 
@@ -369,16 +369,16 @@ Public Class clsProteinFileDataCache
 
         IgnoreILDifferences = False
 
-        Dim intFileAttemptCount = 0
-        Dim blnSuccess = False
-        Do While Not blnSuccess AndAlso intFileAttemptCount < MAX_FILE_CREATE_ATTEMPTS
+        Dim fileAttemptCount = 0
+        Dim success = False
+        Do While Not success AndAlso fileAttemptCount < MAX_FILE_CREATE_ATTEMPTS
 
             ' Define the path to the Sql Lite database
-            If intFileAttemptCount = 0 Then
+            If fileAttemptCount = 0 Then
                 mSqlLiteDBFilePath = DefineSqlLiteDBPath(SQL_LITE_PROTEIN_CACHE_FILENAME)
             Else
                 mSqlLiteDBFilePath = DefineSqlLiteDBPath(Path.GetFileNameWithoutExtension(SQL_LITE_PROTEIN_CACHE_FILENAME) &
-                                                         intFileAttemptCount.ToString &
+                                                         fileAttemptCount.ToString &
                                                          Path.GetExtension(SQL_LITE_PROTEIN_CACHE_FILENAME))
             End If
 
@@ -390,7 +390,7 @@ Public Class clsProteinFileDataCache
                 End If
 
                 If Not File.Exists(mSqlLiteDBFilePath) Then
-                    blnSuccess = True
+                    success = True
                 End If
 
             Catch ex As Exception
@@ -398,7 +398,7 @@ Public Class clsProteinFileDataCache
                 OnWarningEvent("Exception in InitializeLocalVariables: " + ex.Message)
             End Try
 
-            intFileAttemptCount += 1
+            fileAttemptCount += 1
         Loop
 
         mSqlLiteDBConnectionString = "Data Source=" & mSqlLiteDBFilePath & ";"
@@ -408,11 +408,11 @@ Public Class clsProteinFileDataCache
     ''' <summary>
     ''' Examines the file's extension and true if it ends in .fasta or .fsa or .faa
     ''' </summary>
-    ''' <param name="strFilePath"></param>
+    ''' <param name="filePath"></param>
     ''' <returns></returns>
-    Public Shared Function IsFastaFile(strFilePath As String) As Boolean
+    Public Shared Function IsFastaFile(filePath As String) As Boolean
 
-        Dim proteinFileExtension = Path.GetExtension(strFilePath).ToLower()
+        Dim proteinFileExtension = Path.GetExtension(filePath).ToLower()
 
         If proteinFileExtension = ".fasta" OrElse proteinFileExtension = ".fsa" OrElse proteinFileExtension = ".faa" Then
             Return True
@@ -422,8 +422,8 @@ Public Class clsProteinFileDataCache
 
     End Function
 
-    Public Function ParseProteinFile(strProteinInputFilePath As String) As Boolean
-        ' If strOutputFileNameBaseOverride is defined, then uses that name for the protein output filename rather than auto-defining the name
+    Public Function ParseProteinFile(proteinInputFilePath As String) As Boolean
+        ' If outputFileNameBaseOverride is defined, then uses that name for the protein output filename rather than auto-defining the name
 
         ' Create the SQL Lite DB
         Dim sqlConnection = ConnectToSqlLiteDB(True)
@@ -444,18 +444,18 @@ Public Class clsProteinFileDataCache
         ' Define a RegEx to replace all of the non-letter characters
         Dim reReplaceSymbols = New Regex("[^A-Za-z]", RegexOptions.Compiled)
 
-        Dim objProteinFileReader As ProteinFileReaderBaseClass = Nothing
+        Dim proteinFileReader As ProteinFileReaderBaseClass = Nothing
 
-        Dim blnSuccess As Boolean
+        Dim success As Boolean
 
         Try
 
-            If strProteinInputFilePath Is Nothing OrElse strProteinInputFilePath.Length = 0 Then
+            If proteinInputFilePath Is Nothing OrElse proteinInputFilePath.Length = 0 Then
                 ReportError("Empty protein input file path")
-                blnSuccess = False
+                success = False
             Else
 
-                If AssumeFastaFile OrElse IsFastaFile(strProteinInputFilePath) Then
+                If AssumeFastaFile OrElse IsFastaFile(proteinInputFilePath) Then
                     mParsedFileIsFastaFile = True
                 Else
                     If AssumeDelimitedFile Then
@@ -466,12 +466,12 @@ Public Class clsProteinFileDataCache
                 End If
 
                 If mParsedFileIsFastaFile Then
-                    objProteinFileReader = New FastaFileReader() With {
+                    proteinFileReader = New FastaFileReader() With {
                         .ProteinLineStartChar = FastaFileOptions.ProteinLineStartChar,
                         .ProteinLineAccessionEndChar = FastaFileOptions.ProteinLineAccessionEndChar
                     }
                 Else
-                    objProteinFileReader = New DelimitedFileReader With {
+                    proteinFileReader = New DelimitedFileReader With {
                         .Delimiter = mDelimitedInputFileDelimiter,
                         .DelimitedFileFormatCode = DelimitedFileFormatCode,
                         .SkipFirstLine = DelimitedFileSkipFirstLine
@@ -479,29 +479,29 @@ Public Class clsProteinFileDataCache
                 End If
 
                 ' Verify that the input file exists
-                If Not File.Exists(strProteinInputFilePath) Then
-                    ReportError("Protein input file not found: " & strProteinInputFilePath)
-                    blnSuccess = False
+                If Not File.Exists(proteinInputFilePath) Then
+                    ReportError("Protein input file not found: " & proteinInputFilePath)
+                    success = False
                     Exit Try
                 End If
 
                 ' Attempt to open the input file
-                If Not objProteinFileReader.OpenFile(strProteinInputFilePath) Then
-                    ReportError("Error opening protein input file: " & strProteinInputFilePath)
-                    blnSuccess = False
+                If Not proteinFileReader.OpenFile(proteinInputFilePath) Then
+                    ReportError("Error opening protein input file: " & proteinInputFilePath)
+                    success = False
                     Exit Try
                 End If
 
-                blnSuccess = True
+                success = True
             End If
 
         Catch ex As Exception
-            ReportError("Error opening protein input file (" & strProteinInputFilePath & "): " & ex.Message, ex)
-            blnSuccess = False
+            ReportError("Error opening protein input file (" & proteinInputFilePath & "): " & ex.Message, ex)
+            success = False
         End Try
 
         ' Abort processing if we couldn't successfully open the input file
-        If Not blnSuccess Then Return False
+        If Not success Then Return False
 
         Try
             ' Read each protein in the input file and process appropriately
@@ -516,38 +516,38 @@ Public Class clsProteinFileDataCache
             Dim nameFld As SQLiteParameter = cmd.CreateParameter
             Dim descriptionFld As SQLiteParameter = cmd.CreateParameter
             Dim sequenceFld As SQLiteParameter = cmd.CreateParameter
-            Dim uniquesequenceIDFld As SQLiteParameter = cmd.CreateParameter
+            Dim uniqueSequenceIDFld As SQLiteParameter = cmd.CreateParameter
             Dim percentCoverageFld As SQLiteParameter = cmd.CreateParameter
             cmd.Parameters.Add(nameFld)
             cmd.Parameters.Add(descriptionFld)
             cmd.Parameters.Add(sequenceFld)
-            cmd.Parameters.Add(uniquesequenceIDFld)
+            cmd.Parameters.Add(uniqueSequenceIDFld)
             cmd.Parameters.Add(percentCoverageFld)
 
             ' Begin a SQL Transaction
             Dim SQLTransaction = sqlConnection.BeginTransaction()
 
-            Dim intProteinsProcessed = 0
-            Dim intInputFileLinesRead = 0
+            Dim proteinsProcessed = 0
+            Dim inputFileLinesRead = 0
 
             Do
-                Dim blnInputProteinFound = objProteinFileReader.ReadNextProteinEntry()
+                Dim inputProteinFound = proteinFileReader.ReadNextProteinEntry()
 
-                If Not blnInputProteinFound Then
+                If Not inputProteinFound Then
                     Exit Do
                 End If
 
-                intProteinsProcessed += 1
-                intInputFileLinesRead = objProteinFileReader.LinesRead
+                proteinsProcessed += 1
+                inputFileLinesRead = proteinFileReader.LinesRead
 
-                Dim name = objProteinFileReader.ProteinName
-                Dim description = objProteinFileReader.ProteinDescription
+                Dim name = proteinFileReader.ProteinName
+                Dim description = proteinFileReader.ProteinDescription
                 Dim sequence As String
 
                 If RemoveSymbolCharacters Then
-                    sequence = reReplaceSymbols.Replace(objProteinFileReader.ProteinSequence, String.Empty)
+                    sequence = reReplaceSymbols.Replace(proteinFileReader.ProteinSequence, String.Empty)
                 Else
-                    sequence = objProteinFileReader.ProteinSequence
+                    sequence = proteinFileReader.ProteinSequence
                 End If
 
                 If ChangeProteinSequencesToLowercase Then
@@ -576,8 +576,8 @@ Public Class clsProteinFileDataCache
                 descriptionFld.Value = description
                 sequenceFld.Value = sequence
 
-                ' Use mProteinCount to assign UniquesequenceID values
-                uniquesequenceIDFld.Value = mProteinCount
+                ' Use mProteinCount to assign UniqueSequenceID values
+                uniqueSequenceIDFld.Value = mProteinCount
 
                 percentCoverageFld.Value = 0
 
@@ -588,10 +588,10 @@ Public Class clsProteinFileDataCache
                 RaiseEvent ProteinCached(mProteinCount)
 
                 If mProteinCount Mod 100 = 0 Then
-                    RaiseEvent ProteinCachedWithProgress(mProteinCount, objProteinFileReader.PercentFileProcessed)
+                    RaiseEvent ProteinCachedWithProgress(mProteinCount, proteinFileReader.PercentFileProcessed)
                 End If
 
-                blnSuccess = True
+                success = True
             Loop
 
             ' Finalize the SQL Transaction
@@ -606,22 +606,22 @@ Public Class clsProteinFileDataCache
             sqlConnection.Close()
 
             ' Close the protein file
-            objProteinFileReader.CloseFile()
+            proteinFileReader.CloseFile()
 
             RaiseEvent ProteinCachingComplete()
 
-            If blnSuccess Then
-                OnStatusEvent("Done: Processed " & intProteinsProcessed.ToString("###,##0") & " proteins (" & intInputFileLinesRead.ToString("###,###,##0") & " lines)")
+            If success Then
+                OnStatusEvent("Done: Processed " & proteinsProcessed.ToString("###,##0") & " proteins (" & inputFileLinesRead.ToString("###,###,##0") & " lines)")
             Else
                 OnErrorEvent(mStatusMessage)
             End If
 
         Catch ex As Exception
-            ReportError("Error reading protein input file (" & strProteinInputFilePath & "): " & ex.Message, ex)
-            blnSuccess = False
+            ReportError("Error reading protein input file (" & proteinInputFilePath & "): " & ex.Message, ex)
+            success = False
         End Try
 
-        Return blnSuccess
+        Return success
 
     End Function
 

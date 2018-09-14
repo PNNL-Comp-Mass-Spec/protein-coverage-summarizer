@@ -246,7 +246,7 @@ Public Class clsProteinCoverageSummarizerRunner
     End Function
 
     Private Sub InitializeVariables()
-        Me.mCallingAppHandlesEvents = False
+        Me.CallingAppHandlesEvents = False
 
         AbortProcessing = False
         mStatusMessage = String.Empty
@@ -274,7 +274,7 @@ Public Class clsProteinCoverageSummarizerRunner
 
         Try
             ' Show the progress form
-            If Not mCallingAppHandlesEvents Then
+            If Not CallingAppHandlesEvents Then
                 Console.WriteLine(MyBase.ProgressStepDescription)
             End If
 

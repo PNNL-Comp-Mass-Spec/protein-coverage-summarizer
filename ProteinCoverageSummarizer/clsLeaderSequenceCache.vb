@@ -166,15 +166,15 @@ Public Class clsLeaderSequenceCache
     ''' <summary>
     ''' Caches the peptide and updates mLeaderSequences
     ''' </summary>
-    ''' <param name="strPeptideSequence"></param>
-    ''' <param name="strProteinName"></param>
-    ''' <param name="chPrefixResidue"></param>
-    ''' <param name="chSuffixResidue"></param>
+    ''' <param name="peptideSequence">Peptide sequence</param>
+    ''' <param name="proteinName">Protein name</param>
+    ''' <param name="prefixResidue">Prefix residue</param>
+    ''' <param name="suffixResidue">Suffix residue</param>
     ''' <returns></returns>
-    Public Function CachePeptide(strPeptideSequence As String, strProteinName As String, chPrefixResidue As Char, chSuffixResidue As Char) As Boolean
+    Public Function CachePeptide(peptideSequence As String, proteinName As String, prefixResidue As Char, suffixResidue As Char) As Boolean
 
         Try
-            If strPeptideSequence Is Nothing OrElse strPeptideSequence.Length < mLeaderSequenceMinimumLength Then
+            If peptideSequence Is Nothing OrElse peptideSequence.Length < mLeaderSequenceMinimumLength Then
                 ' Peptide is too short; cannot process it
                 mErrorMessage = "Peptide length is shorter than " & mLeaderSequenceMinimumLength.ToString & "; unable to cache the peptide"
                 Return False
@@ -183,29 +183,29 @@ Public Class clsLeaderSequenceCache
             End If
 
             ' Make sure the residues are capitalized
-            strPeptideSequence = strPeptideSequence.ToUpper
-            If Char.IsLetter(chPrefixResidue) Then chPrefixResidue = Char.ToUpper(chPrefixResidue)
-            If Char.IsLetter(chSuffixResidue) Then chSuffixResidue = Char.ToUpper(chSuffixResidue)
+            peptideSequence = peptideSequence.ToUpper
+            If Char.IsLetter(prefixResidue) Then prefixResidue = Char.ToUpper(prefixResidue)
+            If Char.IsLetter(suffixResidue) Then suffixResidue = Char.ToUpper(suffixResidue)
 
-            Dim strLeaderSequence = strPeptideSequence.Substring(0, mLeaderSequenceMinimumLength)
-            Dim chPrefixResidueLtoI = chPrefixResidue
-            Dim chSuffixResidueLtoI = chSuffixResidue
+            Dim leaderSequence = peptideSequence.Substring(0, mLeaderSequenceMinimumLength)
+            Dim prefixResidueLtoI = prefixResidue
+            Dim suffixResidueLtoI = suffixResidue
 
             If mIgnoreILDifferences Then
                 ' Replace all L characters with I
-                strLeaderSequence = strLeaderSequence.Replace("L"c, "I"c)
+                leaderSequence = leaderSequence.Replace("L"c, "I"c)
 
-                If chPrefixResidueLtoI = "L"c Then chPrefixResidueLtoI = "I"c
-                If chSuffixResidueLtoI = "L"c Then chSuffixResidueLtoI = "I"c
+                If prefixResidueLtoI = "L"c Then prefixResidueLtoI = "I"c
+                If suffixResidueLtoI = "L"c Then suffixResidueLtoI = "I"c
             End If
 
             Dim hashIndexPointer As Integer
 
-            ' Look for strLeaderSequence in mLeaderSequences
-            If Not mLeaderSequences.TryGetValue(strLeaderSequence, hashIndexPointer) Then
-                ' strLeaderSequence was not found; add it and initialize intHashIndexPointer
+            ' Look for leaderSequence in mLeaderSequences
+            If Not mLeaderSequences.TryGetValue(leaderSequence, hashIndexPointer) Then
+                ' leaderSequence was not found; add it and initialize intHashIndexPointer
                 hashIndexPointer = mLeaderSequences.Count
-                mLeaderSequences.Add(strLeaderSequence, hashIndexPointer)
+                mLeaderSequences.Add(leaderSequence, hashIndexPointer)
             End If
 
             ' Expand mCachedPeptideSeqInfo if needed
@@ -214,16 +214,16 @@ Public Class clsLeaderSequenceCache
                 ReDim Preserve mCachedPeptideToHashIndexPointer(mCachedPeptideSeqInfo.Length - 1)
             End If
 
-            ' Add strPeptideSequence to mCachedPeptideSeqInfo
+            ' Add peptideSequence to mCachedPeptideSeqInfo
             With mCachedPeptideSeqInfo(mCachedPeptideCount)
-                .ProteinName = String.Copy(strProteinName)
-                .PeptideSequence = String.Copy(strPeptideSequence)
-                .Prefix = chPrefixResidue
-                .Suffix = chSuffixResidue
-                .PrefixLtoI = chPrefixResidueLtoI
-                .SuffixLtoI = chSuffixResidueLtoI
+                .ProteinName = String.Copy(proteinName)
+                .PeptideSequence = String.Copy(peptideSequence)
+                .Prefix = prefixResidue
+                .Suffix = suffixResidue
+                .PrefixLtoI = prefixResidueLtoI
+                .SuffixLtoI = suffixResidueLtoI
                 If mIgnoreILDifferences Then
-                    .PeptideSequenceLtoI = strPeptideSequence.Replace("L"c, "I"c)
+                    .PeptideSequenceLtoI = peptideSequence.Replace("L"c, "I"c)
                 End If
             End With
 
@@ -241,57 +241,58 @@ Public Class clsLeaderSequenceCache
     End Function
 
     Public Function DetermineShortestPeptideLengthInFile(
-        strInputFilePath As String, intTerminatorSize As Integer,
-        blnPeptideFileSkipFirstLine As Boolean, chPeptideInputFileDelimiter As Char,
-        intColumnNumWithPeptideSequence As Integer) As Boolean
+        inputFilePath As String, terminatorSize As Integer,
+        peptideFileSkipFirstLine As Boolean, peptideInputFileDelimiter As Char,
+        columnNumWithPeptideSequence As Integer) As Boolean
 
-        ' Parses strInputFilePath examining column intColumnNumWithPeptideSequence to determine the minimum peptide sequence length present
+        ' Parses inputFilePath examining column columnNumWithPeptideSequence to determine the minimum peptide sequence length present
         ' Updates mLeaderSequenceMinimumLength if successful, though the minimum length is not allowed to be less than MINIMUM_LEADER_SEQUENCE_LENGTH
 
-        ' intColumnNumWithPeptideSequence should be 1 if the peptide sequence is in the first column, 2 if in the second, etc.
+        ' columnNumWithPeptideSequence should be 1 if the peptide sequence is in the first column, 2 if in the second, etc.
 
         ' Define a RegEx to replace all of the non-letter characters
         Dim reReplaceSymbols = New Regex("[^A-Za-z]", RegexOptions.Compiled)
 
         Try
-            Dim intValidPeptideCount = 0
-            Dim intLeaderSequenceMinimumLength = 0
+            Dim validPeptideCount = 0
+            Dim leaderSeqMinimumLength = 0
 
             ' Open the file and read in the lines
-            Using srInFile = New StreamReader(New FileStream(strInputFilePath, FileMode.Open, FileAccess.Read, FileShare.Read))
+            Using reader = New StreamReader(New FileStream(inputFilePath, FileMode.Open, FileAccess.Read, FileShare.Read))
 
 
-                Dim intCurrentLine = 1
+                Dim linesRead = 1
                 Dim bytesRead As Long = 0
 
-                Do While Not srInFile.EndOfStream
+                Do While Not reader.EndOfStream
                     If mAbortProcessing Then Exit Do
 
-                    Dim strLineIn = srInFile.ReadLine
-                    If strLineIn Is Nothing Then Continue Do
+                    Dim dataLine = reader.ReadLine
+                    If dataLine Is Nothing Then Continue Do
 
-                    bytesRead += strLineIn.Length + intTerminatorSize
+                    bytesRead += dataLine.Length + terminatorSize
 
-                    strLineIn = strLineIn.TrimEnd()
+                    dataLine = dataLine.TrimEnd()
 
-                    If intCurrentLine Mod 100 = 1 Then
-                        UpdateProgress("Scanning input file to determine minimum peptide length: " & intCurrentLine.ToString, CSng((bytesRead / srInFile.BaseStream.Length) * 100))
+                    If linesRead Mod 100 = 1 Then
+                        UpdateProgress("Scanning input file to determine minimum peptide length: " & linesRead.ToString,
+                                       bytesRead / CSng(reader.BaseStream.Length) * 100)
                     End If
 
-                    If intCurrentLine = 1 AndAlso blnPeptideFileSkipFirstLine Then
+                    If linesRead = 1 AndAlso peptideFileSkipFirstLine Then
                         ' Do nothing, skip the first line
-                    ElseIf strLineIn.Length > 0 Then
+                    ElseIf dataLine.Length > 0 Then
 
                         Dim blnValidLine As Boolean
-                        Dim strPeptideSequence = ""
+                        Dim peptideSequence = ""
 
                         Try
-                            Dim strSplitLine = strLineIn.Split(chPeptideInputFileDelimiter)
+                            Dim dataCols = dataLine.Split(peptideInputFileDelimiter)
 
-                            If intColumnNumWithPeptideSequence >= 1 And intColumnNumWithPeptideSequence < strSplitLine.Length - 1 Then
-                                strPeptideSequence = strSplitLine(intColumnNumWithPeptideSequence - 1)
+                            If columnNumWithPeptideSequence >= 1 And columnNumWithPeptideSequence < dataCols.Length - 1 Then
+                                peptideSequence = dataCols(columnNumWithPeptideSequence - 1)
                             Else
-                                strPeptideSequence = strSplitLine(0)
+                                peptideSequence = dataCols(0)
                             End If
                             blnValidLine = True
                         Catch ex As Exception
@@ -299,42 +300,42 @@ Public Class clsLeaderSequenceCache
                         End Try
 
                         If blnValidLine Then
-                            If strPeptideSequence.Length >= 4 Then
+                            If peptideSequence.Length >= 4 Then
                                 ' Check for, and remove any prefix or suffix residues
-                                If strPeptideSequence.Chars(1) = "."c AndAlso strPeptideSequence.Chars(strPeptideSequence.Length - 2) = "."c Then
-                                    strPeptideSequence = strPeptideSequence.Substring(2, strPeptideSequence.Length - 4)
+                                If peptideSequence.Chars(1) = "."c AndAlso peptideSequence.Chars(peptideSequence.Length - 2) = "."c Then
+                                    peptideSequence = peptideSequence.Substring(2, peptideSequence.Length - 4)
                                 End If
                             End If
 
                             ' Remove any non-letter characters
-                            strPeptideSequence = reReplaceSymbols.Replace(strPeptideSequence, String.Empty)
+                            peptideSequence = reReplaceSymbols.Replace(peptideSequence, String.Empty)
 
-                            If strPeptideSequence.Length >= MINIMUM_LEADER_SEQUENCE_LENGTH Then
-                                If intValidPeptideCount = 0 Then
-                                    intLeaderSequenceMinimumLength = strPeptideSequence.Length
+                            If peptideSequence.Length >= MINIMUM_LEADER_SEQUENCE_LENGTH Then
+                                If validPeptideCount = 0 Then
+                                    leaderSeqMinimumLength = peptideSequence.Length
                                 Else
-                                    If strPeptideSequence.Length < intLeaderSequenceMinimumLength Then
-                                        intLeaderSequenceMinimumLength = strPeptideSequence.Length
+                                    If peptideSequence.Length < leaderSeqMinimumLength Then
+                                        leaderSeqMinimumLength = peptideSequence.Length
                                     End If
                                 End If
-                                intValidPeptideCount += 1
+                                validPeptideCount += 1
                             End If
                         End If
 
                     End If
-                    intCurrentLine += 1
+                    linesRead += 1
                 Loop
 
             End Using
 
             Dim blnSuccess As Boolean
 
-            If intValidPeptideCount = 0 Then
+            If validPeptideCount = 0 Then
                 ' No valid peptides were found; either no peptides are in the file or they're all shorter than MINIMUM_LEADER_SEQUENCE_LENGTH
                 mLeaderSequenceMinimumLength = MINIMUM_LEADER_SEQUENCE_LENGTH
                 blnSuccess = False
             Else
-                mLeaderSequenceMinimumLength = intLeaderSequenceMinimumLength
+                mLeaderSequenceMinimumLength = leaderSeqMinimumLength
                 blnSuccess = True
             End If
 
@@ -347,31 +348,31 @@ Public Class clsLeaderSequenceCache
 
     End Function
 
-    Public Function GetFirstPeptideIndexForLeaderSequence(strLeaderSequenceToFind As String) As Integer
+    Public Function GetFirstPeptideIndexForLeaderSequence(leaderSequenceToFind As String) As Integer
         ' Looks up the first index value in mCachedPeptideSeqInfo that matches strLeaderSequenceToFind
         ' Returns the index value if found, or -1 if not found
         ' Calls SortIndices if mIndicesSorted = False
 
         Dim targetHashIndex As Integer
 
-        If Not mLeaderSequences.TryGetValue(strLeaderSequenceToFind, targetHashIndex) Then
+        If Not mLeaderSequences.TryGetValue(leaderSequenceToFind, targetHashIndex) Then
             Return -1
         End If
 
         ' Item found in mLeaderSequences
-        ' Return the first peptide index value mapped to objzItem
+        ' Return the first peptide index value mapped to the leader sequence
 
         If Not mIndicesSorted Then
             SortIndices()
         End If
 
-        Dim intCachedPeptideMatchIndex = Array.BinarySearch(mCachedPeptideToHashIndexPointer, 0, mCachedPeptideCount, targetHashIndex)
+        Dim cachedPeptideMatchIndex = Array.BinarySearch(mCachedPeptideToHashIndexPointer, 0, mCachedPeptideCount, targetHashIndex)
 
-        Do While intCachedPeptideMatchIndex > 0 AndAlso mCachedPeptideToHashIndexPointer(intCachedPeptideMatchIndex - 1) = targetHashIndex
-            intCachedPeptideMatchIndex -= 1
+        Do While cachedPeptideMatchIndex > 0 AndAlso mCachedPeptideToHashIndexPointer(cachedPeptideMatchIndex - 1) = targetHashIndex
+            cachedPeptideMatchIndex -= 1
         Loop
 
-        Return intCachedPeptideMatchIndex
+        Return cachedPeptideMatchIndex
 
     End Function
 

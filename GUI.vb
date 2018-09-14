@@ -929,7 +929,7 @@ Public Class GUI
     Private Const COL_NAME_PROTEIN_NAME As String = "Protein Name"
     Private Const COL_NAME_PROTEIN_COVERAGE As String = "Percent Coverage"
     Private Const COL_NAME_PROTEIN_DESCRIPTION As String = "Protein Description"
-    Private Const COL_NAME_NONUNIQUE_PEPTIDE_COUNT As String = "Non Unique Peptide Count"
+    Private Const COL_NAME_NON_UNIQUE_PEPTIDE_COUNT As String = "Non Unique Peptide Count"
     Private Const COL_NAME_UNIQUE_PEPTIDE_COUNT As String = "Unique Peptide Count"
     Private Const COL_NAME_PROTEIN_RESIDUE_COUNT As String = "Protein Residue count"
     Private Const COL_NAME_PROTEIN_SEQUENCE As String = "Protein Sequence"
@@ -945,7 +945,7 @@ Public Class GUI
 
     Private Enum eSequenceDisplayConstants
         UsePrevious = 0
-        UseDatagrid = 1
+        UseDataGrid = 1
         UseCustom = 2
     End Enum
 #End Region
@@ -1023,7 +1023,7 @@ Public Class GUI
                 ShowErrorMessage("Results file not found: " & strResultsFilePath)
             End If
 
-            ' Clear the data source to prevent the datagrid from updating
+            ' Clear the data source to prevent the data grid from updating
             dgResults.DataSource = Nothing
 
             ' Clear the dataset
@@ -1096,13 +1096,13 @@ Public Class GUI
 
             If blnProteinDescriptionPresent <> mProteinDescriptionColVisible Then
                 mProteinDescriptionColVisible = blnProteinDescriptionPresent
-                UpdateDatagridTableStyle()
+                UpdateDataGridTableStyle()
             End If
 
             ' Display the sequence for the first protein
             If mDSCoverageResults.Tables(COVERAGE_RESULTS_DATATABLE).Rows.Count > 0 Then
                 dgResults.CurrentRowIndex = 0
-                ShowRichTextStart(eSequenceDisplayConstants.UseDatagrid)
+                ShowRichTextStart(eSequenceDisplayConstants.UseDataGrid)
             Else
                 ShowRichText("", rtfRichTextBox)
             End If
@@ -1378,7 +1378,7 @@ Public Class GUI
         lblStatus.Text = String.Empty
 
         PopulateComboBoxes()
-        InitializeDatagrid()
+        InitializeDataGrid()
 
         ResetToDefaults()
 
@@ -1392,18 +1392,18 @@ Public Class GUI
 
     End Sub
 
-    Private Sub InitializeDatagrid()
+    Private Sub InitializeDataGrid()
 
         Try
 
-            ' Make the Peak Matching Thresholds datatable
+            ' Make the Peak Matching Thresholds data table
             Dim dtCoverageResults = New DataTable(COVERAGE_RESULTS_DATATABLE)
 
-            ' Add the columns to the datatable
+            ' Add the columns to the data table
             ADONetRoutines.AppendColumnStringToTable(dtCoverageResults, COL_NAME_PROTEIN_NAME, String.Empty)
             ADONetRoutines.AppendColumnSingleToTable(dtCoverageResults, COL_NAME_PROTEIN_COVERAGE)
             ADONetRoutines.AppendColumnStringToTable(dtCoverageResults, COL_NAME_PROTEIN_DESCRIPTION, String.Empty)
-            ADONetRoutines.AppendColumnIntegerToTable(dtCoverageResults, COL_NAME_NONUNIQUE_PEPTIDE_COUNT)
+            ADONetRoutines.AppendColumnIntegerToTable(dtCoverageResults, COL_NAME_NON_UNIQUE_PEPTIDE_COUNT)
             ADONetRoutines.AppendColumnIntegerToTable(dtCoverageResults, COL_NAME_UNIQUE_PEPTIDE_COUNT)
             ADONetRoutines.AppendColumnIntegerToTable(dtCoverageResults, COL_NAME_PROTEIN_RESIDUE_COUNT)
             ADONetRoutines.AppendColumnStringToTable(dtCoverageResults, COL_NAME_PROTEIN_SEQUENCE, String.Empty)
@@ -1432,10 +1432,10 @@ Public Class GUI
             mProteinDescriptionColVisible = False
 
             ' Update the grid's table style
-            UpdateDatagridTableStyle()
+            UpdateDataGridTableStyle()
 
         Catch ex As Exception
-            ShowErrorMessage("Error in InitializeDatagrid: " & ex.ToString)
+            ShowErrorMessage("Error in InitializeDataGrid: " & ex.ToString)
         End Try
 
     End Sub
@@ -1465,36 +1465,36 @@ Public Class GUI
 
     End Sub
 
-    Private Function LookupColumnDelimiter(DelimiterCombobox As ComboBox, DelimiterTextbox As TextBox, strDefaultDelimiter As Char) As Char
+    Private Function LookupColumnDelimiter(delimiterCombobox As ListControl, delimiterTextBox As Control, defaultDelimiter As Char) As Char
         Try
-            Return LookupColumnDelimiterChar(DelimiterCombobox.SelectedIndex, DelimiterTextbox.Text, strDefaultDelimiter)
+            Return LookupColumnDelimiterChar(delimiterCombobox.SelectedIndex, delimiterTextBox.Text, defaultDelimiter)
         Catch ex As Exception
             Return ControlChars.Tab
         End Try
     End Function
 
-    Private Function LookupColumnDelimiterChar(intDelimiterIndex As Integer, strCustomDelimiter As String, strDefaultDelimiter As Char) As Char
+    Private Function LookupColumnDelimiterChar(delimiterIndex As Integer, customDelimiter As String, defaultDelimiter As Char) As Char
 
-        Dim strDelimiter As String
+        Dim delimiter As String
 
-        Select Case intDelimiterIndex
+        Select Case delimiterIndex
             Case DelimiterCharConstants.Space
-                strDelimiter = " "
+                delimiter = " "
             Case DelimiterCharConstants.Tab
-                strDelimiter = ControlChars.Tab
+                delimiter = ControlChars.Tab
             Case DelimiterCharConstants.Comma
-                strDelimiter = ","
+                delimiter = ","
             Case Else
                 ' Includes DelimiterCharConstants.Other
-                strDelimiter = String.Copy(strCustomDelimiter)
+                delimiter = String.Copy(customDelimiter)
         End Select
 
-        If strDelimiter Is Nothing OrElse strDelimiter.Length = 0 Then
-            strDelimiter = String.Copy(strDefaultDelimiter)
+        If delimiter Is Nothing OrElse delimiter.Length = 0 Then
+            delimiter = String.Copy(defaultDelimiter)
         End If
 
         Try
-            Return strDelimiter.Chars(0)
+            Return delimiter.Chars(0)
         Catch ex As Exception
             Return ControlChars.Tab
         End Try
@@ -1538,7 +1538,7 @@ Public Class GUI
                 .Clear()
                 ' Note: Skipping ProteinFileReader.DelimitedFileReader.eDelimitedFileFormatCode.SequenceOnly since a Protein Sequence Only file is inappropriate for this program
                 .Insert(DelimitedFileReader.eDelimitedFileFormatCode.ProteinName_Sequence - PROTEIN_INPUT_FILE_INDEX_OFFSET, "ProteinName and Sequence")
-                .Insert(DelimitedFileReader.eDelimitedFileFormatCode.ProteinName_Description_Sequence - PROTEIN_INPUT_FILE_INDEX_OFFSET, "ProteinName, Descr, Seq")
+                .Insert(DelimitedFileReader.eDelimitedFileFormatCode.ProteinName_Description_Sequence - PROTEIN_INPUT_FILE_INDEX_OFFSET, "ProteinName, Description, Seq")
                 .Insert(DelimitedFileReader.eDelimitedFileFormatCode.UniqueID_Sequence - PROTEIN_INPUT_FILE_INDEX_OFFSET, "UniqueID and Seq")
                 .Insert(DelimitedFileReader.eDelimitedFileFormatCode.ProteinName_PeptideSequence_UniqueID - PROTEIN_INPUT_FILE_INDEX_OFFSET, "ProteinName, Seq, UniqueID")
                 .Insert(DelimitedFileReader.eDelimitedFileFormatCode.ProteinName_PeptideSequence_UniqueID_Mass_NET - PROTEIN_INPUT_FILE_INDEX_OFFSET, "ProteinName, Seq, UniqueID, Mass, Time")
@@ -1708,21 +1708,21 @@ Public Class GUI
     End Sub
 
     Private Sub ShowRichTextStart(eSequenceDisplayMode As eSequenceDisplayConstants)
-        Static blnLastSequenceWasDatagrid As Boolean
-        Dim blnUseDatagrid As Boolean
+        Static lastSequenceWasDataGrid As Boolean
+        Dim useDataGrid As Boolean
 
         Select Case eSequenceDisplayMode
             Case eSequenceDisplayConstants.UseDatagrid
-                blnUseDatagrid = True
+                useDataGrid = True
             Case eSequenceDisplayConstants.UseCustom
-                blnUseDatagrid = False
+                useDataGrid = False
             Case Else
                 ' Includes Use Previous
-                blnUseDatagrid = blnLastSequenceWasDatagrid
+                useDataGrid = lastSequenceWasDataGrid
         End Select
 
-        blnLastSequenceWasDatagrid = blnUseDatagrid
-        If blnUseDatagrid Then
+        lastSequenceWasDataGrid = useDataGrid
+        If useDataGrid Then
             Try
                 If dgResults.CurrentRowIndex >= 0 Then
                     If Not dgResults.Item(dgResults.CurrentRowIndex, mProteinSequenceColIndex) Is Nothing Then
@@ -1780,9 +1780,11 @@ Public Class GUI
             strSequenceToShow = reReplaceSymbols.Replace(strSequenceToShow, String.Empty)
 
             ' Define the base RTF text
+            ' ReSharper disable StringLiteralTypo
             strRtf = "{\rtf1\ansi\ansicpg1252\deff0\deflang1033{\fonttbl{\f0\fnil\fcharset0 Courier New;}}" &
                "{\colortbl\red0\green0\blue0;\red255\green0\blue0;}" &
                "\viewkind4\uc1\pard\f0\fs20 "
+            ' ReSharper restore StringLiteralTypo
 
             blnInUpperRegion = False
             intCharCount = 0
@@ -1897,7 +1899,7 @@ Public Class GUI
         txtRTFCode.Visible = mnuEditShowRTF.Checked
     End Sub
 
-    Private Sub UpdateDatagridTableStyle()
+    Private Sub UpdateDataGridTableStyle()
 
         ' Define the coverage results table style
         Dim tsResults As New DataGridTableStyle
@@ -1920,12 +1922,12 @@ Public Class GUI
             ADONetRoutines.AppendColumnToTableStyle(tsResults, COL_NAME_PROTEIN_DESCRIPTION, COL_NAME_PROTEIN_DESCRIPTION, 0)
         End If
 
-        ADONetRoutines.AppendColumnToTableStyle(tsResults, COL_NAME_NONUNIQUE_PEPTIDE_COUNT, COL_NAME_NONUNIQUE_PEPTIDE_COUNT, 90)
+        ADONetRoutines.AppendColumnToTableStyle(tsResults, COL_NAME_NON_UNIQUE_PEPTIDE_COUNT, COL_NAME_NON_UNIQUE_PEPTIDE_COUNT, 90)
         ADONetRoutines.AppendColumnToTableStyle(tsResults, COL_NAME_UNIQUE_PEPTIDE_COUNT, COL_NAME_UNIQUE_PEPTIDE_COUNT, 65)
         ADONetRoutines.AppendColumnToTableStyle(tsResults, COL_NAME_PROTEIN_RESIDUE_COUNT, COL_NAME_PROTEIN_RESIDUE_COUNT, 90)
         ADONetRoutines.AppendColumnToTableStyle(tsResults, COL_NAME_PROTEIN_SEQUENCE, COL_NAME_PROTEIN_SEQUENCE, 0)
 
-        ' Add the DataGridTableStyle to the datagrid's TableStyles collection
+        ' Add the DataGridTableStyle to the data grid's TableStyles collection
         With dgResults
             .TableStyles.Clear()
 

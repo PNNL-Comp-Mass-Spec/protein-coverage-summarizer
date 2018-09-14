@@ -57,11 +57,11 @@ Public Module modMain
 
     Public Function Main() As Integer
         ' Returns 0 if no error, error code if an error
-        Dim intReturnCode As Integer
-        Dim objParseCommandLine As New PRISM.clsParseCommandLine
-        Dim blnProceed As Boolean
+        Dim returnCode As Integer
+        Dim commandLineParser As New PRISM.clsParseCommandLine
+        Dim proceed As Boolean
 
-        intReturnCode = 0
+        returnCode = 0
         mPeptideInputFilePath = String.Empty
         mProteinInputFilePath = String.Empty
         mParameterFilePath = String.Empty
@@ -74,19 +74,16 @@ Public Module modMain
         mKeepDB = False
 
         Try
-            blnProceed = False
-            If objParseCommandLine.ParseCommandLine Then
-                If SetOptionsUsingCommandLineParameters(objParseCommandLine) Then blnProceed = True
+            proceed = False
+            If commandLineParser.ParseCommandLine Then
+                If SetOptionsUsingCommandLineParameters(commandLineParser) Then proceed = True
             End If
 
-            Dim blnShowGUI = Not objParseCommandLine.NeedToShowHelp And (
-                                 String.IsNullOrEmpty(mProteinInputFilePath))
-
-            If blnShowGUI Then
+            If Not commandLineParser.NeedToShowHelp And String.IsNullOrEmpty(mProteinInputFilePath) Then
                 ShowGUI()
-            ElseIf Not blnProceed OrElse objParseCommandLine.NeedToShowHelp OrElse objParseCommandLine.ParameterCount = 0 OrElse mPeptideInputFilePath.Length = 0 Then
+            ElseIf Not proceed OrElse commandLineParser.NeedToShowHelp OrElse commandLineParser.ParameterCount = 0 OrElse mPeptideInputFilePath.Length = 0 Then
                 ShowProgramHelp()
-                intReturnCode = -1
+                returnCode = -1
             Else
                 Try
                     mProteinCoverageSummarizer = New clsProteinCoverageSummarizerRunner() With {
@@ -116,20 +113,20 @@ Public Module modMain
 
         Catch ex As Exception
             ShowErrorMessage("Error occurred in modMain->Main: " & Environment.NewLine & ex.Message)
-            intReturnCode = -1
+            returnCode = -1
         End Try
 
-        Return intReturnCode
+        Return returnCode
 
     End Function
 
-    Private Sub DisplayProgressPercent(intPercentComplete As Integer, blnAddCarriageReturn As Boolean)
-        If blnAddCarriageReturn Then
+    Private Sub DisplayProgressPercent(percentComplete As Integer, addCarriageReturn As Boolean)
+        If addCarriageReturn Then
             Console.WriteLine()
         End If
-        If intPercentComplete > 100 Then intPercentComplete = 100
-        Console.Write("Processing: " & intPercentComplete.ToString() & "% ")
-        If blnAddCarriageReturn Then
+        If percentComplete > 100 Then percentComplete = 100
+        Console.Write("Processing: " & percentComplete.ToString() & "% ")
+        If addCarriageReturn Then
             Console.WriteLine()
         End If
     End Sub
@@ -138,32 +135,32 @@ Public Module modMain
         Return PRISM.FileProcessor.ProcessFilesBase.GetAppVersion(PROGRAM_DATE)
     End Function
 
-    Private Function SetOptionsUsingCommandLineParameters(objParseCommandLine As PRISM.clsParseCommandLine) As Boolean
+    Private Function SetOptionsUsingCommandLineParameters(commandLineParser As PRISM.clsParseCommandLine) As Boolean
         ' Returns True if no problems; otherwise, returns false
         ' /I:PeptideInputFilePath /R: ProteinInputFilePath /O:OutputFolderPath /P:ParameterFilePath
 
-        Dim strValue As String = String.Empty
+        Dim value As String = String.Empty
         Dim validParameters = New List(Of String) From {"I", "O", "R", "P", "G", "H", "M", "K", "Debug", "KeepDB"}
 
         Try
             ' Make sure no invalid parameters are present
-            If objParseCommandLine.InvalidParametersPresent(validParameters) Then
+            If commandLineParser.InvalidParametersPresent(validParameters) Then
                 ShowErrorMessage("Invalid command line parameters",
-                  (From item In objParseCommandLine.InvalidParameters(validParameters) Select "/" + item).ToList())
+                  (From item In commandLineParser.InvalidParameters(validParameters) Select "/" + item).ToList())
                 Return False
             Else
-                With objParseCommandLine
-                    ' Query objParseCommandLine to see if various parameters are present
-                    If .RetrieveValueForParameter("I", strValue) Then
-                        mPeptideInputFilePath = strValue
+                With commandLineParser
+                    ' Query commandLineParser to see if various parameters are present
+                    If .RetrieveValueForParameter("I", value) Then
+                        mPeptideInputFilePath = value
                     ElseIf .NonSwitchParameterCount > 0 Then
                         mPeptideInputFilePath = .RetrieveNonSwitchParameter(0)
                     End If
 
-                    If .RetrieveValueForParameter("O", strValue) Then mOutputFolderPath = strValue
-                    If .RetrieveValueForParameter("R", strValue) Then mProteinInputFilePath = strValue
-                    If .RetrieveValueForParameter("P", strValue) Then mParameterFilePath = strValue
-                    If .RetrieveValueForParameter("H", strValue) Then mOutputProteinSequence = False
+                    If .RetrieveValueForParameter("O", value) Then mOutputFolderPath = value
+                    If .RetrieveValueForParameter("R", value) Then mProteinInputFilePath = value
+                    If .RetrieveValueForParameter("P", value) Then mParameterFilePath = value
+                    If .RetrieveValueForParameter("H", value) Then mOutputProteinSequence = False
 
                     mIgnoreILDifferences = .IsParameterPresent("G")
                     mSaveProteinToPeptideMappingFile = .IsParameterPresent("M")
