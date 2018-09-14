@@ -22,7 +22,7 @@ Imports PRISM
 Imports ProteinFileReader
 
 ''' <summary>
-''' This class will read a protein fasta file or delimited protein info file and
+''' This class will read a protein FASTA file or delimited protein info file and
 ''' store the proteins in memory
 ''' </summary>
 <CLSCompliant(True)>
@@ -30,7 +30,7 @@ Public Class clsProteinFileDataCache
     Inherits clsEventNotifier
 
     Public Sub New()
-        mFileDate = "October 15, 2017"
+        mFileDate = "September 14, 2018"
         InitializeLocalVariables()
     End Sub
 
@@ -139,24 +139,23 @@ Public Class clsProteinFileDataCache
             Return Nothing
         End If
 
-        Dim SQLconnect = New SQLiteConnection(mSqlLiteDBConnectionString, True)
-        SQLconnect.Open()
         OnDebugEvent("Connecting to SQLite DB: " + mSqlLiteDBConnectionString)
 
-        ' Turn off Journaling and set Synchronous mode to 0
-        ' These changes are required to improve the update speed
+        Dim sqlConnection = New SQLiteConnection(mSqlLiteDBConnectionString, True)
+        sqlConnection.Open()
+
         If blnDisableJournaling Then
             OnDebugEvent("Disabling Journaling and setting Synchronous mode to 0 (improves update speed)")
 
-            Using SQLcommand As SQLiteCommand = SQLconnect.CreateCommand
-                SQLcommand.CommandText = "PRAGMA journal_mode = OFF"
-                SQLcommand.ExecuteNonQuery()
-                SQLcommand.CommandText = "PRAGMA synchronous = 0"
-                SQLcommand.ExecuteNonQuery()
+            Using cmd As SQLiteCommand = sqlConnection.CreateCommand
+                cmd.CommandText = "PRAGMA journal_mode = OFF"
+                cmd.ExecuteNonQuery()
+                cmd.CommandText = "PRAGMA synchronous = 0"
+                cmd.ExecuteNonQuery()
             End Using
         End If
 
-        Return SQLconnect
+        Return sqlConnection
 
     End Function
 
@@ -174,8 +173,8 @@ Public Class clsProteinFileDataCache
             strFilePath = Path.Combine(strFolderPath, "TempFileToTestFileIOPermissions.tmp")
             OnDebugEvent("Checking for write permission by creating file " + strFilePath)
 
-            Using swTestFile = New StreamWriter(New FileStream(strFilePath, FileMode.Create, FileAccess.Write, FileShare.Read))
-                swTestFile.WriteLine("Test")
+            Using writer = New StreamWriter(New FileStream(strFilePath, FileMode.Create, FileAccess.Write, FileShare.Read))
+                writer.WriteLine("Test")
             End Using
 
             blnSuccess = True
@@ -277,7 +276,7 @@ Public Class clsProteinFileDataCache
                     End If
                 End If
 
-                If intRetryIndex > 1 Then
+                If retryIndex > 1 Then
                     OnStatusEvent(" --> File now successfully deleted")
                 End If
 
@@ -292,7 +291,7 @@ Public Class clsProteinFileDataCache
             End Try
 
             GC.Collect()
-            Thread.Sleep(intRetryHoldoffSeconds * 1000)
+            Thread.Sleep(retryHoldOffSeconds * 1000)
         Next
 
     End Sub
@@ -316,16 +315,16 @@ Public Class clsProteinFileDataCache
             mSqlLitePersistentConnection = ConnectToSqlLiteDB(False)
         End If
 
-        Dim SQLcommand As SQLiteCommand
-        SQLcommand = mSqlLitePersistentConnection.CreateCommand
-        SQLcommand.CommandText = "SELECT * FROM udtProteinInfoType WHERE UniqueSequenceID = " & intIndex.ToString
+        Dim cmd As SQLiteCommand
+        cmd = mSqlLitePersistentConnection.CreateCommand
+        cmd.CommandText = "SELECT * FROM udtProteinInfoType WHERE UniqueSequenceID = " & intIndex.ToString
 
         OnDebugEvent("GetCachedProteinFromSQLiteDB: running query " + cmd.CommandText)
 
-        Dim SQLreader As SQLiteDataReader
-        SQLreader = SQLcommand.ExecuteReader()
+        Dim reader As SQLiteDataReader
+        reader = cmd.ExecuteReader()
 
-        If SQLreader.Read() Then
+        If reader.Read() Then
             ' Column names in table udtProteinInfoType:
             '  Name TEXT,
             '  Description TEXT,
@@ -336,18 +335,18 @@ Public Class clsProteinFileDataCache
             '  UniquePeptideCount INTEGER
 
             With udtProteinInfo
-                .UniqueSequenceID = CInt(SQLreader("UniqueSequenceID"))
+                .UniqueSequenceID = CInt(reader("UniqueSequenceID"))
 
-                .Name = CStr(SQLreader("Name"))
-                .PercentCoverage = CDbl(SQLreader("PercentCoverage"))
-                .Description = CStr(SQLreader("Description"))
+                .Name = CStr(reader("Name"))
+                .PercentCoverage = CDbl(reader("PercentCoverage"))
+                .Description = CStr(reader("Description"))
 
-                .Sequence = CStr(SQLreader("Sequence"))
+                .Sequence = CStr(reader("Sequence"))
             End With
 
         End If
 
-        SQLreader.Close()
+        reader.Close()
 
         Return udtProteinInfo
 
@@ -359,17 +358,18 @@ Public Class clsProteinFileDataCache
             Return Nothing
         End If
 
-        Dim SQLconnect = ConnectToSqlLiteDB(False)
+        Dim sqlConnection = ConnectToSqlLiteDB(False)
 
-        Dim SQLcommand As SQLiteCommand
-        SQLcommand = SQLconnect.CreateCommand
-        SQLcommand.CommandText = strSQLQuery
+        Dim cmd As SQLiteCommand
+        cmd = sqlConnection.CreateCommand
+        cmd.CommandText = strSQLQuery
+
         OnDebugEvent("GetSQLiteDataReader: running query " + cmd.CommandText)
 
-        Dim SQLreader As SQLiteDataReader
-        SQLreader = SQLcommand.ExecuteReader()
+        Dim reader As SQLiteDataReader
+        reader = cmd.ExecuteReader()
 
-        Return SQLreader
+        Return reader
 
     End Function
 
@@ -451,11 +451,11 @@ Public Class clsProteinFileDataCache
         ' If strOutputFileNameBaseOverride is defined, then uses that name for the protein output filename rather than auto-defining the name
 
         ' Create the SQL Lite DB
-        Dim SQLconnect = ConnectToSqlLiteDB(True)
+        Dim sqlConnection = ConnectToSqlLiteDB(True)
 
         ' SQL query to Create the Table
-        Dim SQLcommand = SQLconnect.CreateCommand
-        SQLcommand.CommandText = "CREATE TABLE udtProteinInfoType( " &
+        Dim cmd = sqlConnection.CreateCommand
+        cmd.CommandText = "CREATE TABLE udtProteinInfoType( " &
                                     "Name TEXT, " &
                                     "Description TEXT, " &
                                     "sequence TEXT, " &
@@ -535,22 +535,22 @@ Public Class clsProteinFileDataCache
             RaiseEvent ProteinCachingStart()
 
             ' Create a parameterized Insert query
-            SQLcommand.CommandText = " INSERT INTO udtProteinInfoType(Name, Description, sequence, UniquesequenceID, PercentCoverage) " &
+            cmd.CommandText = " INSERT INTO udtProteinInfoType(Name, Description, sequence, UniquesequenceID, PercentCoverage) " &
                                      " VALUES (?, ?, ?, ?, ?)"
 
-            Dim nameFld As SQLiteParameter = SQLcommand.CreateParameter
-            Dim descriptionFld As SQLiteParameter = SQLcommand.CreateParameter
-            Dim sequenceFld As SQLiteParameter = SQLcommand.CreateParameter
-            Dim uniquesequenceIDFld As SQLiteParameter = SQLcommand.CreateParameter
-            Dim percentCoverageFld As SQLiteParameter = SQLcommand.CreateParameter
-            SQLcommand.Parameters.Add(nameFld)
-            SQLcommand.Parameters.Add(descriptionFld)
-            SQLcommand.Parameters.Add(sequenceFld)
-            SQLcommand.Parameters.Add(uniquesequenceIDFld)
-            SQLcommand.Parameters.Add(percentCoverageFld)
+            Dim nameFld As SQLiteParameter = cmd.CreateParameter
+            Dim descriptionFld As SQLiteParameter = cmd.CreateParameter
+            Dim sequenceFld As SQLiteParameter = cmd.CreateParameter
+            Dim uniquesequenceIDFld As SQLiteParameter = cmd.CreateParameter
+            Dim percentCoverageFld As SQLiteParameter = cmd.CreateParameter
+            cmd.Parameters.Add(nameFld)
+            cmd.Parameters.Add(descriptionFld)
+            cmd.Parameters.Add(sequenceFld)
+            cmd.Parameters.Add(uniquesequenceIDFld)
+            cmd.Parameters.Add(percentCoverageFld)
 
             ' Begin a SQL Transaction
-            Dim SQLTransaction = SQLconnect.BeginTransaction()
+            Dim SQLTransaction = sqlConnection.BeginTransaction()
 
             Dim intProteinsProcessed = 0
             Dim intInputFileLinesRead = 0
@@ -606,7 +606,7 @@ Public Class clsProteinFileDataCache
 
                 percentCoverageFld.Value = 0
 
-                SQLcommand.ExecuteNonQuery()
+                cmd.ExecuteNonQuery()
 
                 mProteinCount += 1
 
@@ -623,12 +623,12 @@ Public Class clsProteinFileDataCache
             SQLTransaction.Commit()
 
             ' Set Synchronous mode to 1   (this may not be truly necessary)
-            SQLcommand.CommandText = "PRAGMA synchronous=1"
-            SQLcommand.ExecuteNonQuery()
+            cmd.CommandText = "PRAGMA synchronous=1"
+            cmd.ExecuteNonQuery()
 
             ' Close the Sql Lite DB
-            SQLcommand.Dispose()
-            SQLconnect.Close()
+            cmd.Dispose()
+            sqlConnection.Close()
 
             ' Close the protein file
             objProteinFileReader.CloseFile()

@@ -23,7 +23,7 @@ Imports PRISM
 Imports ProteinFileReader
 
 ''' <summary>
-''' This class will read in a protein fasta file or delimited protein info file along with
+''' This class will read in a protein FASTA file or delimited protein info file along with
 ''' an accompanying file with peptide sequences and compute the percent coverage of each of the proteins
 ''' </summary>
 <CLSCompliant(True)>
@@ -513,10 +513,10 @@ Public Class clsProteinCoverageSummarizer
             End If
 
             ' Query the SqlLite DB to extract the protein information
-            Dim SQLreader = mProteinDataCache.GetSQLiteDataReader("SELECT * FROM udtProteinInfoType")
+            Dim proteinReader = mProteinDataCache.GetSQLiteDataReader("SELECT * FROM udtProteinInfoType")
 
             Dim proteinIndex = 0
-            While SQLreader.Read()
+            While proteinReader.Read()
                 ' Column names in table udtProteinInfoType:
                 '  Name TEXT,
                 '  Description TEXT,
@@ -526,7 +526,7 @@ Public Class clsProteinCoverageSummarizer
                 '  NonUniquePeptideCount INTEGER,
                 '  UniquePeptideCount INTEGER
 
-                Dim proteinID = CInt(SQLreader("UniqueSequenceID"))
+                Dim proteinID = CInt(proteinReader("UniqueSequenceID"))
 
                 Dim uniquePeptideCount = 0
                 Dim nonUniquePeptideCount = 0
@@ -539,12 +539,12 @@ Public Class clsProteinCoverageSummarizer
                     End If
                 End If
 
-                strLineOut = CStr(SQLreader("Name")) & ControlChars.Tab &
-                     Math.Round(CDbl(SQLreader("PercentCoverage")) * 100, 3) & ControlChars.Tab &
-                     CStr(SQLreader("Description")) & ControlChars.Tab &
+                strLineOut = CStr(proteinReader("Name")) & ControlChars.Tab &
+                     Math.Round(CDbl(proteinReader("PercentCoverage")) * 100, 3) & ControlChars.Tab &
+                     CStr(proteinReader("Description")) & ControlChars.Tab &
                      nonUniquePeptideCount & ControlChars.Tab &
                      uniquePeptideCount & ControlChars.Tab &
-                     CStr(SQLreader("Sequence")).Length
+                     CStr(proteinReader("Sequence")).Length
 
                 If OutputProteinSequence Then
                     strLineOut &= ControlChars.Tab & CStr(proteinReader("Sequence"))
@@ -560,7 +560,7 @@ Public Class clsProteinCoverageSummarizer
             End While
 
             ' Close the SQL Reader
-            SQLreader.Close()
+            proteinReader.Close()
 
         End Using
 
@@ -774,10 +774,10 @@ Public Class clsProteinCoverageSummarizer
             End If
 
             ' Store the updated protein sequences in the Sql Lite database
-            Dim SQLconnect = mProteinDataCache.ConnectToSqlLiteDB(True)
+            Dim sqlConnection = mProteinDataCache.ConnectToSqlLiteDB(True)
 
-            Using dbTrans As SQLiteTransaction = SQLconnect.BeginTransaction()
-                Using cmd As SQLiteCommand = SQLconnect.CreateCommand()
+            Using dbTrans As SQLiteTransaction = sqlConnection.BeginTransaction()
+                Using cmd As SQLiteCommand = sqlConnection.CreateCommand()
 
                     ' Create a parameterized Update query
                     cmd.CommandText = "UPDATE udtProteinInfoType Set Sequence = ? Where UniqueSequenceID = ?"
@@ -800,8 +800,8 @@ Public Class clsProteinCoverageSummarizer
             End Using
 
             ' Close the Sql Reader
-            SQLconnect.Close()
-            SQLconnect.Dispose()
+            sqlConnection.Close()
+            sqlConnection.Dispose()
 
         Catch ex As Exception
             SetErrorMessage("Error in UpdateSequenceDbDataValues: " & ex.Message, ex)
@@ -966,10 +966,10 @@ Public Class clsProteinCoverageSummarizer
             End If
 
             ' Store the updated protein coverage values in the Sql Lite database
-            Dim SQLconnect = mProteinDataCache.ConnectToSqlLiteDB(True)
+            Dim sqlConnection = mProteinDataCache.ConnectToSqlLiteDB(True)
 
-            Using dbTrans As SQLiteTransaction = SQLconnect.BeginTransaction()
-                Using cmd As SQLiteCommand = SQLconnect.CreateCommand()
+            Using dbTrans As SQLiteTransaction = sqlConnection.BeginTransaction()
+                Using cmd As SQLiteCommand = sqlConnection.CreateCommand()
 
                     ' Create a parameterized Update query
                     cmd.CommandText = "UPDATE udtProteinInfoType Set PercentCoverage = ? Where UniqueSequenceID = ?"
@@ -992,8 +992,8 @@ Public Class clsProteinCoverageSummarizer
             End Using
 
             ' Close the Sql Reader
-            SQLconnect.Close()
-            SQLconnect.Dispose()
+            sqlConnection.Close()
+            sqlConnection.Dispose()
 
         Catch ex As Exception
             SetErrorMessage("Error in UpdatePercentCoveragesDbDataValues: " & ex.Message, ex)
@@ -1496,7 +1496,7 @@ Public Class clsProteinCoverageSummarizer
                 Return False
             End If
 
-            mProteinDataCache.DeleteSQLiteDBFile()
+            mProteinDataCache.DeleteSQLiteDBFile("clsProteinCoverageSummarizer.ProcessFile_Start", True)
 
             ' First read the protein input file
             mProgressStepDescription = "Reading protein input file: " & Path.GetFileName(ProteinInputFilePath)
@@ -1519,7 +1519,7 @@ Public Class clsProteinCoverageSummarizer
                    eProteinCoverageProcessingSteps.WriteProteinCoverageFile)
 
                 'All done; delete the temporary SqlLite database
-                mProteinDataCache.DeleteSQLiteDBFile()
+                mProteinDataCache.DeleteSQLiteDBFile("clsProteinCoverageSummarizer.ProcessFile_Complete")
 
                 UpdateProgress("Done")
 
