@@ -69,7 +69,19 @@ Public Class clsProteinCoverageSummarizerRunner
         End Set
     End Property
 
-    Public Property MatchPeptidePrefixAndSuffixToProtein() As Boolean
+    ''' <summary>
+    ''' When this is True, the SQLite Database will not be deleted after processing finishes
+    ''' </summary>
+    Public Property KeepDB As Boolean
+        Get
+            Return mProteinCoverageSummarizer.KeepDB
+        End Get
+        Set
+            mProteinCoverageSummarizer.KeepDB = Value
+        End Set
+    End Property
+
+    Public Property MatchPeptidePrefixAndSuffixToProtein As Boolean
         Get
             Return mProteinCoverageSummarizer.MatchPeptidePrefixAndSuffixToProtein
         End Get
@@ -287,9 +299,10 @@ Public Class clsProteinCoverageSummarizerRunner
             End If
 
             ' Call mProteinCoverageSummarizer.ProcessFile to perform the work
+            mProteinCoverageSummarizer.KeepDB = KeepDB
             blnSuccess = mProteinCoverageSummarizer.ProcessFile(strInputFilePath, strOutputFolderPath, strParameterFilePath, True)
 
-            mProteinCoverageSummarizer.mProteinDataCache.DeleteSQLiteDBFile()
+            mProteinCoverageSummarizer.mProteinDataCache.DeleteSQLiteDBFile("clsProteinCoverageSummarizerRunner.ProcessFile_Complete")
 
         Catch ex As Exception
             mStatusMessage = "Error in ProcessFile:" & ControlChars.NewLine & ex.Message

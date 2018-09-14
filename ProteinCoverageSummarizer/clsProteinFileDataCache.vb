@@ -118,6 +118,11 @@ Public Class clsProteinFileDataCache
 
     Public Property IgnoreILDifferences As Boolean
 
+    ''' <summary>
+    ''' When this is True, the SQLite Database will not be deleted after processing finishes
+    ''' </summary>
+    Public Property KeepDB As Boolean
+
     Public ReadOnly Property ParsedFileIsFastaFile As Boolean
         Get
             Return mParsedFileIsFastaFile
@@ -215,7 +220,12 @@ Public Class clsProteinFileDataCache
 
     End Function
 
-    Public Sub DeleteSQLiteDBFile()
+    ''' <summary>
+    ''' Delete the SQLite database file
+    ''' </summary>
+    ''' <param name="callingMethod">Calling method name</param>
+    ''' <param name="forceDelete">Force deletion (ignore KeepDB)</param>
+    Public Sub DeleteSQLiteDBFile(callingMethod As String, Optional forceDelete As Boolean = False)
         Const MAX_RETRY_ATTEMPT_COUNT = 3
 
         Try
@@ -244,8 +254,13 @@ Public Class clsProteinFileDataCache
             ' Ignore errors here
         End Try
 
-        For intRetryIndex = 0 To MAX_RETRY_ATTEMPT_COUNT - 1
-            Dim intRetryHoldoffSeconds = (intRetryIndex + 1)
+        If KeepDB And Not forceDelete Then
+            OnDebugEvent("DeleteSQLiteDBFile: KeepDB is true; not deleting " + mSqlLiteDBFilePath)
+            Exit Sub
+        End If
+
+        For retryIndex = 0 To MAX_RETRY_ATTEMPT_COUNT - 1
+            Dim retryHoldOffSeconds = (retryIndex + 1)
 
             Try
                 If Not String.IsNullOrEmpty(mSqlLiteDBFilePath) Then

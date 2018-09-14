@@ -964,6 +964,7 @@ Public Class GUI
 #End Region
 
 #Region "Properties"
+    Public Property KeepDB As Boolean
 
 #End Region
 
@@ -1854,7 +1855,8 @@ Public Class GUI
             cmdStart.Visible = False
 
             mProteinCoverageSummarizer = New clsProteinCoverageSummarizerRunner() With {
-                .CallingAppHandlesEvents = True
+                .CallingAppHandlesEvents = True,
+                .KeepDB = KeepDB
             }
 
             AddHandler mProteinCoverageSummarizer.StatusEvent, AddressOf mProteinCoverageSummarizer_StatusEvent

@@ -15,6 +15,7 @@ Option Strict On
 ' Copyright 2018 Battelle Memorial Institute
 
 Imports System.Runtime.InteropServices
+Imports PRISM
 
 ''' <summary>
 ''' This program uses clsProteinCoverageSummarizer to read in a file with protein sequences along with
@@ -25,7 +26,7 @@ Imports System.Runtime.InteropServices
 ''' </summary>
 Public Module modMain
 
-    Public Const PROGRAM_DATE As String = "August 8, 2018"
+    Public Const PROGRAM_DATE As String = "September 14, 2018"
 
     Private mPeptideInputFilePath As String
     Private mProteinInputFilePath As String
@@ -36,6 +37,8 @@ Public Module modMain
     Private mOutputProteinSequence As Boolean
     Private mSaveProteinToPeptideMappingFile As Boolean
     Private mSkipCoverageComputationSteps As Boolean
+    Private mDebugMode As Boolean
+    Private mKeepDB As Boolean
 
     Private mProteinCoverageSummarizer As clsProteinCoverageSummarizerRunner
     Private mLastProgressReportTime As DateTime
@@ -67,6 +70,8 @@ Public Module modMain
         mOutputProteinSequence = True
         mSaveProteinToPeptideMappingFile = False
         mSkipCoverageComputationSteps = False
+        mDebugMode = False
+        mKeepDB = False
 
         Try
             blnProceed = False
@@ -74,7 +79,10 @@ Public Module modMain
                 If SetOptionsUsingCommandLineParameters(objParseCommandLine) Then blnProceed = True
             End If
 
-            If objParseCommandLine.ParameterCount = 0 And Not objParseCommandLine.NeedToShowHelp Then
+            Dim blnShowGUI = Not objParseCommandLine.NeedToShowHelp And (
+                                 String.IsNullOrEmpty(mProteinInputFilePath))
+
+            If blnShowGUI Then
                 ShowGUI()
             ElseIf Not blnProceed OrElse objParseCommandLine.NeedToShowHelp OrElse objParseCommandLine.ParameterCount = 0 OrElse mPeptideInputFilePath.Length = 0 Then
                 ShowProgramHelp()
@@ -87,7 +95,8 @@ Public Module modMain
                         .IgnoreILDifferences = mIgnoreILDifferences,
                         .OutputProteinSequence = mOutputProteinSequence,
                         .SaveProteinToPeptideMappingFile = mSaveProteinToPeptideMappingFile,
-                        .SearchAllProteinsSkipCoverageComputationSteps = mSkipCoverageComputationSteps
+                        .SearchAllProteinsSkipCoverageComputationSteps = mSkipCoverageComputationSteps,
+                        .KeepDB = mKeepDB
                     }
 
                     AddHandler mProteinCoverageSummarizer.StatusEvent, AddressOf mProteinCoverageSummarizer_StatusEvent
@@ -203,13 +212,13 @@ Public Module modMain
         ' /I:PeptideInputFilePath /R: ProteinInputFilePath /O:OutputFolderPath /P:ParameterFilePath
 
         Dim strValue As String = String.Empty
-        Dim lstValidParameters = New List(Of String) From {"I", "O", "R", "P", "G", "H", "M", "K"}
+        Dim validParameters = New List(Of String) From {"I", "O", "R", "P", "G", "H", "M", "K", "Debug", "KeepDB"}
 
         Try
             ' Make sure no invalid parameters are present
-            If objParseCommandLine.InvalidParametersPresent(lstValidParameters) Then
-                ShowErrorMessage("Invalid commmand line parameters",
-                  (From item In objParseCommandLine.InvalidParameters(lstValidParameters) Select "/" + item).ToList())
+            If objParseCommandLine.InvalidParametersPresent(validParameters) Then
+                ShowErrorMessage("Invalid command line parameters",
+                  (From item In objParseCommandLine.InvalidParameters(validParameters) Select "/" + item).ToList())
                 Return False
             Else
                 With objParseCommandLine
@@ -223,10 +232,13 @@ Public Module modMain
                     If .RetrieveValueForParameter("O", strValue) Then mOutputFolderPath = strValue
                     If .RetrieveValueForParameter("R", strValue) Then mProteinInputFilePath = strValue
                     If .RetrieveValueForParameter("P", strValue) Then mParameterFilePath = strValue
-                    If .RetrieveValueForParameter("G", strValue) Then mIgnoreILDifferences = True
                     If .RetrieveValueForParameter("H", strValue) Then mOutputProteinSequence = False
-                    If .RetrieveValueForParameter("M", strValue) Then mSaveProteinToPeptideMappingFile = True
-                    If .RetrieveValueForParameter("K", strValue) Then mSkipCoverageComputationSteps = True
+
+                    mIgnoreILDifferences = .IsParameterPresent("G")
+                    mSaveProteinToPeptideMappingFile = .IsParameterPresent("M")
+                    mSkipCoverageComputationSteps = .IsParameterPresent("K")
+                    mDebugMode = .IsParameterPresent("Debug")
+                    mKeepDB = .IsParameterPresent("KeepDB")
                 End With
 
                 Return True
@@ -257,14 +269,24 @@ Public Module modMain
         Try
             Dim handle = GetConsoleWindow()
 
-            ' Hide
-            ShowWindow(handle, SW_HIDE)
+            If Not mDebugMode Then
+                ' Hide the console
+                ShowWindow(handle, SW_HIDE)
+            End If
 
             objFormMain = New GUI()
+            objFormMain.KeepDB = mKeepDB
+
             objFormMain.ShowDialog()
 
-            ShowWindow(handle, SW_SHOW)
+            If Not mDebugMode Then
+                ' Show the console
+                ShowWindow(handle, SW_SHOW)
+            End If
         Catch ex As Exception
+            ConsoleMsgUtils.ShowWarning("Error in ShowGUI: " + ex.Message)
+            ConsoleMsgUtils.ShowWarning(clsStackTraceFormatter.GetExceptionStackTraceMultiLine(ex))
+
             MsgBox("Error in ShowGUI: " & ex.Message, MsgBoxStyle.Exclamation Or MsgBoxStyle.OkOnly, "Error")
         End Try
 
@@ -272,35 +294,45 @@ Public Module modMain
 
     Private Sub ShowProgramHelp()
 
-        Dim strSyntax As String
 
         Try
-            strSyntax = String.Empty
-            strSyntax &= Environment.NewLine & "This program reads in a .fasta or .txt file containing protein names and sequences (and optionally descriptions)"
-            strSyntax &= Environment.NewLine & "The program also reads in a .txt file containing peptide sequences and protein names (though protein name is optional) then uses this information to compute the sequence coverage percent for each protein."
-            strSyntax &= Environment.NewLine
-            strSyntax &= Environment.NewLine & "Program syntax:" & Environment.NewLine & Path.GetFileName(PRISM.FileProcessor.ProcessFilesBase.GetAppPath())
-            strSyntax &= Environment.NewLine & " /I:PeptideInputFilePath /R:ProteinInputFilePath [/O:OutputFolderName] [/P:ParameterFilePath] [/G] [/H] [/M] [/K]"
-            strSyntax &= Environment.NewLine
-            strSyntax &= Environment.NewLine & "The input file path can contain the wildcard character *.  If a wildcard is present, then the same protein input file path will be used for each of the peptide input files matched."
-            strSyntax &= Environment.NewLine & "The output folder name is optional.  If omitted, the output files will be created in the same folder as the input file.  If included, then a subfolder is created with the name OutputFolderName."
-            strSyntax &= Environment.NewLine
-            strSyntax &= Environment.NewLine & "The parameter file path is optional.  If included, it should point to a valid XML parameter file."
-            strSyntax &= Environment.NewLine
-            strSyntax &= Environment.NewLine & "Use /G to ignore I/L differences when finding peptides in proteins or computing coverage."
-            strSyntax &= Environment.NewLine & "Use /H to suppress (hide) the protein sequence in the _coverage.txt file."
-            strSyntax &= Environment.NewLine & "Use /M to enable the creation of a protein to peptide mapping file."
-            strSyntax &= Environment.NewLine
+            Console.WriteLine(ConsoleMsgUtils.WrapParagraph(
+                "This program reads in a .fasta or .txt file containing protein names and sequences (and optionally descriptions). " &
+                "The program also reads in a .txt file containing peptide sequences and protein names (though protein name is optional) " &
+                "then uses this information to compute the sequence coverage percent for each protein."))
+            Console.WriteLine()
+            Console.WriteLine("Program syntax:" & Environment.NewLine & Path.GetFileName(PRISM.FileProcessor.ProcessFilesBase.GetAppPath()))
+            Console.WriteLine("  /I:PeptideInputFilePath /R:ProteinInputFilePath [/O:OutputFolderName]")
+            Console.WriteLine("  [/P:ParameterFilePath] [/G] [/H] [/M] [/K] [/Debug] [/KeepDB]")
+            Console.WriteLine()
+            Console.WriteLine(ConsoleMsgUtils.WrapParagraph(
+                "The input file path can contain the wildcard character *. If a wildcard is present, the same protein input file path " &
+                "will be used for each of the peptide input files matched."))
+            Console.WriteLine()
+            Console.WriteLine(ConsoleMsgUtils.WrapParagraph(
+                "The output folder name is optional. If omitted, the output files will be created in the same folder as the input file. " &
+                "If included, a subfolder is created with the name OutputFolderName."))
+            Console.WriteLine()
+            Console.WriteLine(ConsoleMsgUtils.WrapParagraph(
+                "The parameter file path is optional. If included, it should point to a valid XML parameter file."))
+            Console.WriteLine()
+            Console.WriteLine(ConsoleMsgUtils.WrapParagraph(
+                "Use /G to ignore I/L differences when finding peptides in proteins or computing coverage."))
+            Console.WriteLine("Use /H to suppress (hide) the protein sequence in the _coverage.txt file.")
+            Console.WriteLine("Use /M to enable the creation of a protein to peptide mapping file.")
+            Console.WriteLine("Use /K to skip protein coverage computation steps")
+            Console.WriteLine()
+            Console.WriteLine("Use /Debug to keep the console open to see additional debug messages")
+            Console.WriteLine("Use /KeepDB to keep the SQLite database after processing (by default it is deleted)")
+            Console.WriteLine()
 
-            strSyntax &= Environment.NewLine & "Program written by Matthew Monroe and Nikša Blonder for the Department of Energy (PNNL, Richland, WA) in 2005"
-            strSyntax &= Environment.NewLine & "Version: " & GetAppVersion()
-            strSyntax &= Environment.NewLine
+            Console.WriteLine("Program written by Matthew Monroe and Nikša Blonder for the Department of Energy (PNNL, Richland, WA) in 2005")
+            Console.WriteLine("Version: " & GetAppVersion())
+            Console.WriteLine()
 
-            strSyntax &= Environment.NewLine & "E-mail: matthew.monroe@pnnl.gov or proteomics@pnnl.gov"
-            strSyntax &= Environment.NewLine & "Website: https://omics.pnl.gov or https://panomics.pnl.gov/"
-            strSyntax &= Environment.NewLine
-
-            Console.WriteLine(strSyntax)
+            Console.WriteLine("E-mail: matthew.monroe@pnnl.gov or proteomics@pnnl.gov")
+            Console.WriteLine("Website: https://omics.pnl.gov or https://panomics.pnl.gov/")
+            Console.WriteLine()
 
         Catch ex As Exception
             ShowErrorMessage("Error displaying the program syntax: " & ex.Message)

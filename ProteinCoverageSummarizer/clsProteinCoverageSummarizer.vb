@@ -117,6 +117,8 @@ Public Class clsProteinCoverageSummarizer
     Private mCachedProteinInfoCount As Integer
     Private mCachedProteinInfo() As clsProteinFileDataCache.udtProteinInfoType
 
+    Private mKeepDB As Boolean
+
     Private mPeptideToProteinMapResults As Dictionary(Of String, List(Of String))
 
     ' mPercentCompleteStartLevels is an array that lists the percent complete value to report
@@ -144,6 +146,7 @@ Public Class clsProteinCoverageSummarizer
 #End Region
 
 #Region "Properties"
+
     Public ReadOnly Property ErrorCode As eProteinCoverageErrorCodes
         Get
             Return mErrorCode
@@ -157,8 +160,20 @@ Public Class clsProteinCoverageSummarizer
     End Property
 
     Public Property IgnoreILDifferences As Boolean
+
+    ''' <summary>
+    ''' When this is True, the SQLite Database will not be deleted after processing finishes
+    ''' </summary>
+    Public Property KeepDB As Boolean
         Get
+            Return mKeepDB
         End Get
+        Set(value As Boolean)
+            mKeepDB = value
+            If Not mProteinDataCache Is Nothing Then
+                mProteinDataCache.KeepDB = mKeepDB
+            End If
+
         End Set
     End Property
 
@@ -1022,6 +1037,8 @@ Public Class clsProteinCoverageSummarizer
         mResultsFilePath = String.Empty
 
         mProteinDataCache = New clsProteinFileDataCache()
+        mProteinDataCache.KeepDB = KeepDB
+
         RegisterEvents(mProteinDataCache)
 
         mCachedProteinInfoStartIndex = -1
