@@ -3506,13 +3506,13 @@
             </summary>
             <remarks>If the peptide is a peptide of interest, you must call FinalizeCurrentPSM after calling .MoveNext()</remarks>
         </member>
-        <member name="F:PHRPReader.clsPHRPReader.mParentIonMzMatchNonMsx">
+        <member name="F:PHRPReader.clsPHRPReader.mFindParentIonOnlyNonMsx">
             <summary>
             RegEx to extract parent ions from filter strings that do not have Full msx
             </summary>
             <remarks>Shared (aka static) only to speed up unit tests</remarks>
         </member>
-        <member name="F:PHRPReader.clsPHRPReader.mParentIonMzMatchMsx">
+        <member name="F:PHRPReader.clsPHRPReader.mFindParentIonOnlyMsx">
             <summary>
             RegEx to extract parent ions from filter strings that have Full msx
             </summary>
@@ -4075,7 +4075,7 @@
             <param name="filterText"></param>
             <param name="parentIonMz"></param>
             <returns>True if parsing successful</returns>
-            <remarks>The original version of this code (C#) is in ThermoRawFileReader.XRawFileIO.ExtractParentIonMZFromFilterText(string, out double)</remarks>
+            <remarks>The original version of this code is in ThermoRawFileReader.XRawFileIO.ExtractParentIonMZFromFilterText(string, out double)</remarks>
         </member>
         <member name="M:PHRPReader.clsPHRPReader.FinalizeCurrentPSM">
             <summary>
