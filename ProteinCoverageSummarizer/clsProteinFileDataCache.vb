@@ -27,7 +27,7 @@ Imports ProteinFileReader
 ''' </summary>
 <CLSCompliant(True)>
 Public Class clsProteinFileDataCache
-    Inherits clsEventNotifier
+    Inherits EventNotifier
 
     Public Sub New()
         mFileDate = "September 14, 2018"

@@ -34,7 +34,7 @@ Imports PRISM
 ''' </summary>
 Public Module modMain
 
-    Public Const PROGRAM_DATE As String = "September 14, 2018"
+    Public Const PROGRAM_DATE As String = "September 20, 2018"
 
     Private mPeptideInputFilePath As String
     Private mProteinInputFilePath As String

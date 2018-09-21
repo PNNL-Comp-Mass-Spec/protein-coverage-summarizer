@@ -26,7 +26,7 @@ Imports PRISM
 ''' </summary>
 Public Module modMain
 
-    Public Const PROGRAM_DATE As String = "September 14, 2018"
+    Public Const PROGRAM_DATE As String = "September 20, 2018"
 
     Private mPeptideInputFilePath As String
     Private mProteinInputFilePath As String
@@ -213,7 +213,7 @@ Public Module modMain
             End If
         Catch ex As Exception
             ConsoleMsgUtils.ShowWarning("Error in ShowGUI: " + ex.Message)
-            ConsoleMsgUtils.ShowWarning(clsStackTraceFormatter.GetExceptionStackTraceMultiLine(ex))
+            ConsoleMsgUtils.ShowWarning(StackTraceFormatter.GetExceptionStackTraceMultiLine(ex))
 
             MsgBox("Error in ShowGUI: " & ex.Message, MsgBoxStyle.Exclamation Or MsgBoxStyle.OkOnly, "Error")
         End Try

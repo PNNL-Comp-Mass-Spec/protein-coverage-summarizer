@@ -28,7 +28,7 @@ Imports ProteinFileReader
 ''' </summary>
 <CLSCompliant(True)>
 Public Class clsProteinCoverageSummarizer
-    Inherits clsEventNotifier
+    Inherits EventNotifier
 
     Public Sub New()
         InitializeVariables()
