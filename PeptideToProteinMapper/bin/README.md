@@ -10,18 +10,18 @@ the sequence coverage percent for each protein (though this can be disable using
 ```
 PeptideToProteinMapper.exe
  /I:PeptideInputFilePath /R:ProteinInputFilePath
- [/O:OutputFolderName] [/P:ParameterFilePath] [/F:FileFormatCode]
+ [/O:OutputDirectoryName] [/P:ParameterFilePath] [/F:FileFormatCode]
  [/N:InspectParameterFilePath] [/G] [/H] [/K] [/A]
- [/L[:LogFilePath]] [/LogFolder:LogFolderPath] [/VerboseLog] [/Q]
+ [/L[:LogFilePath]] [/LogDirectory:LogDirectoryPath] [/VerboseLog] [/Q]
 ```
 
 The input file path can contain the wildcard character *. If a wildcard is
 present, the same protein input file path will be used for each of the peptide
 input files matched.
 
-The output folder name is optional. If omitted, the output files will be created
-in the same folder as the input file. If included, then a subfolder is created
-with the name OutputFolderName.
+The output directory name is optional. If omitted, the output files will be created
+in the same directory as the input file. If included, then a subdirectory is created
+with the name OutputDirectoryName.
 
 The parameter file path is optional. If included, it should point to a valid XML parameter file.
 
@@ -47,7 +47,7 @@ If a peptide maps to multiple proteins, then multiple lines will be listed.
 
 Use /L to create a log file, optionally specifying the file name
 
-Use /LogFolder to define the folder in which the log file should be created
+Use /LogDirectory to define the directory in which the log file should be created
 
 Use /VerboseLog to create a detailed log file
 
