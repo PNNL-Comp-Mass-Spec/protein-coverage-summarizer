@@ -30,7 +30,7 @@ Imports PRISM
 ''' In addition, this program supports reading Inspect output files
 '''
 ''' Example command Line
-''' /I:PeptideInputFilePath /R:ProteinInputFilePath /O:OutputFolderPath /P:ParameterFilePath
+''' /I:PeptideInputFilePath /R:ProteinInputFilePath /O:OutputDirectoryPath /P:ParameterFilePath
 ''' </summary>
 Public Module modMain
 
@@ -38,7 +38,7 @@ Public Module modMain
 
     Private mPeptideInputFilePath As String
     Private mProteinInputFilePath As String
-    Private mOutputFolderPath As String
+    Private mOutputDirectoryPath As String
     Private mParameterFilePath As String
     Private mInspectParameterFilePath As String
 
@@ -53,7 +53,7 @@ Public Module modMain
 
     Private mLogMessagesToFile As Boolean
     Private mLogFilePath As String = String.Empty
-    Private mLogFolderPath As String = String.Empty
+    Private mLogDirectoryPath As String = String.Empty
 
     Private mVerboseLogging As Boolean
     Private mVerboseLogFile As StreamWriter
@@ -112,7 +112,7 @@ Public Module modMain
 
         mLogMessagesToFile = False
         mLogFilePath = String.Empty
-        mLogFolderPath = String.Empty
+        mLogDirectoryPath = String.Empty
 
         Try
             blnProceed = False
@@ -145,7 +145,7 @@ Public Module modMain
                         .ProteinInputFilePath = mProteinInputFilePath,
                         .LogMessagesToFile = mLogMessagesToFile,
                         .LogFilePath = mLogFilePath,
-                        .LogFolderPath = mLogFolderPath,
+                        .LogDirectoryPath = mLogDirectoryPath,
                         .PeptideInputFileFormat = mInputFileFormatCode,
                         .InspectParameterFilePath = mInspectParameterFilePath,
                         .IgnoreILDifferences = mIgnoreILDifferences,
@@ -155,14 +155,14 @@ Public Module modMain
                         .SearchAllProteinsSkipCoverageComputationSteps = mSkipCoverageComputationSteps
                     }
 
-                    AddHandler mPeptideToProteinMapEngine.StatusEvent, AddressOf mPeptideToProteinMapEngine_StatusEvent
-                    AddHandler mPeptideToProteinMapEngine.ErrorEvent, AddressOf mPeptideToProteinMapEngine_ErrorEvent
-                    AddHandler mPeptideToProteinMapEngine.WarningEvent, AddressOf mPeptideToProteinMapEngine_WarningEvent
+                    AddHandler mPeptideToProteinMapEngine.StatusEvent, AddressOf PeptideToProteinMapEngine_StatusEvent
+                    AddHandler mPeptideToProteinMapEngine.ErrorEvent, AddressOf PeptideToProteinMapEngine_ErrorEvent
+                    AddHandler mPeptideToProteinMapEngine.WarningEvent, AddressOf PeptideToProteinMapEngine_WarningEvent
 
-                    AddHandler mPeptideToProteinMapEngine.ProgressUpdate, AddressOf mPeptideToProteinMapEngine_ProgressChanged
-                    AddHandler mPeptideToProteinMapEngine.ProgressReset, AddressOf mPeptideToProteinMapEngine_ProgressReset
+                    AddHandler mPeptideToProteinMapEngine.ProgressUpdate, AddressOf PeptideToProteinMapEngine_ProgressChanged
+                    AddHandler mPeptideToProteinMapEngine.ProgressReset, AddressOf PeptideToProteinMapEngine_ProgressReset
 
-                    mPeptideToProteinMapEngine.ProcessFilesWildcard(mPeptideInputFilePath, mOutputFolderPath, mParameterFilePath)
+                    mPeptideToProteinMapEngine.ProcessFilesWildcard(mPeptideInputFilePath, mOutputDirectoryPath, mParameterFilePath)
 
                     If Not mVerboseLogFile Is Nothing Then
                         mVerboseLogFile.Close()
@@ -202,10 +202,10 @@ Public Module modMain
 
     Private Function SetOptionsUsingCommandLineParameters(objParseCommandLine As clsParseCommandLine) As Boolean
         ' Returns True if no problems; otherwise, returns false
-        ' /I:PeptideInputFilePath /R: ProteinInputFilePath /O:OutputFolderPath /P:ParameterFilePath
+        ' /I:PeptideInputFilePath /R: ProteinInputFilePath /O:OutputDirectoryPath /P:ParameterFilePath
 
         Dim strValue As String = String.Empty
-        Dim lstValidParameters = New List(Of String) From {"I", "O", "R", "P", "F", "N", "G", "H", "K", "A", "L", "LogFolder", "VerboseLog"}
+        Dim lstValidParameters = New List(Of String) From {"I", "O", "R", "P", "F", "N", "G", "H", "K", "A", "L", "LogDir", "LogFolder", "VerboseLog"}
         Dim intValue As Integer
 
         Try
@@ -224,7 +224,7 @@ Public Module modMain
                     End If
 
 
-                    If .RetrieveValueForParameter("O", strValue) Then mOutputFolderPath = strValue
+                    If .RetrieveValueForParameter("O", strValue) Then mOutputDirectoryPath = strValue
                     If .RetrieveValueForParameter("R", strValue) Then mProteinInputFilePath = strValue
                     If .RetrieveValueForParameter("P", strValue) Then mParameterFilePath = strValue
 
@@ -253,10 +253,17 @@ Public Module modMain
                         End If
                     End If
 
+                    If .RetrieveValueForParameter("LogDir", strValue) Then
+                        mLogMessagesToFile = True
+                        If Not String.IsNullOrEmpty(strValue) Then
+                            mLogDirectoryPath = strValue
+                        End If
+                    End If
+
                     If .RetrieveValueForParameter("LogFolder", strValue) Then
                         mLogMessagesToFile = True
                         If Not String.IsNullOrEmpty(strValue) Then
-                            mLogFolderPath = strValue
+                            mLogDirectoryPath = strValue
                         End If
                     End If
 
@@ -293,17 +300,17 @@ Public Module modMain
             Console.WriteLine()
             Console.WriteLine("Program syntax:" & ControlChars.NewLine & Path.GetFileName(Assembly.GetExecutingAssembly().Location))
             Console.WriteLine(" /I:PeptideInputFilePath /R:ProteinInputFilePath")
-            Console.WriteLine(" [/O:OutputFolderName] [/P:ParameterFilePath] [/F:FileFormatCode] ")
+            Console.WriteLine(" [/O:OutputDirectoryName] [/P:ParameterFilePath] [/F:FileFormatCode] ")
             Console.WriteLine(" [/N:InspectParameterFilePath] [/G] [/H] [/K] [/A]")
-            Console.WriteLine(" [/L[:LogFilePath]] [/LogFolder:LogFolderPath] [/VerboseLog] [/Q]")
+            Console.WriteLine(" [/L[:LogFilePath]] [/LogDir:LogDirectoryPath] [/VerboseLog] [/Q]")
             Console.WriteLine()
             Console.WriteLine(ConsoleMsgUtils.WrapParagraph(
                 "The input file path can contain the wildcard character *. If a wildcard is present, " &
                 "the same protein input file path will be used for each of the peptide input files matched."))
             Console.WriteLine()
-            Console.WriteLine(ConsoleMsgUtils.WrapParagraph("The output folder name is optional. " &
-                              "If omitted, the output files will be created in the same folder as the input file. " &
-                              "If included, then a subfolder is created with the name OutputFolderName."))
+            Console.WriteLine(ConsoleMsgUtils.WrapParagraph("The output directory name is optional. " &
+                              "If omitted, the output files will be created in the same directory as the input file. " &
+                              "If included, then a subdirectory is created with the name OutputDirectoryName."))
             Console.WriteLine()
             Console.WriteLine(ConsoleMsgUtils.WrapParagraph("The parameter file path is optional. " &
                               "If included, it should point to a valid XML parameter file."))
@@ -331,7 +338,7 @@ Public Module modMain
                 "If a peptide maps to multiple proteins, then multiple lines will be listed"))
 
             Console.WriteLine("Use /L to create a log file, optionally specifying the file name")
-            Console.WriteLine("Use /LogFolder to define the folder in which the log file should be created")
+            Console.WriteLine("Use /LogDir to define the directory in which the log file should be created")
             Console.WriteLine("Use /VerboseLog to create a detailed log file")
             Console.WriteLine()
 
@@ -352,19 +359,19 @@ Public Module modMain
 
     End Sub
 
-    Private Sub mPeptideToProteinMapEngine_StatusEvent(message As String)
+    Private Sub PeptideToProteinMapEngine_StatusEvent(message As String)
         Console.WriteLine(message)
     End Sub
 
-    Private Sub mPeptideToProteinMapEngine_WarningEvent(message As String)
+    Private Sub PeptideToProteinMapEngine_WarningEvent(message As String)
         ConsoleMsgUtils.ShowWarning(message)
     End Sub
 
-    Private Sub mPeptideToProteinMapEngine_ErrorEvent(message As String, ex As Exception)
+    Private Sub PeptideToProteinMapEngine_ErrorEvent(message As String, ex As Exception)
         ShowErrorMessage(message)
     End Sub
 
-    Private Sub mPeptideToProteinMapEngine_ProgressChanged(taskDescription As String, percentComplete As Single)
+    Private Sub PeptideToProteinMapEngine_ProgressChanged(taskDescription As String, percentComplete As Single)
         Const PROGRESS_DOT_INTERVAL_MSEC = 250
 
         If DateTime.UtcNow.Subtract(mLastPercentDisplayed).TotalSeconds >= 15 Then
@@ -397,7 +404,7 @@ Public Module modMain
         End If
     End Sub
 
-    Private Sub mPeptideToProteinMapEngine_ProgressReset()
+    Private Sub PeptideToProteinMapEngine_ProgressReset()
         mLastProgressReportTime = DateTime.UtcNow
         mLastPercentDisplayed = DateTime.UtcNow
     End Sub

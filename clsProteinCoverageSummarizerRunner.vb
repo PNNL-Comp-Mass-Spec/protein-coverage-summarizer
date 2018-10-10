@@ -108,46 +108,46 @@ Public Class clsProteinCoverageSummarizerRunner
 
     Public Property ProteinDataDelimitedFileDelimiter As Char
         Get
-            Return mProteinCoverageSummarizer.mProteinDataCache.DelimitedFileDelimiter
+            Return mProteinCoverageSummarizer.ProteinDataCache.DelimitedFileDelimiter
         End Get
         Set
-            mProteinCoverageSummarizer.mProteinDataCache.DelimitedFileDelimiter = Value
+            mProteinCoverageSummarizer.ProteinDataCache.DelimitedFileDelimiter = Value
         End Set
     End Property
 
     Public Property ProteinDataDelimitedFileFormatCode As DelimitedFileReader.eDelimitedFileFormatCode
         Get
-            Return mProteinCoverageSummarizer.mProteinDataCache.DelimitedFileFormatCode
+            Return mProteinCoverageSummarizer.ProteinDataCache.DelimitedFileFormatCode
         End Get
         Set
-            mProteinCoverageSummarizer.mProteinDataCache.DelimitedFileFormatCode = Value
+            mProteinCoverageSummarizer.ProteinDataCache.DelimitedFileFormatCode = Value
         End Set
     End Property
 
     Public Property ProteinDataDelimitedFileSkipFirstLine As Boolean
         Get
-            Return mProteinCoverageSummarizer.mProteinDataCache.DelimitedFileSkipFirstLine
+            Return mProteinCoverageSummarizer.ProteinDataCache.DelimitedFileSkipFirstLine
         End Get
         Set
-            mProteinCoverageSummarizer.mProteinDataCache.DelimitedFileSkipFirstLine = Value
+            mProteinCoverageSummarizer.ProteinDataCache.DelimitedFileSkipFirstLine = Value
         End Set
     End Property
 
     Public Property ProteinDataRemoveSymbolCharacters As Boolean
         Get
-            Return mProteinCoverageSummarizer.mProteinDataCache.RemoveSymbolCharacters
+            Return mProteinCoverageSummarizer.ProteinDataCache.RemoveSymbolCharacters
         End Get
         Set
-            mProteinCoverageSummarizer.mProteinDataCache.RemoveSymbolCharacters = Value
+            mProteinCoverageSummarizer.ProteinDataCache.RemoveSymbolCharacters = Value
         End Set
     End Property
 
     Public Property ProteinDataIgnoreILDifferences As Boolean
         Get
-            Return mProteinCoverageSummarizer.mProteinDataCache.IgnoreILDifferences
+            Return mProteinCoverageSummarizer.ProteinDataCache.IgnoreILDifferences
         End Get
         Set
-            mProteinCoverageSummarizer.mProteinDataCache.IgnoreILDifferences = Value
+            mProteinCoverageSummarizer.ProteinDataCache.IgnoreILDifferences = Value
         End Set
     End Property
 
@@ -254,9 +254,9 @@ Public Class clsProteinCoverageSummarizerRunner
         mProteinCoverageSummarizer = New clsProteinCoverageSummarizer()
         RegisterEvents(mProteinCoverageSummarizer)
 
-        AddHandler mProteinCoverageSummarizer.ProgressChanged, AddressOf mProteinCoverageSummarizer_ProgressChanged
+        AddHandler mProteinCoverageSummarizer.ProgressChanged, AddressOf ProteinCoverageSummarizer_ProgressChanged
 
-        AddHandler mProteinCoverageSummarizer.ProgressReset, AddressOf mProteinCoverageSummarizer_ProgressReset
+        AddHandler mProteinCoverageSummarizer.ProgressReset, AddressOf ProteinCoverageSummarizer_ProgressReset
 
     End Sub
 
@@ -282,7 +282,7 @@ Public Class clsProteinCoverageSummarizerRunner
             mProteinCoverageSummarizer.KeepDB = KeepDB
             blnSuccess = mProteinCoverageSummarizer.ProcessFile(strInputFilePath, strOutputFolderPath, strParameterFilePath, True)
 
-            mProteinCoverageSummarizer.mProteinDataCache.DeleteSQLiteDBFile("clsProteinCoverageSummarizerRunner.ProcessFile_Complete")
+            mProteinCoverageSummarizer.ProteinDataCache.DeleteSQLiteDBFile("clsProteinCoverageSummarizerRunner.ProcessFile_Complete")
 
         Catch ex As Exception
             mStatusMessage = "Error in ProcessFile:" & ControlChars.NewLine & ex.Message
@@ -294,7 +294,7 @@ Public Class clsProteinCoverageSummarizerRunner
 
     End Function
 
-    Private Sub mProteinCoverageSummarizer_ProgressChanged(taskDescription As String, percentComplete As Single)
+    Private Sub ProteinCoverageSummarizer_ProgressChanged(taskDescription As String, percentComplete As Single)
         UpdateProgress(taskDescription, percentComplete)
 
         ''If mUseProgressForm AndAlso Not mProgressForm Is Nothing Then
@@ -304,7 +304,7 @@ Public Class clsProteinCoverageSummarizerRunner
         ''End If
     End Sub
 
-    Private Sub mProteinCoverageSummarizer_ProgressReset()
+    Private Sub ProteinCoverageSummarizer_ProgressReset()
         ResetProgress(mProteinCoverageSummarizer.ProgressStepDescription)
 
         ''If mUseProgressForm AndAlso Not mProgressForm Is Nothing Then

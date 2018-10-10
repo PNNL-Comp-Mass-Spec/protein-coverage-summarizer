@@ -1712,7 +1712,7 @@ Public Class GUI
         Dim useDataGrid As Boolean
 
         Select Case eSequenceDisplayMode
-            Case eSequenceDisplayConstants.UseDatagrid
+            Case eSequenceDisplayConstants.UseDataGrid
                 useDataGrid = True
             Case eSequenceDisplayConstants.UseCustom
                 useDataGrid = False
@@ -1861,12 +1861,12 @@ Public Class GUI
                 .KeepDB = KeepDB
             }
 
-            AddHandler mProteinCoverageSummarizer.StatusEvent, AddressOf mProteinCoverageSummarizer_StatusEvent
-            AddHandler mProteinCoverageSummarizer.ErrorEvent, AddressOf mProteinCoverageSummarizer_ErrorEvent
-            AddHandler mProteinCoverageSummarizer.WarningEvent, AddressOf mProteinCoverageSummarizer_WarningEvent
+            AddHandler mProteinCoverageSummarizer.StatusEvent, AddressOf ProteinCoverageSummarizer_StatusEvent
+            AddHandler mProteinCoverageSummarizer.ErrorEvent, AddressOf ProteinCoverageSummarizer_ErrorEvent
+            AddHandler mProteinCoverageSummarizer.WarningEvent, AddressOf ProteinCoverageSummarizer_WarningEvent
 
-            AddHandler mProteinCoverageSummarizer.ProgressUpdate, AddressOf mProteinCoverageSummarizer_ProgressChanged
-            AddHandler mProteinCoverageSummarizer.ProgressReset, AddressOf mProteinCoverageSummarizer_ProgressReset
+            AddHandler mProteinCoverageSummarizer.ProgressUpdate, AddressOf ProteinCoverageSummarizer_ProgressChanged
+            AddHandler mProteinCoverageSummarizer.ProgressReset, AddressOf ProteinCoverageSummarizer_ProgressReset
 
             blnSuccess = SetOptionsFromGUI(mProteinCoverageSummarizer)
             If blnSuccess Then
@@ -1982,7 +1982,7 @@ Public Class GUI
     End Sub
 
     Private Sub dgResults_CurrentCellChanged(sender As Object, e As EventArgs) Handles dgResults.CurrentCellChanged
-        ShowRichTextStart(eSequenceDisplayConstants.UseDatagrid)
+        ShowRichTextStart(eSequenceDisplayConstants.UseDataGrid)
     End Sub
 
 #End Region
@@ -2077,7 +2077,7 @@ Public Class GUI
         AutoDefineSearchAllProteins()
     End Sub
 
-    Private Sub mProteinCoverageSummarizer_StatusEvent(message As String)
+    Private Sub ProteinCoverageSummarizer_StatusEvent(message As String)
         Console.WriteLine(message)
         If lblProgress.Text.StartsWith(message) Then
             lblStatus.Text = ""
@@ -2087,24 +2087,24 @@ Public Class GUI
 
     End Sub
 
-    Private Sub mProteinCoverageSummarizer_WarningEvent(message As String)
+    Private Sub ProteinCoverageSummarizer_WarningEvent(message As String)
         ConsoleMsgUtils.ShowWarning(message)
         lblStatus.Text = message
     End Sub
 
-    Private Sub mProteinCoverageSummarizer_ErrorEvent(message As String, ex As Exception)
+    Private Sub ProteinCoverageSummarizer_ErrorEvent(message As String, ex As Exception)
         ConsoleMsgUtils.ShowError(message, ex)
         lblStatus.Text = message
     End Sub
 
-    Private Sub mProteinCoverageSummarizer_ProgressChanged(taskDescription As String, percentComplete As Single)
+    Private Sub ProteinCoverageSummarizer_ProgressChanged(taskDescription As String, percentComplete As Single)
         lblProgress.Text = taskDescription
         If percentComplete > 0 Then lblProgress.Text &= ControlChars.NewLine & percentComplete.ToString("0.0") & "% complete"
 
         Application.DoEvents()
     End Sub
 
-    Private Sub mProteinCoverageSummarizer_ProgressReset()
+    Private Sub ProteinCoverageSummarizer_ProgressReset()
         lblProgress.Text = mProteinCoverageSummarizer.ProgressStepDescription
         Application.DoEvents()
     End Sub

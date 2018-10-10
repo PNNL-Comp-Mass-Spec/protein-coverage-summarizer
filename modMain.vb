@@ -22,7 +22,7 @@ Imports PRISM
 ''' an accompanying file with peptide sequences and compute the percent coverage of each of the proteins
 '''
 ''' Example command Line
-''' /I:PeptideInputFilePath /R:ProteinInputFilePath /O:OutputFolderPath /P:ParameterFilePath
+''' /I:PeptideInputFilePath /R:ProteinInputFilePath /O:OutputDirectoryPath /P:ParameterFilePath
 ''' </summary>
 Public Module modMain
 
@@ -30,7 +30,7 @@ Public Module modMain
 
     Private mPeptideInputFilePath As String
     Private mProteinInputFilePath As String
-    Private mOutputFolderPath As String
+    Private mOutputDirectoryPath As String
     Private mParameterFilePath As String
 
     Private mIgnoreILDifferences As Boolean
@@ -96,14 +96,14 @@ Public Module modMain
                         .KeepDB = mKeepDB
                     }
 
-                    AddHandler mProteinCoverageSummarizer.StatusEvent, AddressOf mProteinCoverageSummarizer_StatusEvent
-                    AddHandler mProteinCoverageSummarizer.ErrorEvent, AddressOf mProteinCoverageSummarizer_ErrorEvent
-                    AddHandler mProteinCoverageSummarizer.WarningEvent, AddressOf mProteinCoverageSummarizer_WarningEvent
+                    AddHandler mProteinCoverageSummarizer.StatusEvent, AddressOf ProteinCoverageSummarizer_StatusEvent
+                    AddHandler mProteinCoverageSummarizer.ErrorEvent, AddressOf ProteinCoverageSummarizer_ErrorEvent
+                    AddHandler mProteinCoverageSummarizer.WarningEvent, AddressOf ProteinCoverageSummarizer_WarningEvent
 
-                    AddHandler mProteinCoverageSummarizer.ProgressUpdate, AddressOf mProteinCoverageSummarizer_ProgressChanged
-                    AddHandler mProteinCoverageSummarizer.ProgressReset, AddressOf mProteinCoverageSummarizer_ProgressReset
+                    AddHandler mProteinCoverageSummarizer.ProgressUpdate, AddressOf ProteinCoverageSummarizer_ProgressChanged
+                    AddHandler mProteinCoverageSummarizer.ProgressReset, AddressOf ProteinCoverageSummarizer_ProgressReset
 
-                    mProteinCoverageSummarizer.ProcessFilesWildcard(mPeptideInputFilePath, mOutputFolderPath, mParameterFilePath)
+                    mProteinCoverageSummarizer.ProcessFilesWildcard(mPeptideInputFilePath, mOutputDirectoryPath, mParameterFilePath)
 
                 Catch ex As Exception
                     ShowErrorMessage("Error initializing Protein File Parser General Options " & ex.Message)
@@ -137,7 +137,7 @@ Public Module modMain
 
     Private Function SetOptionsUsingCommandLineParameters(commandLineParser As PRISM.clsParseCommandLine) As Boolean
         ' Returns True if no problems; otherwise, returns false
-        ' /I:PeptideInputFilePath /R: ProteinInputFilePath /O:OutputFolderPath /P:ParameterFilePath
+        ' /I:PeptideInputFilePath /R: ProteinInputFilePath /O:OutputDirectoryPath /P:ParameterFilePath
 
         Dim value As String = String.Empty
         Dim validParameters = New List(Of String) From {"I", "O", "R", "P", "G", "H", "M", "K", "Debug", "KeepDB"}
@@ -157,7 +157,7 @@ Public Module modMain
                         mPeptideInputFilePath = .RetrieveNonSwitchParameter(0)
                     End If
 
-                    If .RetrieveValueForParameter("O", value) Then mOutputFolderPath = value
+                    If .RetrieveValueForParameter("O", value) Then mOutputDirectoryPath = value
                     If .RetrieveValueForParameter("R", value) Then mProteinInputFilePath = value
                     If .RetrieveValueForParameter("P", value) Then mParameterFilePath = value
                     If .RetrieveValueForParameter("H", value) Then mOutputProteinSequence = False
@@ -230,7 +230,7 @@ Public Module modMain
                 "then uses this information to compute the sequence coverage percent for each protein."))
             Console.WriteLine()
             Console.WriteLine("Program syntax:" & Environment.NewLine & Path.GetFileName(FileProcessor.ProcessFilesOrDirectoriesBase.GetAppPath()))
-            Console.WriteLine("  /I:PeptideInputFilePath /R:ProteinInputFilePath [/O:OutputFolderName]")
+            Console.WriteLine("  /I:PeptideInputFilePath /R:ProteinInputFilePath [/O:OutputDirectoryName]")
             Console.WriteLine("  [/P:ParameterFilePath] [/G] [/H] [/M] [/K] [/Debug] [/KeepDB]")
             Console.WriteLine()
             Console.WriteLine(ConsoleMsgUtils.WrapParagraph(
@@ -238,8 +238,8 @@ Public Module modMain
                 "will be used for each of the peptide input files matched."))
             Console.WriteLine()
             Console.WriteLine(ConsoleMsgUtils.WrapParagraph(
-                "The output folder name is optional. If omitted, the output files will be created in the same folder as the input file. " &
-                "If included, a subfolder is created with the name OutputFolderName."))
+                "The output directory name is optional. If omitted, the output files will be created in the same directory as the input file. " &
+                "If included, a subdirectory is created with the name OutputDirectoryName."))
             Console.WriteLine()
             Console.WriteLine(ConsoleMsgUtils.WrapParagraph(
                 "The parameter file path is optional. If included, it should point to a valid XML parameter file."))
@@ -268,19 +268,19 @@ Public Module modMain
 
     End Sub
 
-    Private Sub mProteinCoverageSummarizer_StatusEvent(message As String)
+    Private Sub ProteinCoverageSummarizer_StatusEvent(message As String)
         Console.WriteLine(message)
     End Sub
 
-    Private Sub mProteinCoverageSummarizer_WarningEvent(message As String)
+    Private Sub ProteinCoverageSummarizer_WarningEvent(message As String)
         PRISM.ConsoleMsgUtils.ShowWarning(message)
     End Sub
 
-    Private Sub mProteinCoverageSummarizer_ErrorEvent(message As String, ex As Exception)
+    Private Sub ProteinCoverageSummarizer_ErrorEvent(message As String, ex As Exception)
         ShowErrorMessage(message)
     End Sub
 
-    Private Sub mProteinCoverageSummarizer_ProgressChanged(taskDescription As String, percentComplete As Single)
+    Private Sub ProteinCoverageSummarizer_ProgressChanged(taskDescription As String, percentComplete As Single)
         Const PERCENT_REPORT_INTERVAL = 25
         Const PROGRESS_DOT_INTERVAL_MSEC = 250
 
@@ -299,7 +299,7 @@ Public Module modMain
         End If
     End Sub
 
-    Private Sub mProteinCoverageSummarizer_ProgressReset()
+    Private Sub ProteinCoverageSummarizer_ProgressReset()
         mLastProgressReportTime = DateTime.UtcNow
         mLastProgressReportValue = 0
     End Sub

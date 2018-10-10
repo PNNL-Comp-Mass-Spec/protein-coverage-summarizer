@@ -167,16 +167,16 @@ Public Class clsProteinFileDataCache
 
     Private Function DefineSqlLiteDBPath(sqlLiteDBFileName As String) As String
         Dim dbPath As String
-        Dim folderPath As String = String.Empty
+        Dim directoryPath As String = String.Empty
         Dim filePath As String = String.Empty
 
         Dim success As Boolean
 
         Try
-            ' See if we can create files in the folder that contains this .Dll
-            folderPath = clsProteinCoverageSummarizer.GetAppFolderPath()
+            ' See if we can create files in the directory that contains this .Dll
+            directoryPath = clsProteinCoverageSummarizer.GetAppDirectoryPath()
 
-            filePath = Path.Combine(folderPath, "TempFileToTestFileIOPermissions.tmp")
+            filePath = Path.Combine(directoryPath, "TempFileToTestFileIOPermissions.tmp")
             OnDebugEvent("Checking for write permission by creating file " + filePath)
 
             Using writer = New StreamWriter(New FileStream(filePath, FileMode.Create, FileAccess.Write, FileShare.Read))
@@ -193,11 +193,11 @@ Public Class clsProteinFileDataCache
 
         If Not success Then
             Try
-                ' Create a randomly named file in the user's temp folder
+                ' Create a randomly named file in the user's temp directory
                 filePath = Path.GetTempFileName
                 OnDebugEvent("Creating file in user's temp directory: " + filePath)
 
-                folderPath = Path.GetDirectoryName(filePath)
+                directoryPath = Path.GetDirectoryName(filePath)
                 success = True
 
             Catch ex As Exception
@@ -218,7 +218,7 @@ Public Class clsProteinFileDataCache
         End If
 
         If success Then
-            dbPath = Path.Combine(folderPath, sqlLiteDBFileName)
+            dbPath = Path.Combine(directoryPath, sqlLiteDBFileName)
         Else
             dbPath = sqlLiteDBFileName
         End If
