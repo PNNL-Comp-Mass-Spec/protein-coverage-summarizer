@@ -26,7 +26,7 @@ Imports PRISM
 ''' </summary>
 Public Module modMain
 
-    Public Const PROGRAM_DATE As String = "September 20, 2018"
+    Public Const PROGRAM_DATE As String = "October 10, 2018"
 
     Private mPeptideInputFilePath As String
     Private mProteinInputFilePath As String
@@ -202,8 +202,9 @@ Public Module modMain
                 ShowWindow(handle, SW_HIDE)
             End If
 
-            objFormMain = New GUI()
-            objFormMain.KeepDB = mKeepDB
+            objFormMain = New GUI With {
+                .KeepDB = mKeepDB
+            }
 
             objFormMain.ShowDialog()
 
@@ -221,7 +222,6 @@ Public Module modMain
     End Sub
 
     Private Sub ShowProgramHelp()
-
 
         Try
             Console.WriteLine(ConsoleMsgUtils.WrapParagraph(
