@@ -269,7 +269,7 @@ Public Class clsProteinCoverageSummarizerRunner
         Dim blnSuccess As Boolean
 
         If blnResetErrorCode Then
-            MyBase.SetBaseClassErrorCode(eProcessFilesErrorCodes.NoError)
+            MyBase.SetBaseClassErrorCode(ProcessFilesErrorCodes.NoError)
         End If
 
         Try

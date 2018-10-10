@@ -885,7 +885,7 @@ Public Class clsPeptideToProteinMapEngine
 
         Try
             If Not File.Exists(strInputFilePath) Then
-                SetBaseClassErrorCode(eProcessFilesErrorCodes.InvalidInputFilePath)
+                SetBaseClassErrorCode(ProcessFilesErrorCodes.InvalidInputFilePath)
                 mStatusMessage = "File not found: " & strInputFilePath
 
                 ShowErrorMessage(mStatusMessage)
@@ -936,7 +936,7 @@ Public Class clsPeptideToProteinMapEngine
                             Next
 
                             If peptideSequenceColIndex < 0 Then
-                                SetBaseClassErrorCode(eProcessFilesErrorCodes.LocalizedError)
+                                SetBaseClassErrorCode(ProcessFilesErrorCodes.LocalizedError)
                                 mStatusMessage = "Peptide column not found; unable to continue"
 
                                 ShowErrorMessage(mStatusMessage)
@@ -990,7 +990,7 @@ Public Class clsPeptideToProteinMapEngine
 
         Try
             If Not File.Exists(strInputFilePath) Then
-                SetBaseClassErrorCode(eProcessFilesErrorCodes.InvalidInputFilePath)
+                SetBaseClassErrorCode(ProcessFilesErrorCodes.InvalidInputFilePath)
                 mStatusMessage = "File not found: " & strInputFilePath
 
                 ShowErrorMessage(mStatusMessage)
@@ -1117,20 +1117,20 @@ Public Class clsPeptideToProteinMapEngine
     Public Overloads Overrides Function ProcessFile(strInputFilePath As String, strOutputFolderPath As String, strParameterFilePath As String, blnResetErrorCode As Boolean) As Boolean
 
         If blnResetErrorCode Then
-            MyBase.SetBaseClassErrorCode(eProcessFilesErrorCodes.NoError)
+            MyBase.SetBaseClassErrorCode(ProcessFilesErrorCodes.NoError)
         End If
 
         Try
             If strInputFilePath Is Nothing OrElse strInputFilePath.Length = 0 Then
                 ShowMessage("Input file name is empty")
-                MyBase.SetBaseClassErrorCode(eProcessFilesErrorCodes.InvalidInputFilePath)
+                MyBase.SetBaseClassErrorCode(ProcessFilesErrorCodes.InvalidInputFilePath)
                 Return False
             End If
             Dim blnSuccess = False
 
-            ' Note that CleanupFilePaths() will update mOutputFolderPath, which is used by LogMessage()
-            If Not CleanupFilePaths(strInputFilePath, strOutputFolderPath) Then
-                MyBase.SetBaseClassErrorCode(eProcessFilesErrorCodes.FilePathError)
+            ' Note that CleanupFilePaths() will update mOutputDirectoryPath, which is used by LogMessage()
+            If Not CleanupFilePaths(strInputFilePath, outputDirectoryPath) Then
+                MyBase.SetBaseClassErrorCode(ProcessFilesErrorCodes.FilePathError)
             Else
 
                 LogMessage("Processing " & Path.GetFileName(strInputFilePath))
