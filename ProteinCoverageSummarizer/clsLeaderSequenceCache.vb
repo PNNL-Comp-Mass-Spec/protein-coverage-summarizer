@@ -89,9 +89,7 @@ Public Class clsLeaderSequenceCache
     End Structure
 
 #End Region
-
 #Region "Classwide variables"
-    Private mLeaderSequenceMinimumLength As Integer
     Private mLeaderSequences As Dictionary(Of String, Integer)
 
     Public mCachedPeptideCount As Integer
@@ -136,13 +134,6 @@ Public Class clsLeaderSequenceCache
     End Property
 
     Public Property LeaderSequenceMinimumLength As Integer
-        Get
-            Return mLeaderSequenceMinimumLength
-        End Get
-        Set
-            mLeaderSequenceMinimumLength = Value
-        End Set
-    End Property
 
     Public ReadOnly Property ProgressStepDescription As String
         Get
@@ -174,9 +165,9 @@ Public Class clsLeaderSequenceCache
     Public Function CachePeptide(peptideSequence As String, proteinName As String, prefixResidue As Char, suffixResidue As Char) As Boolean
 
         Try
-            If peptideSequence Is Nothing OrElse peptideSequence.Length < mLeaderSequenceMinimumLength Then
+            If peptideSequence Is Nothing OrElse peptideSequence.Length < LeaderSequenceMinimumLength Then
                 ' Peptide is too short; cannot process it
-                mErrorMessage = "Peptide length is shorter than " & mLeaderSequenceMinimumLength.ToString & "; unable to cache the peptide"
+                mErrorMessage = "Peptide length is shorter than " & LeaderSequenceMinimumLength.ToString & "; unable to cache the peptide"
                 Return False
             Else
                 mErrorMessage = String.Empty
@@ -187,7 +178,7 @@ Public Class clsLeaderSequenceCache
             If Char.IsLetter(prefixResidue) Then prefixResidue = Char.ToUpper(prefixResidue)
             If Char.IsLetter(suffixResidue) Then suffixResidue = Char.ToUpper(suffixResidue)
 
-            Dim leaderSequence = peptideSequence.Substring(0, mLeaderSequenceMinimumLength)
+            Dim leaderSequence = peptideSequence.Substring(0, LeaderSequenceMinimumLength)
             Dim prefixResidueLtoI = prefixResidue
             Dim suffixResidueLtoI = suffixResidue
 
@@ -332,10 +323,10 @@ Public Class clsLeaderSequenceCache
 
             If validPeptideCount = 0 Then
                 ' No valid peptides were found; either no peptides are in the file or they're all shorter than MINIMUM_LEADER_SEQUENCE_LENGTH
-                mLeaderSequenceMinimumLength = MINIMUM_LEADER_SEQUENCE_LENGTH
+                LeaderSequenceMinimumLength = MINIMUM_LEADER_SEQUENCE_LENGTH
                 blnSuccess = False
             Else
-                mLeaderSequenceMinimumLength = leaderSeqMinimumLength
+                LeaderSequenceMinimumLength = leaderSeqMinimumLength
                 blnSuccess = True
             End If
 
@@ -405,7 +396,7 @@ Public Class clsLeaderSequenceCache
 
     Public Sub InitializeVariables()
 
-        mLeaderSequenceMinimumLength = DEFAULT_LEADER_SEQUENCE_LENGTH
+        LeaderSequenceMinimumLength = DEFAULT_LEADER_SEQUENCE_LENGTH
         mErrorMessage = String.Empty
         mAbortProcessing = False
 
