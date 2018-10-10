@@ -119,6 +119,7 @@
     <Compile Include="clsSharedADONetFunctions.vb">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="GlobalSuppressions.vb" />
     <Compile Include="GUI.vb">
       <SubType>Form</SubType>
     </Compile>

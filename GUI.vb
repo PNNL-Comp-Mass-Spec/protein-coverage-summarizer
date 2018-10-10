@@ -29,6 +29,8 @@ Imports SharedVBNetRoutines
 Public Class GUI
     Inherits Form
 
+#Disable Warning IDE1006 ' Naming Styles
+
 #Region " Windows Form Designer generated code "
 
     Public Sub New()
@@ -2108,5 +2110,7 @@ Public Class GUI
         lblProgress.Text = mProteinCoverageSummarizer.ProgressStepDescription
         Application.DoEvents()
     End Sub
+
+#Enable Warning IDE1006 ' Naming Styles
 
 End Class
