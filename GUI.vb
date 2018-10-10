@@ -1140,7 +1140,7 @@ Public Class GUI
     End Sub
 
     Private Function GetSettingsFilePath() As String
-        Return PRISM.FileProcessor.ProcessFilesBase.GetSettingsFilePathLocal("ProteinCoverageSummarizer", XML_SETTINGS_FILE_NAME)
+        Return FileProcessor.ProcessFilesOrDirectoriesBase.GetSettingsFilePathLocal("ProteinCoverageSummarizer", XML_SETTINGS_FILE_NAME)
     End Function
 
     Private Sub IniFileLoadOptions(blnUpdateIOPaths As Boolean)
@@ -1169,10 +1169,10 @@ Public Class GUI
                 Try
                     .InitialDirectory = Directory.GetParent(strFilePath).ToString
                 Catch
-                    .InitialDirectory = PRISM.FileProcessor.ProcessFilesBase.GetAppFolderPath()
+                    .InitialDirectory = FileProcessor.ProcessFilesOrDirectoriesBase.GetAppDirectoryPath()
                 End Try
             Else
-                .InitialDirectory = PRISM.FileProcessor.ProcessFilesBase.GetAppFolderPath()
+                .InitialDirectory = FileProcessor.ProcessFilesOrDirectoriesBase.GetAppDirectoryPath()
             End If
 
             If File.Exists(strFilePath) Then
@@ -1585,7 +1585,7 @@ Public Class GUI
         chkAddSpace.Checked = True
 
         mXmlSettingsFilePath = GetSettingsFilePath()
-        PRISM.FileProcessor.ProcessFilesBase.CreateSettingsFileIfMissing(mXmlSettingsFilePath)
+        FileProcessor.ProcessFilesOrDirectoriesBase.CreateSettingsFileIfMissing(mXmlSettingsFilePath)
 
     End Sub
 

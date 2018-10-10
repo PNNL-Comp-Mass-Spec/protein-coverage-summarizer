@@ -132,7 +132,7 @@ Public Module modMain
     End Sub
 
     Private Function GetAppVersion() As String
-        Return PRISM.FileProcessor.ProcessFilesBase.GetAppVersion(PROGRAM_DATE)
+        Return FileProcessor.ProcessFilesOrDirectoriesBase.GetAppVersion(PROGRAM_DATE)
     End Function
 
     Private Function SetOptionsUsingCommandLineParameters(commandLineParser As PRISM.clsParseCommandLine) As Boolean
@@ -229,7 +229,7 @@ Public Module modMain
                 "The program also reads in a .txt file containing peptide sequences and protein names (though protein name is optional) " &
                 "then uses this information to compute the sequence coverage percent for each protein."))
             Console.WriteLine()
-            Console.WriteLine("Program syntax:" & Environment.NewLine & Path.GetFileName(PRISM.FileProcessor.ProcessFilesBase.GetAppPath()))
+            Console.WriteLine("Program syntax:" & Environment.NewLine & Path.GetFileName(FileProcessor.ProcessFilesOrDirectoriesBase.GetAppPath()))
             Console.WriteLine("  /I:PeptideInputFilePath /R:ProteinInputFilePath [/O:OutputFolderName]")
             Console.WriteLine("  [/P:ParameterFilePath] [/G] [/H] [/M] [/K] [/Debug] [/KeepDB]")
             Console.WriteLine()
