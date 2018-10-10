@@ -94,7 +94,11 @@ Public Class clsLeaderSequenceCache
 
     Public mCachedPeptideCount As Integer
     Public mCachedPeptideSeqInfo() As udtPeptideSequenceInfoType
+
+#Disable Warning IDE0044 ' Add readonly modifier
     Private mCachedPeptideToHashIndexPointer() As Integer               ' Parallel to mCachedPeptideSeqInfo
+#Enable Warning IDE0044 ' Add readonly modifier
+
     Private mIndicesSorted As Boolean
 
     Private mErrorMessage As String

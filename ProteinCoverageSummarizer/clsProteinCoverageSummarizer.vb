@@ -102,7 +102,10 @@ Public Class clsProteinCoverageSummarizer
 
     Private mCachedProteinInfoStartIndex As Integer = -1
     Private mCachedProteinInfoCount As Integer
+
+#Disable Warning IDE0044 ' Add readonly modifier
     Private mCachedProteinInfo() As clsProteinFileDataCache.udtProteinInfoType
+#Enable Warning IDE0044 ' Add readonly modifier
 
     Private mKeepDB As Boolean
 
