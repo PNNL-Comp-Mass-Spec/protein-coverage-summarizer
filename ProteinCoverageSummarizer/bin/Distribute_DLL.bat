@@ -1,4 +1,4 @@
-f:
+af:
 pushd "F:\Documents\Projects\DataMining\Protein_Coverage_Summarizer\ProteinCoverageSummarizer\bin\AnyCPU"
 
 copy ProteinCoverageSummarizer.dll        "F:\Documents\Projects\DataMining\DMS_Managers\Analysis_Manager\AM_Common\" /Y
@@ -33,6 +33,10 @@ copy ProteinCoverageSummarizer.pdb        "F:\Documents\Projects\DataMining\Pept
 copy ProteinCoverageSummarizer.pdb        "F:\Documents\Projects\DataMining\DMS_Managers\Analysis_Manager\AM_Common\" /Y
 copy ProteinCoverageSummarizer.pdb        "F:\Documents\Projects\DataMining\Protein_Coverage_Summarizer\PeptideToProteinMapper\PeptideToProteinMapEngine\bin\x86\" /Y
 copy ProteinCoverageSummarizer.pdb        "F:\Documents\Projects\DataMining\Protein_Coverage_Summarizer\PeptideToProteinMapper\bin\x86\" /Y
+
+copy ProteinCoverageSummarizer.dll        "F:\Documents\Projects\JoshAldrich\AScore\AScore_DLL\lib\" /Y
+copy ProteinCoverageSummarizer.dll        "F:\Documents\Projects\JoshAldrich\AScore\AScore_DLL\bin\AnyCPU\Debug\" /Y
+copy ProteinCoverageSummarizer.dll        "F:\Documents\Projects\JoshAldrich\AScore\AScore_Console\bin\Debug\" /Y
 
 popd
 
