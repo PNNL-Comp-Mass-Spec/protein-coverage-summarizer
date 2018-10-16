@@ -1,6 +1,9 @@
 Protein Coverage Summarizer Change Log
 
-Version 1.3.6831; October 10, 2018
+Version 1.3.6862; October 15, 2018
+	- Updated PRISM.dll with renamed enum
+
+Version 1.3.6857; October 10, 2018
 	- Updated PRISM.dll with renamed class
 
 Version 1.3.6831; September 14, 2018
