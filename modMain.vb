@@ -26,7 +26,7 @@ Imports PRISM
 ''' </summary>
 Public Module modMain
 
-    Public Const PROGRAM_DATE As String = "October 15, 2018"
+    Public Const PROGRAM_DATE As String = "October 18, 2018"
 
     Private mPeptideInputFilePath As String
     Private mProteinInputFilePath As String
@@ -58,7 +58,7 @@ Public Module modMain
     Public Function Main() As Integer
         ' Returns 0 if no error, error code if an error
         Dim returnCode As Integer
-        Dim commandLineParser As New PRISM.clsParseCommandLine
+        Dim commandLineParser As New clsParseCommandLine
         Dim proceed As Boolean
 
         returnCode = 0
@@ -142,7 +142,7 @@ Public Module modMain
         Return FileProcessor.ProcessFilesOrDirectoriesBase.GetAppVersion(PROGRAM_DATE)
     End Function
 
-    Private Function SetOptionsUsingCommandLineParameters(commandLineParser As PRISM.clsParseCommandLine) As Boolean
+    Private Function SetOptionsUsingCommandLineParameters(commandLineParser As clsParseCommandLine) As Boolean
         ' Returns True if no problems; otherwise, returns false
         ' /I:PeptideInputFilePath /R: ProteinInputFilePath /O:OutputDirectoryPath /P:ParameterFilePath
 
@@ -188,11 +188,11 @@ Public Module modMain
     End Function
 
     Private Sub ShowErrorMessage(message As String)
-        PRISM.ConsoleMsgUtils.ShowError(message)
+        ConsoleMsgUtils.ShowError(message)
     End Sub
 
     Private Sub ShowErrorMessage(title As String, errorMessages As List(Of String))
-        PRISM.ConsoleMsgUtils.ShowErrors(title, errorMessages)
+        ConsoleMsgUtils.ShowErrors(title, errorMessages)
     End Sub
 
     Private Sub ShowGUI()
@@ -280,7 +280,7 @@ Public Module modMain
     End Sub
 
     Private Sub ProteinCoverageSummarizer_WarningEvent(message As String)
-        PRISM.ConsoleMsgUtils.ShowWarning(message)
+        ConsoleMsgUtils.ShowWarning(message)
     End Sub
 
     Private Sub ProteinCoverageSummarizer_ErrorEvent(message As String, ex As Exception)
