@@ -85,6 +85,13 @@ Public Module modMain
                 ShowProgramHelp()
                 returnCode = -1
             Else
+                If (String.IsNullOrWhiteSpace(mParameterFilePath) And
+                    Not mSaveProteinToPeptideMappingFile And
+                    mSkipCoverageComputationSteps) Then
+                    ConsoleMsgUtils.ShowWarning("You used /K but didn't specify /M; no results will be saved")
+                    ConsoleMsgUtils.ShowWarning("It is advised that you use only /M (and don't use /K)")
+                End If
+
                 Try
                     mProteinCoverageSummarizer = New clsProteinCoverageSummarizerRunner() With {
                         .ProteinInputFilePath = mProteinInputFilePath,
