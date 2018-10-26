@@ -476,7 +476,7 @@
         <member name="M:PHRPReader.clsModificationDefinition.CanAffectPeptideOrProteinTerminus">
             <summary>
             Returns True if this modification can affect the peptide or protein terminus
-            Note that some modifications can affect either peptide teriminii or internal residues
+            Note that some modifications can affect either peptide terminii or internal residues
             </summary>
             <returns></returns>
             <remarks></remarks>
@@ -540,7 +540,7 @@
             Dynamic mod parameter file keyword
             </summary>
         </member>
-        <member name="F:PHRPReader.clsMSGFPlusParamFileModExtractor.PARAM_TAG_CUSTOMAA">
+        <member name="F:PHRPReader.clsMSGFPlusParamFileModExtractor.PARAM_TAG_CUSTOM_AA">
             <summary>
             Custom amino acid definition parameter file keyword
             </summary>
@@ -667,9 +667,9 @@
         </member>
         <member name="M:PHRPReader.clsMSGFPlusParamFileModExtractor.ResolveMSGFDBModsWithModDefinitions(System.Collections.Generic.List{PHRPReader.clsMSGFPlusParamFileModExtractor.udtModInfoType},PHRPReader.clsPeptideModificationContainer)">
             <summary>
-            Resod
+            Resolve MSGF+ mods with mod definitions
             </summary>
-            <param name="mSGFDBModInfo"></param>
+            <param name="modInfo"></param>
             <param name="oPeptideMods"></param>
         </member>
         <member name="T:PHRPReader.clsMSGFResultsReader">
@@ -1082,10 +1082,23 @@
             Compute the monoisotopic mass of the given empirical formula
             </summary>
             <param name="empiricalFormula"></param>
+        </member>
+        <member name="M:PHRPReader.clsPeptideMassCalculator.ComputeMonoisotopicMass(PHRPReader.clsEmpiricalFormula)">
+            <summary>
+            Compute the monoisotopic mass of the given empirical formula
+            </summary>
+            <param name="empiricalFormula"></param>
             <returns></returns>
             <remarks>Throws an exception if an unknown symbol is encountered</remarks>
         </member>
         <member name="M:PHRPReader.clsPeptideMassCalculator.ComputeMonoistopicMass(System.Collections.Generic.Dictionary{System.String,System.Int32},System.Collections.Generic.List{System.String}@)">
+            <summary>
+            Compute the monoisotopic mass of the compound represented by elementalComposition
+            </summary>
+            <param name="elementalComposition"></param>
+            <param name="unknownSymbols"></param>
+        </member>
+        <member name="M:PHRPReader.clsPeptideMassCalculator.ComputeMonoisotopicMass(System.Collections.Generic.Dictionary{System.String,System.Int32},System.Collections.Generic.List{System.String}@)">
             <summary>
             Compute the monoisotopic mass of the compound represented by elementalComposition
             </summary>
@@ -1179,7 +1192,7 @@
         </member>
         <member name="M:PHRPReader.clsPeptideMassCalculator.GetAminoAcidEmpiricalFormula(System.Int32,System.Int32,System.Int32,System.Int32,System.Int32)">
             <summary>
-            Create a new clsEmpiricalFormula instnance with the specified number of atoms
+            Create a new clsEmpiricalFormula instance with the specified number of atoms
             </summary>
             <param name="countC"></param>
             <param name="countH"></param>
@@ -1214,8 +1227,8 @@
              C3H3NOS4
              CH23NO-5S+4
             </summary>
-            <param name="empiricalformula"></param>
-            <returns>EmpiricalFormula instnance tracking the element symbols and counts</returns>
+            <param name="empiricalFormula"></param>
+            <returns>EmpiricalFormula instance tracking the element symbols and counts</returns>
         </member>
         <member name="M:PHRPReader.clsPeptideMassCalculator.MassToPPM(System.Double,System.Double)">
             <summary>
@@ -1381,7 +1394,7 @@
             <returns>The index of the newly added modification, or the the index of the modification that modificationDefinition matches </returns>
             <remarks></remarks>
         </member>
-        <member name="M:PHRPReader.clsPeptideModificationContainer.AppendStandardRefinmentModifications">
+        <member name="M:PHRPReader.clsPeptideModificationContainer.AppendStandardRefinementModifications">
             <summary>
             Append standard refinement modifications
             </summary>
@@ -1630,7 +1643,7 @@
         </member>
         <member name="T:PHRPReader.clsPHRPParser.udtAmbiguousModInfo">
             <summary>
-            Tracks ambigious modifications
+            Tracks ambiguous modifications
             </summary>
         </member>
         <member name="F:PHRPReader.clsPHRPParser.udtAmbiguousModInfo.ResidueStart">
@@ -1658,9 +1671,9 @@
             Input file path
             </summary>
         </member>
-        <member name="F:PHRPReader.clsPHRPParser.mInputFolderPath">
+        <member name="F:PHRPReader.clsPHRPParser.mInputDirectoryPath">
             <summary>
-            Input folder path
+            Input directory path
             </summary>
         </member>
         <member name="F:PHRPReader.clsPHRPParser.mInitialized">
@@ -1719,13 +1732,18 @@
             <returns></returns>
             <remarks></remarks>
         </member>
-        <member name="P:PHRPReader.clsPHRPParser.InputFolderPath">
+        <member name="P:PHRPReader.clsPHRPParser.InputDirectoryPath">
             <summary>
-            Input folder path
+            Input directory path
             </summary>
             <value></value>
             <returns></returns>
             <remarks></remarks>
+        </member>
+        <member name="P:PHRPReader.clsPHRPParser.InputFolderPath">
+            <summary>
+            Input directory path
+            </summary>
         </member>
         <member name="P:PHRPReader.clsPHRPParser.MaxProteinsPerPSM">
             <summary>
@@ -1921,9 +1939,9 @@
         <member name="M:PHRPReader.clsPHRPParser.LoadSearchEngineParameters(System.String,PHRPReader.clsSearchEngineParameters@)">
             <summary>
             Parses the specified parameter file
-            Also reads the Tool_Version_Info file in the same folder (if present)
+            Also reads the Tool_Version_Info file in the same directory (if present)
             </summary>
-            <param name="searchEngineParamFileName">Name of the parameter file to parse (must reside in InputFolderPath)</param>
+            <param name="searchEngineParamFileName">Name of the parameter file to parse (must reside in InputDirectoryPath)</param>
             <param name="searchEngineParams">Search engine parameters class (output)</param>
             <returns></returns>
             <remarks></remarks>
@@ -2031,7 +2049,7 @@
             Read a Search Engine parameter file where settings are stored as key/value pairs
             </summary>
             <param name="searchEngineName">Search engine name (e.g. MSGF+)</param>
-            <param name="searchEngineParamFileName">Search engine parameter file name (must exist in mInputFolderPath)</param>
+            <param name="searchEngineParamFileName">Search engine parameter file name (must exist in mInputDirectoryPath)</param>
             <param name="ePeptideHitResultType">PeptideHitResultType (only important if reading a ModA parameter file</param>
             <param name="searchEngineParams">SearchEngineParams container class (must be initialized by the calling function)</param>
             <returns>True if success, false if an error</returns>
@@ -2058,7 +2076,7 @@
         </member>
         <member name="M:PHRPReader.clsPHRPParser.ReportError(System.String)">
             <summary>
-            Repor an error
+            Report an error
             </summary>
             <param name="message"></param>
         </member>
@@ -2183,7 +2201,7 @@
         </member>
         <member name="M:PHRPReader.clsPHRPParserInspect.GetPHRPModSummaryFileName(System.String)">
             <summary>
-            Defeault ModSummary file name for the given dataset
+            Default ModSummary file name for the given dataset
             </summary>
             <param name="datasetName"></param>
             <returns>Filename</returns>
@@ -2354,7 +2372,7 @@
         </member>
         <member name="M:PHRPReader.clsPHRPParserMODa.GetPHRPModSummaryFileName(System.String)">
             <summary>
-            Defeault ModSummary file name for the given dataset
+            Default ModSummary file name for the given dataset
             </summary>
             <param name="datasetName"></param>
             <returns>Filename</returns>
@@ -2516,7 +2534,7 @@
         </member>
         <member name="M:PHRPReader.clsPHRPParserMODPlus.GetPHRPModSummaryFileName(System.String)">
             <summary>
-            Defeault ModSummary file name for the given dataset
+            Default ModSummary file name for the given dataset
             </summary>
             <param name="datasetName"></param>
             <returns>Filename</returns>
@@ -2687,7 +2705,7 @@
         </member>
         <member name="M:PHRPReader.clsPHRPParserMSAlign.GetPHRPModSummaryFileName(System.String)">
             <summary>
-            Defeault ModSummary file name for the given dataset
+            Default ModSummary file name for the given dataset
             </summary>
             <param name="datasetName"></param>
             <returns>Filename</returns>
@@ -2870,7 +2888,7 @@
         </member>
         <member name="M:PHRPReader.clsPHRPParserMSGFDB.GetPHRPModSummaryFileName(System.String)">
             <summary>
-            Defeault ModSummary file name for the given dataset
+            Default ModSummary file name for the given dataset
             </summary>
             <param name="datasetName"></param>
             <returns>Filename</returns>
@@ -3044,7 +3062,7 @@
         </member>
         <member name="M:PHRPReader.clsPHRPParserMSPathFinder.GetPHRPModSummaryFileName(System.String)">
             <summary>
-            Defeault ModSummary file name for the given dataset
+            Default ModSummary file name for the given dataset
             </summary>
             <param name="datasetName"></param>
             <returns>Filename</returns>
@@ -3215,7 +3233,7 @@
         </member>
         <member name="M:PHRPReader.clsPHRPParserSequest.GetPHRPModSummaryFileName(System.String)">
             <summary>
-            Defeault ModSummary file name for the given dataset
+            Default ModSummary file name for the given dataset
             </summary>
             <param name="datasetName"></param>
             <returns>Filename</returns>
@@ -3386,7 +3404,7 @@
         </member>
         <member name="M:PHRPReader.clsPHRPParserXTandem.GetPHRPModSummaryFileName(System.String)">
             <summary>
-            Defeault ModSummary file name for the given dataset
+            Default ModSummary file name for the given dataset
             </summary>
             <param name="datasetName"></param>
             <returns>Filename</returns>
@@ -3448,7 +3466,7 @@
         <member name="M:PHRPReader.clsPHRPParserXTandem.LoadSearchEngineParameters(System.String,PHRPReader.clsSearchEngineParameters@)">
             <summary>
             Parses the specified X!Tandem parameter file
-            Note that the file specified by parameter "list path, default parameters" will also be auto-parsed (if found in folder mInputFolderPath)
+            Note that the file specified by parameter "list path, default parameters" will also be auto-parsed (if found in directory mInputDirectoryPath)
             </summary>
             <param name="searchEngineParamFileName"></param>
             <param name="searchEngineParams"></param>
@@ -3708,7 +3726,7 @@
             Constructor that auto-determines the PeptideHit result type based on the filename
             </summary>
             <param name="inputFilePath">Input file to read</param>
-            <param name="loadModsAndSeqInfo">If True, then looks for and auto-loads the modification definitions from the _moddefs.txt file</param>
+            <param name="loadModsAndSeqInfo">If True, then looks for and auto-loads the modification definitions from the _ModSummary.txt file</param>
             <param name="loadMSGFResults">If True, then looks for and auto-loads the MSGF results from the _msg.txt file</param>
             <remarks></remarks>
         </member>
@@ -3717,7 +3735,7 @@
             Constructor that auto-determines the PeptideHit result type based on the filename
             </summary>
             <param name="inputFilePath">Input file to read</param>
-            <param name="loadModsAndSeqInfo">If True, then looks for and auto-loads the modification definitions from the _moddefs.txt file</param>
+            <param name="loadModsAndSeqInfo">If True, then looks for and auto-loads the modification definitions from the _ModSummary.txt file</param>
             <param name="loadMSGFResults">If True, then looks for and auto-loads the MSGF results from the _msg.txt file</param>
             <param name="loadScanStats">If True, then looks for and auto-loads the MASIC scan stats files (used to determine collision mode and to refine the precursor m/z values)</param>
             <remarks></remarks>
@@ -3736,7 +3754,7 @@
             </summary>
             <param name="inputFilePath">Input file to read</param>
             ''' <param name="eResultType">Source file PeptideHit result type</param>
-            <param name="loadModsAndSeqInfo">If True, then looks for and auto-loads the modification definitions from the _moddefs.txt file</param>
+            <param name="loadModsAndSeqInfo">If True, then looks for and auto-loads the modification definitions from the _ModSummary.txt file</param>
             <param name="loadMSGFResults">If True, then looks for and auto-loads the MSGF results from the _msg.txt file</param>
             <remarks></remarks>
         </member>
@@ -3746,7 +3764,7 @@
             </summary>
             <param name="inputFilePath">Input file to read</param>
             <param name="eResultType">Source file PeptideHit result type</param>
-            <param name="loadModsAndSeqInfo">If True, then looks for and auto-loads the modification definitions from the _moddefs.txt file</param>
+            <param name="loadModsAndSeqInfo">If True, then looks for and auto-loads the modification definitions from the _ModSummary.txt file</param>
             <param name="loadMSGFResults">If True, then looks for and auto-loads the MSGF results from the _msg.txt file</param>
             <param name="loadScanStats">If True, then looks for and auto-loads the MASIC scan stats files (used to determine collision mode and to refine the precursor m/z values)</param>
             <remarks></remarks>
@@ -3800,39 +3818,39 @@
         </member>
         <member name="M:PHRPReader.clsPHRPReader.AutoDetermineBestInputFile(System.String)">
             <summary>
-            Looks for a valid _syn.txt or _fht.txt file for any dataset in the specified folder
+            Looks for a valid _syn.txt or _fht.txt file for any dataset in the specified directory
             If both the _syn.txt and _fht.txt files are present, then chooses the file with _ResultToSeqMap.txt and _SeqInfo.txt files
             </summary>
-            <param name="inputFolderPath">Input folder path</param>
+            <param name="inputDirectoryPath">Input directory path</param>
             <returns>The full path to the most appropriate Synopsis or First hits file</returns>
             <remarks></remarks>
         </member>
         <member name="M:PHRPReader.clsPHRPReader.AutoDetermineBestInputFile(System.String,PHRPReader.clsPHRPReader.ePeptideHitResultType@)">
             <summary>
-            Looks for a valid _syn.txt or _fht.txt file for any dataset in the specified folder
+            Looks for a valid _syn.txt or _fht.txt file for any dataset in the specified directory
             If both the _syn.txt and _fht.txt files are present, then chooses the file with _ResultToSeqMap.txt and _SeqInfo.txt files
             </summary>
-            <param name="inputFolderPath">Input folder path</param>
+            <param name="inputDirectoryPath">Input directory path</param>
             <param name="eMatchedResultType">Output parameter: the result type of the best result file found</param>
             <returns>The full path to the most appropriate Synopsis or First hits file</returns>
             <remarks></remarks>
         </member>
         <member name="M:PHRPReader.clsPHRPReader.AutoDetermineBestInputFile(System.String,System.String)">
             <summary>
-            Looks for a valid _syn.txt or _fht.txt file for the specified dataset in the specified folder
+            Looks for a valid _syn.txt or _fht.txt file for the specified dataset in the specified directory
             If both the _syn.txt and _fht.txt files are present, then chooses the file with _ResultToSeqMap.txt and _SeqInfo.txt files
             </summary>
-            <param name="inputFolderPath">Input folder path</param>
+            <param name="inputDirectoryPath">Input directory path</param>
             <param name="datasetName">Dataset name</param>
             <returns>The full path to the most appropriate Synopsis or First hits file</returns>
             <remarks></remarks>
         </member>
         <member name="M:PHRPReader.clsPHRPReader.AutoDetermineBestInputFile(System.String,System.String,PHRPReader.clsPHRPReader.ePeptideHitResultType@)">
             <summary>
-            Looks for a valid _syn.txt or _fht.txt file for the specified dataset in the specified folder
+            Looks for a valid _syn.txt or _fht.txt file for the specified dataset in the specified directory
             If both the _syn.txt and _fht.txt files are present, then chooses the file with _ResultToSeqMap.txt and _SeqInfo.txt files
             </summary>
-            <param name="inputFolderPath">Input folder path</param>
+            <param name="inputDirectoryPath">Input directory path</param>
             <param name="datasetName">Dataset name</param>
             <param name="eMatchedResultType">Output parameter: the result type of the best result file found</param>
             <returns>The full path to the most appropriate Synopsis or First hits file</returns>
@@ -3840,10 +3858,10 @@
         </member>
         <member name="M:PHRPReader.clsPHRPReader.AutoDetermineBestInputFile(System.String,System.Collections.Generic.List{System.String},PHRPReader.clsPHRPReader.ePeptideHitResultType@)">
             <summary>
-            Looks for a valid _syn.txt or _fht.txt file for the given list of datasets in the specified folder
+            Looks for a valid _syn.txt or _fht.txt file for the given list of datasets in the specified directory
             If both the _syn.txt and _fht.txt files are present, then chooses the file with _ResultToSeqMap.txt and _SeqInfo.txt files
             </summary>
-            <param name="inputFolderPath">Input folder path</param>
+            <param name="inputDirectoryPath">Input directory path</param>
             <param name="datasetNames">List of dataset names to search for</param>
             <param name="eMatchedResultType">Output parameter: the result type of the best result file found</param>
             <returns>The full path to the most appropriate Synopsis or First hits file</returns>
@@ -4119,9 +4137,14 @@
             Error message
             </summary>
         </member>
+        <member name="P:PHRPReader.clsPHRPSeqMapReader.InputDirectoryPath">
+            <summary>
+            Input directory path
+            </summary>
+        </member>
         <member name="P:PHRPReader.clsPHRPSeqMapReader.InputFolderPath">
             <summary>
-            Input folder path
+            Input directory path
             </summary>
         </member>
         <member name="P:PHRPReader.clsPHRPSeqMapReader.MaxProteinsPerSeqID">
@@ -4154,7 +4177,7 @@
             Constructor
             </summary>
             <param name="datasetName">Dataset name</param>
-            <param name="inputFolderPath">Input file path</param>
+            <param name="inputDirectoryPath">Input file path</param>
             <param name="ePeptideHitResultType">Peptide Hit result type</param>
             <remarks></remarks>
         </member>
@@ -4163,7 +4186,7 @@
             Constructor
             </summary>
             <param name="datasetName">Dataset name</param>
-            <param name="inputFolderPath">Input file path</param>
+            <param name="inputDirectoryPath">Input file path</param>
             <param name="ePeptideHitResultType">Peptide Hit result type</param>
             <param name="phrpDataFileName">The base PHRP data file name; used when calling AutoSwitchToLegacyMSGFDBIfRequired and AutoSwitchToFHTIfRequired</param>
             <remarks></remarks>
@@ -4172,7 +4195,7 @@
             <summary>
             Constructor
             </summary>
-            <param name="inputFolderPath">Input folder path</param>
+            <param name="inputDirectoryPath">Input directory path</param>
             <param name="resultToSeqMapFilename">ResultToSeqMap filename</param>
             <param name="seqToProteinMapFilename"></param>
             <param name="seqInfoFilename">SeqInfo filename</param>
@@ -4195,7 +4218,7 @@
             <param name="resultToSeqMap">ResultToSeqMap list (output); keys are ResultID, Values as SeqID</param>
             <param name="seqToProteinMap">SeqToProteinMap list (output); keys are SeqID, Values are list of clsProteinInfo objects</param>
             <param name="seqInfo">SeqInfo list (output); keys are SeqID, Values are seq details stored in clsSeqInfo objects</param>
-            <param name="pepToProteinMap">PepToProteinMap list (ouput); keys are clean peptide sequences (no mods), Values are Protein name and residue start/end locations for the peptide</param>
+            <param name="pepToProteinMap">PepToProteinMap list (output); keys are clean peptide sequences (no mods), Values are Protein name and residue start/end locations for the peptide</param>
             <returns>True if success, false if an error</returns>
             <remarks></remarks>
         </member>
@@ -4374,29 +4397,10 @@
             Unknown collision mode
             </summary>
         </member>
-        <member name="F:PHRPReader.clsPSM.mScanList">
-            <summary>
-            List of scans that were combined prior to identifying this peptide
-            </summary>
-        </member>
-        <member name="F:PHRPReader.clsPSM.mPeptide">
-            <summary>
-            Peptide sequence, with or without prefix and suffix residues; may contain mod symbols; example: R.RM*VNSGSGADSAVDLNSIPVAMIAR.V
-            </summary>
-        </member>
         <member name="F:PHRPReader.clsPSM.mPeptideWithNumericMods">
             <summary>
-            Peptide sequence where modified residues have the modification mass indicated as a number, example: R.N+144.102063SNPVIAELSQAINSGTLLSK+144.102063PS+79.9663PPLPPK+144.102063.R
-            </summary>
-        </member>
-        <member name="F:PHRPReader.clsPSM.mPeptideCleanSequence">
-            <summary>
-            Peptide sequence without any mod symbols
-            </summary>
-        </member>
-        <member name="F:PHRPReader.clsPSM.mModifiedPeptideResidues">
-            <summary>
-            Modified residues
+            Peptide sequence where modified residues have the modification mass indicated as a number
+            Example: R.N+144.102063SNPVIAELSQAINSGTLLSK+144.102063PS+79.9663PPLPPK+144.102063.R
             </summary>
         </member>
         <member name="F:PHRPReader.clsPSM.mProteins">
@@ -4533,7 +4537,8 @@
         <member name="P:PHRPReader.clsPSM.Peptide">
             <summary>
             Peptide sequence, including any modification symbols that were assigned by the search engine
-            For example, R.AAS*PQDLAGGYTSSLACHR.A
+            Peptide sequence, with or without prefix and suffix residues; may contain mod symbols
+            Example, R.AAS*PQDLAGGYTSSLACHR.A
             </summary>
             <value></value>
             <returns></returns>
@@ -4669,21 +4674,21 @@
             <summary>
             Add the details for a modified residue
             </summary>
-            <param name="Residue">Amino acid letter; use angle brackets or square brackets for peptide or protein terminii (see the SYMBOL_DMS constants in clsAminoAcidModInfo)</param>
-            <param name="ResidueLocInPeptide">Location of the residue in the peptide; use 1 for an N-terminal mod</param>
-            <param name="ResidueTerminusState">Terminus state of residue</param>
-            <param name="ModDefinition">Modification details</param>
+            <param name="residue">Amino acid letter; use angle brackets or square brackets for peptide or protein terminii (see the SYMBOL_DMS constants in clsAminoAcidModInfo)</param>
+            <param name="residueLocInPeptide">Location of the residue in the peptide; use 1 for an N-terminal mod</param>
+            <param name="residueTerminusState">Terminus state of residue</param>
+            <param name="modDefinition">Modification details</param>
             <remarks></remarks>
         </member>
         <member name="M:PHRPReader.clsPSM.AddModifiedResidue(System.Char,System.Int32,PHRPReader.clsAminoAcidModInfo.eResidueTerminusStateConstants,PHRPReader.clsModificationDefinition,System.Int32)">
             <summary>
             Add the details for a modified residue
             </summary>
-            <param name="Residue">Amino acid letter; use angle brackets or square brackets for peptide or protein terminii (see the SYMBOL_DMS constants in clsAminoAcidModInfo)</param>
-            <param name="ResidueLocInPeptide">Location of the residue in the peptide; use 1 for an N-terminal mod</param>
-            <param name="ResidueTerminusState">Terminus state of residue</param>
-            <param name="ModDefinition">Modification details</param>
-            <param name="EndResidueLocInPeptide">For ambiguous mods, the residue number of the last residue that could have this modification</param>
+            <param name="residue">Amino acid letter; use angle brackets or square brackets for peptide or protein terminii (see the SYMBOL_DMS constants in clsAminoAcidModInfo)</param>
+            <param name="residueLocInPeptide">Location of the residue in the peptide; use 1 for an N-terminal mod</param>
+            <param name="residueTerminusState">Terminus state of residue</param>
+            <param name="modDefinition">Modification details</param>
+            <param name="endResidueLocInPeptide">For ambiguous mods, the residue number of the last residue that could have this modification</param>
             <remarks></remarks>
         </member>
         <member name="M:PHRPReader.clsPSM.AddProtein(System.String)">
