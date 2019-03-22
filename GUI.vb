@@ -928,7 +928,7 @@ Public Class GUI
     Private Const XML_SETTINGS_FILE_NAME As String = "ProteinCoverageSummarizerSettings.xml"
     Private Const XML_SECTION_GUI_OPTIONS As String = "GUIOptions"
 
-    Private Const COVERAGE_RESULTS_DATATABLE As String = "T_Coverage_Results"
+    Private Const COVERAGE_RESULTS_DATA_TABLE As String = "T_Coverage_Results"
     Private Const COL_NAME_PROTEIN_NAME As String = "Protein Name"
     Private Const COL_NAME_PROTEIN_COVERAGE As String = "Percent Coverage"
     Private Const COL_NAME_PROTEIN_DESCRIPTION As String = "Protein Description"
@@ -1030,7 +1030,7 @@ Public Class GUI
             dgResults.DataSource = Nothing
 
             ' Clear the dataset
-            mDSCoverageResults.Tables(COVERAGE_RESULTS_DATATABLE).Clear()
+            mDSCoverageResults.Tables(COVERAGE_RESULTS_DATA_TABLE).Clear()
 
             ' Open the file and read in the lines
             srInFile = New StreamReader(strResultsFilePath)
@@ -1046,7 +1046,7 @@ Public Class GUI
                 Else
                     strSplitLine = strLineIn.Split(ControlChars.Tab)
 
-                    objNewRow = mDSCoverageResults.Tables(COVERAGE_RESULTS_DATATABLE).NewRow()
+                    objNewRow = mDSCoverageResults.Tables(COVERAGE_RESULTS_DATA_TABLE).NewRow()
                     For intIndex = 0 To strSplitLine.Length - 1
                         If intIndex > clsProteinCoverageSummarizer.OUTPUT_FILE_PROTEIN_SEQUENCE_COLUMN_NUMBER - 1 Then Exit For
 
@@ -1077,7 +1077,7 @@ Public Class GUI
                     End If
 
                     ' Add the row to the Customers table.
-                    mDSCoverageResults.Tables(COVERAGE_RESULTS_DATATABLE).Rows.Add(objNewRow)
+                    mDSCoverageResults.Tables(COVERAGE_RESULTS_DATA_TABLE).Rows.Add(objNewRow)
 
                 End If
                 intLineCount += 1
@@ -1094,7 +1094,7 @@ Public Class GUI
             ' Bind the DataSet to the DataGrid
             With dgResults
                 .DataSource = mDSCoverageResults
-                .DataMember = COVERAGE_RESULTS_DATATABLE
+                .DataMember = COVERAGE_RESULTS_DATA_TABLE
             End With
 
             If blnProteinDescriptionPresent <> mProteinDescriptionColVisible Then
@@ -1103,7 +1103,7 @@ Public Class GUI
             End If
 
             ' Display the sequence for the first protein
-            If mDSCoverageResults.Tables(COVERAGE_RESULTS_DATATABLE).Rows.Count > 0 Then
+            If mDSCoverageResults.Tables(COVERAGE_RESULTS_DATA_TABLE).Rows.Count > 0 Then
                 dgResults.CurrentRowIndex = 0
                 ShowRichTextStart(eSequenceDisplayConstants.UseDataGrid)
             Else
@@ -1400,7 +1400,7 @@ Public Class GUI
         Try
 
             ' Make the Peak Matching Thresholds data table
-            Dim dtCoverageResults = New DataTable(COVERAGE_RESULTS_DATATABLE)
+            Dim dtCoverageResults = New DataTable(COVERAGE_RESULTS_DATA_TABLE)
 
             ' Add the columns to the data table
             DatabaseUtils.DataTableUtils.AppendColumnStringToTable(dtCoverageResults, COL_NAME_PROTEIN_NAME, String.Empty)
@@ -1421,7 +1421,7 @@ Public Class GUI
             'End With
 
             ' Instantiate the dataset
-            mDSCoverageResults = New DataSet(COVERAGE_RESULTS_DATATABLE)
+            mDSCoverageResults = New DataSet(COVERAGE_RESULTS_DATA_TABLE)
 
             ' Add the new DataTable to the DataSet.
             mDSCoverageResults.Tables.Add(dtCoverageResults)
@@ -1429,7 +1429,7 @@ Public Class GUI
             ' Bind the DataSet to the DataGrid
             With dgResults
                 .DataSource = mDSCoverageResults
-                .DataMember = COVERAGE_RESULTS_DATATABLE
+                .DataMember = COVERAGE_RESULTS_DATA_TABLE
             End With
 
             mProteinDescriptionColVisible = False
@@ -1687,22 +1687,22 @@ Public Class GUI
     End Function
 
     Private Sub ShowAboutBox()
-        Dim strMessage As String
+        Dim message = New StringBuilder()
 
-        strMessage = "This program reads in a .fasta or .txt file containing protein names and sequences (and optionally descriptions)." & ControlChars.NewLine
-        strMessage &= "The program also reads in a .txt file containing peptide sequences and protein names (though protein name is optional) then uses this information to compute the sequence coverage percent for each protein." & ControlChars.NewLine & ControlChars.NewLine
+        message.AppendLine("This program reads in a .fasta or .txt file containing protein names and sequences (and optionally descriptions).")
+        message.AppendLine("The program also reads in a .txt file containing peptide sequences and protein names (though protein name is optional) then uses this information to compute the sequence coverage percent for each protein.")
+        message.AppendLine()
+        message.AppendLine("Program written by Matthew Monroe and Nikša Blonder for the Department of Energy (PNNL, Richland, WA) in 2005")
+        message.AppendLine()
+        message.AppendLine("This is version " & Application.ProductVersion & " (" & PROGRAM_DATE & ")")
+        message.AppendLine()
+        message.AppendLine("E-mail: matthew.monroe@pnnl.gov or proteomics@pnnl.gov")
+        message.AppendLine("Website: https://omics.pnl.gov or https://panomics.pnl.gov/")
+        message.AppendLine()
+        message.AppendLine("Licensed under the 2-Clause BSD License; https://opensource.org/licenses/BSD-2-Clause")
+        message.AppendLine("Copyright 2018 Battelle Memorial Institute")
 
-        strMessage &= "Program written by Matthew Monroe and Nikša Blonder for the Department of Energy (PNNL, Richland, WA) in 2005" & ControlChars.NewLine & ControlChars.NewLine
-
-        strMessage &= "This is version " & Application.ProductVersion & " (" & PROGRAM_DATE & ")" & ControlChars.NewLine & ControlChars.NewLine
-
-        strMessage &= "E-mail: matthew.monroe@pnnl.gov or proteomics@pnnl.gov" & ControlChars.NewLine
-        strMessage &= "Website: https://omics.pnl.gov or https://panomics.pnl.gov/" & ControlChars.NewLine & ControlChars.NewLine
-
-        strMessage &= "Licensed under the 2-Clause BSD License; https://opensource.org/licenses/BSD-2-Clause" & ControlChars.NewLine
-        strMessage &= "Copyright 2018 Battelle Memorial Institute" & ControlChars.NewLine & ControlChars.NewLine
-
-        MessageBox.Show(strMessage, "About", MessageBoxButtons.OK, MessageBoxIcon.Information)
+        MessageBox.Show(message.ToString(), "About", MessageBoxButtons.OK, MessageBoxIcon.Information)
 
     End Sub
 
@@ -1907,9 +1907,9 @@ Public Class GUI
         ' Define the coverage results table style
         Dim tsResults As New DataGridTableStyle
 
-        ' Setting the MappingName of the table style to COVERAGE_RESULTS_DATATABLE will cause this style to be used with that table
+        ' Setting the MappingName of the table style to COVERAGE_RESULTS_DATA_TABLE will cause this style to be used with that table
         With tsResults
-            .MappingName = COVERAGE_RESULTS_DATATABLE
+            .MappingName = COVERAGE_RESULTS_DATA_TABLE
             .AllowSorting = True
             .ColumnHeadersVisible = True
             .RowHeadersVisible = True
