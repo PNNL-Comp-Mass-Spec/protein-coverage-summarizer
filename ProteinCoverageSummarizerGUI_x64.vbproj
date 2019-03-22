@@ -79,10 +79,6 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="SharedVBNetRoutines, Version=1.0.2797.40342, Culture=neutral">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>Lib\SharedVBNetRoutines.dll</HintPath>
-    </Reference>
     <Reference Include="System">
       <Name>System</Name>
     </Reference>
@@ -114,9 +110,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="clsProteinCoverageSummarizerRunner.vb">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="clsSharedADONetFunctions.vb">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="GlobalSuppressions.vb" />
@@ -170,6 +163,9 @@
     </PackageReference>
     <PackageReference Include="PRISM-Library">
       <Version>2.5.8</Version>
+    </PackageReference>
+    <PackageReference Include="PRISMWin-Library">
+      <Version>1.0.10</Version>
     </PackageReference>
     <PackageReference Include="ProteinFileReader">
       <Version>1.3.1</Version>

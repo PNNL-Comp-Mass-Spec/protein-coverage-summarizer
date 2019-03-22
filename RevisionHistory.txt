@@ -1,5 +1,8 @@
 Protein Coverage Summarizer Change Log
 
+Version 1.3.7020; March 22, 2019
+	- Replaced SharedVBNetRoutines.dll with PRISMWin-library
+
 Version 1.3.6862; October 15, 2018
 	- Updated PRISM.dll with renamed enum
 

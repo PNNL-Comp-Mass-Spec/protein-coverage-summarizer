@@ -15,12 +15,13 @@ Option Strict On
 ' Copyright 2018 Battelle Memorial Institute
 
 Imports System.ComponentModel
+Imports System.Text
 Imports System.Text.RegularExpressions
 Imports Ookii.Dialogs
 Imports PRISM
+Imports PRISMWin
 Imports ProteinCoverageSummarizer
 Imports ProteinFileReader
-Imports SharedVBNetRoutines
 
 ''' <summary>
 ''' This program uses clsProteinCoverageSummarizer to read in a file with protein sequences along with
@@ -1402,13 +1403,13 @@ Public Class GUI
             Dim dtCoverageResults = New DataTable(COVERAGE_RESULTS_DATATABLE)
 
             ' Add the columns to the data table
-            ADONetRoutines.AppendColumnStringToTable(dtCoverageResults, COL_NAME_PROTEIN_NAME, String.Empty)
-            ADONetRoutines.AppendColumnSingleToTable(dtCoverageResults, COL_NAME_PROTEIN_COVERAGE)
-            ADONetRoutines.AppendColumnStringToTable(dtCoverageResults, COL_NAME_PROTEIN_DESCRIPTION, String.Empty)
-            ADONetRoutines.AppendColumnIntegerToTable(dtCoverageResults, COL_NAME_NON_UNIQUE_PEPTIDE_COUNT)
-            ADONetRoutines.AppendColumnIntegerToTable(dtCoverageResults, COL_NAME_UNIQUE_PEPTIDE_COUNT)
-            ADONetRoutines.AppendColumnIntegerToTable(dtCoverageResults, COL_NAME_PROTEIN_RESIDUE_COUNT)
-            ADONetRoutines.AppendColumnStringToTable(dtCoverageResults, COL_NAME_PROTEIN_SEQUENCE, String.Empty)
+            DatabaseUtils.DataTableUtils.AppendColumnStringToTable(dtCoverageResults, COL_NAME_PROTEIN_NAME, String.Empty)
+            DatabaseUtils.DataTableUtils.AppendColumnFloatToTable(dtCoverageResults, COL_NAME_PROTEIN_COVERAGE)
+            DatabaseUtils.DataTableUtils.AppendColumnStringToTable(dtCoverageResults, COL_NAME_PROTEIN_DESCRIPTION, String.Empty)
+            DatabaseUtils.DataTableUtils.AppendColumnIntegerToTable(dtCoverageResults, COL_NAME_NON_UNIQUE_PEPTIDE_COUNT)
+            DatabaseUtils.DataTableUtils.AppendColumnIntegerToTable(dtCoverageResults, COL_NAME_UNIQUE_PEPTIDE_COUNT)
+            DatabaseUtils.DataTableUtils.AppendColumnIntegerToTable(dtCoverageResults, COL_NAME_PROTEIN_RESIDUE_COUNT)
+            DatabaseUtils.DataTableUtils.AppendColumnStringToTable(dtCoverageResults, COL_NAME_PROTEIN_SEQUENCE, String.Empty)
 
             ' Note that Protein Sequence should be at ColIndex 6 = clsProteinCoverageSummarizer.OUTPUT_FILE_PROTEIN_SEQUENCE_COLUMN_NUMBER-1
             mProteinSequenceColIndex = clsProteinCoverageSummarizer.OUTPUT_FILE_PROTEIN_SEQUENCE_COLUMN_NUMBER - 1
@@ -1915,19 +1916,19 @@ Public Class GUI
             .ReadOnly = True
         End With
 
-        ADONetRoutines.AppendColumnToTableStyle(tsResults, COL_NAME_PROTEIN_NAME, COL_NAME_PROTEIN_NAME, 100)
-        ADONetRoutines.AppendColumnToTableStyle(tsResults, COL_NAME_PROTEIN_COVERAGE, COL_NAME_PROTEIN_COVERAGE, 95)
+        DataGridUtils.AppendColumnToTableStyle(tsResults, COL_NAME_PROTEIN_NAME, COL_NAME_PROTEIN_NAME, 100)
+        DataGridUtils.AppendColumnToTableStyle(tsResults, COL_NAME_PROTEIN_COVERAGE, COL_NAME_PROTEIN_COVERAGE, 95)
 
         If mProteinDescriptionColVisible Then
-            ADONetRoutines.AppendColumnToTableStyle(tsResults, COL_NAME_PROTEIN_DESCRIPTION, COL_NAME_PROTEIN_DESCRIPTION, 100)
+            DataGridUtils.AppendColumnToTableStyle(tsResults, COL_NAME_PROTEIN_DESCRIPTION, COL_NAME_PROTEIN_DESCRIPTION, 100)
         Else
-            ADONetRoutines.AppendColumnToTableStyle(tsResults, COL_NAME_PROTEIN_DESCRIPTION, COL_NAME_PROTEIN_DESCRIPTION, 0)
+            DataGridUtils.AppendColumnToTableStyle(tsResults, COL_NAME_PROTEIN_DESCRIPTION, COL_NAME_PROTEIN_DESCRIPTION, 0)
         End If
 
-        ADONetRoutines.AppendColumnToTableStyle(tsResults, COL_NAME_NON_UNIQUE_PEPTIDE_COUNT, COL_NAME_NON_UNIQUE_PEPTIDE_COUNT, 90)
-        ADONetRoutines.AppendColumnToTableStyle(tsResults, COL_NAME_UNIQUE_PEPTIDE_COUNT, COL_NAME_UNIQUE_PEPTIDE_COUNT, 65)
-        ADONetRoutines.AppendColumnToTableStyle(tsResults, COL_NAME_PROTEIN_RESIDUE_COUNT, COL_NAME_PROTEIN_RESIDUE_COUNT, 90)
-        ADONetRoutines.AppendColumnToTableStyle(tsResults, COL_NAME_PROTEIN_SEQUENCE, COL_NAME_PROTEIN_SEQUENCE, 0)
+        DataGridUtils.AppendColumnToTableStyle(tsResults, COL_NAME_NON_UNIQUE_PEPTIDE_COUNT, COL_NAME_NON_UNIQUE_PEPTIDE_COUNT, 90)
+        DataGridUtils.AppendColumnToTableStyle(tsResults, COL_NAME_UNIQUE_PEPTIDE_COUNT, COL_NAME_UNIQUE_PEPTIDE_COUNT, 65)
+        DataGridUtils.AppendColumnToTableStyle(tsResults, COL_NAME_PROTEIN_RESIDUE_COUNT, COL_NAME_PROTEIN_RESIDUE_COUNT, 90)
+        DataGridUtils.AppendColumnToTableStyle(tsResults, COL_NAME_PROTEIN_SEQUENCE, COL_NAME_PROTEIN_SEQUENCE, 0)
 
         ' Add the DataGridTableStyle to the data grid's TableStyles collection
         With dgResults
@@ -1991,7 +1992,7 @@ Public Class GUI
 
 #Region "Textbox handlers"
     Private Sub txtCoverage_KeyPress(sender As Object, e As KeyPressEventArgs) Handles txtCoverage.KeyPress
-        VBNetRoutines.TextBoxKeyPressHandler(txtCoverage, e, False, False, False, False, False, False, False, False, False, False, True)
+        TextBoxUtils.TextBoxKeyPressHandler(txtCoverage, e, False, False, False, False, False, False, False, False, False, False, True)
     End Sub
 
     Private Sub txtCustomProteinSequence_Click(sender As Object, e As EventArgs) Handles txtCustomProteinSequence.Click
@@ -1999,7 +2000,7 @@ Public Class GUI
     End Sub
 
     Private Sub txtCustomProteinSequence_KeyPress(sender As Object, e As KeyPressEventArgs) Handles txtCustomProteinSequence.KeyPress
-        VBNetRoutines.TextBoxKeyPressHandler(txtCustomProteinSequence, e, False, False, False, True, False, False, False, False, True, True, True)
+        TextBoxUtils.TextBoxKeyPressHandler(txtCustomProteinSequence, e, False, False, False, True, False, False, False, False, True, True, True)
     End Sub
 
     Private Sub txtCustomProteinSequence_TextChanged(sender As Object, e As EventArgs) Handles txtCustomProteinSequence.TextChanged
@@ -2007,11 +2008,11 @@ Public Class GUI
     End Sub
 
     Private Sub txtOutputFolderPath_KeyPress(sender As Object, e As KeyPressEventArgs) Handles txtOutputFolderPath.KeyPress
-        VBNetRoutines.TextBoxKeyPressHandlerCheckControlChars(txtOutputFolderPath, e)
+        TextBoxUtils.TextBoxKeyPressHandlerCheckControlChars(txtOutputFolderPath, e)
     End Sub
 
     Private Sub txtPeptideInputFilePath_KeyPress(sender As Object, e As KeyPressEventArgs) Handles txtPeptideInputFilePath.KeyPress
-        VBNetRoutines.TextBoxKeyPressHandlerCheckControlChars(txtPeptideInputFilePath, e)
+        TextBoxUtils.TextBoxKeyPressHandlerCheckControlChars(txtPeptideInputFilePath, e)
     End Sub
 
     Private Sub txtPeptideInputFilePath_TextChanged(sender As Object, e As EventArgs) Handles txtPeptideInputFilePath.TextChanged
@@ -2020,7 +2021,7 @@ Public Class GUI
     End Sub
 
     Private Sub txtProteinInputFilePath_KeyPress(sender As Object, e As KeyPressEventArgs) Handles txtProteinInputFilePath.KeyPress
-        VBNetRoutines.TextBoxKeyPressHandlerCheckControlChars(txtProteinInputFilePath, e)
+        TextBoxUtils.TextBoxKeyPressHandlerCheckControlChars(txtProteinInputFilePath, e)
     End Sub
 
     Private Sub txtProteinInputFilePath_TextChanged(sender As Object, e As EventArgs) Handles txtProteinInputFilePath.TextChanged
