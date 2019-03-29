@@ -307,7 +307,6 @@ Public Class clsProteinFileDataCache
     End Function
 
     Public Iterator Function GetCachedProteins(Optional startIndex As Integer = -1, Optional endIndex As Integer = -1) As IEnumerable(Of udtProteinInfoType)
-        Dim udtProteinInfo = New udtProteinInfoType
 
         If mSqlLitePersistentConnection Is Nothing Then
             mSqlLitePersistentConnection = ConnectToSqlLiteDB(False)
@@ -341,6 +340,8 @@ Public Class clsProteinFileDataCache
             '  PercentCoverage REAL,
             '  NonUniquePeptideCount INTEGER,
             '  UniquePeptideCount INTEGER
+
+            Dim udtProteinInfo = New udtProteinInfoType()
 
             With udtProteinInfo
                 .UniqueSequenceID = CInt(reader("UniqueSequenceID"))
