@@ -351,8 +351,7 @@ Public Class clsPeptideToProteinMapEngine
             Return ePeptideInputFileFormatConstants.MSGFDBResultsFile
         End If
 
-        Dim eResultType As clsPHRPReader.ePeptideHitResultType
-        eResultType = clsPHRPReader.AutoDetermineResultType(strFilePath)
+        Dim eResultType = clsPHRPReader.AutoDetermineResultType(strFilePath)
         If eResultType <> clsPHRPReader.ePeptideHitResultType.Unknown Then
             Return ePeptideInputFileFormatConstants.PHRPFile
         End If
