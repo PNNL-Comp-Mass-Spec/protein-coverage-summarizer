@@ -500,7 +500,7 @@ Public Class clsProteinCoverageSummarizer
                 ReDim udtPeptideStats(-1)
             End If
 
-            ' Query the SqlLite DB to extract the protein information
+            ' Query the SQLite DB to extract the protein information
             Dim proteinsProcessed = 0
             For Each udtProtein In ProteinDataCache.GetCachedProteins()
 
@@ -622,7 +622,7 @@ Public Class clsProteinCoverageSummarizer
 
             Dim startIndex = 0
             Do
-                ' Extract up to PROTEIN_CHUNK_COUNT proteins from the SQL Lite database
+                ' Extract up to PROTEIN_CHUNK_COUNT proteins from the SQLite database
                 ' Store the information in the four local arrays
                 Dim proteinCount = ReadProteinInfoChunk(startIndex, proteinUpdated, False)
 
@@ -747,8 +747,8 @@ Public Class clsProteinCoverageSummarizer
                 Exit Sub
             End If
 
-            ' Store the updated protein sequences in the Sql Lite database
-            Dim sqlConnection = ProteinDataCache.ConnectToSqlLiteDB(True)
+            ' Store the updated protein sequences in the SQLite database
+            Dim sqlConnection = ProteinDataCache.ConnectToSQLiteDB(True)
 
             Using dbTrans As SQLiteTransaction = sqlConnection.BeginTransaction()
                 Using cmd As SQLiteCommand = sqlConnection.CreateCommand()
@@ -901,7 +901,7 @@ Public Class clsProteinCoverageSummarizer
         Dim startIndex = 0
         Dim index = 0
         Do
-            ' Extract up to PROTEIN_CHUNK_COUNT proteins from the Sql Lite database
+            ' Extract up to PROTEIN_CHUNK_COUNT proteins from the SQLite database
             ' Store the information in the four local arrays
             Dim proteinCount = ReadProteinInfoChunk(startIndex, proteinUpdated, False)
 
@@ -944,8 +944,8 @@ Public Class clsProteinCoverageSummarizer
                 Exit Sub
             End If
 
-            ' Store the updated protein coverage values in the Sql Lite database
-            Dim sqlConnection = ProteinDataCache.ConnectToSqlLiteDB(True)
+            ' Store the updated protein coverage values in the SQLite database
+            Dim sqlConnection = ProteinDataCache.ConnectToSQLiteDB(True)
 
             Using dbTrans As SQLiteTransaction = sqlConnection.BeginTransaction()
                 Using cmd As SQLiteCommand = sqlConnection.CreateCommand()
@@ -1495,10 +1495,10 @@ Public Class clsProteinCoverageSummarizer
                     CreateProteinCoverageFile(inputFilePath, outputDirectoryPath, outputFileBaseName)
                 End If
 
-                UpdateProgress("Processing complete; deleting the temporary SqlLite database", 100,
+                UpdateProgress("Processing complete; deleting the temporary SQLite database", 100,
                    eProteinCoverageProcessingSteps.WriteProteinCoverageFile)
 
-                'All done; delete the temporary SqlLite database
+                'All done; delete the temporary SQLite database
                 ProteinDataCache.DeleteSQLiteDBFile("clsProteinCoverageSummarizer.ProcessFile_Complete")
 
                 UpdateProgress("Done")
@@ -1522,7 +1522,7 @@ Public Class clsProteinCoverageSummarizer
     ''' <remarks></remarks>
     Private Function ReadProteinInfoChunk(startIndex As Integer, proteinUpdated() As Boolean, forceReload As Boolean) As Integer
 
-        ' We use a SQLLite database to store the protein sequences (to avoid running out of memory when parsing large protein lists)
+        ' We use a SQLite database to store the protein sequences (to avoid running out of memory when parsing large protein lists)
         ' However, we will store the most recently loaded peptides in mCachedProteinInfoCount() and
         ' will only reload them if startIndex is different than mCachedProteinInfoStartIndex
 
@@ -1538,7 +1538,7 @@ Public Class clsProteinCoverageSummarizer
             Return mCachedProteinInfoCount
         End If
 
-        ' Extract up to PROTEIN_CHUNK_COUNT proteins from the Sql Lite database
+        ' Extract up to PROTEIN_CHUNK_COUNT proteins from the SQLite database
         ' Store the information in the four local arrays
 
         Dim endIndex = startIndex + PROTEIN_CHUNK_COUNT - 1
@@ -1689,7 +1689,7 @@ Public Class clsProteinCoverageSummarizer
 
             Dim startIndex = 0
             Do
-                ' Extract up to PROTEIN_CHUNK_COUNT proteins from the Sql Lite database
+                ' Extract up to PROTEIN_CHUNK_COUNT proteins from the SQLite database
                 ' Store the information in the four local arrays
                 Dim proteinCount = ReadProteinInfoChunk(startIndex, proteinUpdated, False)
 
@@ -1851,7 +1851,7 @@ Public Class clsProteinCoverageSummarizer
 
                 Next
 
-                ' Store the updated protein sequence information in the SQL Lite DB
+                ' Store the updated protein sequence information in the SQLite DB
                 UpdateSequenceDbDataValues(proteinUpdated, proteinCount)
 
                 ' Increment startIndex to obtain the next chunk of proteins

@@ -50,7 +50,7 @@ Public Class clsProteinFileDataCache
         ''' Unique sequence ID
         ''' </summary>
         ''' <remarks>
-        ''' Index number applied to the proteins stored in the SQL Lite DB; the first protein has UniqueSequenceID = 0
+        ''' Index number applied to the proteins stored in the SQLite DB; the first protein has UniqueSequenceID = 0
         ''' </remarks>
         Public UniqueSequenceID As Integer
 
@@ -74,11 +74,11 @@ Public Class clsProteinFileDataCache
     Private mProteinCount As Integer
     Private mParsedFileIsFastaFile As Boolean
 
-    ' Sql Lite Connection String and filepath
-    Private mSqlLiteDBConnectionString As String = String.Empty
-    Private mSqlLiteDBFilePath As String = SQL_LITE_PROTEIN_CACHE_FILENAME
+    ' SQLite Connection String and filepath
+    Private mSQLiteDBConnectionString As String = String.Empty
+    Private mSQLiteDBFilePath As String = SQL_LITE_PROTEIN_CACHE_FILENAME
 
-    Private mSqlLitePersistentConnection As SQLiteConnection
+    Private mSQLitePersistentConnection As SQLiteConnection
 
     Public Event ProteinCachingStart()
     Public Event ProteinCached(proteinsCached As Integer)
@@ -138,16 +138,16 @@ Public Class clsProteinFileDataCache
 
 #End Region
 
-    Public Function ConnectToSqlLiteDB(disableJournaling As Boolean) As SQLiteConnection
+    Public Function ConnectToSQLiteDB(disableJournaling As Boolean) As SQLiteConnection
 
-        If mSqlLiteDBConnectionString Is Nothing OrElse mSqlLiteDBConnectionString.Length = 0 Then
-            OnDebugEvent("ConnectToSqlLiteDB: Unable to open the SQLite database because mSqlLiteDBConnectionString is empty")
+        If mSQLiteDBConnectionString Is Nothing OrElse mSQLiteDBConnectionString.Length = 0 Then
+            OnDebugEvent("ConnectToSQLiteDB: Unable to open the SQLite database because mSQLiteDBConnectionString is empty")
             Return Nothing
         End If
 
-        OnDebugEvent("Connecting to SQLite DB: " + mSqlLiteDBConnectionString)
+        OnDebugEvent("Connecting to SQLite DB: " + mSQLiteDBConnectionString)
 
-        Dim sqlConnection = New SQLiteConnection(mSqlLiteDBConnectionString, True)
+        Dim sqlConnection = New SQLiteConnection(mSQLiteDBConnectionString, True)
         sqlConnection.Open()
 
         If disableJournaling Then
@@ -165,7 +165,7 @@ Public Class clsProteinFileDataCache
 
     End Function
 
-    Private Function DefineSqlLiteDBPath(sqlLiteDBFileName As String) As String
+    Private Function DefineSQLiteDBPath(SQLiteDBFileName As String) As String
         Dim dbPath As String
         Dim directoryPath As String = String.Empty
         Dim filePath As String = String.Empty
@@ -218,9 +218,9 @@ Public Class clsProteinFileDataCache
         End If
 
         If success Then
-            dbPath = Path.Combine(directoryPath, sqlLiteDBFileName)
+            dbPath = Path.Combine(directoryPath, SQLiteDBFileName)
         Else
-            dbPath = sqlLiteDBFileName
+            dbPath = SQLiteDBFileName
         End If
 
         OnDebugEvent(" SQLite DB Path defined: " + dbPath)
@@ -238,9 +238,9 @@ Public Class clsProteinFileDataCache
         Const MAX_RETRY_ATTEMPT_COUNT = 3
 
         Try
-            If Not mSqlLitePersistentConnection Is Nothing Then
+            If Not mSQLitePersistentConnection Is Nothing Then
                 OnDebugEvent("Closing persistent SQLite connection; calling method: " + callingMethod)
-                mSqlLitePersistentConnection.Close()
+                mSQLitePersistentConnection.Close()
             End If
         Catch ex As Exception
             ' Ignore errors here
@@ -249,12 +249,12 @@ Public Class clsProteinFileDataCache
 
         Try
 
-            If String.IsNullOrEmpty(mSqlLiteDBFilePath) Then
-                OnDebugEvent("DeleteSQLiteDBFile: SqlLiteDBFilePath is not defined or is empty; nothing to do; calling method: " + callingMethod)
+            If String.IsNullOrEmpty(mSQLiteDBFilePath) Then
+                OnDebugEvent("DeleteSQLiteDBFile: SQLiteDBFilePath is not defined or is empty; nothing to do; calling method: " + callingMethod)
                 Exit Sub
-            ElseIf Not File.Exists(mSqlLiteDBFilePath) Then
+            ElseIf Not File.Exists(mSQLiteDBFilePath) Then
                 OnDebugEvent(String.Format("DeleteSQLiteDBFile: File doesn't exist; nothing to do ({0}); calling method: {1}",
-                                           mSqlLiteDBFilePath, callingMethod))
+                                           mSQLiteDBFilePath, callingMethod))
                 Exit Sub
             End If
 
@@ -267,7 +267,7 @@ Public Class clsProteinFileDataCache
         End Try
 
         If KeepDB And Not forceDelete Then
-            OnDebugEvent("DeleteSQLiteDBFile: KeepDB is true; not deleting " + mSqlLiteDBFilePath)
+            OnDebugEvent("DeleteSQLiteDBFile: KeepDB is true; not deleting " + mSQLiteDBFilePath)
             Exit Sub
         End If
 
@@ -275,10 +275,10 @@ Public Class clsProteinFileDataCache
             Dim retryHoldOffSeconds = (retryIndex + 1)
 
             Try
-                If Not String.IsNullOrEmpty(mSqlLiteDBFilePath) Then
-                    If File.Exists(mSqlLiteDBFilePath) Then
-                        OnDebugEvent("DeleteSQLiteDBFile: Deleting " + mSqlLiteDBFilePath + "; calling method: " + callingMethod)
-                        File.Delete(mSqlLiteDBFilePath)
+                If Not String.IsNullOrEmpty(mSQLiteDBFilePath) Then
+                    If File.Exists(mSQLiteDBFilePath) Then
+                        OnDebugEvent("DeleteSQLiteDBFile: Deleting " + mSQLiteDBFilePath + "; calling method: " + callingMethod)
+                        File.Delete(mSQLiteDBFilePath)
                     End If
                 End If
 
@@ -291,7 +291,7 @@ Public Class clsProteinFileDataCache
 
             Catch ex As Exception
                 If retryIndex > 0 Then
-                    OnWarningEvent(String.Format("Error deleting {0} (calling method {1}): {2}", mSqlLiteDBFilePath, callingMethod, ex.Message))
+                    OnWarningEvent(String.Format("Error deleting {0} (calling method {1}): {2}", mSQLiteDBFilePath, callingMethod, ex.Message))
                     OnWarningEvent("  Waiting " & retryHoldOffSeconds & " seconds, then trying again")
                 End If
             End Try
@@ -323,7 +323,7 @@ Public Class clsProteinFileDataCache
         End If
 
         Dim cmd As SQLiteCommand
-        cmd = mSqlLitePersistentConnection.CreateCommand
+        cmd = mSQLitePersistentConnection.CreateCommand
         cmd.CommandText = sqlQuery
 
         OnDebugEvent("GetCachedProteinFromSQLiteDB: running query " + cmd.CommandText)
@@ -386,23 +386,23 @@ Public Class clsProteinFileDataCache
         Dim success = False
         Do While Not success AndAlso fileAttemptCount < MAX_FILE_CREATE_ATTEMPTS
 
-            ' Define the path to the Sql Lite database
+            ' Define the path to the SQLite database
             If fileAttemptCount = 0 Then
-                mSqlLiteDBFilePath = DefineSqlLiteDBPath(SQL_LITE_PROTEIN_CACHE_FILENAME)
+                mSQLiteDBFilePath = DefineSQLiteDBPath(SQL_LITE_PROTEIN_CACHE_FILENAME)
             Else
-                mSqlLiteDBFilePath = DefineSqlLiteDBPath(Path.GetFileNameWithoutExtension(SQL_LITE_PROTEIN_CACHE_FILENAME) &
+                mSQLiteDBFilePath = DefineSQLiteDBPath(Path.GetFileNameWithoutExtension(SQL_LITE_PROTEIN_CACHE_FILENAME) &
                                                          fileAttemptCount.ToString &
                                                          Path.GetExtension(SQL_LITE_PROTEIN_CACHE_FILENAME))
             End If
 
             Try
                 ' If the file exists, we need to delete it
-                If File.Exists(mSqlLiteDBFilePath) Then
-                    OnDebugEvent("InitializeLocalVariables: deleting " + mSqlLiteDBFilePath)
-                    File.Delete(mSqlLiteDBFilePath)
+                If File.Exists(mSQLiteDBFilePath) Then
+                    OnDebugEvent("InitializeLocalVariables: deleting " + mSQLiteDBFilePath)
+                    File.Delete(mSQLiteDBFilePath)
                 End If
 
-                If Not File.Exists(mSqlLiteDBFilePath) Then
+                If Not File.Exists(mSQLiteDBFilePath) Then
                     success = True
                 End If
 
@@ -414,7 +414,7 @@ Public Class clsProteinFileDataCache
             fileAttemptCount += 1
         Loop
 
-        mSqlLiteDBConnectionString = "Data Source=" & mSqlLiteDBFilePath & ";"
+        mSQLiteDBConnectionString = "Data Source=" & mSQLiteDBFilePath & ";"
 
     End Sub
 
@@ -438,8 +438,8 @@ Public Class clsProteinFileDataCache
     Public Function ParseProteinFile(proteinInputFilePath As String) As Boolean
         ' If outputFileNameBaseOverride is defined, then uses that name for the protein output filename rather than auto-defining the name
 
-        ' Create the SQL Lite DB
-        Dim sqlConnection = ConnectToSqlLiteDB(True)
+        ' Create the SQLite DB
+        Dim sqlConnection = ConnectToSQLiteDB(True)
 
         ' SQL query to Create the Table
         Dim cmd = sqlConnection.CreateCommand
@@ -584,7 +584,7 @@ Public Class clsProteinFileDataCache
                     End If
                 End If
 
-                ' Store this protein in the Sql Lite DB
+                ' Store this protein in the SQLite DB
                 nameFld.Value = name
                 descriptionFld.Value = description
                 sequenceFld.Value = sequence
@@ -614,7 +614,7 @@ Public Class clsProteinFileDataCache
             cmd.CommandText = "PRAGMA synchronous=1"
             cmd.ExecuteNonQuery()
 
-            ' Close the Sql Lite DB
+            ' Close the SQLite DB
             cmd.Dispose()
             sqlConnection.Close()
 
