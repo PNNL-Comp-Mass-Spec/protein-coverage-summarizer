@@ -308,8 +308,10 @@ Public Class clsProteinFileDataCache
 
     Public Iterator Function GetCachedProteins(Optional startIndex As Integer = -1, Optional endIndex As Integer = -1) As IEnumerable(Of udtProteinInfoType)
 
-        If mSqlLitePersistentConnection Is Nothing Then
-            mSqlLitePersistentConnection = ConnectToSqlLiteDB(False)
+        If mSQLitePersistentConnection Is Nothing OrElse
+           mSQLitePersistentConnection.State = ConnectionState.Closed OrElse
+           mSQLitePersistentConnection.State = ConnectionState.Broken Then
+            mSQLitePersistentConnection = ConnectToSQLiteDB(False)
         End If
 
         Dim sqlQuery =
