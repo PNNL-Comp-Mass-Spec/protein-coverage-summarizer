@@ -590,6 +590,51 @@
             Custom amino acid definition
             </summary>
         </member>
+        <member name="T:PHRPReader.clsMSGFPlusParamFileModExtractor.eMSGFPlusModType">
+            <summary>
+            MSGF+ modification type
+            </summary>
+        </member>
+        <member name="F:PHRPReader.clsMSGFPlusParamFileModExtractor.eMSGFPlusModType.Unknown">
+            <summary>
+            Unknown
+            </summary>
+        </member>
+        <member name="F:PHRPReader.clsMSGFPlusParamFileModExtractor.eMSGFPlusModType.DynamicMod">
+            <summary>
+            Dynamic
+            </summary>
+        </member>
+        <member name="F:PHRPReader.clsMSGFPlusParamFileModExtractor.eMSGFPlusModType.StaticMod">
+            <summary>
+            Static
+            </summary>
+        </member>
+        <member name="F:PHRPReader.clsMSGFPlusParamFileModExtractor.eMSGFPlusModType.DynNTermPeptide">
+            <summary>
+            N-terminal peptide dynamic
+            </summary>
+        </member>
+        <member name="F:PHRPReader.clsMSGFPlusParamFileModExtractor.eMSGFPlusModType.DynCTermPeptide">
+            <summary>
+            C-terminal peptide dynamic
+            </summary>
+        </member>
+        <member name="F:PHRPReader.clsMSGFPlusParamFileModExtractor.eMSGFPlusModType.DynNTermProtein">
+            <summary>
+            N-terminal protein dynamic
+            </summary>
+        </member>
+        <member name="F:PHRPReader.clsMSGFPlusParamFileModExtractor.eMSGFPlusModType.DynCTermProtein">
+            <summary>
+            C-terminal protein dynamic
+            </summary>
+        </member>
+        <member name="F:PHRPReader.clsMSGFPlusParamFileModExtractor.eMSGFPlusModType.CustomAA">
+            <summary>
+            Custom amino acid definition
+            </summary>
+        </member>
         <member name="T:PHRPReader.clsMSGFPlusParamFileModExtractor.udtModInfoType">
             <summary>
             Tracks dynamic and static modification details
@@ -601,7 +646,7 @@
               ModMass:    Composition string, for example C5H7N1O2S0 for Hydroxyproline
               ModMassVal: Computed mass of the composition string
               Residues:   Single letter abbreviation for the custom amino acid, for example J or X
-              ModType:    eMSGFDBModType.CustomAA
+              ModType:    eMSGFPlusModType.CustomAA
               ModSymbol:  ?   (a question mark; not used)
             </remarks>
         </member>
@@ -677,6 +722,11 @@
             This class reads MSGF scores from a tab-delimited _msgf.txt file
             </summary>
         </member>
+        <member name="F:PHRPReader.clsMSGFResultsReader.mColumnHeaders">
+            <summary>
+            Column headers
+            </summary>
+        </member>
         <member name="P:PHRPReader.clsMSGFResultsReader.ErrorMessage">
             <summary>
             Error message
@@ -687,6 +737,11 @@
             Constructor
             </summary>
             <remarks></remarks>
+        </member>
+        <member name="M:PHRPReader.clsMSGFResultsReader.DefineColumnHeaders">
+            <summary>
+            Define header names for MSGF result files
+            </summary>
         </member>
         <member name="M:PHRPReader.clsMSGFResultsReader.ReadMSGFData(System.String)">
             <summary>
@@ -1913,8 +1968,14 @@
         </member>
         <member name="M:PHRPReader.clsPHRPParser.DefineColumnHeaders">
             <summary>
-            Define column header names
+            Define header names for the PHRP synopsis or first hits file for the given tool
             </summary>
+        </member>
+        <member name="M:PHRPReader.clsPHRPParser.GetColumnHeaderNames">
+            <summary>
+            List of header names for the PHRP synopsis or first hits file for the given tool
+            </summary>
+            <returns></returns>
         </member>
         <member name="M:PHRPReader.clsPHRPParser.ParsePHRPDataLine(System.String,System.Int32,PHRPReader.clsPSM@)">
             <summary>
@@ -1948,9 +2009,13 @@
         </member>
         <member name="M:PHRPReader.clsPHRPParser.AddHeaderColumn(System.String)">
             <summary>
-            Add a header column
+            Add a PHRP synopsis or first hits header column to mColumnHeaders
             </summary>
             <param name="columnName"></param>
+            <remarks>
+            The column index will be set to mColumnHeaders.Count
+            That value will be updated by ParseColumnHeaders
+            </remarks>
         </member>
         <member name="M:PHRPReader.clsPHRPParser.AddScore(PHRPReader.clsPSM,System.String[],System.String)">
             <summary>
@@ -2107,6 +2172,11 @@
             PHRP parser for Inspect
             </summary>
         </member>
+        <member name="T:PHRPReader.clsPHRPParserInspect.InspectSynFileColumns">
+            <summary>
+            These columns correspond to the Synopsis file created by clsInspectResultsProcessor
+            </summary>
+        </member>
         <member name="P:PHRPReader.clsPHRPParserInspect.PHRPFirstHitsFileName">
             <summary>
             First hits file
@@ -2178,11 +2248,6 @@
             <param name="startupOptions">Startup Options, in particular LoadModsAndSeqInfo and MaxProteinsPerPSM</param>
             <remarks></remarks>
         </member>
-        <member name="M:PHRPReader.clsPHRPParserInspect.DefineColumnHeaders">
-            <summary>
-            Define column header names
-            </summary>
-        </member>
         <member name="M:PHRPReader.clsPHRPParserInspect.DeterminePrecursorMassTolerance(PHRPReader.clsSearchEngineParameters,System.Double@)">
             <summary>
             Determines the precursor mass tolerance
@@ -2191,6 +2256,18 @@
             <param name="tolerancePPM">Precursor mass tolerance, in ppm</param>
             <returns>Precursor tolerance, in Da</returns>
             <remarks></remarks>
+        </member>
+        <member name="M:PHRPReader.clsPHRPParserInspect.GetColumnHeaderNames">
+            <summary>
+            Get the header names in the PHRP synopsis or first hits file for this tool
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:PHRPReader.clsPHRPParserInspect.GetColumnHeaderNamesAndIDs">
+            <summary>
+            Header names and enums for the PHRP synopsis file for this tool
+            </summary>
+            <returns></returns>
         </member>
         <member name="M:PHRPReader.clsPHRPParserInspect.GetPHRPFirstHitsFileName(System.String)">
             <summary>
@@ -2278,6 +2355,11 @@
             PHRP parser for MODa
             </summary>
         </member>
+        <member name="T:PHRPReader.clsPHRPParserMODa.MODaSynFileColumns">
+            <summary>
+            These columns correspond to the Synopsis file created by clsMODaResultsProcessor
+            </summary>
+        </member>
         <member name="P:PHRPReader.clsPHRPParserMODa.PHRPFirstHitsFileName">
             <summary>
             First hits file
@@ -2349,11 +2431,6 @@
             <param name="startupOptions">Startup Options, in particular LoadModsAndSeqInfo and MaxProteinsPerPSM</param>
             <remarks></remarks>
         </member>
-        <member name="M:PHRPReader.clsPHRPParserMODa.DefineColumnHeaders">
-            <summary>
-            Define column header names
-            </summary>
-        </member>
         <member name="M:PHRPReader.clsPHRPParserMODa.DeterminePrecursorMassTolerance(PHRPReader.clsSearchEngineParameters,System.Double@)">
             <summary>
             Determines the precursor mass tolerance
@@ -2362,6 +2439,18 @@
             <param name="tolerancePPM">Precursor mass tolerance, in ppm</param>
             <returns>Precursor tolerance, in Da</returns>
             <remarks></remarks>
+        </member>
+        <member name="M:PHRPReader.clsPHRPParserMODa.GetColumnHeaderNames">
+            <summary>
+            Get the header names in the PHRP synopsis or first hits file for this tool
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:PHRPReader.clsPHRPParserMODa.GetColumnHeaderNamesAndIDs">
+            <summary>
+            Header names and enums for the PHRP synopsis file for this tool
+            </summary>
+            <returns></returns>
         </member>
         <member name="M:PHRPReader.clsPHRPParserMODa.GetPHRPFirstHitsFileName(System.String)">
             <summary>
@@ -2449,6 +2538,11 @@
             PHRP parser for MOD+
             </summary>
         </member>
+        <member name="T:PHRPReader.clsPHRPParserMODPlus.MODPlusSynFileColumns">
+            <summary>
+            These columns correspond to the Synopsis file created by clsMODPlusResultsProcessor
+            </summary>
+        </member>
         <member name="P:PHRPReader.clsPHRPParserMODPlus.PHRPFirstHitsFileName">
             <summary>
             First hits file
@@ -2520,10 +2614,17 @@
             <param name="startupOptions">Startup Options, in particular LoadModsAndSeqInfo and MaxProteinsPerPSM</param>
             <remarks></remarks>
         </member>
-        <member name="M:PHRPReader.clsPHRPParserMODPlus.DefineColumnHeaders">
+        <member name="M:PHRPReader.clsPHRPParserMODPlus.GetColumnHeaderNames">
             <summary>
-            Define column header names
+            Get the header names in the PHRP synopsis or first hits file for this tool
             </summary>
+            <returns></returns>
+        </member>
+        <member name="M:PHRPReader.clsPHRPParserMODPlus.GetColumnHeaderNamesAndIDs">
+            <summary>
+            Header names and enums for the PHRP synopsis file for this tool
+            </summary>
+            <returns></returns>
         </member>
         <member name="M:PHRPReader.clsPHRPParserMODPlus.GetPHRPFirstHitsFileName(System.String)">
             <summary>
@@ -2611,6 +2712,11 @@
             PHRP parser for MSAlign
             </summary>
         </member>
+        <member name="T:PHRPReader.clsPHRPParserMSAlign.MSAlignSynFileColumns">
+            <summary>
+            These columns correspond to the Synopsis file created by clsMSAlignResultsProcessor
+            </summary>
+        </member>
         <member name="P:PHRPReader.clsPHRPParserMSAlign.PHRPFirstHitsFileName">
             <summary>
             First hits file
@@ -2682,11 +2788,6 @@
             <param name="startupOptions">Startup Options, in particular LoadModsAndSeqInfo and MaxProteinsPerPSM</param>
             <remarks></remarks>
         </member>
-        <member name="M:PHRPReader.clsPHRPParserMSAlign.DefineColumnHeaders">
-            <summary>
-            Define column header names
-            </summary>
-        </member>
         <member name="M:PHRPReader.clsPHRPParserMSAlign.DeterminePrecursorMassTolerance(PHRPReader.clsSearchEngineParameters,System.Double@)">
             <summary>
             Determines the precursor mass tolerance
@@ -2695,6 +2796,18 @@
             <param name="tolerancePPM">Precursor mass tolerance, in ppm</param>
             <returns>Precursor tolerance, in Da</returns>
             <remarks></remarks>
+        </member>
+        <member name="M:PHRPReader.clsPHRPParserMSAlign.GetColumnHeaderNames">
+            <summary>
+            Get the header names in the PHRP synopsis or first hits file for this tool
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:PHRPReader.clsPHRPParserMSAlign.GetColumnHeaderNamesAndIDs">
+            <summary>
+            Header names and enums for the PHRP synopsis file for this tool
+            </summary>
+            <returns></returns>
         </member>
         <member name="M:PHRPReader.clsPHRPParserMSAlign.GetPHRPFirstHitsFileName(System.String)">
             <summary>
@@ -2782,6 +2895,11 @@
             PHRP parser for MSGF+
             </summary>
         </member>
+        <member name="T:PHRPReader.clsPHRPParserMSGFDB.MSGFPlusSynFileColumns">
+            <summary>
+            These columns correspond to the Synopsis file created by clsMSGFDBResultsProcessor
+            </summary>
+        </member>
         <member name="P:PHRPReader.clsPHRPParserMSGFDB.PHRPFirstHitsFileName">
             <summary>
             First hits file
@@ -2853,14 +2971,9 @@
             <param name="startupOptions">Startup Options, in particular LoadModsAndSeqInfo and MaxProteinsPerPSM</param>
             <remarks></remarks>
         </member>
-        <member name="M:PHRPReader.clsPHRPParserMSGFDB.DefineColumnHeaders">
-            <summary>
-            Define column header names
-            </summary>
-        </member>
         <member name="M:PHRPReader.clsPHRPParserMSGFDB.DeterminePrecursorMassTolerance(PHRPReader.clsSearchEngineParameters,System.Double@,PHRPReader.clsPHRPReader.ePeptideHitResultType)">
             <summary>
-            Determines the precursor mass tolerance for either MSGF+ or MSPathFinder
+            Determines the precursor mass tolerance for either MSGF+, MSPathFinder, or TopPIC
             </summary>
             <param name="searchEngineParams"></param>
             <param name="tolerancePPM">Precursor mass tolerance, in ppm</param>
@@ -2878,6 +2991,19 @@
             <param name="chargeCarrierMass"></param>
             <returns></returns>
             <remarks>This function is used by clsPHRPMassErrorValidator in the Analysis Manager</remarks>
+        </member>
+        <member name="M:PHRPReader.clsPHRPParserMSGFDB.GetColumnHeaderNames">
+            <summary>
+            Get the header names in the PHRP synopsis or first hits file for this tool
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:PHRPReader.clsPHRPParserMSGFDB.GetColumnHeaderNamesAndIDs">
+            <summary>
+            Header names and enums for the PHRP synopsis file for this tool
+            </summary>
+            <returns></returns>
+            <remarks>This includes headers for synopsis files from both MSGFDB and MSGF+</remarks>
         </member>
         <member name="M:PHRPReader.clsPHRPParserMSGFDB.GetPHRPFirstHitsFileName(System.String)">
             <summary>
@@ -2977,6 +3103,11 @@
             PHRP parser for MSPathfinder
             </summary>
         </member>
+        <member name="T:PHRPReader.clsPHRPParserMSPathFinder.MSPathFinderSynFileColumns">
+            <summary>
+            These columns correspond to the Synopsis file created by clsMSPathFinderResultsProcessor
+            </summary>
+        </member>
         <member name="P:PHRPReader.clsPHRPParserMSPathFinder.PHRPFirstHitsFileName">
             <summary>
             First hits file
@@ -3048,10 +3179,17 @@
             <param name="startupOptions">Startup Options, in particular LoadModsAndSeqInfo and MaxProteinsPerPSM</param>
             <remarks></remarks>
         </member>
-        <member name="M:PHRPReader.clsPHRPParserMSPathFinder.DefineColumnHeaders">
+        <member name="M:PHRPReader.clsPHRPParserMSPathFinder.GetColumnHeaderNames">
             <summary>
-            Define column header names
+            Get the header names in the PHRP synopsis or first hits file for this tool
             </summary>
+            <returns></returns>
+        </member>
+        <member name="M:PHRPReader.clsPHRPParserMSPathFinder.GetColumnHeaderNamesAndIDs">
+            <summary>
+            Header names and enums for the PHRP synopsis file for this tool
+            </summary>
+            <returns></returns>
         </member>
         <member name="M:PHRPReader.clsPHRPParserMSPathFinder.GetPHRPFirstHitsFileName(System.String)">
             <summary>
@@ -3139,6 +3277,11 @@
             PHRP parser for SEQUEST
             </summary>
         </member>
+        <member name="T:PHRPReader.clsPHRPParserSequest.SequestSynopsisFileColumns">
+            <summary>
+            These columns correspond to the tab-delimited file created directly by SEQUEST
+            </summary>
+        </member>
         <member name="P:PHRPReader.clsPHRPParserSequest.PHRPFirstHitsFileName">
             <summary>
             First hits file
@@ -3212,7 +3355,7 @@
         </member>
         <member name="M:PHRPReader.clsPHRPParserSequest.DefineColumnHeaders">
             <summary>
-            Define column header names
+            Define column header names for SEQUEST synopsis and first hits files
             </summary>
         </member>
         <member name="M:PHRPReader.clsPHRPParserSequest.DeterminePrecursorMassTolerance(PHRPReader.clsSearchEngineParameters,System.Double@)">
@@ -3223,6 +3366,18 @@
             <param name="tolerancePPM">Precursor mass tolerance, in ppm</param>
             <returns>Precursor tolerance, in Da</returns>
             <remarks></remarks>
+        </member>
+        <member name="M:PHRPReader.clsPHRPParserSequest.GetColumnHeaderNames">
+            <summary>
+            Get the header names in the PHRP synopsis or first hits file for this tool
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:PHRPReader.clsPHRPParserSequest.GetColumnHeaderNamesAndIDs">
+            <summary>
+            Header names and enums for the PHRP synopsis file for this tool
+            </summary>
+            <returns></returns>
         </member>
         <member name="M:PHRPReader.clsPHRPParserSequest.GetPHRPFirstHitsFileName(System.String)">
             <summary>
@@ -3305,9 +3460,197 @@
             <returns>True if success, false if an error</returns>
             <remarks>When fastReadMode is True, you should call FinalizePSM to populate the remaining fields</remarks>
         </member>
+        <member name="T:PHRPReader.clsPHRPParserTopPIC">
+            <summary>
+            PHRP parser for TopPIC
+            </summary>
+        </member>
+        <member name="T:PHRPReader.clsPHRPParserTopPIC.TopPICSynFileColumns">
+            <summary>
+            These columns correspond to the Synopsis file created by clsTopPICResultsProcessor
+            </summary>
+        </member>
+        <member name="P:PHRPReader.clsPHRPParserTopPIC.PHRPFirstHitsFileName">
+            <summary>
+            First hits file
+            </summary>
+        </member>
+        <member name="P:PHRPReader.clsPHRPParserTopPIC.PHRPModSummaryFileName">
+            <summary>
+            Mod summary file
+            </summary>
+        </member>
+        <member name="P:PHRPReader.clsPHRPParserTopPIC.PHRPPepToProteinMapFileName">
+            <summary>
+            Peptide to protein map file
+            </summary>
+        </member>
+        <member name="P:PHRPReader.clsPHRPParserTopPIC.PHRPProteinModsFileName">
+            <summary>
+            Protein mods file
+            </summary>
+        </member>
+        <member name="P:PHRPReader.clsPHRPParserTopPIC.PHRPSynopsisFileName">
+            <summary>
+            Synopsis file
+            </summary>
+        </member>
+        <member name="P:PHRPReader.clsPHRPParserTopPIC.PHRPResultToSeqMapFileName">
+            <summary>
+            Result to sequence map file
+            </summary>
+        </member>
+        <member name="P:PHRPReader.clsPHRPParserTopPIC.PHRPSeqInfoFileName">
+            <summary>
+            Sequence info file
+            </summary>
+        </member>
+        <member name="P:PHRPReader.clsPHRPParserTopPIC.PHRPSeqToProteinMapFileName">
+            <summary>
+            Sequence to protein map file
+            </summary>
+        </member>
+        <member name="P:PHRPReader.clsPHRPParserTopPIC.SearchEngineName">
+            <summary>
+            Search engine name
+            </summary>
+        </member>
+        <member name="M:PHRPReader.clsPHRPParserTopPIC.#ctor(System.String,System.String)">
+            <summary>
+            Constructor; assumes loadModsAndSeqInfo=True
+            </summary>
+            <param name="datasetName">Dataset name</param>
+            <param name="inputFilePath">Input file path</param>
+            <remarks></remarks>
+        </member>
+        <member name="M:PHRPReader.clsPHRPParserTopPIC.#ctor(System.String,System.String,System.Boolean)">
+            <summary>
+            Constructor
+            </summary>
+            <param name="datasetName">Dataset name</param>
+            <param name="inputFilePath">Input file path</param>
+            <param name="loadModsAndSeqInfo">If True, then load the ModSummary file and SeqInfo files</param>
+            <remarks></remarks>
+        </member>
+        <member name="M:PHRPReader.clsPHRPParserTopPIC.#ctor(System.String,System.String,PHRPReader.clsPHRPStartupOptions)">
+            <summary>
+            Constructor
+            </summary>
+            <param name="datasetName">Dataset name</param>
+            <param name="inputFilePath">Input file path</param>
+            <param name="startupOptions">Startup Options, in particular LoadModsAndSeqInfo and MaxProteinsPerPSM</param>
+            <remarks></remarks>
+        </member>
+        <member name="M:PHRPReader.clsPHRPParserTopPIC.DeterminePrecursorMassTolerance(PHRPReader.clsSearchEngineParameters,System.Double@)">
+            <summary>
+            Determines the precursor mass tolerance
+            </summary>
+            <param name="searchEngineParams"></param>
+            <param name="tolerancePPM">Precursor mass tolerance, in ppm</param>
+            <returns>Precursor tolerance, in Da</returns>
+            <remarks></remarks>
+        </member>
+        <member name="M:PHRPReader.clsPHRPParserTopPIC.GetColumnHeaderNames">
+            <summary>
+            Get the header names in the PHRP synopsis or first hits file for this tool
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:PHRPReader.clsPHRPParserTopPIC.GetColumnHeaderNamesAndIDs">
+            <summary>
+            Header names and enums for the PHRP synopsis file for this tool
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:PHRPReader.clsPHRPParserTopPIC.GetPHRPFirstHitsFileName(System.String)">
+            <summary>
+            Default first hits file for the given dataset
+            </summary>
+            <param name="datasetName"></param>
+            <returns>Filename</returns>
+        </member>
+        <member name="M:PHRPReader.clsPHRPParserTopPIC.GetPHRPModSummaryFileName(System.String)">
+            <summary>
+            Default ModSummary file name for the given dataset
+            </summary>
+            <param name="datasetName"></param>
+            <returns>Filename</returns>
+        </member>
+        <member name="M:PHRPReader.clsPHRPParserTopPIC.GetPHRPPepToProteinMapFileName(System.String)">
+            <summary>
+            Default PepToProtMap file name for the given dataset
+            </summary>
+            <param name="datasetName"></param>
+            <returns>Filename</returns>
+        </member>
+        <member name="M:PHRPReader.clsPHRPParserTopPIC.GetPHRPProteinModsFileName(System.String)">
+            <summary>
+            Default ProteinMods file name for the given dataset
+            </summary>
+            <param name="datasetName"></param>
+            <returns>Filename</returns>
+        </member>
+        <member name="M:PHRPReader.clsPHRPParserTopPIC.GetPHRPSynopsisFileName(System.String)">
+            <summary>
+            Default Synopsis file name for the given dataset
+            </summary>
+            <param name="datasetName"></param>
+            <returns>Filename</returns>
+        </member>
+        <member name="M:PHRPReader.clsPHRPParserTopPIC.GetPHRPResultToSeqMapFileName(System.String)">
+            <summary>
+            Default ResultToSeq map file name for the given dataset
+            </summary>
+            <param name="datasetName"></param>
+            <returns>Filename</returns>
+        </member>
+        <member name="M:PHRPReader.clsPHRPParserTopPIC.GetPHRPSeqInfoFileName(System.String)">
+            <summary>
+            Default SeqInfo map file name for the given dataset
+            </summary>
+            <param name="datasetName"></param>
+            <returns>Filename</returns>
+        </member>
+        <member name="M:PHRPReader.clsPHRPParserTopPIC.GetPHRPSeqToProteinMapFileName(System.String)">
+            <summary>
+            Default SeqToProtein map file name for the given dataset
+            </summary>
+            <param name="datasetName"></param>
+            <returns>Filename</returns>
+        </member>
+        <member name="M:PHRPReader.clsPHRPParserTopPIC.GetSearchEngineName">
+            <summary>
+            Search engine name
+            </summary>
+        </member>
+        <member name="M:PHRPReader.clsPHRPParserTopPIC.LoadSearchEngineParameters(System.String,PHRPReader.clsSearchEngineParameters@)">
+            <summary>
+            Parses the specified TopPIC parameter file
+            </summary>
+            <param name="searchEngineParamFileName"></param>
+            <param name="searchEngineParams"></param>
+            <returns></returns>
+            <remarks></remarks>
+        </member>
+        <member name="M:PHRPReader.clsPHRPParserTopPIC.ParsePHRPDataLine(System.String,System.Int32,PHRPReader.clsPSM@,System.Boolean)">
+            <summary>
+            Parse the data line read from a PHRP results file
+            </summary>
+            <param name="line">Data line</param>
+            <param name="linesRead">Number of lines read so far (used for error reporting)</param>
+            <param name="psm">clsPSM object (output)</param>
+            <param name="fastReadMode">When set to true, then reads the next data line, but doesn't perform text parsing required to determine cleavage state</param>
+            <returns>True if success, false if an error</returns>
+            <remarks>When fastReadMode is True, you should call FinalizePSM to populate the remaining fields</remarks>
+        </member>
         <member name="T:PHRPReader.clsPHRPParserXTandem">
             <summary>
             PHRP parser for X!Tandem
+            </summary>
+        </member>
+        <member name="T:PHRPReader.clsPHRPParserXTandem.XTandemSynFileColumns">
+            <summary>
+            These columns correspond to the Synopsis file created by clsXTandemResultsProcessor
             </summary>
         </member>
         <member name="P:PHRPReader.clsPHRPParserXTandem.PHRPFirstHitsFileName">
@@ -3381,11 +3724,6 @@
             <param name="startupOptions">Startup Options, in particular LoadModsAndSeqInfo and MaxProteinsPerPSM</param>
             <remarks></remarks>
         </member>
-        <member name="M:PHRPReader.clsPHRPParserXTandem.DefineColumnHeaders">
-            <summary>
-            Define column header names
-            </summary>
-        </member>
         <member name="M:PHRPReader.clsPHRPParserXTandem.DeterminePrecursorMassTolerance(PHRPReader.clsSearchEngineParameters,System.Double@)">
             <summary>
             Determines the precursor mass tolerance
@@ -3394,6 +3732,18 @@
             <param name="tolerancePPM">Precursor mass tolerance, in ppm</param>
             <returns>Precursor tolerance, in Da</returns>
             <remarks></remarks>
+        </member>
+        <member name="M:PHRPReader.clsPHRPParserXTandem.GetColumnHeaderNames">
+            <summary>
+            Get the header names in the PHRP synopsis or first hits file for this tool
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:PHRPReader.clsPHRPParserXTandem.GetColumnHeaderNamesAndIDs">
+            <summary>
+            Header names and enums for the PHRP synopsis file for this tool
+            </summary>
+            <returns></returns>
         </member>
         <member name="M:PHRPReader.clsPHRPParserXTandem.GetPHRPFirstHitsFileName(System.String)">
             <summary>
@@ -4077,7 +4427,7 @@
             </summary>
             <param name="columns">Column names read from the input file</param>
             <param name="columnHeaders">Column mapping dictionary object to update</param>
-            <remarks>The SortedDictionary object should be instantiated using a case-insensitive comparer, i.e. (StringComparer.CurrentCultureIgnoreCase)</remarks>
+            <remarks>The SortedDictionary object should be instantiated using a case-insensitive comparer, i.e. (StringComparer.OrdinalIgnoreCase)</remarks>
         </member>
         <member name="M:PHRPReader.clsPHRPReader.MoveNext">
             <summary>
@@ -4925,6 +5275,11 @@
         <member name="T:PHRPReader.clsExtendedScanStatsReader">
             <summary>
             Extended scan stats reader
+            </summary>
+        </member>
+        <member name="F:PHRPReader.clsExtendedScanStatsReader.mColumnHeaders">
+            <summary>
+            Column headers
             </summary>
         </member>
         <member name="P:PHRPReader.clsExtendedScanStatsReader.ErrorMessage">
