@@ -93,9 +93,6 @@ Public Class clsPeptideToProteinMapEngine
 #Region "Classwide variables"
     Protected WithEvents mProteinCoverageSummarizer As clsProteinCoverageSummarizer
 
-    Private mPeptideInputFileFormat As ePeptideInputFileFormatConstants
-    Private mDeleteTempFiles As Boolean
-
     ' When processing an inspect search result file, if you provide the inspect parameter file name,
     '  then this program will read the parameter file and look for the "mod," lines.  The user-assigned mod
     '  names will be extracted and used when "cleaning" the peptides prior to looking for matching proteins
@@ -133,13 +130,6 @@ Public Class clsPeptideToProteinMapEngine
     End Property
 
     Public Property DeleteTempFiles As Boolean
-        Get
-            Return mDeleteTempFiles
-        End Get
-        Set
-            mDeleteTempFiles = Value
-        End Set
-    End Property
 
     Public Property IgnoreILDifferences As Boolean
         Get
@@ -197,13 +187,6 @@ Public Class clsPeptideToProteinMapEngine
     End Property
 
     Public Property PeptideInputFileFormat As ePeptideInputFileFormatConstants
-        Get
-            Return mPeptideInputFileFormat
-        End Get
-        Set
-            mPeptideInputFileFormat = Value
-        End Set
-    End Property
 
     Public Property ProteinDataDelimitedFileDelimiter As Char
         Get
@@ -359,8 +342,8 @@ Public Class clsPeptideToProteinMapEngine
         ElseIf Path.GetFileName(strFilePath).ToLower().EndsWith(FILENAME_SUFFIX_MSGFDB_RESULTS_FILE.ToLower()) Then
             Return ePeptideInputFileFormatConstants.MSGFDBResultsFile
 
-        ElseIf mPeptideInputFileFormat <> ePeptideInputFileFormatConstants.AutoDetermine And mPeptideInputFileFormat <> ePeptideInputFileFormatConstants.Unknown Then
-            Return mPeptideInputFileFormat
+        ElseIf PeptideInputFileFormat <> ePeptideInputFileFormatConstants.AutoDetermine And PeptideInputFileFormat <> ePeptideInputFileFormatConstants.Unknown Then
+            Return PeptideInputFileFormat
         End If
 
         Dim strBaseNameLCase As String = Path.GetFileNameWithoutExtension(strFilePath)
@@ -454,8 +437,8 @@ Public Class clsPeptideToProteinMapEngine
 
     Private Sub InitializeVariables()
 
-        mPeptideInputFileFormat = ePeptideInputFileFormatConstants.AutoDetermine
-        mDeleteTempFiles = True
+        PeptideInputFileFormat = ePeptideInputFileFormatConstants.AutoDetermine
+        DeleteTempFiles = True
 
         mInspectParameterFilePath = String.Empty
 
@@ -1136,10 +1119,10 @@ Public Class clsPeptideToProteinMapEngine
                 LogMessage("Processing " & Path.GetFileName(strInputFilePath))
                 Dim eInputFileFormat As ePeptideInputFileFormatConstants
 
-                If mPeptideInputFileFormat = ePeptideInputFileFormatConstants.AutoDetermine Then
+                If PeptideInputFileFormat = ePeptideInputFileFormatConstants.AutoDetermine Then
                     eInputFileFormat = DetermineResultsFileFormat(strInputFilePath)
                 Else
-                    eInputFileFormat = mPeptideInputFileFormat
+                    eInputFileFormat = PeptideInputFileFormat
                 End If
 
                 If eInputFileFormat = ePeptideInputFileFormatConstants.Unknown Then
@@ -1231,7 +1214,7 @@ Public Class clsPeptideToProteinMapEngine
 
                         Case Else
                             ' Sequest, X!Tandem, Inspect, or MSGF+ PHRP data file; need to post-process the results file
-                            blnSuccess = PostProcessPSMResultsFile(strInputFilePathWork, strProteinToPeptideMappingFilePath, mDeleteTempFiles)
+                            blnSuccess = PostProcessPSMResultsFile(strInputFilePathWork, strProteinToPeptideMappingFilePath, DeleteTempFiles)
 
                     End Select
                 End If
