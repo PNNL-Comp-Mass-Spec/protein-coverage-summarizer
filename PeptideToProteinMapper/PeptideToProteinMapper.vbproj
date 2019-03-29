@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -137,7 +137,7 @@
       <Name>ProteinCoverageSummarizer</Name>
     </ProjectReference>
     <ProjectReference Include="PeptideToProteinMapEngine\PeptideToProteinMapEngine.vbproj">
-      <Project>{AFA3FE41-2306-4799-8A39-846B7DDFDF3C}</Project>
+      <Project>{afa3fe41-2306-4799-8a39-846b7ddfdf3c}</Project>
       <Name>PeptideToProteinMapEngine</Name>
     </ProjectReference>
   </ItemGroup>
