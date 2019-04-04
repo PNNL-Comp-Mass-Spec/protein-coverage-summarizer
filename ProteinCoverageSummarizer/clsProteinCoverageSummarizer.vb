@@ -90,7 +90,11 @@ Public Class clsProteinCoverageSummarizer
     ' The value for each entry is the number of times the peptide is present in the given protein
     ' This dictionary is only populated if mTrackPeptideCounts is true
     Private mProteinPeptideStats As Dictionary(Of String, Integer)
-    Private mResultsFilePath As String              ' This value is populated by function ProcessFile()
+
+    ''' <summary>
+    ''' This is populated by function ProcessFile()
+    ''' </summary>
+    Private mResultsFilePath As String
 
     Private mProteinToPeptideMappingFilePath As String
     Private mProteinToPeptideMappingOutputFile As StreamWriter
@@ -105,23 +109,32 @@ Public Class clsProteinCoverageSummarizer
 
 #Disable Warning IDE0044 ' Add readonly modifier
     Private mCachedProteinInfo() As clsProteinFileDataCache.udtProteinInfoType
-#Enable Warning IDE0044 ' Add readonly modifier
+#Enable Warning IDE0044
 
     Private mKeepDB As Boolean
 
     Private mPeptideToProteinMapResults As Dictionary(Of String, List(Of String))
 
-    ' mPercentCompleteStartLevels is an array that lists the percent complete value to report
-    '  at the start of each of the various processing steps performed in this procedure
-    ' The percent complete values range from 0 to 100
     Const PERCENT_COMPLETE_LEVEL_COUNT As Integer = 9
+
+    ''' <summary>
+    ''' Array that lists the percent complete value to report at the start
+    ''' of each of the various processing steps performed in this procedure
+    ''' </summary>
+    ''' <remarks>The percent complete values range from 0 to 100</remarks>
     Protected mPercentCompleteStartLevels() As Single
 
 #End Region
 
 #Region "Progress Events and Variables"
     Public Event ProgressReset()
-    Public Event ProgressChanged(taskDescription As String, percentComplete As Single)     ' PercentComplete ranges from 0 to 100, but can contain decimal percentage values
+
+    ''' <summary>
+    ''' Progress changed event
+    ''' </summary>
+    ''' <param name="taskDescription"></param>
+    ''' <param name="percentComplete">Value between 0 and 100, but can contain decimal percentage values</param>
+    Public Event ProgressChanged(taskDescription As String, percentComplete As Single)
 
     Protected mCurrentProcessingStep As eProteinCoverageProcessingSteps = eProteinCoverageProcessingSteps.Starting
     Protected mProgressStepDescription As String = String.Empty
@@ -130,7 +143,7 @@ Public Class clsProteinCoverageSummarizer
     ''' Percent complete
     ''' </summary>
     ''' <remarks>
-    ''' Ranges from 0 to 100, but can contain decimal percentage values
+    ''' Value between 0 and 100, but can contain decimal percentage values
     ''' </remarks>
     Protected mProgressPercentComplete As Single
 
@@ -184,7 +197,11 @@ Public Class clsProteinCoverageSummarizer
         End Get
     End Property
 
-    ' ProgressPercentComplete ranges from 0 to 100, but can contain decimal percentage values
+    ''' <summary>
+    ''' Percent complete
+    ''' </summary>
+    ''' <returns></returns>
+    ''' <remarks>Value between 0 and 100, but can contain decimal percentage values</remarks>
     Public ReadOnly Property ProgressPercentComplete As Single
         Get
             Return CType(Math.Round(mProgressPercentComplete, 2), Single)
@@ -1221,7 +1238,8 @@ Public Class clsProteinCoverageSummarizer
 
                     UpdateProgress("Creating the protein to peptide mapping file: " & Path.GetFileName(mProteinToPeptideMappingFilePath))
 
-                    mProteinToPeptideMappingOutputFile = New StreamWriter(New FileStream(mProteinToPeptideMappingFilePath, FileMode.Create, FileAccess.Write, FileShare.Read)) With {
+                    mProteinToPeptideMappingOutputFile = New StreamWriter(
+                        New FileStream(mProteinToPeptideMappingFilePath, FileMode.Create, FileAccess.Write, FileShare.Read)) With {
                         .AutoFlush = True
                     }
 

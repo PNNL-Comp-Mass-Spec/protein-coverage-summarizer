@@ -89,6 +89,7 @@ Public Class clsLeaderSequenceCache
     End Structure
 
 #End Region
+
 #Region "Classwide variables"
     Private mLeaderSequences As Dictionary(Of String, Integer)
 
@@ -96,8 +97,11 @@ Public Class clsLeaderSequenceCache
     Public mCachedPeptideSeqInfo() As udtPeptideSequenceInfoType
 
 #Disable Warning IDE0044 ' Add readonly modifier
-    Private mCachedPeptideToHashIndexPointer() As Integer               ' Parallel to mCachedPeptideSeqInfo
-#Enable Warning IDE0044 ' Add readonly modifier
+    ''' <summary>
+    ''' Parallel to mCachedPeptideSeqInfo
+    ''' </summary>
+    Private mCachedPeptideToHashIndexPointer() As Integer
+#Enable Warning IDE0044
 
     Private mIndicesSorted As Boolean
 
@@ -105,11 +109,25 @@ Public Class clsLeaderSequenceCache
     Private mAbortProcessing As Boolean
 
     Public Event ProgressReset()
-    Public Event ProgressChanged(taskDescription As String, percentComplete As Single)     ' PercentComplete ranges from 0 to 100, but can contain decimal percentage values
+
+    ''' <summary>
+    ''' Progress changed event
+    ''' </summary>
+    ''' <param name="taskDescription"></param>
+    ''' <param name="percentComplete">Value between 0 and 100, but can contain decimal percentage values</param>
+    Public Event ProgressChanged(taskDescription As String, percentComplete As Single)
+
     Public Event ProgressComplete()
 
     Protected mProgressStepDescription As String
-    Protected mProgressPercentComplete As Single        ' Ranges from 0 to 100, but can contain decimal percentage values
+
+    ''' <summary>
+    ''' Percent complete
+    ''' </summary>
+    ''' <remarks>
+    ''' Value between 0 and 100, but can contain decimal percentage values
+    ''' </remarks>
+    Protected mProgressPercentComplete As Single
 
 #End Region
 
@@ -136,7 +154,12 @@ Public Class clsLeaderSequenceCache
         End Get
     End Property
 
-    ' ProgressPercentComplete ranges from 0 to 100, but can contain decimal percentage values
+    ''' <summary>
+    ''' Percent complete
+    ''' </summary>
+    ''' <remarks>
+    ''' Value between 0 and 100, but can contain decimal percentage values
+    ''' </remarks>
     Public ReadOnly Property ProgressPercentComplete As Single
         Get
             Return CType(Math.Round(mProgressPercentComplete, 2), Single)
