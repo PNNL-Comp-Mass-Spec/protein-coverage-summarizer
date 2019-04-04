@@ -1,4 +1,4 @@
-af:
+@echo off:
 pushd "F:\Documents\Projects\DataMining\Protein_Coverage_Summarizer\ProteinCoverageSummarizer\bin\AnyCPU"
 
 copy ProteinCoverageSummarizer.dll        "F:\Documents\Projects\DataMining\DMS_Managers\Analysis_Manager\AM_Common\" /Y
@@ -40,4 +40,18 @@ copy ProteinCoverageSummarizer.dll        "F:\Documents\Projects\JoshAldrich\ASc
 
 popd
 
+rem PeptideToProteinMapEngine\bin\Distribute_DLL.bat passes "NoCall" to this batch file
+rem to indicate that this batch file should not call ..\..\PeptideToProteinMapper\PeptideToProteinMapEngine\bin\Distribute_DLL.bat 
+If "%1"=="NoCall" Goto Done
+
+@echo off
+echo.
+echo.
+echo.
+echo Press any key to also distribute PeptideToProteinMapEngine.dll
 pause
+@echo on
+
+call ..\..\PeptideToProteinMapper\PeptideToProteinMapEngine\bin\Distribute_DLL.bat NoCall
+
+:Done
