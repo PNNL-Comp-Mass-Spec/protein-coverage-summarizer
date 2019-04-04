@@ -104,8 +104,6 @@ Public Class clsLeaderSequenceCache
     Private mErrorMessage As String
     Private mAbortProcessing As Boolean
 
-    Private mIgnoreILDifferences As Boolean
-
     Public Event ProgressReset()
     Public Event ProgressChanged(taskDescription As String, percentComplete As Single)     ' PercentComplete ranges from 0 to 100, but can contain decimal percentage values
     Public Event ProgressComplete()
@@ -129,13 +127,6 @@ Public Class clsLeaderSequenceCache
     End Property
 
     Public Property IgnoreILDifferences As Boolean
-        Get
-            Return mIgnoreILDifferences
-        End Get
-        Set
-            mIgnoreILDifferences = Value
-        End Set
-    End Property
 
     Public Property LeaderSequenceMinimumLength As Integer
 
@@ -186,7 +177,7 @@ Public Class clsLeaderSequenceCache
             Dim prefixResidueLtoI = prefixResidue
             Dim suffixResidueLtoI = suffixResidue
 
-            If mIgnoreILDifferences Then
+            If IgnoreILDifferences Then
                 ' Replace all L characters with I
                 leaderSequence = leaderSequence.Replace("L"c, "I"c)
 
@@ -217,7 +208,7 @@ Public Class clsLeaderSequenceCache
                 .Suffix = suffixResidue
                 .PrefixLtoI = prefixResidueLtoI
                 .SuffixLtoI = suffixResidueLtoI
-                If mIgnoreILDifferences Then
+                If IgnoreILDifferences Then
                     .PeptideSequenceLtoI = peptideSequence.Replace("L"c, "I"c)
                 End If
             End With
@@ -254,7 +245,6 @@ Public Class clsLeaderSequenceCache
 
             ' Open the file and read in the lines
             Using reader = New StreamReader(New FileStream(inputFilePath, FileMode.Open, FileAccess.Read, FileShare.Read))
-
 
                 Dim linesRead = 1
                 Dim bytesRead As Long = 0
@@ -404,7 +394,7 @@ Public Class clsLeaderSequenceCache
         mErrorMessage = String.Empty
         mAbortProcessing = False
 
-        mIgnoreILDifferences = False
+        IgnoreILDifferences = False
 
         InitializeCachedPeptides()
     End Sub
