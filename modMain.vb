@@ -26,7 +26,7 @@ Imports PRISM
 ''' </summary>
 Public Module modMain
 
-    Public Const PROGRAM_DATE As String = "March 28, 2019"
+    Public Const PROGRAM_DATE As String = "April 4, 2019"
 
     Private mPeptideInputFilePath As String
     Private mProteinInputFilePath As String
@@ -58,7 +58,7 @@ Public Module modMain
     Public Function Main() As Integer
         ' Returns 0 if no error, error code if an error
         Dim returnCode As Integer
-        Dim commandLineParser As New clsParseCommandLine
+        Dim commandLineParser As New clsParseCommandLine()
         Dim proceed As Boolean
 
         returnCode = 0

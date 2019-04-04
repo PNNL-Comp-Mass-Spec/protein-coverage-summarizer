@@ -64,20 +64,21 @@ Public Module modMain
     Private mLastPercentDisplayed As DateTime
 
     Private Sub CreateVerboseLogFile()
-        Dim strLogFilePath As String
-        Dim blnOpeningExistingFile As Boolean
+        Dim logFilePath As String
+        Dim openingExistingFile As Boolean
 
         Try
-            strLogFilePath = Path.GetFileNameWithoutExtension(Assembly.GetExecutingAssembly().Location)
-            strLogFilePath &= "_VerboseLog_" & DateTime.Now.ToString("yyyy-MM-dd") & ".txt"
+            logFilePath = Path.GetFileNameWithoutExtension(Assembly.GetExecutingAssembly().Location)
+            logFilePath &= "_VerboseLog_" & DateTime.Now.ToString("yyyy-MM-dd") & ".txt"
 
-            blnOpeningExistingFile = File.Exists(strLogFilePath)
+            openingExistingFile = File.Exists(logFilePath)
 
-            mVerboseLogFile = New StreamWriter(New FileStream(strLogFilePath, FileMode.Append, FileAccess.Write, FileShare.Read)) With {
+            mVerboseLogFile = New StreamWriter(
+                New FileStream(logFilePath, FileMode.Append, FileAccess.Write, FileShare.Read)) With {
                 .AutoFlush = True
             }
 
-            If Not blnOpeningExistingFile Then
+            If Not openingExistingFile Then
                 mVerboseLogFile.WriteLine("Date" & ControlChars.Tab & "Percent Complete" & ControlChars.Tab & "Message")
             End If
 
@@ -91,11 +92,11 @@ Public Module modMain
 
     Public Function Main() As Integer
         ' Returns 0 if no error, error code if an error
-        Dim intReturnCode As Integer
-        Dim objParseCommandLine As New clsParseCommandLine
-        Dim blnProceed As Boolean
+        Dim returnCode As Integer
+        Dim commandLineParser As New clsParseCommandLine()
+        Dim proceed As Boolean
 
-        intReturnCode = 0
+        returnCode = 0
         mPeptideInputFilePath = String.Empty
         mProteinInputFilePath = String.Empty
         mParameterFilePath = String.Empty
@@ -115,16 +116,16 @@ Public Module modMain
         mLogDirectoryPath = String.Empty
 
         Try
-            blnProceed = False
-            If objParseCommandLine.ParseCommandLine Then
-                If SetOptionsUsingCommandLineParameters(objParseCommandLine) Then blnProceed = True
+            proceed = False
+            If commandLineParser.ParseCommandLine Then
+                If SetOptionsUsingCommandLineParameters(commandLineParser) Then proceed = True
             End If
 
-            If Not blnProceed OrElse
-               objParseCommandLine.NeedToShowHelp OrElse
-               objParseCommandLine.ParameterCount + objParseCommandLine.NonSwitchParameterCount = 0 Then
+            If Not proceed OrElse
+               commandLineParser.NeedToShowHelp OrElse
+               commandLineParser.ParameterCount + commandLineParser.NonSwitchParameterCount = 0 Then
                 ShowProgramHelp()
-                intReturnCode = -1
+                returnCode = -1
             Else
                 Try
                     If mVerboseLogging Then
@@ -133,11 +134,11 @@ Public Module modMain
 
                     If String.IsNullOrWhiteSpace(mPeptideInputFilePath) Then
                         ShowErrorMessage("Peptide input file must be defined via /I (or by listing the filename just after the .exe)")
-                        intReturnCode = -1
+                        returnCode = -1
                         Exit Try
                     ElseIf String.IsNullOrWhiteSpace(mProteinInputFilePath) Then
                         ShowErrorMessage("Protein input file must be defined via /R")
-                        intReturnCode = -1
+                        returnCode = -1
                         Exit Try
                     End If
 
@@ -176,22 +177,22 @@ Public Module modMain
 
         Catch ex As Exception
             ShowErrorMessage("Error occurred in modMain->Main: " & Environment.NewLine & ex.Message)
-            intReturnCode = -1
+            returnCode = -1
         End Try
 
-        Return intReturnCode
+        Return returnCode
 
     End Function
 
-    Private Sub DisplayProgressPercent(taskDescription As String, intPercentComplete As Integer, blnAddCarriageReturn As Boolean)
-        If blnAddCarriageReturn Then
+    Private Sub DisplayProgressPercent(taskDescription As String, percentComplete As Integer, addCarriageReturn As Boolean)
+        If addCarriageReturn Then
             Console.WriteLine()
         End If
-        If intPercentComplete > 100 Then intPercentComplete = 100
+        If percentComplete > 100 Then percentComplete = 100
         If String.IsNullOrEmpty(taskDescription) Then taskDescription = "Processing"
 
-        Console.Write(taskDescription & ": " & intPercentComplete.ToString() & "% ")
-        If blnAddCarriageReturn Then
+        Console.Write(taskDescription & ": " & percentComplete.ToString() & "% ")
+        If addCarriageReturn Then
             Console.WriteLine()
         End If
     End Sub
@@ -200,36 +201,36 @@ Public Module modMain
         Return FileProcessor.ProcessFilesOrDirectoriesBase.GetAppVersion(PROGRAM_DATE)
     End Function
 
-    Private Function SetOptionsUsingCommandLineParameters(objParseCommandLine As clsParseCommandLine) As Boolean
+    Private Function SetOptionsUsingCommandLineParameters(CommandLineParser As clsParseCommandLine) As Boolean
         ' Returns True if no problems; otherwise, returns false
         ' /I:PeptideInputFilePath /R: ProteinInputFilePath /O:OutputDirectoryPath /P:ParameterFilePath
 
-        Dim strValue As String = String.Empty
-        Dim lstValidParameters = New List(Of String) From {"I", "O", "R", "P", "F", "N", "G", "H", "K", "A", "L", "LogDir", "LogFolder", "VerboseLog"}
+        Dim value As String = String.Empty
+        Dim validParameters = New List(Of String) From {"I", "O", "R", "P", "F", "N", "G", "H", "K", "A", "L", "LogDir", "LogFolder", "VerboseLog"}
         Dim intValue As Integer
 
         Try
             ' Make sure no invalid parameters are present
-            If objParseCommandLine.InvalidParametersPresent(lstValidParameters) Then
+            If CommandLineParser.InvalidParametersPresent(validParameters) Then
                 ShowErrorMessage("Invalid command line parameters",
-                  (From item In objParseCommandLine.InvalidParameters(lstValidParameters) Select "/" + item).ToList())
+                  (From item In CommandLineParser.InvalidParameters(validParameters) Select "/" + item).ToList())
                 Return False
             Else
-                With objParseCommandLine
-                    ' Query objParseCommandLine to see if various parameters are present
-                    If .RetrieveValueForParameter("I", strValue) Then
-                        mPeptideInputFilePath = strValue
+                With CommandLineParser
+                    ' Query commandLineParser to see if various parameters are present
+                    If .RetrieveValueForParameter("I", value) Then
+                        mPeptideInputFilePath = value
                     ElseIf .NonSwitchParameterCount > 0 Then
                         mPeptideInputFilePath = .RetrieveNonSwitchParameter(0)
                     End If
 
 
-                    If .RetrieveValueForParameter("O", strValue) Then mOutputDirectoryPath = strValue
-                    If .RetrieveValueForParameter("R", strValue) Then mProteinInputFilePath = strValue
-                    If .RetrieveValueForParameter("P", strValue) Then mParameterFilePath = strValue
+                    If .RetrieveValueForParameter("O", value) Then mOutputDirectoryPath = value
+                    If .RetrieveValueForParameter("R", value) Then mProteinInputFilePath = value
+                    If .RetrieveValueForParameter("P", value) Then mParameterFilePath = value
 
-                    If .RetrieveValueForParameter("F", strValue) Then
-                        If Integer.TryParse(strValue, intValue) Then
+                    If .RetrieveValueForParameter("F", value) Then
+                        If Integer.TryParse(value, intValue) Then
                             Try
                                 mInputFileFormatCode = CType(intValue, ePeptideInputFileFormatConstants)
                             Catch ex As Exception
@@ -238,36 +239,36 @@ Public Module modMain
                         End If
                     End If
 
-                    If .RetrieveValueForParameter("N", strValue) Then mInspectParameterFilePath = strValue
+                    If .RetrieveValueForParameter("N", value) Then mInspectParameterFilePath = value
 
-                    If .RetrieveValueForParameter("G", strValue) Then mIgnoreILDifferences = True
-                    If .RetrieveValueForParameter("H", strValue) Then mOutputProteinSequence = False
-                    If .RetrieveValueForParameter("K", strValue) Then mSkipCoverageComputationSteps = True
+                    If .RetrieveValueForParameter("G", value) Then mIgnoreILDifferences = True
+                    If .RetrieveValueForParameter("H", value) Then mOutputProteinSequence = False
+                    If .RetrieveValueForParameter("K", value) Then mSkipCoverageComputationSteps = True
 
-                    If .RetrieveValueForParameter("A", strValue) Then mSaveSourceDataPlusProteinsFile = True
+                    If .RetrieveValueForParameter("A", value) Then mSaveSourceDataPlusProteinsFile = True
 
-                    If .RetrieveValueForParameter("L", strValue) Then
+                    If .RetrieveValueForParameter("L", value) Then
                         mLogMessagesToFile = True
-                        If Not String.IsNullOrEmpty(strValue) Then
-                            mLogFilePath = strValue
+                        If Not String.IsNullOrEmpty(value) Then
+                            mLogFilePath = value
                         End If
                     End If
 
-                    If .RetrieveValueForParameter("LogDir", strValue) Then
+                    If .RetrieveValueForParameter("LogDir", value) Then
                         mLogMessagesToFile = True
-                        If Not String.IsNullOrEmpty(strValue) Then
-                            mLogDirectoryPath = strValue
+                        If Not String.IsNullOrEmpty(value) Then
+                            mLogDirectoryPath = value
                         End If
                     End If
 
-                    If .RetrieveValueForParameter("LogFolder", strValue) Then
+                    If .RetrieveValueForParameter("LogFolder", value) Then
                         mLogMessagesToFile = True
-                        If Not String.IsNullOrEmpty(strValue) Then
-                            mLogDirectoryPath = strValue
+                        If Not String.IsNullOrEmpty(value) Then
+                            mLogDirectoryPath = value
                         End If
                     End If
 
-                    If .RetrieveValueForParameter("VerboseLog", strValue) Then mVerboseLogging = True
+                    If .RetrieveValueForParameter("VerboseLog", value) Then mVerboseLogging = True
                 End With
 
                 Return True
@@ -408,4 +409,5 @@ Public Module modMain
         mLastProgressReportTime = DateTime.UtcNow
         mLastPercentDisplayed = DateTime.UtcNow
     End Sub
+
 End Module

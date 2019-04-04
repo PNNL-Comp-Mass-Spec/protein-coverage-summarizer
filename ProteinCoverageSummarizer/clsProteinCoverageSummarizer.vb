@@ -984,17 +984,17 @@ Public Class clsProteinCoverageSummarizer
     ''' Increment the observation count for the given key in the given dictionary
     ''' If the key is not defined, add it
     ''' </summary>
-    ''' <param name="oDictionary"></param>
+    ''' <param name="dictionaryToUpdate"></param>
     ''' <param name="keyName"></param>
     ''' <returns>True if the protein is new and was added tomProteinPeptideStats </returns>
-    Private Function IncrementCountByKey(oDictionary As IDictionary(Of String, Integer), keyName As String) As Boolean
+    Private Function IncrementCountByKey(dictionaryToUpdate As IDictionary(Of String, Integer), keyName As String) As Boolean
         Dim value As Integer
 
-        If oDictionary.TryGetValue(keyName, value) Then
-            oDictionary(keyName) = value + 1
+        If dictionaryToUpdate.TryGetValue(keyName, value) Then
+            dictionaryToUpdate(keyName) = value + 1
             Return False
         Else
-            oDictionary.Add(keyName, 1)
+            dictionaryToUpdate.Add(keyName, 1)
             Return True
         End If
     End Function

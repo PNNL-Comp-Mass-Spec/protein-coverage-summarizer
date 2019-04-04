@@ -278,7 +278,7 @@ Public Class clsLeaderSequenceCache
                         ' Do nothing, skip the first line
                     ElseIf dataLine.Length > 0 Then
 
-                        Dim blnValidLine As Boolean
+                        Dim validLine As Boolean
                         Dim peptideSequence = ""
 
                         Try
@@ -289,12 +289,12 @@ Public Class clsLeaderSequenceCache
                             Else
                                 peptideSequence = dataCols(0)
                             End If
-                            blnValidLine = True
+                            validLine = True
                         Catch ex As Exception
-                            blnValidLine = False
+                            validLine = False
                         End Try
 
-                        If blnValidLine Then
+                        If validLine Then
                             If peptideSequence.Length >= 4 Then
                                 ' Check for, and remove any prefix or suffix residues
                                 If peptideSequence.Chars(1) = "."c AndAlso peptideSequence.Chars(peptideSequence.Length - 2) = "."c Then
@@ -323,19 +323,19 @@ Public Class clsLeaderSequenceCache
 
             End Using
 
-            Dim blnSuccess As Boolean
+            Dim success As Boolean
 
             If validPeptideCount = 0 Then
                 ' No valid peptides were found; either no peptides are in the file or they're all shorter than MINIMUM_LEADER_SEQUENCE_LENGTH
                 LeaderSequenceMinimumLength = MINIMUM_LEADER_SEQUENCE_LENGTH
-                blnSuccess = False
+                success = False
             Else
                 LeaderSequenceMinimumLength = leaderSeqMinimumLength
-                blnSuccess = True
+                success = True
             End If
 
             OperationComplete()
-            Return blnSuccess
+            Return success
 
         Catch ex As Exception
             Throw New Exception("Error in DetermineShortestPeptideLengthInFile", ex)
