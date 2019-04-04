@@ -257,11 +257,6 @@
             Monoisotopic modification mass
             </summary>
         </member>
-        <member name="F:PHRPReader.clsModificationDefinition.mModificationMassAsText">
-            <summary>
-            Modification mass, stored as text
-            </summary>
-        </member>
         <member name="F:PHRPReader.clsModificationDefinition.mTargetResidues">
             <summary>
             Target residues, tracked as a space-free, comma-free list of one letter amino acid residue symbols that this mod can apply to
@@ -270,11 +265,6 @@
             <remarks>
             If this is empty, the given modification can apply to any residue or terminus
             </remarks>
-        </member>
-        <member name="F:PHRPReader.clsModificationDefinition.mModificationType">
-            <summary>
-            Modification type
-            </summary>
         </member>
         <member name="F:PHRPReader.clsModificationDefinition.mMassCorrectionTag">
             <summary>
@@ -286,16 +276,6 @@
             <summary>
             Set to Nothing or to clsPeptideMassCalculator.NO_AFFECTED_ATOM_SYMBOL for positional modifications (including terminus modifications)
             For Isotopic modifications, indicate the atom affected (e.g. C, H, N, O, or S)
-            </summary>
-        </member>
-        <member name="F:PHRPReader.clsModificationDefinition.mOccurrenceCount">
-            <summary>
-            Number of times this modification was observed in the given XML file
-            </summary>
-        </member>
-        <member name="F:PHRPReader.clsModificationDefinition.mUnknownModAutoDefined">
-            <summary>
-            True if this was an unknown mass that was auto defined
             </summary>
         </member>
         <member name="P:PHRPReader.clsModificationDefinition.ModificationSymbol">
@@ -519,6 +499,12 @@
             <returns></returns>
             <remarks></remarks>
         </member>
+        <member name="M:PHRPReader.clsModificationDefinition.ToString">
+            <summary>
+            Description of this modification definition
+            </summary>
+            <returns></returns>
+        </member>
         <member name="T:PHRPReader.clsMSGFPlusParamFileModExtractor">
             <summary>
             This class reads a DMS-based parameter file for MSGF+ or MSPathFinder to extract the dynamic and static modification information
@@ -543,51 +529,6 @@
         <member name="F:PHRPReader.clsMSGFPlusParamFileModExtractor.PARAM_TAG_CUSTOM_AA">
             <summary>
             Custom amino acid definition parameter file keyword
-            </summary>
-        </member>
-        <member name="T:PHRPReader.clsMSGFPlusParamFileModExtractor.eMSGFDBModType">
-            <summary>
-            MSGF+ modification type
-            </summary>
-        </member>
-        <member name="F:PHRPReader.clsMSGFPlusParamFileModExtractor.eMSGFDBModType.Unknown">
-            <summary>
-            Unknown
-            </summary>
-        </member>
-        <member name="F:PHRPReader.clsMSGFPlusParamFileModExtractor.eMSGFDBModType.DynamicMod">
-            <summary>
-            Dynamic
-            </summary>
-        </member>
-        <member name="F:PHRPReader.clsMSGFPlusParamFileModExtractor.eMSGFDBModType.StaticMod">
-            <summary>
-            Static
-            </summary>
-        </member>
-        <member name="F:PHRPReader.clsMSGFPlusParamFileModExtractor.eMSGFDBModType.DynNTermPeptide">
-            <summary>
-            N-terminal peptide dynamic
-            </summary>
-        </member>
-        <member name="F:PHRPReader.clsMSGFPlusParamFileModExtractor.eMSGFDBModType.DynCTermPeptide">
-            <summary>
-            C-terminal peptide dynamic
-            </summary>
-        </member>
-        <member name="F:PHRPReader.clsMSGFPlusParamFileModExtractor.eMSGFDBModType.DynNTermProtein">
-            <summary>
-            N-terminal protein dynamic
-            </summary>
-        </member>
-        <member name="F:PHRPReader.clsMSGFPlusParamFileModExtractor.eMSGFDBModType.DynCTermProtein">
-            <summary>
-            C-terminal protein dynamic
-            </summary>
-        </member>
-        <member name="F:PHRPReader.clsMSGFPlusParamFileModExtractor.eMSGFDBModType.CustomAA">
-            <summary>
-            Custom amino acid definition
             </summary>
         </member>
         <member name="T:PHRPReader.clsMSGFPlusParamFileModExtractor.eMSGFPlusModType">
@@ -633,6 +574,21 @@
         <member name="F:PHRPReader.clsMSGFPlusParamFileModExtractor.eMSGFPlusModType.CustomAA">
             <summary>
             Custom amino acid definition
+            </summary>
+        </member>
+        <member name="T:PHRPReader.clsMSGFPlusParamFileModExtractor.ModSpecFormats">
+            <summary>
+            Modification specification formats
+            </summary>
+        </member>
+        <member name="F:PHRPReader.clsMSGFPlusParamFileModExtractor.ModSpecFormats.MSGFPlusAndMSPathFinder">
+            <summary>
+            MSGF+ or MSPathFinder
+            </summary>
+        </member>
+        <member name="F:PHRPReader.clsMSGFPlusParamFileModExtractor.ModSpecFormats.TopPIC">
+            <summary>
+            TopPIC
             </summary>
         </member>
         <member name="T:PHRPReader.clsMSGFPlusParamFileModExtractor.udtModInfoType">
@@ -701,21 +657,43 @@
             </param>
             <remarks></remarks>
         </member>
-        <member name="M:PHRPReader.clsMSGFPlusParamFileModExtractor.ExtractModInfoFromParamFile(System.String,System.Collections.Generic.List{PHRPReader.clsMSGFPlusParamFileModExtractor.udtModInfoType}@)">
+        <member name="M:PHRPReader.clsMSGFPlusParamFileModExtractor.ExtractModInfoFromParamFile(System.String,PHRPReader.clsMSGFPlusParamFileModExtractor.ModSpecFormats,System.Collections.Generic.List{PHRPReader.clsMSGFPlusParamFileModExtractor.udtModInfoType}@)">
             <summary>
-            Extracts mod info from either a MSGF+ or MSPathFinder param file or from a MSGFPlus_Mods.txt file (previously MSGFDB_Mods.txt)
+            Extracts mod info from a MSGF+ or MSPathFinder param file, or from a MSGFPlus_Mods.txt file (previously MSGFDB_Mods.txt)
             </summary>
             <param name="paramFilePath"></param>
+            <param name="modSpecFormat"></param>
             <param name="modInfo"></param>
             <returns>True if success; false if a problem</returns>
             <remarks></remarks>
         </member>
-        <member name="M:PHRPReader.clsMSGFPlusParamFileModExtractor.ResolveMSGFDBModsWithModDefinitions(System.Collections.Generic.List{PHRPReader.clsMSGFPlusParamFileModExtractor.udtModInfoType},PHRPReader.clsPeptideModificationContainer)">
+        <member name="M:PHRPReader.clsMSGFPlusParamFileModExtractor.ParseModSpecMSGFPlus(System.String,System.Collections.Generic.IReadOnlyList{System.String},System.Int32@,PHRPReader.clsMSGFPlusParamFileModExtractor.udtModInfoType@)">
             <summary>
-            Resolve MSGF+ mods with mod definitions
+            Parse the mod spec definition from a MSGF+ or MSPathFinder parameter file
+            </summary>
+            <param name="paramFilePath"></param>
+            <param name="splitLine"></param>
+            <param name="unnamedModID"></param>
+            <param name="udtModInfo"></param>
+            <returns>True if success, false if an error</returns>
+        </member>
+        <member name="M:PHRPReader.clsMSGFPlusParamFileModExtractor.ParseModSpecTopPIC(System.String,System.Collections.Generic.IReadOnlyList{System.String},PHRPReader.clsMSGFPlusParamFileModExtractor.eMSGFPlusModType,System.Int32@,PHRPReader.clsMSGFPlusParamFileModExtractor.udtModInfoType@)">
+            <summary>
+            Parse the mod spec definition from a TopPIC parameter file
+            </summary>
+            <param name="paramFilePath"></param>
+            <param name="splitLine"></param>
+            <param name="modType">eMSGFPlusModType.DynamicMod or eMSGFPlusModType.StaticMod</param>
+            <param name="unnamedModID"></param>
+            <param name="udtModInfo"></param>
+            <returns>True if success, false if an error</returns>
+        </member>
+        <member name="M:PHRPReader.clsMSGFPlusParamFileModExtractor.ResolveMSGFPlusModsWithModDefinitions(System.Collections.Generic.List{PHRPReader.clsMSGFPlusParamFileModExtractor.udtModInfoType},PHRPReader.clsPeptideModificationContainer)">
+            <summary>
+            Resolve MSGF+, MSPathFinder, or TopPIC mods with mod definitions
             </summary>
             <param name="modInfo"></param>
-            <param name="oPeptideMods"></param>
+            <param name="peptideMods"></param>
         </member>
         <member name="T:PHRPReader.clsMSGFResultsReader">
             <summary>
@@ -1082,6 +1060,12 @@
             Set to Nothing or to NO_AFFECTED_ATOM_SYMBOL for positional modifications (including terminus modifications)
             For Isotopic modifications, indicate the atom affected (e.g. C, H, N, O, or S)
             </remarks>
+        </member>
+        <member name="M:PHRPReader.clsPeptideMassCalculator.udtPeptideSequenceModInfoType.ToString">
+            <summary>
+            Modification mass and residue number
+            </summary>
+            <returns></returns>
         </member>
         <member name="F:PHRPReader.clsPeptideMassCalculator.mAtomicFormulaRegEx">
             <summary>
@@ -3070,7 +3054,7 @@
             <summary>
             Parses the specified MSGFDB (aka MS-GF+) parameter file
             </summary>
-            <param name="searchEngineParamFileName"></param>
+            <param name="searchEngineParamFilePath"></param>
             <param name="searchEngineParams"></param>
             <returns></returns>
             <remarks></remarks>
@@ -3091,7 +3075,7 @@
             Look for custom amino acid definitions in the MSGF+ parameter file
             If any are found, update the amino acid mass values in the PeptideMassCalculator instance
             </summary>
-            <param name="searchEngineParamFileName"></param>
+            <param name="searchEngineParamFilePath"></param>
             <param name="modFileProcessor"></param>
             <param name="peptideMassCalculator"></param>
             <param name="errorMessage"></param>
@@ -3196,7 +3180,8 @@
             Default first hits file for the given dataset
             </summary>
             <param name="datasetName"></param>
-            <returns>Filename</returns>
+            <returns>Empty string, since MSPathFinder does not have a first-hits file; just the _syn.txt file</returns>
+            <remarks></remarks>
         </member>
         <member name="M:PHRPReader.clsPHRPParserMSPathFinder.GetPHRPModSummaryFileName(System.String)">
             <summary>
@@ -3750,7 +3735,7 @@
             Default first hits file for the given dataset
             </summary>
             <param name="datasetName"></param>
-            <returns>Filename</returns>
+            <returns>Empty string, since X!Tandem does not have a first-hits file; just the _xt.txt file</returns>
         </member>
         <member name="M:PHRPReader.clsPHRPParserXTandem.GetPHRPModSummaryFileName(System.String)">
             <summary>
@@ -4095,7 +4080,7 @@
             Constructor that auto-determines the PeptideHit result type based on the filename
             </summary>
             <param name="inputFilePath">Input file to read</param>
-            <param name="oStartupOptions">Startup options</param>
+            <param name="startupOptions">Startup options</param>
             <remarks></remarks>
         </member>
         <member name="M:PHRPReader.clsPHRPReader.#ctor(System.String,PHRPReader.clsPHRPReader.ePeptideHitResultType,System.Boolean,System.Boolean)">
@@ -4165,6 +4150,31 @@
             <param name="inputFilePath">Input file to read</param>
             <param name="eResultType">Source file PeptideHit result type</param>
             <remarks></remarks>
+        </member>
+        <member name="M:PHRPReader.clsPHRPReader.AddFileToFind(System.Collections.Generic.ICollection{System.Collections.Generic.KeyValuePair{System.String,PHRPReader.clsPHRPReader.ePeptideHitResultType}},PHRPReader.clsPHRPReader.ePeptideHitResultType,System.Func{System.String,System.String},System.String)">
+            <summary>
+            Add a PHRP file to find when auto-determining the input file type
+            </summary>
+            <param name="filesToFind"></param>
+            <param name="resultType"></param>
+            <param name="getPhrpFilenameMethod"></param>
+            <param name="datasetName"></param>
+        </member>
+        <member name="M:PHRPReader.clsPHRPReader.AddFileToFind(System.Collections.Generic.ICollection{System.Collections.Generic.KeyValuePair{System.String,PHRPReader.clsPHRPReader.ePeptideHitResultType}},PHRPReader.clsPHRPReader.ePeptideHitResultType,System.String)">
+            <summary>
+            Add a PHRP file to find when auto-determining the input file type
+            </summary>
+            <param name="filesToFind"></param>
+            <param name="resultType"></param>
+            <param name="phrpFilename"></param>
+        </member>
+        <member name="M:PHRPReader.clsPHRPReader.AddSuffixToCheck(System.Collections.Generic.ICollection{System.Collections.Generic.KeyValuePair{System.String,PHRPReader.clsPHRPReader.ePeptideHitResultType}},PHRPReader.clsPHRPReader.ePeptideHitResultType,System.String)">
+            <summary>
+            Add a filename suffix to check when auto-determining the input file type
+            </summary>
+            <param name="suffixesToCheck"></param>
+            <param name="resultType"></param>
+            <param name="suffix"></param>
         </member>
         <member name="M:PHRPReader.clsPHRPReader.AutoDetermineBestInputFile(System.String)">
             <summary>
@@ -4460,6 +4470,11 @@
             <param name="dynamicMods">List with mod symbols as the key and the corresponding mod mass</param>
             <param name="staticMods">List with amino acid names as the key and the corresponding mod mass</param>
             <returns>True if success; false if an error</returns>
+        </member>
+        <member name="F:PHRPReader.clsPHRPReader.disposedValue">
+            <summary>
+            Used to detect redundant calls
+            </summary>
         </member>
         <member name="M:PHRPReader.clsPHRPReader.Dispose(System.Boolean)">
             <summary>
