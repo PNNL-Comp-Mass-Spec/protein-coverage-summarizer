@@ -58,7 +58,7 @@ Public Class clsProteinCoverageSummarizer
         UnspecifiedError = -1
     End Enum
 
-    ' Note: if you add/remove any steps, then update PERCENT_COMPLETE_LEVEL_COUNT and update the population of mPercentCompleteStartLevels()
+    ' Note: if you add/remove any steps, update PERCENT_COMPLETE_LEVEL_COUNT and update the population of mPercentCompleteStartLevels()
     Enum eProteinCoverageProcessingSteps
         Starting = 0
         CacheProteins = 1
@@ -1692,7 +1692,7 @@ Public Class clsProteinCoverageSummarizer
         Dim proteinUpdated(PROTEIN_CHUNK_COUNT - 1) As Boolean
 
         ' Step through the proteins in memory and compare the residues for each to mLeaderSequenceHashTable
-        ' If mSearchAllProteinsForPeptideSequence = False, then require that the protein name in the peptide input file matches the protein being examined
+        ' If mSearchAllProteinsForPeptideSequence = False, require that the protein name in the peptide input file matches the protein being examined
 
         Try
             Dim progressMessageBase = "Comparing proteins to peptide leader sequences"
