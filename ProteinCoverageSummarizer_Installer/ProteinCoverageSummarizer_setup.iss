@@ -17,9 +17,9 @@ Source: ..\bin\AnyCPU\ProteinCoverageSummarizerGUI.exe         ; DestDir: {app}
 Source: ..\bin\AnyCPU\ProteinCoverageSummarizerGUI.exe.config  ; DestDir: {app}
 Source: ..\bin\AnyCPU\Ookii.Dialogs.dll                        ; DestDir: {app}
 Source: ..\bin\AnyCPU\PRISM.dll                                ; DestDir: {app}
+Source: ..\bin\AnyCPU\PRISMWin.dll                             ; DestDir: {app}
 Source: ..\bin\AnyCPU\ProteinCoverageSummarizer.dll            ; DestDir: {app}
 Source: ..\bin\AnyCPU\ProteinFileReader.dll                    ; DestDir: {app}
-Source: ..\bin\AnyCPU\SharedVBNetRoutines.dll                  ; DestDir: {app}
 Source: ..\bin\AnyCPU\System.Data.SQLite.dll                   ; DestDir: {app}
 Source: ..\bin\ProteinCoverageSummarizerSettings.xml           ; DestDir: {app}
 Source: ..\bin\AnyCPU\x64\SQLite.Interop.dll                   ; DestDir: {app}\x64
