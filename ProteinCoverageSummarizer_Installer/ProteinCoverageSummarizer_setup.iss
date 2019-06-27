@@ -33,7 +33,10 @@ Source: ..\bin\BSA_P171_QID1638_TestProteins.fasta                        ; Dest
 Source: ..\bin\BSA_P171_QID1638_TestPeptides.txt                          ; DestDir: {app}
 Source: ..\bin\BSA_P171_QID1638_TestPeptides_coverage.txt                 ; DestDir: {app}
 Source: ..\bin\BSA_P171_QID1638_TestPeptides_ProteinToPeptideMapping.txt  ; DestDir: {app}
-Source: ..\bin\BSA_P171_QID1638_TestPeptides_SequenceOnly.txt             ; DestDir: {app}
+Source: ..\bin\BSA_P171_QID1638_TestPeptides_SequenceOnly.txt                         ; DestDir: {app}
+Source: ..\bin\BSA_P171_QID1638_TestPeptides_SequenceOnly_coverage.txt                ; DestDir: {app}
+Source: ..\bin\BSA_P171_QID1638_TestPeptides_SequenceOnly_ProteinToPeptideMapping.txt ; DestDir: {app}
+
 Source: ..\bin\BSA_P171_QID1638_TestProteins.txt                          ; DestDir: {app}
 
 Source: Images\delete_16x.ico                ; DestDir: {app}
