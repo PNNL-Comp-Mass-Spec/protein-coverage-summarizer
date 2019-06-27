@@ -1,5 +1,8 @@
 Protein Coverage Summarizer Change Log
 
+Version 1.3.7026; March 28, 2019
+	- Check for closed or broken SQLite connection
+
 Version 1.3.7020; March 22, 2019
 	- Replaced SharedVBNetRoutines.dll with PRISMWin-library
 

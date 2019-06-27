@@ -12,44 +12,47 @@ PeptideToProteinMapper.exe
  /I:PeptideInputFilePath /R:ProteinInputFilePath
  [/O:OutputDirectoryName] [/P:ParameterFilePath] [/F:FileFormatCode]
  [/N:InspectParameterFilePath] [/G] [/H] [/K] [/A]
- [/L[:LogFilePath]] [/LogDirectory:LogDirectoryPath] [/VerboseLog] [/Q]
+ [/L[:LogFilePath]] [/LogDir:LogDirectoryPath] [/VerboseLog] [/Q]
 ```
 
 The input file path can contain the wildcard character *. If a wildcard is
 present, the same protein input file path will be used for each of the peptide
 input files matched.
 
-The output directory name is optional. If omitted, the output files will be created
-in the same directory as the input file. If included, then a subdirectory is created
-with the name OutputDirectoryName.
+The output directory name is optional. If omitted, the output files will be
+created in the same directory as the input file. If included, then a subdirectory
+is created with the name OutputDirectoryName.
 
-The parameter file path is optional. If included, it should point to a valid XML parameter file.
+The parameter file path is optional. If included, it should point to a valid XML
+parameter file.
 
-Use /F to specify the peptide input file format code.  Options are:
-* 0=Auto Determine: Treated as /F:1 unless name ends in _inspect.txt, then /F:3
+Use `/F` to specify the peptide input file format code.  Options are:
+* 0=Auto Determine: Treated as `/F:1` unless name ends in _inspect.txt, then `/F:3`
 * 1=Peptide sequence in the 1st column (subsequent columns are ignored)
 * 2=Protein name in 1st column and peptide sequence 2nd column
 * 3=Inspect search results file (peptide sequence in the 3rd column)
 * 4=MS-GF+ search results file (peptide sequence in the column titled 'Peptide'; optionally scan number in the column titled 'Scan')
 * 5=SEQUEST, X!Tandem, Inspect, or MS-GF+ PHRP data file
 
-When processing an Inspect search results file, use /N to specify the Inspect parameter file used 
-(required for determining the mod names embedded in the identified peptides).
+When processing an Inspect search results file, use `/N` to specify the Inspect
+parameter file used (required for determining the mod names embedded in the
+identified peptides).
 
-Use /G to ignore I/L differences when finding peptides in proteins or computing coverage
+Use `/G` to ignore I/L differences when finding peptides in proteins or computing coverage
 
-Use /H to suppress (hide) the protein sequence in the _coverage.txt file
+Use `/H` to suppress (hide) the protein sequence in the _coverage.txt file
 
-Use /K to skip the protein coverage computation steps (enabling faster processing)
+Use `/K` to skip the protein coverage computation steps (enabling faster processing)
 
-Use /A to create a copy of the source file, but with a new column listing the mapped protein for each peptide.
-If a peptide maps to multiple proteins, then multiple lines will be listed.
+Use `/A` to create a copy of the source file, but with a new column listing the
+mapped protein for each peptide. If a peptide maps to multiple proteins, then
+multiple lines will be listed
 
-Use /L to create a log file, optionally specifying the file name
+Use `/L` to create a log file, optionally specifying the file name
 
-Use /LogDirectory to define the directory in which the log file should be created
+Use `/LogDir` to define the directory in which the log file should be created
 
-Use /VerboseLog to create a detailed log file
+Use `/VerboseLog` to create a detailed log file
 
 ## Contacts
 
