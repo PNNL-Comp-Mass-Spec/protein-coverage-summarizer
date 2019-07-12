@@ -35,6 +35,7 @@ Public Class clsPeptideToProteinMapEngine
 
     Public Const FILENAME_SUFFIX_INSPECT_RESULTS_FILE As String = "_inspect.txt"
     Public Const FILENAME_SUFFIX_MSGFDB_RESULTS_FILE As String = "_msgfdb.txt"
+    Public Const FILENAME_SUFFIX_MSGFPLUS_RESULTS_FILE As String = "_msgfplus.txt"
 
     Public Const FILENAME_SUFFIX_PEP_TO_PROTEIN_MAPPING As String = "_PepToProtMap.txt"
 
@@ -102,13 +103,13 @@ Public Class clsPeptideToProteinMapEngine
 
     Private mStatusMessage As String
 
-    ' The following is used when the input file is Sequest, X!Tandem, Inspect, or MSGF+ results file
+    ' The following is used when the input file is Sequest, X!Tandem, Inspect, or MS-GF+ results file
     ' Keys are peptide sequences; values are Lists of scan numbers that each peptide was observed in
     ' Keys may have mod symbols in them; those symbols will be removed in PreProcessDataWriteOutPeptides
     Private mUniquePeptideList As SortedList(Of String, SortedSet(Of Integer))
 
     ' Mod names must be lower case, and 4 characters in length (or shorter)
-    ' Only used with Inspect since mods in MSGF+ are simply numbers, e.g. R.DNFM+15.995SATQAVEYGLVDAVM+15.995TK.R
+    ' Only used with Inspect since mods in MS-GF+ are simply numbers, e.g. R.DNFM+15.995SATQAVEYGLVDAVM+15.995TK.R
     '  while mods in Sequest and XTandem are symbols (*, #, @)
     Private mInspectModNameList As List(Of String)
 
@@ -703,7 +704,7 @@ Public Class clsPeptideToProteinMapEngine
             Return True
 
         Catch ex As Exception
-            mStatusMessage = "Error writing the Inspect or MSGF+ peptide to protein map file in PostProcessPSMResultsFile"
+            mStatusMessage = "Error writing the Inspect or MS-GF+ peptide to protein map file in PostProcessPSMResultsFile"
             HandleException(mStatusMessage, ex)
         End Try
 
@@ -866,7 +867,7 @@ Public Class clsPeptideToProteinMapEngine
             terminatorSize = 2
             peptideSequenceColIndex = -1
             scanColIndex = -1
-            toolDescription = "MSGF+"
+            toolDescription = "MS-GF+"
 
         Else
             mStatusMessage = "Unrecognized file type: " & eFileType.ToString() & "; will look for column header 'Peptide'"
@@ -1157,6 +1158,7 @@ Public Class clsPeptideToProteinMapEngine
                         mProteinCoverageSummarizer.MatchPeptidePrefixAndSuffixToProtein = False
 
                     Case ePeptideInputFileFormatConstants.MSGFPlusResultsFile
+                        ' MS-GF+ search results file; need to pre-process it
                         ' Make sure RemoveSymbolCharacters is true
                         Me.RemoveSymbolCharacters = True
 
@@ -1168,7 +1170,7 @@ Public Class clsPeptideToProteinMapEngine
                         mProteinCoverageSummarizer.MatchPeptidePrefixAndSuffixToProtein = False
 
                     Case ePeptideInputFileFormatConstants.PHRPFile
-                        ' Sequest, X!Tandem, Inspect, or MSGF+ PHRP data file; need to pre-process it
+                        ' Sequest, X!Tandem, Inspect, or MS-GF+ PHRP data file; need to pre-process it
                         ' Make sure RemoveSymbolCharacters is true
                         Me.RemoveSymbolCharacters = True
 
@@ -1222,7 +1224,7 @@ Public Class clsPeptideToProteinMapEngine
                             ' No post-processing is required
 
                         Case Else
-                            ' Sequest, X!Tandem, Inspect, or MSGF+ PHRP data file; need to post-process the results file
+                            ' Sequest, X!Tandem, Inspect, or MS-GF+ PHRP data file; need to post-process the results file
                             success = PostProcessPSMResultsFile(inputFilePathWork, proteinToPepMapFilePath, DeleteTempFiles)
 
                     End Select
