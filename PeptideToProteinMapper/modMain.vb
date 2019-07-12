@@ -322,7 +322,7 @@ Public Module modMain
             Console.WriteLine("   " & ePeptideInputFileFormatConstants.PeptideListFile & "=Peptide sequence in the 1st column (subsequent columns are ignored)")
             Console.WriteLine("   " & ePeptideInputFileFormatConstants.ProteinAndPeptideFile & "=Protein name in 1st column and peptide sequence 2nd column")
             Console.WriteLine("   " & ePeptideInputFileFormatConstants.InspectResultsFile & "=Inspect search results file (peptide sequence in the 3rd column)")
-            Console.WriteLine("   " & ePeptideInputFileFormatConstants.MSGFDBResultsFile & "=MS-GF+ search results file (peptide sequence in the column titled 'Peptide'; optionally scan number in the column titled 'Scan')")
+            Console.WriteLine("   " & ePeptideInputFileFormatConstants.MSGFPlusResultsFile & "=MS-GF+ search results file (peptide sequence in the column titled 'Peptide'; optionally scan number in the column titled 'Scan')")
             Console.WriteLine("   " & ePeptideInputFileFormatConstants.PHRPFile & "=SEQUEST, X!Tandem, Inspect, or MS-GF+ PHRP data file")
             Console.WriteLine()
 

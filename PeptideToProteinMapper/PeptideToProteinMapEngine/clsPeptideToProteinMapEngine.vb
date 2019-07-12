@@ -51,8 +51,10 @@ Public Class clsPeptideToProteinMapEngine
         PeptideListFile = 1             ' First column is peptide sequence
         ProteinAndPeptideFile = 2       ' First column is protein name, second column is peptide sequence
         InspectResultsFile = 3          ' Inspect results file; pre-process the file to determine the peptides present, then determine the proteins that contain the given peptides
-        MSGFDBResultsFile = 4           ' MSGF+ results file; pre-process the file to determine the peptides present, then determine the proteins that contain the given peptides
-        PHRPFile = 5                    ' Sequest, Inspect, X!Tandem, or MSGF+ synopsis or first-hits file created by PHRP; pre-process the file to determine the peptides present, then determine the proteins that contain the given peptides
+        <Obsolete("Old Name")>
+        MSGFDBResultsFile = 4
+        MSGFPlusResultsFile = 4         ' MS-GF+ results file; pre-process the file to determine the peptides present, then determine the proteins that contain the given peptides
+        PHRPFile = 5                    ' Sequest, Inspect, X!Tandem, or MS-GF+ synopsis or first-hits file created by PHRP; pre-process the file to determine the peptides present, then determine the proteins that contain the given peptides
     End Enum
 
 #End Region
@@ -344,7 +346,10 @@ Public Class clsPeptideToProteinMapEngine
             Return ePeptideInputFileFormatConstants.InspectResultsFile
 
         ElseIf Path.GetFileName(filePath).ToLower().EndsWith(FILENAME_SUFFIX_MSGFDB_RESULTS_FILE.ToLower()) Then
-            Return ePeptideInputFileFormatConstants.MSGFDBResultsFile
+            Return ePeptideInputFileFormatConstants.MSGFPlusResultsFile
+
+        ElseIf Path.GetFileName(filePath).ToLower().EndsWith(FILENAME_SUFFIX_MSGFPLUS_RESULTS_FILE.ToLower()) Then
+            Return ePeptideInputFileFormatConstants.MSGFPlusResultsFile
 
         ElseIf PeptideInputFileFormat <> ePeptideInputFileFormatConstants.AutoDetermine And PeptideInputFileFormat <> ePeptideInputFileFormatConstants.Unknown Then
             Return PeptideInputFileFormat
@@ -353,7 +358,7 @@ Public Class clsPeptideToProteinMapEngine
         Dim baseNameLCase As String = Path.GetFileNameWithoutExtension(filePath)
         If baseNameLCase.EndsWith("_MSGFDB", StringComparison.OrdinalIgnoreCase) OrElse
            baseNameLCase.EndsWith("_MSGFPlus", StringComparison.OrdinalIgnoreCase) Then
-            Return ePeptideInputFileFormatConstants.MSGFDBResultsFile
+            Return ePeptideInputFileFormatConstants.MSGFPlusResultsFile
         End If
 
         Dim eResultType = clsPHRPReader.AutoDetermineResultType(filePath)
@@ -857,7 +862,7 @@ Public Class clsPeptideToProteinMapEngine
             scanColIndex = 1
             toolDescription = "Inspect"
 
-        ElseIf eFileType = ePeptideInputFileFormatConstants.MSGFDBResultsFile Then
+        ElseIf eFileType = ePeptideInputFileFormatConstants.MSGFPlusResultsFile Then
             terminatorSize = 2
             peptideSequenceColIndex = -1
             scanColIndex = -1
@@ -1151,8 +1156,7 @@ Public Class clsPeptideToProteinMapEngine
                         mProteinCoverageSummarizer.PeptideFileSkipFirstLine = False
                         mProteinCoverageSummarizer.MatchPeptidePrefixAndSuffixToProtein = False
 
-                    Case ePeptideInputFileFormatConstants.MSGFDBResultsFile
-                        ' MSGF+ search results file; need to pre-process it
+                    Case ePeptideInputFileFormatConstants.MSGFPlusResultsFile
                         ' Make sure RemoveSymbolCharacters is true
                         Me.RemoveSymbolCharacters = True
 
