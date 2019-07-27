@@ -30,7 +30,7 @@ Public Class clsProteinFileDataCache
     Inherits EventNotifier
 
     Public Sub New()
-        mFileDate = "September 14, 2018"
+        mFileDate = "July 26, 2019"
         InitializeLocalVariables()
     End Sub
 
