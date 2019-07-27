@@ -507,13 +507,13 @@
         </member>
         <member name="T:PHRPReader.clsMSGFPlusParamFileModExtractor">
             <summary>
-            This class reads a DMS-based parameter file for MSGF+ or MSPathFinder to extract the dynamic and static modification information
+            This class reads a DMS-based parameter file for MS-GF+ or MSPathFinder to extract the dynamic and static modification information
             </summary>
             <remarks>See above for an example parameter file</remarks>
         </member>
         <member name="F:PHRPReader.clsMSGFPlusParamFileModExtractor.UNKNOWN_MSGFPlus_MOD_SYMBOL">
             <summary>
-            Unknown MSGF+ mod symbols
+            Unknown MS-GF+ mod symbols
             </summary>
         </member>
         <member name="F:PHRPReader.clsMSGFPlusParamFileModExtractor.PARAM_TAG_MOD_STATIC">
@@ -533,7 +533,7 @@
         </member>
         <member name="T:PHRPReader.clsMSGFPlusParamFileModExtractor.eMSGFPlusModType">
             <summary>
-            MSGF+ modification type
+            MS-GF+ modification type
             </summary>
         </member>
         <member name="F:PHRPReader.clsMSGFPlusParamFileModExtractor.eMSGFPlusModType.Unknown">
@@ -583,7 +583,7 @@
         </member>
         <member name="F:PHRPReader.clsMSGFPlusParamFileModExtractor.ModSpecFormats.MSGFPlusAndMSPathFinder">
             <summary>
-            MSGF+ or MSPathFinder
+            MS-GF+ or MSPathFinder
             </summary>
         </member>
         <member name="F:PHRPReader.clsMSGFPlusParamFileModExtractor.ModSpecFormats.TopPIC">
@@ -608,7 +608,7 @@
         </member>
         <member name="F:PHRPReader.clsMSGFPlusParamFileModExtractor.udtModInfoType.ModName">
             <summary>
-            Mod name (read from the parameter file) isn't used by MSGF+, but it is used by MSPathFinder
+            Mod name (read from the parameter file) isn't used by MS-GF+, but it is used by MSPathFinder
             </summary>
         </member>
         <member name="F:PHRPReader.clsMSGFPlusParamFileModExtractor.udtModInfoType.ModMass">
@@ -652,14 +652,14 @@
             Constructor
             </summary>
             <param name="toolName">
-            Search engine name, typically MSGF+
+            Search engine name, typically MS-GF+
             This name is only used in log messages
             </param>
             <remarks></remarks>
         </member>
         <member name="M:PHRPReader.clsMSGFPlusParamFileModExtractor.ExtractModInfoFromParamFile(System.String,PHRPReader.clsMSGFPlusParamFileModExtractor.ModSpecFormats,System.Collections.Generic.List{PHRPReader.clsMSGFPlusParamFileModExtractor.udtModInfoType}@)">
             <summary>
-            Extracts mod info from a MSGF+ or MSPathFinder param file, or from a MSGFPlus_Mods.txt file (previously MSGFDB_Mods.txt)
+            Extracts mod info from a MS-GF+ or MSPathFinder param file, or from a MSGFPlus_Mods.txt file (previously MSGFDB_Mods.txt)
             </summary>
             <param name="paramFilePath"></param>
             <param name="modSpecFormat"></param>
@@ -669,7 +669,7 @@
         </member>
         <member name="M:PHRPReader.clsMSGFPlusParamFileModExtractor.ParseModSpecMSGFPlus(System.String,System.Collections.Generic.IReadOnlyList{System.String},System.Int32@,PHRPReader.clsMSGFPlusParamFileModExtractor.udtModInfoType@)">
             <summary>
-            Parse the mod spec definition from a MSGF+ or MSPathFinder parameter file
+            Parse the mod spec definition from a MS-GF+ or MSPathFinder parameter file
             </summary>
             <param name="paramFilePath"></param>
             <param name="splitLine"></param>
@@ -690,7 +690,7 @@
         </member>
         <member name="M:PHRPReader.clsMSGFPlusParamFileModExtractor.ResolveMSGFPlusModsWithModDefinitions(System.Collections.Generic.List{PHRPReader.clsMSGFPlusParamFileModExtractor.udtModInfoType},PHRPReader.clsPeptideModificationContainer)">
             <summary>
-            Resolve MSGF+, MSPathFinder, or TopPIC mods with mod definitions
+            Resolve MS-GF+, MSPathFinder, or TopPIC mods with mod definitions
             </summary>
             <param name="modInfo"></param>
             <param name="peptideMods"></param>
@@ -2058,6 +2058,15 @@
             </summary>
             <param name="psm"></param>
         </member>
+        <member name="M:PHRPReader.clsPHRPParser.GetColumnMapFromHeaderLine``1(System.Collections.Generic.List{System.String},System.Collections.Generic.SortedDictionary{System.String,``0})">
+            <summary>
+            Compares the names in headerNames to the standard header names tracked by headerColumnInfo
+            Populates a dictionary mapping a PHRPReader enum to the 0-based index in columnNames
+            </summary>
+            <param name="headerNames">List of column names from the header line of a data file</param>
+            <param name="headerColumnInfo">Dictionary mapping standard header column names to a PHRPReader enum (e.g. MSGFPlusSynFileColumns)</param>
+            <returns>Dictionary mapping the PHRPReader enum value to the column index in headerNames (0-based column index)</returns>
+        </member>
         <member name="M:PHRPReader.clsPHRPParser.HandleException(System.String,System.Exception)">
             <summary>
             Report an exception as an error
@@ -2119,7 +2128,7 @@
             <summary>
             Read a Search Engine parameter file where settings are stored as key/value pairs
             </summary>
-            <param name="searchEngineName">Search engine name (e.g. MSGF+)</param>
+            <param name="searchEngineName">Search engine name (e.g. MS-GF+)</param>
             <param name="searchEngineParamFileName">Search engine parameter file name (must exist in InputDirectoryPath)</param>
             <param name="ePeptideHitResultType">PeptideHitResultType (only important if reading a ModA parameter file</param>
             <param name="searchEngineParams">SearchEngineParams container class (must be initialized by the calling function)</param>
@@ -2274,6 +2283,14 @@
             Header names and enums for the PHRP synopsis file for this tool
             </summary>
             <returns></returns>
+        </member>
+        <member name="M:PHRPReader.clsPHRPParserInspect.GetColumnMapFromHeaderLine(System.Collections.Generic.List{System.String})">
+            <summary>
+            Compares the names in headerNames to the standard header names tracked by the dictionary returned by GetColumnHeaderNamesAndIDs
+            Populates a dictionary mapping enum InspectSynFileColumns to the 0-based index in columnNames
+            </summary>
+            <param name="headerNames"></param>
+            <returns>Dictionary mapping the enum value to the column index in headerNames (0-based column index)</returns>
         </member>
         <member name="M:PHRPReader.clsPHRPParserInspect.GetPHRPFirstHitsFileName(System.String)">
             <summary>
@@ -2458,6 +2475,14 @@
             </summary>
             <returns></returns>
         </member>
+        <member name="M:PHRPReader.clsPHRPParserMODa.GetColumnMapFromHeaderLine(System.Collections.Generic.List{System.String})">
+            <summary>
+            Compares the names in headerNames to the standard header names tracked by the dictionary returned by GetColumnHeaderNamesAndIDs
+            Populates a dictionary mapping enum MODaSynFileColumns to the 0-based index in columnNames
+            </summary>
+            <param name="headerNames"></param>
+            <returns>Dictionary mapping the enum value to the column index in headerNames (0-based column index)</returns>
+        </member>
         <member name="M:PHRPReader.clsPHRPParserMODa.GetPHRPFirstHitsFileName(System.String)">
             <summary>
             Default first hits file for the given dataset
@@ -2631,6 +2656,14 @@
             Header names and enums for the PHRP synopsis file for this tool
             </summary>
             <returns></returns>
+        </member>
+        <member name="M:PHRPReader.clsPHRPParserMODPlus.GetColumnMapFromHeaderLine(System.Collections.Generic.List{System.String})">
+            <summary>
+            Compares the names in headerNames to the standard header names tracked by the dictionary returned by GetColumnHeaderNamesAndIDs
+            Populates a dictionary mapping enum MODPlusSynFileColumns to the 0-based index in columnNames
+            </summary>
+            <param name="headerNames"></param>
+            <returns>Dictionary mapping the enum value to the column index in headerNames (0-based column index)</returns>
         </member>
         <member name="M:PHRPReader.clsPHRPParserMODPlus.GetPHRPFirstHitsFileName(System.String)">
             <summary>
@@ -2815,6 +2848,14 @@
             </summary>
             <returns></returns>
         </member>
+        <member name="M:PHRPReader.clsPHRPParserMSAlign.GetColumnMapFromHeaderLine(System.Collections.Generic.List{System.String})">
+            <summary>
+            Compares the names in headerNames to the standard header names tracked by the dictionary returned by GetColumnHeaderNamesAndIDs
+            Populates a dictionary mapping enum MSAlignSynFileColumns to the 0-based index in columnNames
+            </summary>
+            <param name="headerNames"></param>
+            <returns>Dictionary mapping the enum value to the column index in headerNames (0-based column index)</returns>
+        </member>
         <member name="M:PHRPReader.clsPHRPParserMSAlign.GetPHRPFirstHitsFileName(System.String)">
             <summary>
             Default first hits file for the given dataset
@@ -2898,57 +2939,7 @@
         </member>
         <member name="T:PHRPReader.clsPHRPParserMSGFDB">
             <summary>
-            PHRP parser for MSGF+
-            </summary>
-        </member>
-        <member name="T:PHRPReader.clsPHRPParserMSGFDB.MSGFPlusSynFileColumns">
-            <summary>
-            These columns correspond to the Synopsis file created by clsMSGFDBResultsProcessor
-            </summary>
-        </member>
-        <member name="P:PHRPReader.clsPHRPParserMSGFDB.PHRPFirstHitsFileName">
-            <summary>
-            First hits file
-            </summary>
-        </member>
-        <member name="P:PHRPReader.clsPHRPParserMSGFDB.PHRPModSummaryFileName">
-            <summary>
-            Mod summary file
-            </summary>
-        </member>
-        <member name="P:PHRPReader.clsPHRPParserMSGFDB.PHRPPepToProteinMapFileName">
-            <summary>
-            Peptide to protein map file
-            </summary>
-        </member>
-        <member name="P:PHRPReader.clsPHRPParserMSGFDB.PHRPProteinModsFileName">
-            <summary>
-            Protein mods file
-            </summary>
-        </member>
-        <member name="P:PHRPReader.clsPHRPParserMSGFDB.PHRPSynopsisFileName">
-            <summary>
-            Synopsis file
-            </summary>
-        </member>
-        <member name="P:PHRPReader.clsPHRPParserMSGFDB.PHRPResultToSeqMapFileName">
-            <summary>
-            Result to sequence map file
-            </summary>
-        </member>
-        <member name="P:PHRPReader.clsPHRPParserMSGFDB.PHRPSeqInfoFileName">
-            <summary>
-            Sequence info file
-            </summary>
-        </member>
-        <member name="P:PHRPReader.clsPHRPParserMSGFDB.PHRPSeqToProteinMapFileName">
-            <summary>
-            Sequence to protein map file
-            </summary>
-        </member>
-        <member name="P:PHRPReader.clsPHRPParserMSGFDB.SearchEngineName">
-            <summary>
-            Search engine name
+            Old PHRP parser for MS-GF+
             </summary>
         </member>
         <member name="M:PHRPReader.clsPHRPParserMSGFDB.#ctor(System.String,System.String)">
@@ -2977,9 +2968,90 @@
             <param name="startupOptions">Startup Options, in particular LoadModsAndSeqInfo and MaxProteinsPerPSM</param>
             <remarks></remarks>
         </member>
-        <member name="M:PHRPReader.clsPHRPParserMSGFDB.DeterminePrecursorMassTolerance(PHRPReader.clsSearchEngineParameters,System.Double@,PHRPReader.clsPHRPReader.ePeptideHitResultType)">
+        <member name="T:PHRPReader.clsPHRPParserMSGFPlus">
             <summary>
-            Determines the precursor mass tolerance for either MSGF+, MSPathFinder, or TopPIC
+            PHRP parser for MS-GF+
+            </summary>
+        </member>
+        <member name="T:PHRPReader.clsPHRPParserMSGFPlus.MSGFPlusSynFileColumns">
+            <summary>
+            These columns correspond to the Synopsis file created by clsMSGFPlusResultsProcessor
+            </summary>
+        </member>
+        <member name="P:PHRPReader.clsPHRPParserMSGFPlus.PHRPFirstHitsFileName">
+            <summary>
+            First hits file
+            </summary>
+        </member>
+        <member name="P:PHRPReader.clsPHRPParserMSGFPlus.PHRPModSummaryFileName">
+            <summary>
+            Mod summary file
+            </summary>
+        </member>
+        <member name="P:PHRPReader.clsPHRPParserMSGFPlus.PHRPPepToProteinMapFileName">
+            <summary>
+            Peptide to protein map file
+            </summary>
+        </member>
+        <member name="P:PHRPReader.clsPHRPParserMSGFPlus.PHRPProteinModsFileName">
+            <summary>
+            Protein mods file
+            </summary>
+        </member>
+        <member name="P:PHRPReader.clsPHRPParserMSGFPlus.PHRPSynopsisFileName">
+            <summary>
+            Synopsis file
+            </summary>
+        </member>
+        <member name="P:PHRPReader.clsPHRPParserMSGFPlus.PHRPResultToSeqMapFileName">
+            <summary>
+            Result to sequence map file
+            </summary>
+        </member>
+        <member name="P:PHRPReader.clsPHRPParserMSGFPlus.PHRPSeqInfoFileName">
+            <summary>
+            Sequence info file
+            </summary>
+        </member>
+        <member name="P:PHRPReader.clsPHRPParserMSGFPlus.PHRPSeqToProteinMapFileName">
+            <summary>
+            Sequence to protein map file
+            </summary>
+        </member>
+        <member name="P:PHRPReader.clsPHRPParserMSGFPlus.SearchEngineName">
+            <summary>
+            Search engine name
+            </summary>
+        </member>
+        <member name="M:PHRPReader.clsPHRPParserMSGFPlus.#ctor(System.String,System.String)">
+            <summary>
+            Constructor; assumes loadModsAndSeqInfo=True
+            </summary>
+            <param name="datasetName">Dataset name</param>
+            <param name="inputFilePath">Input file path</param>
+            <remarks></remarks>
+        </member>
+        <member name="M:PHRPReader.clsPHRPParserMSGFPlus.#ctor(System.String,System.String,System.Boolean)">
+            <summary>
+            Constructor
+            </summary>
+            <param name="datasetName">Dataset name</param>
+            <param name="inputFilePath">Input file path</param>
+            <param name="loadModsAndSeqInfo">If True, load the ModSummary file and SeqInfo files</param>
+            <remarks></remarks>
+        </member>
+        <member name="M:PHRPReader.clsPHRPParserMSGFPlus.#ctor(System.String,System.String,PHRPReader.clsPHRPStartupOptions)">
+            <summary>
+            Constructor
+            </summary>
+            <param name="datasetName">Dataset name</param>
+            <param name="inputFilePath">Input file path</param>
+            <param name="startupOptions">Startup Options, in particular LoadModsAndSeqInfo and MaxProteinsPerPSM</param>
+            <remarks></remarks>
+        </member>
+        <member name="M:PHRPReader.clsPHRPParserMSGFPlus.DeterminePrecursorMassTolerance(PHRPReader.clsSearchEngineParameters,System.Double@,PHRPReader.clsPHRPReader.ePeptideHitResultType)">
+            <summary>
+            Determines the precursor mass tolerance for either MS-GF+, MSPathFinder, or TopPIC
             </summary>
             <param name="searchEngineParams"></param>
             <param name="tolerancePPM">Precursor mass tolerance, in ppm</param>
@@ -2987,9 +3059,9 @@
             <returns>Precursor tolerance, in Da</returns>
             <remarks></remarks>
         </member>
-        <member name="M:PHRPReader.clsPHRPParserMSGFDB.GetCustomChargeCarrierMass(PHRPReader.clsSearchEngineParameters,System.Double@)">
+        <member name="M:PHRPReader.clsPHRPParserMSGFPlus.GetCustomChargeCarrierMass(PHRPReader.clsSearchEngineParameters,System.Double@)">
             <summary>
-            Look for MSGF+ parameter ChargeCarrierMass
+            Look for MS-GF+ parameter ChargeCarrierMass
             If defined, update chargeCarrierMass with the associated mass value and return True
             Otherwise return false
             </summary>
@@ -2998,81 +3070,89 @@
             <returns></returns>
             <remarks>This function is used by clsPHRPMassErrorValidator in the Analysis Manager</remarks>
         </member>
-        <member name="M:PHRPReader.clsPHRPParserMSGFDB.GetColumnHeaderNames">
+        <member name="M:PHRPReader.clsPHRPParserMSGFPlus.GetColumnHeaderNames">
             <summary>
             Get the header names in the PHRP synopsis or first hits file for this tool
             </summary>
             <returns></returns>
         </member>
-        <member name="M:PHRPReader.clsPHRPParserMSGFDB.GetColumnHeaderNamesAndIDs">
+        <member name="M:PHRPReader.clsPHRPParserMSGFPlus.GetColumnHeaderNamesAndIDs">
             <summary>
             Header names and enums for the PHRP synopsis file for this tool
             </summary>
             <returns></returns>
-            <remarks>This includes headers for synopsis files from both MSGFDB and MSGF+</remarks>
+            <remarks>This includes headers for synopsis files from both MSGFDB and MS-GF+</remarks>
         </member>
-        <member name="M:PHRPReader.clsPHRPParserMSGFDB.GetPHRPFirstHitsFileName(System.String)">
+        <member name="M:PHRPReader.clsPHRPParserMSGFPlus.GetColumnMapFromHeaderLine(System.Collections.Generic.List{System.String})">
+            <summary>
+            Compares the names in headerNames to the standard header names tracked by the dictionary returned by GetColumnHeaderNamesAndIDs
+            Populates a dictionary mapping enum MSGFPlusSynFileColumns to the 0-based index in columnNames
+            </summary>
+            <param name="headerNames"></param>
+            <returns>Dictionary mapping the enum value to the column index in headerNames (0-based column index)</returns>
+        </member>
+        <member name="M:PHRPReader.clsPHRPParserMSGFPlus.GetPHRPFirstHitsFileName(System.String)">
             <summary>
             Default first hits file for the given dataset
             </summary>
             <param name="datasetName"></param>
             <returns>Filename</returns>
         </member>
-        <member name="M:PHRPReader.clsPHRPParserMSGFDB.GetPHRPModSummaryFileName(System.String)">
+        <member name="M:PHRPReader.clsPHRPParserMSGFPlus.GetPHRPModSummaryFileName(System.String)">
             <summary>
             Default ModSummary file name for the given dataset
             </summary>
             <param name="datasetName"></param>
             <returns>Filename</returns>
         </member>
-        <member name="M:PHRPReader.clsPHRPParserMSGFDB.GetPHRPPepToProteinMapFileName(System.String)">
+        <member name="M:PHRPReader.clsPHRPParserMSGFPlus.GetPHRPPepToProteinMapFileName(System.String)">
             <summary>
             Default PepToProtMap file name for the given dataset
             </summary>
             <param name="datasetName"></param>
             <returns>Filename</returns>
         </member>
-        <member name="M:PHRPReader.clsPHRPParserMSGFDB.GetPHRPProteinModsFileName(System.String)">
+        <member name="M:PHRPReader.clsPHRPParserMSGFPlus.GetPHRPProteinModsFileName(System.String)">
             <summary>
             Default ProteinMods file name for the given dataset
             </summary>
             <param name="datasetName"></param>
             <returns>Filename</returns>
         </member>
-        <member name="M:PHRPReader.clsPHRPParserMSGFDB.GetPHRPSynopsisFileName(System.String)">
+        <member name="M:PHRPReader.clsPHRPParserMSGFPlus.GetPHRPSynopsisFileName(System.String)">
             <summary>
             Default Synopsis file name for the given dataset
             </summary>
             <param name="datasetName"></param>
             <returns>Filename</returns>
         </member>
-        <member name="M:PHRPReader.clsPHRPParserMSGFDB.GetPHRPResultToSeqMapFileName(System.String)">
+        <member name="M:PHRPReader.clsPHRPParserMSGFPlus.GetPHRPResultToSeqMapFileName(System.String)">
             <summary>
             Default ResultToSeq map file name for the given dataset
             </summary>
             <param name="datasetName"></param>
             <returns>Filename</returns>
         </member>
-        <member name="M:PHRPReader.clsPHRPParserMSGFDB.GetPHRPSeqInfoFileName(System.String)">
+        <member name="M:PHRPReader.clsPHRPParserMSGFPlus.GetPHRPSeqInfoFileName(System.String)">
             <summary>
             Default SeqInfo map file name for the given dataset
             </summary>
             <param name="datasetName"></param>
             <returns>Filename</returns>
         </member>
-        <member name="M:PHRPReader.clsPHRPParserMSGFDB.GetPHRPSeqToProteinMapFileName(System.String)">
+        <member name="M:PHRPReader.clsPHRPParserMSGFPlus.GetPHRPSeqToProteinMapFileName(System.String)">
             <summary>
             Default SeqToProtein map file name for the given dataset
             </summary>
             <param name="datasetName"></param>
             <returns>Filename</returns>
         </member>
-        <member name="M:PHRPReader.clsPHRPParserMSGFDB.GetSearchEngineName">
+        <member name="M:PHRPReader.clsPHRPParserMSGFPlus.GetSearchEngineName">
             <summary>
             Search engine name
             </summary>
         </member>
-        <member name="M:PHRPReader.clsPHRPParserMSGFDB.LoadSearchEngineParameters(System.String,PHRPReader.clsSearchEngineParameters@)">
+        <member name="M:PHRPReader.clsPHRPParserMSGFPlus.LoadSearchEngineParameters(System.String,PHRPReader.clsSearchEngineParameters@)">
             <summary>
             Parses the specified MSGFDB (aka MS-GF+) parameter file
             </summary>
@@ -3081,7 +3161,7 @@
             <returns></returns>
             <remarks></remarks>
         </member>
-        <member name="M:PHRPReader.clsPHRPParserMSGFDB.ParsePHRPDataLine(System.String,System.Int32,PHRPReader.clsPSM@,System.Boolean)">
+        <member name="M:PHRPReader.clsPHRPParserMSGFPlus.ParsePHRPDataLine(System.String,System.Int32,PHRPReader.clsPSM@,System.Boolean)">
             <summary>
             Parse the data line read from a PHRP results file
             </summary>
@@ -3092,9 +3172,9 @@
             <returns>True if success, false if an error</returns>
             <remarks>When fastReadMode is True, you should call FinalizePSM to populate the remaining fields</remarks>
         </member>
-        <member name="M:PHRPReader.clsPHRPParserMSGFDB.UpdateMassCalculatorMasses(System.String,PHRPReader.clsMSGFPlusParamFileModExtractor,PHRPReader.clsPeptideMassCalculator,System.String@)">
+        <member name="M:PHRPReader.clsPHRPParserMSGFPlus.UpdateMassCalculatorMasses(System.String,PHRPReader.clsMSGFPlusParamFileModExtractor,PHRPReader.clsPeptideMassCalculator,System.String@)">
             <summary>
-            Look for custom amino acid definitions in the MSGF+ parameter file
+            Look for custom amino acid definitions in the MS-GF+ parameter file
             If any are found, update the amino acid mass values in the PeptideMassCalculator instance
             </summary>
             <param name="searchEngineParamFilePath"></param>
@@ -3196,6 +3276,14 @@
             Header names and enums for the PHRP synopsis file for this tool
             </summary>
             <returns></returns>
+        </member>
+        <member name="M:PHRPReader.clsPHRPParserMSPathFinder.GetColumnMapFromHeaderLine(System.Collections.Generic.List{System.String})">
+            <summary>
+            Compares the names in headerNames to the standard header names tracked by the dictionary returned by GetColumnHeaderNamesAndIDs
+            Populates a dictionary mapping enum MSPathFinderSynFileColumns to the 0-based index in columnNames
+            </summary>
+            <param name="headerNames"></param>
+            <returns>Dictionary mapping the enum value to the column index in headerNames (0-based column index)</returns>
         </member>
         <member name="M:PHRPReader.clsPHRPParserMSPathFinder.GetPHRPFirstHitsFileName(System.String)">
             <summary>
@@ -3386,6 +3474,14 @@
             </summary>
             <returns></returns>
         </member>
+        <member name="M:PHRPReader.clsPHRPParserSequest.GetColumnMapFromHeaderLine(System.Collections.Generic.List{System.String})">
+            <summary>
+            Compares the names in headerNames to the standard header names tracked by the dictionary returned by GetColumnHeaderNamesAndIDs
+            Populates a dictionary mapping enum SequestSynopsisFileColumns to the 0-based index in columnNames
+            </summary>
+            <param name="headerNames"></param>
+            <returns>Dictionary mapping the enum value to the column index in headerNames (0-based column index)</returns>
+        </member>
         <member name="M:PHRPReader.clsPHRPParserSequest.GetPHRPFirstHitsFileName(System.String)">
             <summary>
             Default first hits file for the given dataset
@@ -3569,6 +3665,14 @@
             </summary>
             <returns></returns>
         </member>
+        <member name="M:PHRPReader.clsPHRPParserTopPIC.GetColumnMapFromHeaderLine(System.Collections.Generic.List{System.String})">
+            <summary>
+            Compares the names in headerNames to the standard header names tracked by the dictionary returned by GetColumnHeaderNamesAndIDs
+            Populates a dictionary mapping enum TopPICSynFileColumns to the 0-based index in columnNames
+            </summary>
+            <param name="headerNames"></param>
+            <returns>Dictionary mapping the enum value to the column index in headerNames (0-based column index)</returns>
+        </member>
         <member name="M:PHRPReader.clsPHRPParserTopPIC.GetPHRPFirstHitsFileName(System.String)">
             <summary>
             Default first hits file for the given dataset
@@ -3751,6 +3855,14 @@
             Header names and enums for the PHRP synopsis file for this tool
             </summary>
             <returns></returns>
+        </member>
+        <member name="M:PHRPReader.clsPHRPParserXTandem.GetColumnMapFromHeaderLine(System.Collections.Generic.List{System.String})">
+            <summary>
+            Compares the names in headerNames to the standard header names tracked by the dictionary returned by GetColumnHeaderNamesAndIDs
+            Populates a dictionary mapping enum XTandemSynFileColumns to the 0-based index in columnNames
+            </summary>
+            <param name="headerNames"></param>
+            <returns>Dictionary mapping the enum value to the column index in headerNames (0-based column index)</returns>
         </member>
         <member name="M:PHRPReader.clsPHRPParserXTandem.GetPHRPFirstHitsFileName(System.String)">
             <summary>
@@ -4001,7 +4113,7 @@
         </member>
         <member name="P:PHRPReader.clsPHRPReader.PeptideHitResultType">
             <summary>
-            Peptide hit result type; Sequest, XTandem, Inspect, or MSGFDB (aka MSGF+)
+            Peptide hit result type; Sequest, XTandem, Inspect, or MSGFPlus (aka MS-GF+)
             </summary>
             <value></value>
             <returns></returns>
@@ -4466,6 +4578,15 @@
             <returns>Column index, or -1 if not found</returns>
             <remarks></remarks>
         </member>
+        <member name="M:PHRPReader.clsPHRPReader.LookupColumnIndex(System.Enum,System.Collections.Generic.SortedDictionary{System.Enum,System.Int32})">
+            <summary>
+            Returns the index of the indicated column, as tracked by columnHeaders
+            </summary>
+            <param name="columnEnum"></param>
+            <param name="columnHeaders"></param>
+            <returns>Column index, or -1 if not found</returns>
+            <remarks></remarks>
+        </member>
         <member name="M:PHRPReader.clsPHRPReader.LookupColumnValue(System.String[],System.String,System.Collections.Generic.SortedDictionary{System.String,System.Int32})">
             <summary>
             Returns the string stored in the given named column (using columnHeaders to dereference column name with column index)
@@ -4474,6 +4595,13 @@
             <remarks></remarks>
         </member>
         <member name="M:PHRPReader.clsPHRPReader.LookupColumnValue(System.String[],System.String,System.Collections.Generic.SortedDictionary{System.String,System.Int32},System.String)">
+            <summary>
+            Returns the string stored in the given named column (using columnHeaders to dereference column name with column index)
+            </summary>
+            <returns>The text in the specified column; valueIfMissing if the specific column name is not recognized</returns>
+            <remarks></remarks>
+        </member>
+        <member name="M:PHRPReader.clsPHRPReader.LookupColumnValue(System.String[],System.Enum,System.Collections.Generic.SortedDictionary{System.Enum,System.Int32},System.String)">
             <summary>
             Returns the string stored in the given named column (using columnHeaders to dereference column name with column index)
             </summary>
@@ -4498,7 +4626,7 @@
             <summary>
             Updates the column name to column index mapping in columnHeaders
             </summary>
-            <param name="columns">Column names read from the input file</param>
+            <param name="dataColumns">Column names read from the input file</param>
             <param name="columnHeaders">Column mapping dictionary object to update</param>
             <remarks>The SortedDictionary object should be instantiated using a case-insensitive comparer, i.e. (StringComparer.OrdinalIgnoreCase)</remarks>
         </member>
@@ -4699,7 +4827,7 @@
         </member>
         <member name="P:PHRPReader.clsPHRPStartupOptions.LoadMSGFResults">
             <summary>
-            If true, load MSGF results (not MSGF+)
+            If true, load MSGF results (not MS-GF+)
             </summary>
         </member>
         <member name="P:PHRPReader.clsPHRPStartupOptions.LoadScanStatsData">
@@ -5586,7 +5714,7 @@
             </summary>
             <param name="searchEngineName"></param>
             <param name="modInfo"></param>
-            <param name="Parameters"></param>
+            <param name="parameters"></param>
         </member>
         <member name="M:PHRPReader.clsSearchEngineParameters.AddModification(PHRPReader.clsModificationDefinition)">
             <summary>
@@ -5604,8 +5732,8 @@
             <summary>
             Add/update a parameter
             </summary>
-            <param name="ParamName"></param>
-            <param name="ParamValue"></param>
+            <param name="paramName"></param>
+            <param name="paramValue"></param>
         </member>
         <member name="M:PHRPReader.clsSearchEngineParameters.ClearModifications">
             <summary>
