@@ -11,7 +11,14 @@ A graphical user interface (GUI) is provided to allow the user to select the inp
 The results browser displays the protein sequences, highlighting the residues that were present 
 in the peptide input file, and providing sequence coverage stats for each protein.
 
-## Example files:
+## Downloads
+
+Download a .zip file with the installer from:
+https://github.com/PNNL-Comp-Mass-Spec/protein-coverage-summarizer/releases
+
+The release page also includes a .zip file with PeptideToProteinMapper.exe
+
+### Example files:
 
 Input files:
 * [BSA_P171_QID1638_TestPeptides.txt](https://github.com/PNNL-Comp-Mass-Spec/protein-coverage-summarizer/blob/master/bin/BSA_P171_QID1638_TestPeptides.txt)
@@ -23,7 +30,6 @@ Output files:
 * [BSA_P171_QID1638_TestPeptides_ProteinToPeptideMapping.txt](https://github.com/PNNL-Comp-Mass-Spec/protein-coverage-summarizer/blob/master/bin/BSA_P171_QID1638_TestPeptides_ProteinToPeptideMapping.txt)
 * [BSA_P171_QID1638_TestPeptides_SequenceOnly_coverage.txt](https://github.com/PNNL-Comp-Mass-Spec/protein-coverage-summarizer/blob/master/bin/BSA_P171_QID1638_TestPeptides_SequenceOnly_coverage.txt)
 * [BSA_P171_QID1638_TestPeptides_SequenceOnly_ProteinToPeptideMapping.txt](https://github.com/PNNL-Comp-Mass-Spec/protein-coverage-summarizer/blob/master/bin/BSA_P171_QID1638_TestPeptides_SequenceOnly_ProteinToPeptideMapping.txt)
-
 
 ## Console Version Syntax
 
@@ -62,7 +68,6 @@ Use `/K` to skip protein coverage computation steps
 Use `/Debug` to keep the console open to see additional debug messages
 
 Use `/KeepDB` to keep the SQLite database after processing (by default it is deleted)
-
 
 ### Console Arguments for PeptideToProteinMapper.exe
 

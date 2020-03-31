@@ -5,6 +5,11 @@ searches the specified .fasta or text file containing protein names and sequence
 to find the proteins that contain each peptide.  The program will also compute 
 the sequence coverage percent for each protein (though this can be disable using /K).
 
+## Downloads
+
+Download PeptideToProteinMapper.zip from:
+https://github.com/PNNL-Comp-Mass-Spec/protein-coverage-summarizer/releases
+
 ## Program Syntax
 
 ```
