@@ -1,6 +1,8 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual Studio 2010
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29920.165
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "PeptideToProteinMapper_x64", "PeptideToProteinMapper_x64.vbproj", "{90820292-FF2E-411E-AAC9-367C02F79A17}"
 EndProject
 Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "PeptideToProteinMapEngine_x64", "PeptideToProteinMapEngine\PeptideToProteinMapEngine_x64.vbproj", "{F6468856-2855-443C-8236-20CB59FD2C6A}"
@@ -9,22 +11,41 @@ Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "ProteinCoverageSummarizer_x
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
 		Debug|x64 = Debug|x64
+		Debug|x86 = Debug|x86
+		Release|Any CPU = Release|Any CPU
 		Release|x64 = Release|x64
+		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{90820292-FF2E-411E-AAC9-367C02F79A17}.Debug|Any CPU.ActiveCfg = Debug|x64
 		{90820292-FF2E-411E-AAC9-367C02F79A17}.Debug|x64.ActiveCfg = Debug|x64
 		{90820292-FF2E-411E-AAC9-367C02F79A17}.Debug|x64.Build.0 = Debug|x64
+		{90820292-FF2E-411E-AAC9-367C02F79A17}.Debug|x86.ActiveCfg = Debug|x64
+		{90820292-FF2E-411E-AAC9-367C02F79A17}.Release|Any CPU.ActiveCfg = Release|x64
 		{90820292-FF2E-411E-AAC9-367C02F79A17}.Release|x64.ActiveCfg = Release|x64
+		{90820292-FF2E-411E-AAC9-367C02F79A17}.Release|x86.ActiveCfg = Release|x64
+		{F6468856-2855-443C-8236-20CB59FD2C6A}.Debug|Any CPU.ActiveCfg = Debug|x64
 		{F6468856-2855-443C-8236-20CB59FD2C6A}.Debug|x64.ActiveCfg = Debug|x64
 		{F6468856-2855-443C-8236-20CB59FD2C6A}.Debug|x64.Build.0 = Debug|x64
+		{F6468856-2855-443C-8236-20CB59FD2C6A}.Debug|x86.ActiveCfg = Debug|x64
+		{F6468856-2855-443C-8236-20CB59FD2C6A}.Release|Any CPU.ActiveCfg = Release|x64
 		{F6468856-2855-443C-8236-20CB59FD2C6A}.Release|x64.ActiveCfg = Release|x64
+		{F6468856-2855-443C-8236-20CB59FD2C6A}.Release|x86.ActiveCfg = Release|x64
+		{AF5E35D8-1C45-41F9-82FE-56D4CAD8856C}.Debug|Any CPU.ActiveCfg = Debug|x64
 		{AF5E35D8-1C45-41F9-82FE-56D4CAD8856C}.Debug|x64.ActiveCfg = Debug|x64
 		{AF5E35D8-1C45-41F9-82FE-56D4CAD8856C}.Debug|x64.Build.0 = Debug|x64
+		{AF5E35D8-1C45-41F9-82FE-56D4CAD8856C}.Debug|x86.ActiveCfg = Debug|x64
+		{AF5E35D8-1C45-41F9-82FE-56D4CAD8856C}.Release|Any CPU.ActiveCfg = Release|x64
 		{AF5E35D8-1C45-41F9-82FE-56D4CAD8856C}.Release|x64.ActiveCfg = Release|x64
 		{AF5E35D8-1C45-41F9-82FE-56D4CAD8856C}.Release|x64.Build.0 = Release|x64
+		{AF5E35D8-1C45-41F9-82FE-56D4CAD8856C}.Release|x86.ActiveCfg = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {82B9716C-EAA3-4B5A-BB28-C276654F1201}
 	EndGlobalSection
 EndGlobal

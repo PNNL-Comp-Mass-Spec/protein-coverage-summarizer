@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.28010.2026
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29920.165
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "ProteinCoverageSummarizerGUI_x64", "ProteinCoverageSummarizerGUI_x64.vbproj", "{2FCC0BA9-9F66-4826-83BD-8750392D6BFF}"
 EndProject
@@ -9,18 +9,30 @@ Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "ProteinCoverageSummarizer_x
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
 		Debug|x64 = Debug|x64
+		Debug|x86 = Debug|x86
+		Release|Any CPU = Release|Any CPU
 		Release|x64 = Release|x64
+		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{2FCC0BA9-9F66-4826-83BD-8750392D6BFF}.Debug|Any CPU.ActiveCfg = Debug|x64
 		{2FCC0BA9-9F66-4826-83BD-8750392D6BFF}.Debug|x64.ActiveCfg = Debug|x64
 		{2FCC0BA9-9F66-4826-83BD-8750392D6BFF}.Debug|x64.Build.0 = Debug|x64
+		{2FCC0BA9-9F66-4826-83BD-8750392D6BFF}.Debug|x86.ActiveCfg = Debug|x64
+		{2FCC0BA9-9F66-4826-83BD-8750392D6BFF}.Release|Any CPU.ActiveCfg = Release|x64
 		{2FCC0BA9-9F66-4826-83BD-8750392D6BFF}.Release|x64.ActiveCfg = Release|x64
 		{2FCC0BA9-9F66-4826-83BD-8750392D6BFF}.Release|x64.Build.0 = Release|x64
+		{2FCC0BA9-9F66-4826-83BD-8750392D6BFF}.Release|x86.ActiveCfg = Release|x64
+		{AF5E35D8-1C45-41F9-82FE-56D4CAD8856C}.Debug|Any CPU.ActiveCfg = Debug|x64
 		{AF5E35D8-1C45-41F9-82FE-56D4CAD8856C}.Debug|x64.ActiveCfg = Debug|x64
 		{AF5E35D8-1C45-41F9-82FE-56D4CAD8856C}.Debug|x64.Build.0 = Debug|x64
+		{AF5E35D8-1C45-41F9-82FE-56D4CAD8856C}.Debug|x86.ActiveCfg = Debug|x64
+		{AF5E35D8-1C45-41F9-82FE-56D4CAD8856C}.Release|Any CPU.ActiveCfg = Release|x64
 		{AF5E35D8-1C45-41F9-82FE-56D4CAD8856C}.Release|x64.ActiveCfg = Release|x64
 		{AF5E35D8-1C45-41F9-82FE-56D4CAD8856C}.Release|x64.Build.0 = Release|x64
+		{AF5E35D8-1C45-41F9-82FE-56D4CAD8856C}.Release|x86.ActiveCfg = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
