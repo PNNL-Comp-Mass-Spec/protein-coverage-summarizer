@@ -22,6 +22,7 @@ Imports PRISM
 Imports PRISMWin
 Imports ProteinCoverageSummarizer
 Imports ProteinFileReader
+Imports DBUtils = PRISMDatabaseUtils.DataTableUtils
 
 ''' <summary>
 ''' This program uses clsProteinCoverageSummarizer to read in a file with protein sequences along with
@@ -1403,13 +1404,13 @@ Public Class GUI
             Dim dtCoverageResults = New DataTable(COVERAGE_RESULTS_DATA_TABLE)
 
             ' Add the columns to the data table
-            DatabaseUtils.DataTableUtils.AppendColumnStringToTable(dtCoverageResults, COL_NAME_PROTEIN_NAME, String.Empty)
-            DatabaseUtils.DataTableUtils.AppendColumnFloatToTable(dtCoverageResults, COL_NAME_PROTEIN_COVERAGE)
-            DatabaseUtils.DataTableUtils.AppendColumnStringToTable(dtCoverageResults, COL_NAME_PROTEIN_DESCRIPTION, String.Empty)
-            DatabaseUtils.DataTableUtils.AppendColumnIntegerToTable(dtCoverageResults, COL_NAME_NON_UNIQUE_PEPTIDE_COUNT)
-            DatabaseUtils.DataTableUtils.AppendColumnIntegerToTable(dtCoverageResults, COL_NAME_UNIQUE_PEPTIDE_COUNT)
-            DatabaseUtils.DataTableUtils.AppendColumnIntegerToTable(dtCoverageResults, COL_NAME_PROTEIN_RESIDUE_COUNT)
-            DatabaseUtils.DataTableUtils.AppendColumnStringToTable(dtCoverageResults, COL_NAME_PROTEIN_SEQUENCE, String.Empty)
+            DBUtils.AppendColumnStringToTable(dtCoverageResults, COL_NAME_PROTEIN_NAME, String.Empty)
+            DBUtils.AppendColumnFloatToTable(dtCoverageResults, COL_NAME_PROTEIN_COVERAGE)
+            DBUtils.AppendColumnStringToTable(dtCoverageResults, COL_NAME_PROTEIN_DESCRIPTION, String.Empty)
+            DBUtils.AppendColumnIntegerToTable(dtCoverageResults, COL_NAME_NON_UNIQUE_PEPTIDE_COUNT)
+            DBUtils.AppendColumnIntegerToTable(dtCoverageResults, COL_NAME_UNIQUE_PEPTIDE_COUNT)
+            DBUtils.AppendColumnIntegerToTable(dtCoverageResults, COL_NAME_PROTEIN_RESIDUE_COUNT)
+            DBUtils.AppendColumnStringToTable(dtCoverageResults, COL_NAME_PROTEIN_SEQUENCE, String.Empty)
 
             ' Note that Protein Sequence should be at ColIndex 6 = clsProteinCoverageSummarizer.OUTPUT_FILE_PROTEIN_SEQUENCE_COLUMN_NUMBER-1
             mProteinSequenceColIndex = clsProteinCoverageSummarizer.OUTPUT_FILE_PROTEIN_SEQUENCE_COLUMN_NUMBER - 1
