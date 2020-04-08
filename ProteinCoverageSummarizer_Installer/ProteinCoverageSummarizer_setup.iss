@@ -15,32 +15,32 @@ WelcomeLabel2=This will install [name/ver] on your computer.
 ; WelcomeLabel2=Welcome message%n%nAdditional sentence
 
 [Files]
-Source: ..\bin\AnyCPU\ProteinCoverageSummarizerGUI.exe            ; DestDir: {app}
-Source: ..\bin\AnyCPU\ProteinCoverageSummarizerGUI.exe.config     ; DestDir: {app}
-Source: ..\bin\AnyCPU\Microsoft.Bcl.AsyncInterfaces.dll           ; DestDir: {app}
-Source: ..\bin\AnyCPU\Npgsql.dll                                  ; DestDir: {app}
-Source: ..\bin\AnyCPU\Ookii.Dialogs.dll                           ; DestDir: {app}
-Source: ..\bin\AnyCPU\PRISM.dll                                   ; DestDir: {app}
-Source: ..\bin\AnyCPU\PRISMDatabaseUtils.dll                      ; DestDir: {app}
-Source: ..\bin\AnyCPU\PRISMWin.dll                                ; DestDir: {app}
-Source: ..\bin\AnyCPU\ProteinCoverageSummarizer.dll               ; DestDir: {app}
-Source: ..\bin\AnyCPU\ProteinFileReader.dll                       ; DestDir: {app}
-Source: ..\bin\AnyCPU\System.Buffers.dll                          ; DestDir: {app}
-Source: ..\bin\AnyCPU\System.Data.SQLite.dll                      ; DestDir: {app}
-Source: ..\bin\AnyCPU\System.Memory.dll                           ; DestDir: {app}
-Source: ..\bin\AnyCPU\System.Numerics.Vectors.dll                 ; DestDir: {app}
-Source: ..\bin\AnyCPU\System.Runtime.CompilerServices.Unsafe.dll  ; DestDir: {app}
-Source: ..\bin\AnyCPU\System.Text.Encodings.Web.dll               ; DestDir: {app}
-Source: ..\bin\AnyCPU\System.Text.Json.dll                        ; DestDir: {app}
-Source: ..\bin\AnyCPU\System.Threading.Tasks.Extensions.dll       ; DestDir: {app}
-Source: ..\bin\AnyCPU\System.ValueTuple.dll                       ; DestDir: {app}
-Source: ..\bin\ProteinCoverageSummarizerSettings.xml              ; DestDir: {app}
-Source: ..\bin\AnyCPU\x64\SQLite.Interop.dll                      ; DestDir: {app}\x64
-Source: ..\bin\AnyCPU\x86\SQLite.Interop.dll                      ; DestDir: {app}\x86
+Source: ..\bin\Release\ProteinCoverageSummarizerGUI.exe            ; DestDir: {app}
+Source: ..\bin\Release\ProteinCoverageSummarizerGUI.exe.config     ; DestDir: {app}
+Source: ..\bin\Release\Microsoft.Bcl.AsyncInterfaces.dll           ; DestDir: {app}
+Source: ..\bin\Release\Npgsql.dll                                  ; DestDir: {app}
+Source: ..\bin\Release\Ookii.Dialogs.dll                           ; DestDir: {app}
+Source: ..\bin\Release\PRISM.dll                                   ; DestDir: {app}
+Source: ..\bin\Release\PRISMDatabaseUtils.dll                      ; DestDir: {app}
+Source: ..\bin\Release\PRISMWin.dll                                ; DestDir: {app}
+Source: ..\bin\Release\ProteinCoverageSummarizer.dll               ; DestDir: {app}
+Source: ..\bin\Release\ProteinFileReader.dll                       ; DestDir: {app}
+Source: ..\bin\Release\System.Buffers.dll                          ; DestDir: {app}
+Source: ..\bin\Release\System.Data.SQLite.dll                      ; DestDir: {app}
+Source: ..\bin\Release\System.Memory.dll                           ; DestDir: {app}
+Source: ..\bin\Release\System.Numerics.Vectors.dll                 ; DestDir: {app}
+Source: ..\bin\Release\System.Runtime.CompilerServices.Unsafe.dll  ; DestDir: {app}
+Source: ..\bin\Release\System.Text.Encodings.Web.dll               ; DestDir: {app}
+Source: ..\bin\Release\System.Text.Json.dll                        ; DestDir: {app}
+Source: ..\bin\Release\System.Threading.Tasks.Extensions.dll       ; DestDir: {app}
+Source: ..\bin\Release\System.ValueTuple.dll                       ; DestDir: {app}
+Source: ..\bin\ProteinCoverageSummarizerSettings.xml               ; DestDir: {app}
+Source: ..\bin\Release\x64\SQLite.Interop.dll                      ; DestDir: {app}\x64
+Source: ..\bin\Release\x86\SQLite.Interop.dll                      ; DestDir: {app}\x86
 
-Source: ..\PeptideToProteinMapper\bin\AnyCPU\PeptideToProteinMapper.exe    ; DestDir: {app}
-Source: ..\PeptideToProteinMapper\bin\AnyCPU\PeptideToProteinMapEngine.dll ; DestDir: {app}
-Source: ..\PeptideToProteinMapper\bin\AnyCPU\PHRPReader.dll                ; DestDir: {app}
+Source: ..\PeptideToProteinMapper\bin\Release\PeptideToProteinMapper.exe    ; DestDir: {app}
+Source: ..\PeptideToProteinMapper\bin\Release\PeptideToProteinMapEngine.dll ; DestDir: {app}
+Source: ..\PeptideToProteinMapper\bin\Release\PHRPReader.dll                ; DestDir: {app}
 
 Source: ..\bin\BSA_P171_QID1638_TestProteins.fasta                        ; DestDir: {app}
 Source: ..\bin\BSA_P171_QID1638_TestPeptides.txt                          ; DestDir: {app}

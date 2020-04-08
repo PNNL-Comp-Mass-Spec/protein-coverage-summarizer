@@ -1,5 +1,5 @@
 f:
-pushd "F:\Documents\Projects\DataMining\Protein_Coverage_Summarizer\PeptideToProteinMapper\PeptideToProteinMapEngine\bin\AnyCPU"
+pushd "F:\Documents\Projects\DataMining\Protein_Coverage_Summarizer\PeptideToProteinMapper\PeptideToProteinMapEngine\bin\Debug"
 
 copy PeptideToProteinMapEngine.dll "F:\Documents\projects\dataMining\DMS_Managers\Analysis_Manager\AM_Common\" /Y
 copy PeptideToProteinMapEngine.dll "F:\Documents\projects\dataMining\DMS_Managers\Analysis_Manager\AM_Program\bin\" /Y
