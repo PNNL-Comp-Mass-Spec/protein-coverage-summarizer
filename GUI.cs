@@ -1,7 +1,7 @@
-Option Strict On
+ÔªøOption Strict On
 
 ' -------------------------------------------------------------------------------
-' Written by Matthew Monroe and Niköa Blonder for the Department of Energy (PNNL, Richland, WA)
+' Written by Matthew Monroe and Nik≈°a Blonder for the Department of Energy (PNNL, Richland, WA)
 ' Program started June 14, 2005
 '
 ' E-mail: matthew.monroe@pnnl.gov or proteomics@pnnl.gov
@@ -1693,7 +1693,7 @@ Public Class GUI
         message.AppendLine("This program reads in a .fasta or .txt file containing protein names and sequences (and optionally descriptions).")
         message.AppendLine("The program also reads in a .txt file containing peptide sequences and protein names (though protein name is optional) then uses this information to compute the sequence coverage percent for each protein.")
         message.AppendLine()
-        message.AppendLine("Program written by Matthew Monroe and Niköa Blonder for the Department of Energy (PNNL, Richland, WA) in 2005")
+        message.AppendLine("Program written by Matthew Monroe and Nik≈°a Blonder for the Department of Energy (PNNL, Richland, WA) in 2005")
         message.AppendLine()
         message.AppendLine("This is version " & Application.ProductVersion & " (" & PROGRAM_DATE & ")")
         message.AppendLine()

@@ -1,7 +1,7 @@
-Option Strict On
+ÔªøOption Strict On
 
 ' -------------------------------------------------------------------------------
-' Written by Matthew Monroe and Niköa Blonder for the Department of Energy (PNNL, Richland, WA)
+' Written by Matthew Monroe and Nik≈°a Blonder for the Department of Energy (PNNL, Richland, WA)
 ' Program started June 14, 2005
 '
 ' E-mail: matthew.monroe@pnnl.gov or proteomics@pnnl.gov
@@ -261,7 +261,7 @@ Public Module Program
             Console.WriteLine("Use /KeepDB to keep the SQLite database after processing (by default it is deleted)")
             Console.WriteLine()
 
-            Console.WriteLine("Program written by Matthew Monroe and Niköa Blonder for the Department of Energy (PNNL, Richland, WA) in 2005")
+            Console.WriteLine("Program written by Matthew Monroe and Nik≈°a Blonder for the Department of Energy (PNNL, Richland, WA) in 2005")
             Console.WriteLine("Version: " & GetAppVersion())
             Console.WriteLine()
 

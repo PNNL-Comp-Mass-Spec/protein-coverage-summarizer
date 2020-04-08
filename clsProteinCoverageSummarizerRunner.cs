@@ -1,7 +1,7 @@
-Option Strict On
+﻿Option Strict On
 
 ' -------------------------------------------------------------------------------
-' Written by Matthew Monroe and Nik�a Blonder for the Department of Energy (PNNL, Richland, WA)
+' Written by Matthew Monroe and Nikša Blonder for the Department of Energy (PNNL, Richland, WA)
 ' Program started June 14, 2005
 '
 ' E-mail: matthew.monroe@pnnl.gov or proteomics@pnnl.gov
