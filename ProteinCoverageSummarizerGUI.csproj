@@ -24,7 +24,7 @@
     <OptionExplicit>On</OptionExplicit>
     <OptionStrict>On</OptionStrict>
     <RootNamespace>ProteinCoverageSummarizerGUI</RootNamespace>
-    <StartupObject>ProteinCoverageSummarizerGUI.modMain</StartupObject>
+    <StartupObject>ProteinCoverageSummarizerGUI.Program</StartupObject>
     <FileUpgradeFlags>
     </FileUpgradeFlags>
     <MyType>Console</MyType>
@@ -108,21 +108,21 @@
     <Import Include="System.Windows.Forms" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AssemblyInfo.vb">
+    <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="clsProteinCoverageSummarizerRunner.vb">
+    <Compile Include="clsProteinCoverageSummarizerRunner.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="GlobalSuppressions.vb" />
-    <Compile Include="GUI.vb">
+    <Compile Include="GlobalSuppressions.cs" />
+    <Compile Include="GUI.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="modMain.vb">
+    <Compile Include="Program.cs">
       <SubType>Code</SubType>
     </Compile>
     <EmbeddedResource Include="GUI.resx">
-      <DependentUpon>GUI.vb</DependentUpon>
+      <DependentUpon>GUI.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
   </ItemGroup>
@@ -154,10 +154,7 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="My Project\" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="app.config" />
+    <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Ookii.Dialogs.WindowsForms">
@@ -180,7 +177,7 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="ProteinCoverageSummarizer\ProteinCoverageSummarizer.vbproj">
+    <ProjectReference Include="ProteinCoverageSummarizer\ProteinCoverageSummarizer.csproj">
       <Project>{27958cb4-6ae4-4f9b-8fa9-381def2646bf}</Project>
       <Name>ProteinCoverageSummarizer</Name>
     </ProjectReference>

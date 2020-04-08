@@ -32,7 +32,7 @@ Imports PRISM
 ''' Example command Line
 ''' /I:PeptideInputFilePath /R:ProteinInputFilePath /O:OutputDirectoryPath /P:ParameterFilePath
 ''' </summary>
-Public Module modMain
+Public Module Program
 
     Public Const PROGRAM_DATE As String = "March 30, 2020"
 

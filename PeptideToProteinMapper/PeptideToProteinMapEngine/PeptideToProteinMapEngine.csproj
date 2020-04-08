@@ -5,13 +5,12 @@
     <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
     <ProductVersion>9.0.30729</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{327E7C53-2350-483E-A551-83A60B9B5131}</ProjectGuid>
-    <OutputType>Exe</OutputType>
-    <StartupObject>PeptideToProteinMapper.modMain</StartupObject>
-    <RootNamespace>PeptideToProteinMapper</RootNamespace>
-    <AssemblyName>PeptideToProteinMapper</AssemblyName>
+    <ProjectGuid>{AFA3FE41-2306-4799-8A39-846B7DDFDF3C}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <RootNamespace>PeptideToProteinMapEngine</RootNamespace>
+    <AssemblyName>PeptideToProteinMapEngine</AssemblyName>
     <FileAlignment>512</FileAlignment>
-    <MyType>Console</MyType>
+    <MyType>Windows</MyType>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <OptionExplicit>On</OptionExplicit>
     <OptionCompare>Binary</OptionCompare>
@@ -28,32 +27,36 @@
     <DefineDebug>true</DefineDebug>
     <DefineTrace>true</DefineTrace>
     <OutputPath>bin\Debug\</OutputPath>
-    <DocumentationFile>PeptideToProteinMapper.xml</DocumentationFile>
-    <NoWarn>42016,41999,42017,42018,42019,42032,42036,42020,42021,42022,42353,42354,42355</NoWarn>
+    <DocumentationFile>PeptideToProteinMapEngine.xml</DocumentationFile>
+    <NoWarn>42353,42354,42355</NoWarn>
     <DebugType>full</DebugType>
     <PlatformTarget>AnyCPU</PlatformTarget>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisIgnoreBuiltInRuleSets>false</CodeAnalysisIgnoreBuiltInRuleSets>
+    <CodeAnalysisIgnoreBuiltInRules>false</CodeAnalysisIgnoreBuiltInRules>
     <Prefer32Bit>false</Prefer32Bit>
+    <WarningsAsErrors>41999,42016,42017,42018,42019,42020,42021,42022,42032,42036</WarningsAsErrors>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|AnyCPU'">
     <DefineTrace>true</DefineTrace>
     <OutputPath>bin\Release\</OutputPath>
-    <DocumentationFile>PeptideToProteinMapper.xml</DocumentationFile>
+    <DocumentationFile>PeptideToProteinMapEngine.xml</DocumentationFile>
     <Optimize>true</Optimize>
-    <NoWarn>42016,41999,42017,42018,42019,42032,42036,42020,42021,42022,42353,42354,42355</NoWarn>
+    <NoWarn>42353,42354,42355</NoWarn>
     <DebugType>pdbonly</DebugType>
     <PlatformTarget>AnyCPU</PlatformTarget>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisIgnoreBuiltInRuleSets>false</CodeAnalysisIgnoreBuiltInRuleSets>
+    <CodeAnalysisIgnoreBuiltInRules>false</CodeAnalysisIgnoreBuiltInRules>
     <Prefer32Bit>false</Prefer32Bit>
+    <WarningsAsErrors>41999,42016,42017,42018,42019,42020,42021,42022,42032,42036</WarningsAsErrors>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="PHRPReader, Version=1.1.6858.27509, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>PeptideToProteinMapEngine\Lib\PHRPReader.dll</HintPath>
+    <Reference Include="PHRPReader">
+      <HintPath>Lib\PHRPReader.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
-    <Reference Include="System.Deployment" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
@@ -66,29 +69,19 @@
     <Import Include="System.Linq" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="modMain.vb" />
-    <Compile Include="My Project\AssemblyInfo.vb" />
-    <Compile Include="My Project\Application.Designer.vb">
+    <Compile Include="clsPeptideToProteinMapEngine.cs" />
+    <Compile Include="GlobalSuppressions.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\Application.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Application.myapp</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="app.config" />
-    <None Include="My Project\Application.myapp">
+    <None Include="Properties\Application.myapp">
       <Generator>MyApplicationCodeGenerator</Generator>
-      <LastGenOutput>Application.Designer.vb</LastGenOutput>
+      <LastGenOutput>Application.Designer.cs</LastGenOutput>
     </None>
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\ProteinCoverageSummarizer\ProteinCoverageSummarizer.vbproj">
-      <Project>{27958CB4-6AE4-4F9B-8FA9-381DEF2646BF}</Project>
-      <Name>ProteinCoverageSummarizer</Name>
-    </ProjectReference>
-    <ProjectReference Include="PeptideToProteinMapEngine\PeptideToProteinMapEngine.vbproj">
-      <Project>{afa3fe41-2306-4799-8a39-846b7ddfdf3c}</Project>
-      <Name>PeptideToProteinMapEngine</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="PRISM-Library">
@@ -97,18 +90,14 @@
     <PackageReference Include="ProteinFileReader">
       <Version>1.3.1</Version>
     </PackageReference>
-    <PackageReference Include="System.Data.SQLite.Core">
-      <Version>1.0.111</Version>
-    </PackageReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\ProteinCoverageSummarizer\ProteinCoverageSummarizer.csproj">
+      <Project>{27958cb4-6ae4-4f9b-8fa9-381def2646bf}</Project>
+      <Name>ProteinCoverageSummarizer</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
-  <PropertyGroup>
-    <PostBuildEvent>if exist "$(TargetDir)SQLite.Interop.dll" (del "$(TargetDir)SQLite.Interop.dll")
-rem if not exist "$(TargetDir)x86" mkdir "$(TargetDir)x86"
-rem if not exist "$(TargetDir)x64" mkdir "$(TargetDir)x64"
-rem xcopy "$(ProjectDir)..\Lib\x86\*" "$(TargetDir)x86\" /D /Y
-rem xcopy "$(ProjectDir)..\Lib\x64\*" "$(TargetDir)x64\" /D /Y</PostBuildEvent>
-  </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
