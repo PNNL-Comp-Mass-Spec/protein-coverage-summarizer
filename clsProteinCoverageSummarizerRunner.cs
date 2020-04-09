@@ -1,317 +1,258 @@
-﻿Option Strict On
+﻿// -------------------------------------------------------------------------------
+// Written by Matthew Monroe and Nikša Blonder for the Department of Energy (PNNL, Richland, WA)
+// Program started June 14, 2005
+//
+// E-mail: matthew.monroe@pnnl.gov or proteomics@pnnl.gov
+// Website: https://omics.pnl.gov/ or https://panomics.pnnl.gov/
+// -------------------------------------------------------------------------------
+//
+// Licensed under the 2-Clause BSD License; you may not use this file except
+// in compliance with the License.  You may obtain a copy of the License at
+// https://opensource.org/licenses/BSD-2-Clause
+//
+// Copyright 2018 Battelle Memorial Institute
 
-' -------------------------------------------------------------------------------
-' Written by Matthew Monroe and Nikša Blonder for the Department of Energy (PNNL, Richland, WA)
-' Program started June 14, 2005
-'
-' E-mail: matthew.monroe@pnnl.gov or proteomics@pnnl.gov
-' Website: https://omics.pnl.gov/ or https://panomics.pnnl.gov/
-' -------------------------------------------------------------------------------
-'
-' Licensed under the 2-Clause BSD License; you may not use this file except
-' in compliance with the License.  You may obtain a copy of the License at
-' https://opensource.org/licenses/BSD-2-Clause
-'
-' Copyright 2018 Battelle Memorial Institute
+using System;
+using ProteinCoverageSummarizer;
+using ProteinFileReader;
 
-Imports ProteinCoverageSummarizer
-Imports ProteinFileReader
-'
+namespace ProteinCoverageSummarizerGUI
+{
+    /// <summary>
+    /// This class uses ProteinCoverageSummarizer.dll to read in a protein fasta file or delimited protein info file along with
+    /// an accompanying file with peptide sequences to then compute the percent coverage of each of the proteins
+    /// </summary>
+    public class clsProteinCoverageSummarizerRunner : PRISM.FileProcessor.ProcessFilesBase
+    {
+        public clsProteinCoverageSummarizerRunner()
+        {
+            InitializeVariables();
+        }
 
-''' <summary>
-''' This class uses ProteinCoverageSummarizer.dll to read in a protein fasta file or delimited protein info file along with
-''' an accompanying file with peptide sequences to then compute the percent coverage of each of the proteins
-''' </summary>
-Public Class clsProteinCoverageSummarizerRunner
-    Inherits PRISM.FileProcessor.ProcessFilesBase
+        #region "Classwide variables"
+        private clsProteinCoverageSummarizer mProteinCoverageSummarizer;
 
-    Public Sub New()
-        InitializeVariables()
-    End Sub
+        private string mStatusMessage;
 
-#Region "Classwide variables"
-    Private mProteinCoverageSummarizer As clsProteinCoverageSummarizer
+        #endregion
 
-    Private mStatusMessage As String
+        #region "Properties"
 
-#End Region
+        public bool CallingAppHandlesEvents { get; set; }
 
-#Region "Properties"
+        public bool IgnoreILDifferences
+        {
+            get => mProteinCoverageSummarizer.IgnoreILDifferences;
+            set => mProteinCoverageSummarizer.IgnoreILDifferences = value;
+        }
 
-    Public Property CallingAppHandlesEvents As Boolean
+        /// <summary>
+        /// When this is True, the SQLite Database will not be deleted after processing finishes
+        /// </summary>
+        public bool KeepDB
+        {
+            get => mProteinCoverageSummarizer.KeepDB;
+            set => mProteinCoverageSummarizer.KeepDB = value;
+        }
 
-    Public Property IgnoreILDifferences As Boolean
-        Get
-            Return mProteinCoverageSummarizer.IgnoreILDifferences
-        End Get
-        Set
-            mProteinCoverageSummarizer.IgnoreILDifferences = Value
-        End Set
-    End Property
+        public bool MatchPeptidePrefixAndSuffixToProtein
+        {
+            get => mProteinCoverageSummarizer.MatchPeptidePrefixAndSuffixToProtein;
+            set => mProteinCoverageSummarizer.MatchPeptidePrefixAndSuffixToProtein = value;
+        }
 
-    ''' <summary>
-    ''' When this is True, the SQLite Database will not be deleted after processing finishes
-    ''' </summary>
-    Public Property KeepDB As Boolean
-        Get
-            Return mProteinCoverageSummarizer.KeepDB
-        End Get
-        Set
-            mProteinCoverageSummarizer.KeepDB = Value
-        End Set
-    End Property
+        public bool OutputProteinSequence
+        {
+            get => mProteinCoverageSummarizer.OutputProteinSequence;
+            set => mProteinCoverageSummarizer.OutputProteinSequence = value;
+        }
 
-    Public Property MatchPeptidePrefixAndSuffixToProtein As Boolean
-        Get
-            Return mProteinCoverageSummarizer.MatchPeptidePrefixAndSuffixToProtein
-        End Get
-        Set
-            mProteinCoverageSummarizer.MatchPeptidePrefixAndSuffixToProtein = Value
-        End Set
-    End Property
+        public clsProteinCoverageSummarizer.ePeptideFileColumnOrderingCode PeptideFileFormatCode
+        {
+            get => mProteinCoverageSummarizer.PeptideFileFormatCode;
+            set => mProteinCoverageSummarizer.PeptideFileFormatCode = value;
+        }
 
-    Public Property OutputProteinSequence As Boolean
-        Get
-            Return mProteinCoverageSummarizer.OutputProteinSequence
-        End Get
-        Set
-            mProteinCoverageSummarizer.OutputProteinSequence = Value
-        End Set
-    End Property
+        public bool PeptideFileSkipFirstLine
+        {
+            get => mProteinCoverageSummarizer.PeptideFileSkipFirstLine;
+            set => mProteinCoverageSummarizer.PeptideFileSkipFirstLine = value;
+        }
 
-    Public Property PeptideFileFormatCode As clsProteinCoverageSummarizer.ePeptideFileColumnOrderingCode
-        Get
-            Return mProteinCoverageSummarizer.PeptideFileFormatCode
-        End Get
-        Set
-            mProteinCoverageSummarizer.PeptideFileFormatCode = Value
-        End Set
-    End Property
+        public char PeptideInputFileDelimiter
+        {
+            get => mProteinCoverageSummarizer.PeptideInputFileDelimiter;
+            set => mProteinCoverageSummarizer.PeptideInputFileDelimiter = value;
+        }
 
-    Public Property PeptideFileSkipFirstLine As Boolean
-        Get
-            Return mProteinCoverageSummarizer.PeptideFileSkipFirstLine
-        End Get
-        Set
-            mProteinCoverageSummarizer.PeptideFileSkipFirstLine = Value
-        End Set
-    End Property
+        public char ProteinDataDelimitedFileDelimiter
+        {
+            get => mProteinCoverageSummarizer.ProteinDataCache.DelimitedFileDelimiter;
+            set => mProteinCoverageSummarizer.ProteinDataCache.DelimitedFileDelimiter = value;
+        }
 
-    Public Property PeptideInputFileDelimiter As Char
-        Get
-            Return mProteinCoverageSummarizer.PeptideInputFileDelimiter
-        End Get
-        Set
-            mProteinCoverageSummarizer.PeptideInputFileDelimiter = Value
-        End Set
-    End Property
+        public DelimitedFileReader.eDelimitedFileFormatCode ProteinDataDelimitedFileFormatCode
+        {
+            get => mProteinCoverageSummarizer.ProteinDataCache.DelimitedFileFormatCode;
+            set => mProteinCoverageSummarizer.ProteinDataCache.DelimitedFileFormatCode = value;
+        }
 
-    Public Property ProteinDataDelimitedFileDelimiter As Char
-        Get
-            Return mProteinCoverageSummarizer.ProteinDataCache.DelimitedFileDelimiter
-        End Get
-        Set
-            mProteinCoverageSummarizer.ProteinDataCache.DelimitedFileDelimiter = Value
-        End Set
-    End Property
+        public bool ProteinDataDelimitedFileSkipFirstLine
+        {
+            get => mProteinCoverageSummarizer.ProteinDataCache.DelimitedFileSkipFirstLine;
+            set => mProteinCoverageSummarizer.ProteinDataCache.DelimitedFileSkipFirstLine = value;
+        }
 
-    Public Property ProteinDataDelimitedFileFormatCode As DelimitedFileReader.eDelimitedFileFormatCode
-        Get
-            Return mProteinCoverageSummarizer.ProteinDataCache.DelimitedFileFormatCode
-        End Get
-        Set
-            mProteinCoverageSummarizer.ProteinDataCache.DelimitedFileFormatCode = Value
-        End Set
-    End Property
+        public bool ProteinDataRemoveSymbolCharacters
+        {
+            get => mProteinCoverageSummarizer.ProteinDataCache.RemoveSymbolCharacters;
+            set => mProteinCoverageSummarizer.ProteinDataCache.RemoveSymbolCharacters = value;
+        }
 
-    Public Property ProteinDataDelimitedFileSkipFirstLine As Boolean
-        Get
-            Return mProteinCoverageSummarizer.ProteinDataCache.DelimitedFileSkipFirstLine
-        End Get
-        Set
-            mProteinCoverageSummarizer.ProteinDataCache.DelimitedFileSkipFirstLine = Value
-        End Set
-    End Property
+        public bool ProteinDataIgnoreILDifferences
+        {
+            get => mProteinCoverageSummarizer.ProteinDataCache.IgnoreILDifferences;
+            set => mProteinCoverageSummarizer.ProteinDataCache.IgnoreILDifferences = value;
+        }
 
-    Public Property ProteinDataRemoveSymbolCharacters As Boolean
-        Get
-            Return mProteinCoverageSummarizer.ProteinDataCache.RemoveSymbolCharacters
-        End Get
-        Set
-            mProteinCoverageSummarizer.ProteinDataCache.RemoveSymbolCharacters = Value
-        End Set
-    End Property
+        public string ProteinInputFilePath
+        {
+            get => mProteinCoverageSummarizer.ProteinInputFilePath;
+            set => mProteinCoverageSummarizer.ProteinInputFilePath = value;
+        }
 
-    Public Property ProteinDataIgnoreILDifferences As Boolean
-        Get
-            Return mProteinCoverageSummarizer.ProteinDataCache.IgnoreILDifferences
-        End Get
-        Set
-            mProteinCoverageSummarizer.ProteinDataCache.IgnoreILDifferences = Value
-        End Set
-    End Property
+        public string ProteinToPeptideMappingFilePath => mProteinCoverageSummarizer.ProteinToPeptideMappingFilePath;
 
-    Public Property ProteinInputFilePath As String
-        Get
-            Return mProteinCoverageSummarizer.ProteinInputFilePath
-        End Get
-        Set
-            mProteinCoverageSummarizer.ProteinInputFilePath = Value
-        End Set
-    End Property
+        public bool RemoveSymbolCharacters
+        {
+            get => mProteinCoverageSummarizer.RemoveSymbolCharacters;
+            set => mProteinCoverageSummarizer.RemoveSymbolCharacters = value;
+        }
 
-    Public ReadOnly Property ProteinToPeptideMappingFilePath As String
-        Get
-            Return mProteinCoverageSummarizer.ProteinToPeptideMappingFilePath
-        End Get
-    End Property
+        public string ResultsFilePath => mProteinCoverageSummarizer.ResultsFilePath;
 
-    Public Property RemoveSymbolCharacters As Boolean
-        Get
-            Return mProteinCoverageSummarizer.RemoveSymbolCharacters
-        End Get
-        Set
-            mProteinCoverageSummarizer.RemoveSymbolCharacters = Value
-        End Set
-    End Property
+        public bool SaveProteinToPeptideMappingFile
+        {
+            get => mProteinCoverageSummarizer.SaveProteinToPeptideMappingFile;
+            set => mProteinCoverageSummarizer.SaveProteinToPeptideMappingFile = value;
+        }
 
-    Public ReadOnly Property ResultsFilePath As String
-        Get
-            Return mProteinCoverageSummarizer.ResultsFilePath
-        End Get
-    End Property
+        public bool SearchAllProteinsForPeptideSequence
+        {
+            get => mProteinCoverageSummarizer.SearchAllProteinsForPeptideSequence;
+            set => mProteinCoverageSummarizer.SearchAllProteinsForPeptideSequence = value;
+        }
 
-    Public Property SaveProteinToPeptideMappingFile As Boolean
-        Get
-            Return mProteinCoverageSummarizer.SaveProteinToPeptideMappingFile
-        End Get
-        Set
-            mProteinCoverageSummarizer.SaveProteinToPeptideMappingFile = Value
-        End Set
-    End Property
+        public bool UseLeaderSequenceHashTable
+        {
+            get => mProteinCoverageSummarizer.UseLeaderSequenceHashTable;
+            set => mProteinCoverageSummarizer.UseLeaderSequenceHashTable = value;
+        }
 
-    Public Property SearchAllProteinsForPeptideSequence As Boolean
-        Get
-            Return mProteinCoverageSummarizer.SearchAllProteinsForPeptideSequence
-        End Get
-        Set
-            mProteinCoverageSummarizer.SearchAllProteinsForPeptideSequence = Value
-        End Set
-    End Property
+        public bool SearchAllProteinsSkipCoverageComputationSteps
+        {
+            get => mProteinCoverageSummarizer.SearchAllProteinsSkipCoverageComputationSteps;
+            set => mProteinCoverageSummarizer.SearchAllProteinsSkipCoverageComputationSteps = value;
+        }
 
-    Public Property UseLeaderSequenceHashTable As Boolean
-        Get
-            Return mProteinCoverageSummarizer.UseLeaderSequenceHashTable
-        End Get
-        Set
-            mProteinCoverageSummarizer.UseLeaderSequenceHashTable = Value
-        End Set
-    End Property
+        public string StatusMessage => mStatusMessage;
 
-    Public Property SearchAllProteinsSkipCoverageComputationSteps As Boolean
-        Get
-            Return mProteinCoverageSummarizer.SearchAllProteinsSkipCoverageComputationSteps
-        End Get
-        Set
-            mProteinCoverageSummarizer.SearchAllProteinsSkipCoverageComputationSteps = Value
-        End Set
-    End Property
+        public bool TrackPeptideCounts
+        {
+            get => mProteinCoverageSummarizer.TrackPeptideCounts;
+            set => mProteinCoverageSummarizer.TrackPeptideCounts = value;
+        }
 
-    Public ReadOnly Property StatusMessage As String
-        Get
-            Return mStatusMessage
-        End Get
-    End Property
+        #endregion
 
-    Public Property TrackPeptideCounts As Boolean
-        Get
-            Return mProteinCoverageSummarizer.TrackPeptideCounts
-        End Get
-        Set
-            mProteinCoverageSummarizer.TrackPeptideCounts = Value
-        End Set
-    End Property
+        public override void AbortProcessingNow()
+        {
+            base.AbortProcessingNow();
+            if (mProteinCoverageSummarizer != null)
+            {
+                mProteinCoverageSummarizer.AbortProcessingNow();
+            }
+        }
 
-#End Region
+        public override string GetErrorMessage()
+        {
+            return GetBaseClassErrorMessage();
+        }
 
-    Public Overrides Sub AbortProcessingNow()
-        MyBase.AbortProcessingNow()
-        If Not mProteinCoverageSummarizer Is Nothing Then
-            mProteinCoverageSummarizer.AbortProcessingNow()
-        End If
-    End Sub
+        private void InitializeVariables()
+        {
+            CallingAppHandlesEvents = false;
 
-    Public Overrides Function GetErrorMessage() As String
-        Return MyBase.GetBaseClassErrorMessage
-    End Function
+            AbortProcessing = false;
+            mStatusMessage = string.Empty;
 
-    Private Sub InitializeVariables()
-        Me.CallingAppHandlesEvents = False
+            mProteinCoverageSummarizer = new clsProteinCoverageSummarizer();
+            RegisterEvents(mProteinCoverageSummarizer);
 
-        AbortProcessing = False
-        mStatusMessage = String.Empty
+            this.mProteinCoverageSummarizer.ProgressChanged += this.ProteinCoverageSummarizer_ProgressChanged;
 
-        mProteinCoverageSummarizer = New clsProteinCoverageSummarizer()
-        RegisterEvents(mProteinCoverageSummarizer)
+            this.mProteinCoverageSummarizer.ProgressReset += this.ProteinCoverageSummarizer_ProgressReset;
+        }
 
-        AddHandler mProteinCoverageSummarizer.ProgressChanged, AddressOf ProteinCoverageSummarizer_ProgressChanged
+        public bool LoadParameterFileSettings(string strParameterFilePath)
+        {
+            return mProteinCoverageSummarizer.LoadParameterFileSettings(strParameterFilePath);
+        }
 
-        AddHandler mProteinCoverageSummarizer.ProgressReset, AddressOf ProteinCoverageSummarizer_ProgressReset
+        public override bool ProcessFile(string strInputFilePath, string strOutputFolderPath, string strParameterFilePath, bool blnResetErrorCode)
+        {
+            bool blnSuccess;
 
-    End Sub
+            if (blnResetErrorCode)
+            {
+                base.SetBaseClassErrorCode(ProcessFilesErrorCodes.NoError);
+            }
 
-    Public Function LoadParameterFileSettings(strParameterFilePath As String) As Boolean
-        Return mProteinCoverageSummarizer.LoadParameterFileSettings(strParameterFilePath)
-    End Function
+            try
+            {
+                // Show the progress form
+                if (!CallingAppHandlesEvents)
+                {
+                    Console.WriteLine(base.ProgressStepDescription);
+                }
 
-    Public Overloads Overrides Function ProcessFile(strInputFilePath As String, strOutputFolderPath As String, strParameterFilePath As String, blnResetErrorCode As Boolean) As Boolean
+                // Call mProteinCoverageSummarizer.ProcessFile to perform the work
+                mProteinCoverageSummarizer.KeepDB = KeepDB;
+                blnSuccess = mProteinCoverageSummarizer.ProcessFile(strInputFilePath, strOutputFolderPath, strParameterFilePath, true);
 
-        Dim blnSuccess As Boolean
+                mProteinCoverageSummarizer.ProteinDataCache.DeleteSQLiteDBFile("clsProteinCoverageSummarizerRunner.ProcessFile_Complete");
+            }
+            catch (Exception ex)
+            {
+                mStatusMessage = "Error in ProcessFile:" + Environment.NewLine + ex.Message;
+                OnErrorEvent(mStatusMessage, ex);
+                blnSuccess = false;
+            }
 
-        If blnResetErrorCode Then
-            MyBase.SetBaseClassErrorCode(ProcessFilesErrorCodes.NoError)
-        End If
+            return blnSuccess;
+        }
 
-        Try
-            ' Show the progress form
-            If Not CallingAppHandlesEvents Then
-                Console.WriteLine(MyBase.ProgressStepDescription)
-            End If
+        private void ProteinCoverageSummarizer_ProgressChanged(string taskDescription, float percentComplete)
+        {
+            UpdateProgress(taskDescription, percentComplete);
 
-            ' Call mProteinCoverageSummarizer.ProcessFile to perform the work
-            mProteinCoverageSummarizer.KeepDB = KeepDB
-            blnSuccess = mProteinCoverageSummarizer.ProcessFile(strInputFilePath, strOutputFolderPath, strParameterFilePath, True)
+            // if (mUseProgressForm && mProgressForm != null)
+            // {
+            //     mProgressForm.UpdateCurrentTask(taskDescription);
+            //     mProgressForm.UpdateProgressBar(percentComplete);
+            //     Windows.Forms.Application.DoEvents();
+            // }
+        }
 
-            mProteinCoverageSummarizer.ProteinDataCache.DeleteSQLiteDBFile("clsProteinCoverageSummarizerRunner.ProcessFile_Complete")
+        private void ProteinCoverageSummarizer_ProgressReset()
+        {
+            ResetProgress(mProteinCoverageSummarizer.ProgressStepDescription);
 
-        Catch ex As Exception
-            mStatusMessage = "Error in ProcessFile:" & ControlChars.NewLine & ex.Message
-            OnErrorEvent(mStatusMessage, ex)
-            blnSuccess = False
-        End Try
-
-        Return blnSuccess
-
-    End Function
-
-    Private Sub ProteinCoverageSummarizer_ProgressChanged(taskDescription As String, percentComplete As Single)
-        UpdateProgress(taskDescription, percentComplete)
-
-        ''If mUseProgressForm AndAlso Not mProgressForm Is Nothing Then
-        ''    mProgressForm.UpdateCurrentTask(taskDescription)
-        ''    mProgressForm.UpdateProgressBar(percentComplete)
-        ''    Windows.Forms.Application.DoEvents()
-        ''End If
-    End Sub
-
-    Private Sub ProteinCoverageSummarizer_ProgressReset()
-        ResetProgress(mProteinCoverageSummarizer.ProgressStepDescription)
-
-        ''If mUseProgressForm AndAlso Not mProgressForm Is Nothing Then
-        ''    mProgressForm.UpdateProgressBar(0, True)
-        ''    mProgressForm.UpdateCurrentTask(mProteinCoverageSummarizer.ProgressStepDescription)
-        ''End If
-
-    End Sub
-
-End Class
+            // if (mUseProgressForm && mProgressForm != null)
+            // {
+            //     mProgressForm.UpdateProgressBar(0, true);
+            //     mProgressForm.UpdateCurrentTask(mProteinCoverageSummarizer.ProgressStepDescription);
+            // }
+        }
+    }
+}

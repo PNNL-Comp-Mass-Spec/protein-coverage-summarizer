@@ -1,692 +1,766 @@
-﻿Option Strict On
-
-' -------------------------------------------------------------------------------
-' Written by Matthew Monroe and Nikša Blonder for the Department of Energy (PNNL, Richland, WA)
-' Started June 2005
-'
-' E-mail: matthew.monroe@pnnl.gov or proteomics@pnnl.gov
-' Website: https://omics.pnl.gov/ or https://panomics.pnnl.gov/
-' -------------------------------------------------------------------------------
-'
-' Licensed under the 2-Clause BSD License; you may not use this file except
-' in compliance with the License.  You may obtain a copy of the License at
-' https://opensource.org/licenses/BSD-2-Clause
-'
-' Copyright 2018 Battelle Memorial Institute
-
-Imports System.Data.SQLite
-Imports System.IO
-Imports System.Text.RegularExpressions
-Imports System.Threading
-Imports PRISM
-Imports ProteinFileReader
-
-''' <summary>
-''' This class will read a protein FASTA file or delimited protein info file and
-''' store the proteins in memory
-''' </summary>
-<CLSCompliant(True)>
-Public Class clsProteinFileDataCache
-    Inherits EventNotifier
-
-    Public Sub New()
-        mFileDate = "July 26, 2019"
-        InitializeLocalVariables()
-    End Sub
-
-#Region "Constants and Enums"
-
-    Protected Const SQL_LITE_PROTEIN_CACHE_FILENAME As String = "tmpProteinInfoCache.db3"
-
-#End Region
-
-#Region "Structures"
-    Public Structure udtProteinInfoType
-        Public Name As String
-        Public Description As String
-        Public Sequence As String
-
-        ''' <summary>
-        ''' Unique sequence ID
-        ''' </summary>
-        ''' <remarks>
-        ''' Index number applied to the proteins stored in the SQLite DB; the first protein has UniqueSequenceID = 0
-        ''' </remarks>
-        Public UniqueSequenceID As Integer
-
-        ''' <summary>
-        ''' Percent coverage
-        ''' </summary>
-        ''' <remarks>Value between 0 and 1</remarks>
-        Public PercentCoverage As Double
-    End Structure
-
-#End Region
-
-#Region "Classwide Variables"
-    Protected mFileDate As String
-    Private mStatusMessage As String
-
-    Private mDelimitedInputFileDelimiter As Char                              ' Only used for delimited protein input files, not for fasta files
-
-    Public FastaFileOptions As FastaFileOptionsClass
-
-    Private mProteinCount As Integer
-    Private mParsedFileIsFastaFile As Boolean
-
-    ' SQLite Connection String and filepath
-    Private mSQLiteDBConnectionString As String = String.Empty
-    Private mSQLiteDBFilePath As String = SQL_LITE_PROTEIN_CACHE_FILENAME
-
-    Private mSQLitePersistentConnection As SQLiteConnection
-
-    Public Event ProteinCachingStart()
-    Public Event ProteinCached(proteinsCached As Integer)
-    Public Event ProteinCachedWithProgress(proteinsCached As Integer, percentFileProcessed As Single)
-    Public Event ProteinCachingComplete()
-
-#End Region
-
-#Region "Processing Options Interface Functions"
-
-    ''' <summary>
-    ''' When True, assume the input file is a tab-delimited text file
-    ''' </summary>
-    ''' <returns></returns>
-    ''' <remarks>Ignored if AssumeFastaFile is True</remarks>
-    Public Property AssumeDelimitedFile As Boolean
-
-    ''' <summary>
-    ''' When True, assume the input file is a FASTA text file
-    ''' </summary>
-    ''' <returns></returns>
-    Public Property AssumeFastaFile As Boolean
-
-    Public Property ChangeProteinSequencesToLowercase As Boolean
-
-    Public Property ChangeProteinSequencesToUppercase As Boolean
-
-    Public Property DelimitedFileFormatCode As DelimitedFileReader.eDelimitedFileFormatCode
-
-    Public Property DelimitedFileDelimiter As Char
-        Get
-            Return mDelimitedInputFileDelimiter
-        End Get
-        Set
-            If Not Value = Nothing Then
-                mDelimitedInputFileDelimiter = Value
-            End If
-        End Set
-    End Property
-
-    Public Property DelimitedFileSkipFirstLine As Boolean
-
-    Public Property IgnoreILDifferences As Boolean
-
-    ''' <summary>
-    ''' When this is True, the SQLite Database will not be deleted after processing finishes
-    ''' </summary>
-    Public Property KeepDB As Boolean
-
-    Public Property RemoveSymbolCharacters As Boolean
-
-    Public ReadOnly Property StatusMessage As String
-        Get
-            Return mStatusMessage
-        End Get
-    End Property
-
-#End Region
-
-    Public Function ConnectToSQLiteDB(disableJournaling As Boolean) As SQLiteConnection
-
-        If mSQLiteDBConnectionString Is Nothing OrElse mSQLiteDBConnectionString.Length = 0 Then
-            OnDebugEvent("ConnectToSQLiteDB: Unable to open the SQLite database because mSQLiteDBConnectionString is empty")
-            Return Nothing
-        End If
-
-        OnDebugEvent("Connecting to SQLite DB: " + mSQLiteDBConnectionString)
-
-        Dim sqlConnection = New SQLiteConnection(mSQLiteDBConnectionString, True)
-        sqlConnection.Open()
-
-        If disableJournaling Then
-            OnDebugEvent("Disabling Journaling and setting Synchronous mode to 0 (improves update speed)")
-
-            Using cmd As SQLiteCommand = sqlConnection.CreateCommand
-                cmd.CommandText = "PRAGMA journal_mode = OFF"
-                cmd.ExecuteNonQuery()
-                cmd.CommandText = "PRAGMA synchronous = 0"
-                cmd.ExecuteNonQuery()
-            End Using
-        End If
-
-        Return sqlConnection
-
-    End Function
-
-    Private Function DefineSQLiteDBPath(SQLiteDBFileName As String) As String
-        Dim dbPath As String
-        Dim directoryPath As String = String.Empty
-        Dim filePath As String = String.Empty
-
-        Dim success As Boolean
-
-        Try
-            ' See if we can create files in the directory that contains this .Dll
-            directoryPath = clsProteinCoverageSummarizer.GetAppDirectoryPath()
-
-            filePath = Path.Combine(directoryPath, "TempFileToTestFileIOPermissions.tmp")
-            OnDebugEvent("Checking for write permission by creating file " + filePath)
-
-            Using writer = New StreamWriter(New FileStream(filePath, FileMode.Create, FileAccess.Write, FileShare.Read))
-                writer.WriteLine("Test")
-            End Using
-
-            success = True
-
-        Catch ex As Exception
-            ' Error creating file; user likely doesn't have write-access
-            OnDebugEvent(" ... unable to create the file: " + ex.Message)
-            success = False
-        End Try
-
-        If Not success Then
-            Try
-                ' Create a randomly named file in the user's temp directory
-                filePath = Path.GetTempFileName
-                OnDebugEvent("Creating file in user's temp directory: " + filePath)
-
-                directoryPath = Path.GetDirectoryName(filePath)
-                success = True
-
-            Catch ex As Exception
-                ' Error creating temp file; user likely doesn't have write-access anywhere on the disk
-                OnDebugEvent(" ... unable to create the file: " + ex.Message)
-                success = False
-            End Try
-        End If
-
-        If success Then
-            Try
-                ' Delete the temporary file
-                OnDebugEvent("Deleting " + filePath)
-                File.Delete(filePath)
-            Catch ex As Exception
-                ' Ignore errors here
-            End Try
-        End If
-
-        If success Then
-            dbPath = Path.Combine(directoryPath, SQLiteDBFileName)
-        Else
-            dbPath = SQLiteDBFileName
-        End If
-
-        OnDebugEvent(" SQLite DB Path defined: " + dbPath)
-
-        Return dbPath
-
-    End Function
-
-    ''' <summary>
-    ''' Delete the SQLite database file
-    ''' </summary>
-    ''' <param name="callingMethod">Calling method name</param>
-    ''' <param name="forceDelete">Force deletion (ignore KeepDB)</param>
-    Public Sub DeleteSQLiteDBFile(callingMethod As String, Optional forceDelete As Boolean = False)
-        Const MAX_RETRY_ATTEMPT_COUNT = 3
-
-        Try
-            If Not mSQLitePersistentConnection Is Nothing Then
-                OnDebugEvent("Closing persistent SQLite connection; calling method: " + callingMethod)
-                mSQLitePersistentConnection.Close()
-            End If
-        Catch ex As Exception
-            ' Ignore errors here
-            OnDebugEvent(" ... exception: " + ex.Message)
-        End Try
-
-        Try
-
-            If String.IsNullOrEmpty(mSQLiteDBFilePath) Then
-                OnDebugEvent("DeleteSQLiteDBFile: SQLiteDBFilePath is not defined or is empty; nothing to do; calling method: " + callingMethod)
-                Exit Sub
-            ElseIf Not File.Exists(mSQLiteDBFilePath) Then
-                OnDebugEvent(String.Format("DeleteSQLiteDBFile: File doesn't exist; nothing to do ({0}); calling method: {1}",
-                                           mSQLiteDBFilePath, callingMethod))
-                Exit Sub
-            End If
-
-            ' Call the garbage collector to dispose of the SQLite objects
-            GC.Collect()
-            Thread.Sleep(500)
-
-        Catch ex As Exception
-            ' Ignore errors here
-        End Try
-
-        If KeepDB And Not forceDelete Then
-            OnDebugEvent("DeleteSQLiteDBFile: KeepDB is true; not deleting " + mSQLiteDBFilePath)
-            Exit Sub
-        End If
-
-        For retryIndex = 0 To MAX_RETRY_ATTEMPT_COUNT - 1
-            Dim retryHoldOffSeconds = (retryIndex + 1)
-
-            Try
-                If Not String.IsNullOrEmpty(mSQLiteDBFilePath) Then
-                    If File.Exists(mSQLiteDBFilePath) Then
-                        OnDebugEvent("DeleteSQLiteDBFile: Deleting " + mSQLiteDBFilePath + "; calling method: " + callingMethod)
-                        File.Delete(mSQLiteDBFilePath)
-                    End If
-                End If
-
-                If retryIndex > 1 Then
-                    OnStatusEvent(" --> File now successfully deleted")
-                End If
-
-                ' If we get here, the delete succeeded
-                Exit For
-
-            Catch ex As Exception
-                If retryIndex > 0 Then
-                    OnWarningEvent(String.Format("Error deleting {0} (calling method {1}): {2}", mSQLiteDBFilePath, callingMethod, ex.Message))
-                    OnWarningEvent("  Waiting " & retryHoldOffSeconds & " seconds, then trying again")
-                End If
-            End Try
-
-            GC.Collect()
-            Thread.Sleep(retryHoldOffSeconds * 1000)
-        Next
-
-    End Sub
-
-    Public Function GetProteinCountCached() As Integer
-        Return mProteinCount
-    End Function
-
-    Public Iterator Function GetCachedProteins(Optional startIndex As Integer = -1, Optional endIndex As Integer = -1) As IEnumerable(Of udtProteinInfoType)
-
-        If mSQLitePersistentConnection Is Nothing OrElse
-           mSQLitePersistentConnection.State = ConnectionState.Closed OrElse
-           mSQLitePersistentConnection.State = ConnectionState.Broken Then
-            mSQLitePersistentConnection = ConnectToSQLiteDB(False)
-        End If
-
-        Dim sqlQuery =
-            " SELECT UniqueSequenceID, Name, Description, Sequence, PercentCoverage" &
-            " FROM udtProteinInfoType"
-
-        If startIndex >= 0 AndAlso endIndex < 0 Then
-            sqlQuery &= " WHERE UniqueSequenceID >= " & CStr(startIndex)
-        ElseIf startIndex >= 0 AndAlso endIndex >= 0 Then
-            sqlQuery &= " WHERE UniqueSequenceID BETWEEN " & CStr(startIndex) & " AND " & CStr(endIndex)
-        End If
-
-        Dim cmd As SQLiteCommand
-        cmd = mSQLitePersistentConnection.CreateCommand
-        cmd.CommandText = sqlQuery
-
-        OnDebugEvent("GetCachedProteinFromSQLiteDB: running query " + cmd.CommandText)
-
-        Dim reader As SQLiteDataReader
-        reader = cmd.ExecuteReader()
-
-        While reader.Read()
-            ' Column names in table udtProteinInfoType:
-            '  Name TEXT,
-            '  Description TEXT,
-            '  Sequence TEXT,
-            '  UniqueSequenceID INTEGER,
-            '  PercentCoverage REAL,
-            '  NonUniquePeptideCount INTEGER,
-            '  UniquePeptideCount INTEGER
-
-            Dim udtProteinInfo = New udtProteinInfoType()
-
-            With udtProteinInfo
-                .UniqueSequenceID = CInt(reader("UniqueSequenceID"))
-
-                .Name = CStr(reader("Name"))
-                .PercentCoverage = CDbl(reader("PercentCoverage"))
-                .Description = CStr(reader("Description"))
-
-                .Sequence = CStr(reader("Sequence"))
-            End With
-
-            Yield udtProteinInfo
-        End While
-
-        ' Close the SQL Reader
-        reader.Close()
-
-    End Function
-
-    Private Sub InitializeLocalVariables()
-        Const MAX_FILE_CREATE_ATTEMPTS = 10
-
-        AssumeDelimitedFile = False
-        AssumeFastaFile = False
-
-        mDelimitedInputFileDelimiter = ControlChars.Tab
-        DelimitedFileFormatCode = DelimitedFileReader.eDelimitedFileFormatCode.ProteinName_Description_Sequence
-        DelimitedFileSkipFirstLine = False
-
-        FastaFileOptions = New FastaFileOptionsClass
-
-        mProteinCount = 0
-
-        RemoveSymbolCharacters = True
-
-        ChangeProteinSequencesToLowercase = False
-        ChangeProteinSequencesToUppercase = False
-
-        IgnoreILDifferences = False
-
-        Dim fileAttemptCount = 0
-        Dim success = False
-        Do While Not success AndAlso fileAttemptCount < MAX_FILE_CREATE_ATTEMPTS
-
-            ' Define the path to the SQLite database
-            If fileAttemptCount = 0 Then
-                mSQLiteDBFilePath = DefineSQLiteDBPath(SQL_LITE_PROTEIN_CACHE_FILENAME)
-            Else
-                mSQLiteDBFilePath = DefineSQLiteDBPath(Path.GetFileNameWithoutExtension(SQL_LITE_PROTEIN_CACHE_FILENAME) &
-                                                         fileAttemptCount.ToString &
-                                                         Path.GetExtension(SQL_LITE_PROTEIN_CACHE_FILENAME))
-            End If
-
-            Try
-                ' If the file exists, we need to delete it
-                If File.Exists(mSQLiteDBFilePath) Then
-                    OnDebugEvent("InitializeLocalVariables: deleting " + mSQLiteDBFilePath)
-                    File.Delete(mSQLiteDBFilePath)
-                End If
-
-                If Not File.Exists(mSQLiteDBFilePath) Then
-                    success = True
-                End If
-
-            Catch ex As Exception
-                ' Error deleting the file
-                OnWarningEvent("Exception in InitializeLocalVariables: " + ex.Message)
-            End Try
-
-            fileAttemptCount += 1
-        Loop
-
-        mSQLiteDBConnectionString = "Data Source=" & mSQLiteDBFilePath & ";"
-
-    End Sub
-
-    ''' <summary>
-    ''' Examines the file's extension and true if it ends in .fasta or .fsa or .faa
-    ''' </summary>
-    ''' <param name="filePath"></param>
-    ''' <returns></returns>
-    Public Shared Function IsFastaFile(filePath As String) As Boolean
-
-        Dim proteinFileExtension = Path.GetExtension(filePath).ToLower()
-
-        If proteinFileExtension = ".fasta" OrElse proteinFileExtension = ".fsa" OrElse proteinFileExtension = ".faa" Then
-            Return True
-        Else
-            Return False
-        End If
-
-    End Function
-
-    Public Function ParseProteinFile(proteinInputFilePath As String) As Boolean
-        ' If outputFileNameBaseOverride is defined, then uses that name for the protein output filename rather than auto-defining the name
-
-        ' Create the SQLite DB
-        Dim sqlConnection = ConnectToSQLiteDB(True)
-
-        ' SQL query to Create the Table
-        Dim cmd = sqlConnection.CreateCommand
-        cmd.CommandText = "CREATE TABLE udtProteinInfoType( " &
-                                    "Name TEXT, " &
-                                    "Description TEXT, " &
-                                    "sequence TEXT, " &
-                                    "UniquesequenceID INTEGER PRIMARY KEY, " &
-                                    "PercentCoverage REAL);" ', NonUniquePeptideCount INTEGER, UniquePeptideCount INTEGER);"
-
-        OnDebugEvent("ParseProteinFile: Creating table with " + cmd.CommandText)
-
-        cmd.ExecuteNonQuery()
-
-        ' Define a RegEx to replace all of the non-letter characters
-        Dim reReplaceSymbols = New Regex("[^A-Za-z]", RegexOptions.Compiled)
-
-        Dim proteinFileReader As ProteinFileReaderBaseClass = Nothing
-
-        Dim success As Boolean
-
-        Try
-
-            If proteinInputFilePath Is Nothing OrElse proteinInputFilePath.Length = 0 Then
-                ReportError("Empty protein input file path")
-                success = False
-            Else
-
-                If AssumeFastaFile OrElse IsFastaFile(proteinInputFilePath) Then
-                    mParsedFileIsFastaFile = True
-                Else
-                    If AssumeDelimitedFile Then
-                        mParsedFileIsFastaFile = False
-                    Else
-                        mParsedFileIsFastaFile = True
-                    End If
-                End If
-
-                If mParsedFileIsFastaFile Then
-                    proteinFileReader = New FastaFileReader() With {
-                        .ProteinLineStartChar = FastaFileOptions.ProteinLineStartChar,
-                        .ProteinLineAccessionEndChar = FastaFileOptions.ProteinLineAccessionEndChar
+﻿// -------------------------------------------------------------------------------
+// Written by Matthew Monroe and Nikša Blonder for the Department of Energy (PNNL, Richland, WA)
+// Started June 2005
+//
+// E-mail: matthew.monroe@pnnl.gov or proteomics@pnnl.gov
+// Website: https://omics.pnl.gov/ or https://panomics.pnnl.gov/
+// -------------------------------------------------------------------------------
+//
+// Licensed under the 2-Clause BSD License; you may not use this file except
+// in compliance with the License.  You may obtain a copy of the License at
+// https://opensource.org/licenses/BSD-2-Clause
+//
+// Copyright 2018 Battelle Memorial Institute
+
+using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Data.SQLite;
+using System.IO;
+using System.Text.RegularExpressions;
+using System.Threading;
+using PRISM;
+using ProteinFileReader;
+
+namespace ProteinCoverageSummarizer
+{
+    public delegate void ProteinCachingStartEventHandler();
+    public delegate void ProteinCachedEventHandler(int proteinsCached);
+    public delegate void ProteinCachedWithProgressEventHandler(int proteinsCached, float percentFileProcessed);
+    public delegate void ProteinCachingCompleteEventHandler();
+
+    /// <summary>
+    /// This class will read a protein FASTA file or delimited protein info file and
+    /// store the proteins in memory
+    /// </summary>
+    [CLSCompliant(true)]
+    public class clsProteinFileDataCache : EventNotifier
+    {
+        public clsProteinFileDataCache()
+        {
+            mFileDate = "July 26, 2019";
+            InitializeLocalVariables();
+        }
+
+        #region "Constants and Enums"
+
+        protected const string SQL_LITE_PROTEIN_CACHE_FILENAME = "tmpProteinInfoCache.db3";
+
+        #endregion
+
+        #region "Structures"
+        public struct udtProteinInfoType
+        {
+            public string Name;
+            public string Description;
+            public string Sequence;
+
+            /// <summary>
+            /// Unique sequence ID
+            /// </summary>
+            /// <remarks>
+            /// Index number applied to the proteins stored in the SQLite DB; the first protein has UniqueSequenceID = 0
+            /// </remarks>
+            public int UniqueSequenceID;
+
+            /// <summary>
+            /// Percent coverage
+            /// </summary>
+            /// <remarks>Value between 0 and 1</remarks>
+            public double PercentCoverage;
+        }
+
+        #endregion
+
+        #region "Classwide Variables"
+        protected string mFileDate;
+        private string mStatusMessage;
+
+        private char mDelimitedInputFileDelimiter;                              // Only used for delimited protein input files, not for fasta files
+
+        public FastaFileOptionsClass FastaFileOptions;
+
+        private int mProteinCount;
+        private bool mParsedFileIsFastaFile;
+
+        // SQLite Connection String and filepath
+        private string mSQLiteDBConnectionString = string.Empty;
+        private string mSQLiteDBFilePath = SQL_LITE_PROTEIN_CACHE_FILENAME;
+
+        private SQLiteConnection mSQLitePersistentConnection;
+
+        public event ProteinCachingStartEventHandler ProteinCachingStart;
+        public event ProteinCachedEventHandler ProteinCached;
+        public event ProteinCachedWithProgressEventHandler ProteinCachedWithProgress;
+        public event ProteinCachingCompleteEventHandler ProteinCachingComplete;
+
+        #endregion
+
+        #region "Processing Options Interface Functions"
+
+        /// <summary>
+        /// When True, assume the input file is a tab-delimited text file
+        /// </summary>
+        /// <returns></returns>
+        /// <remarks>Ignored if AssumeFastaFile is True</remarks>
+        public bool AssumeDelimitedFile { get; set; }
+
+        /// <summary>
+        /// When True, assume the input file is a FASTA text file
+        /// </summary>
+        /// <returns></returns>
+        public bool AssumeFastaFile { get; set; }
+        public bool ChangeProteinSequencesToLowercase { get; set; }
+        public bool ChangeProteinSequencesToUppercase { get; set; }
+        public DelimitedFileReader.eDelimitedFileFormatCode DelimitedFileFormatCode { get; set; }
+
+        public char DelimitedFileDelimiter
+        {
+            get => mDelimitedInputFileDelimiter;
+            set
+            {
+                if (value != default)
+                {
+                    mDelimitedInputFileDelimiter = value;
+                }
+            }
+        }
+
+        public bool DelimitedFileSkipFirstLine { get; set; }
+        public bool IgnoreILDifferences { get; set; }
+
+        /// <summary>
+        /// When this is True, the SQLite Database will not be deleted after processing finishes
+        /// </summary>
+        public bool KeepDB { get; set; }
+
+        public bool RemoveSymbolCharacters { get; set; }
+
+        public string StatusMessage => mStatusMessage;
+
+        #endregion
+
+        public SQLiteConnection ConnectToSQLiteDB(bool disableJournaling)
+        {
+            if (mSQLiteDBConnectionString == null || mSQLiteDBConnectionString.Length == 0)
+            {
+                OnDebugEvent("ConnectToSQLiteDB: Unable to open the SQLite database because mSQLiteDBConnectionString is empty");
+                return null;
+            }
+
+            OnDebugEvent("Connecting to SQLite DB: " + mSQLiteDBConnectionString);
+
+            var sqlConnection = new SQLiteConnection(mSQLiteDBConnectionString, true);
+            sqlConnection.Open();
+
+            if (disableJournaling)
+            {
+                OnDebugEvent("Disabling Journaling and setting Synchronous mode to 0 (improves update speed)");
+
+                using (var cmd = sqlConnection.CreateCommand())
+                {
+                    cmd.CommandText = "PRAGMA journal_mode = OFF";
+                    cmd.ExecuteNonQuery();
+                    cmd.CommandText = "PRAGMA synchronous = 0";
+                    cmd.ExecuteNonQuery();
+                }
+            }
+
+            return sqlConnection;
+        }
+
+        private string DefineSQLiteDBPath(string SQLiteDBFileName)
+        {
+            string dbPath;
+            string directoryPath = string.Empty;
+            string filePath = string.Empty;
+
+            bool success;
+
+            try
+            {
+                // See if we can create files in the directory that contains this .Dll
+                directoryPath = clsProteinCoverageSummarizer.GetAppDirectoryPath();
+
+                filePath = Path.Combine(directoryPath, "TempFileToTestFileIOPermissions.tmp");
+                OnDebugEvent("Checking for write permission by creating file " + filePath);
+
+                using (var writer = new StreamWriter(new FileStream(filePath, FileMode.Create, FileAccess.Write, FileShare.Read)))
+                {
+                    writer.WriteLine("Test");
+                }
+
+                success = true;
+            }
+            catch (Exception ex)
+            {
+                // Error creating file; user likely doesn't have write-access
+                OnDebugEvent(" ... unable to create the file: " + ex.Message);
+                success = false;
+            }
+
+            if (!success)
+            {
+                try
+                {
+                    // Create a randomly named file in the user's temp directory
+                    filePath = Path.GetTempFileName();
+                    OnDebugEvent("Creating file in user's temp directory: " + filePath);
+
+                    directoryPath = Path.GetDirectoryName(filePath);
+                    success = true;
+                }
+                catch (Exception ex)
+                {
+                    // Error creating temp file; user likely doesn't have write-access anywhere on the disk
+                    OnDebugEvent(" ... unable to create the file: " + ex.Message);
+                    success = false;
+                }
+            }
+
+            if (success)
+            {
+                try
+                {
+                    // Delete the temporary file
+                    OnDebugEvent("Deleting " + filePath);
+                    File.Delete(filePath);
+                }
+                catch (Exception ex)
+                {
+                    // Ignore errors here
+                }
+            }
+
+            if (success)
+            {
+                dbPath = Path.Combine(directoryPath, SQLiteDBFileName);
+            }
+            else
+            {
+                dbPath = SQLiteDBFileName;
+            }
+
+            OnDebugEvent(" SQLite DB Path defined: " + dbPath);
+
+            return dbPath;
+        }
+
+        /// <summary>
+        /// Delete the SQLite database file
+        /// </summary>
+        /// <param name="callingMethod">Calling method name</param>
+        /// <param name="forceDelete">Force deletion (ignore KeepDB)</param>
+        public void DeleteSQLiteDBFile(string callingMethod, bool forceDelete = false)
+        {
+            const int MAX_RETRY_ATTEMPT_COUNT = 3;
+            try
+            {
+                if (mSQLitePersistentConnection != null)
+                {
+                    OnDebugEvent("Closing persistent SQLite connection; calling method: " + callingMethod);
+                    mSQLitePersistentConnection.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                // Ignore errors here
+                OnDebugEvent(" ... exception: " + ex.Message);
+            }
+
+            try
+            {
+                if (string.IsNullOrEmpty(mSQLiteDBFilePath))
+                {
+                    OnDebugEvent("DeleteSQLiteDBFile: SQLiteDBFilePath is not defined or is empty; nothing to do; calling method: " + callingMethod);
+                    return;
+                }
+                else if (!File.Exists(mSQLiteDBFilePath))
+                {
+                    OnDebugEvent(string.Format("DeleteSQLiteDBFile: File doesn't exist; nothing to do ({0}); calling method: {1}", mSQLiteDBFilePath, callingMethod));
+                    return;
+                }
+
+                // Call the garbage collector to dispose of the SQLite objects
+                GC.Collect();
+                Thread.Sleep(500);
+            }
+            catch (Exception ex)
+            {
+                // Ignore errors here
+            }
+
+            if (KeepDB & !forceDelete)
+            {
+                OnDebugEvent("DeleteSQLiteDBFile: KeepDB is true; not deleting " + mSQLiteDBFilePath);
+                return;
+            }
+
+            for (int retryIndex = 0; retryIndex < MAX_RETRY_ATTEMPT_COUNT ; retryIndex++)
+            {
+                int retryHoldOffSeconds = retryIndex + 1;
+                try
+                {
+                    if (!string.IsNullOrEmpty(mSQLiteDBFilePath))
+                    {
+                        if (File.Exists(mSQLiteDBFilePath))
+                        {
+                            OnDebugEvent("DeleteSQLiteDBFile: Deleting " + mSQLiteDBFilePath + "; calling method: " + callingMethod);
+                            File.Delete(mSQLiteDBFilePath);
+                        }
                     }
-                Else
-                    proteinFileReader = New DelimitedFileReader With {
-                        .Delimiter = mDelimitedInputFileDelimiter,
-                        .DelimitedFileFormatCode = DelimitedFileFormatCode,
-                        .SkipFirstLine = DelimitedFileSkipFirstLine
+
+                    if (retryIndex > 1)
+                    {
+                        OnStatusEvent(" --> File now successfully deleted");
                     }
-                End If
 
-                ' Verify that the input file exists
-                If Not File.Exists(proteinInputFilePath) Then
-                    ReportError("Protein input file not found: " & proteinInputFilePath)
-                    success = False
-                    Exit Try
-                End If
+                    // If we get here, the delete succeeded
+                    break;
+                }
+                catch (Exception ex)
+                {
+                    if (retryIndex > 0)
+                    {
+                        OnWarningEvent(string.Format("Error deleting {0} (calling method {1}): {2}", mSQLiteDBFilePath, callingMethod, ex.Message));
+                        OnWarningEvent("  Waiting " + retryHoldOffSeconds + " seconds, then trying again");
+                    }
+                }
 
-                ' Attempt to open the input file
-                If Not proteinFileReader.OpenFile(proteinInputFilePath) Then
-                    ReportError("Error opening protein input file: " & proteinInputFilePath)
-                    success = False
-                    Exit Try
-                End If
+                GC.Collect();
+                Thread.Sleep(retryHoldOffSeconds * 1000);
+            }
+        }
 
-                success = True
-            End If
+        public int GetProteinCountCached()
+        {
+            return mProteinCount;
+        }
 
-        Catch ex As Exception
-            ReportError("Error opening protein input file (" & proteinInputFilePath & "): " & ex.Message, ex)
-            success = False
-        End Try
+        public IEnumerable<udtProteinInfoType> GetCachedProteins(int startIndex = -1, int endIndex = -1)
+        {
+            if (mSQLitePersistentConnection == null ||
+                mSQLitePersistentConnection.State == ConnectionState.Closed ||
+                mSQLitePersistentConnection.State == ConnectionState.Broken)
+            {
+                mSQLitePersistentConnection = ConnectToSQLiteDB(false);
+            }
 
-        ' Abort processing if we couldn't successfully open the input file
-        If Not success Then Return False
+            string sqlQuery =
+                " SELECT UniqueSequenceID, Name, Description, Sequence, PercentCoverage" +
+                " FROM udtProteinInfoType";
 
-        Try
-            ' Read each protein in the input file and process appropriately
-            mProteinCount = 0
+            if (startIndex >= 0 && endIndex < 0)
+            {
+                sqlQuery += " WHERE UniqueSequenceID >= " + Convert.ToString(startIndex);
+            }
+            else if (startIndex >= 0 && endIndex >= 0)
+            {
+                sqlQuery += " WHERE UniqueSequenceID BETWEEN " + Convert.ToString(startIndex) + " AND " + Convert.ToString(endIndex);
+            }
 
-            RaiseEvent ProteinCachingStart()
+            SQLiteCommand cmd;
+            cmd = mSQLitePersistentConnection.CreateCommand();
+            cmd.CommandText = sqlQuery;
 
-            ' Create a parameterized Insert query
-            cmd.CommandText = " INSERT INTO udtProteinInfoType(Name, Description, sequence, UniquesequenceID, PercentCoverage) " &
-                                     " VALUES (?, ?, ?, ?, ?)"
+            OnDebugEvent("GetCachedProteinFromSQLiteDB: running query " + cmd.CommandText);
 
-            Dim nameFld As SQLiteParameter = cmd.CreateParameter
-            Dim descriptionFld As SQLiteParameter = cmd.CreateParameter
-            Dim sequenceFld As SQLiteParameter = cmd.CreateParameter
-            Dim uniqueSequenceIDFld As SQLiteParameter = cmd.CreateParameter
-            Dim percentCoverageFld As SQLiteParameter = cmd.CreateParameter
-            cmd.Parameters.Add(nameFld)
-            cmd.Parameters.Add(descriptionFld)
-            cmd.Parameters.Add(sequenceFld)
-            cmd.Parameters.Add(uniqueSequenceIDFld)
-            cmd.Parameters.Add(percentCoverageFld)
+            SQLiteDataReader reader;
+            reader = cmd.ExecuteReader();
 
-            ' Begin a SQL Transaction
-            Dim SQLTransaction = sqlConnection.BeginTransaction()
+            while (reader.Read())
+            {
+                // Column names in table udtProteinInfoType:
+                // Name TEXT,
+                // Description TEXT,
+                // Sequence TEXT,
+                // UniqueSequenceID INTEGER,
+                // PercentCoverage REAL,
+                // NonUniquePeptideCount INTEGER,
+                // UniquePeptideCount INTEGER
 
-            Dim proteinsProcessed = 0
-            Dim inputFileLinesRead = 0
+                var udtProteinInfo = new udtProteinInfoType();
 
-            Do
-                Dim inputProteinFound = proteinFileReader.ReadNextProteinEntry()
+                udtProteinInfo.UniqueSequenceID = Convert.ToInt32(reader["UniqueSequenceID"]);
 
-                If Not inputProteinFound Then
-                    Exit Do
-                End If
+                udtProteinInfo.Name = Convert.ToString(reader["Name"]);
+                udtProteinInfo.PercentCoverage = Convert.ToDouble(reader["PercentCoverage"]);
+                udtProteinInfo.Description = Convert.ToString(reader["Description"]);
 
-                proteinsProcessed += 1
-                inputFileLinesRead = proteinFileReader.LinesRead
+                udtProteinInfo.Sequence = Convert.ToString(reader["Sequence"]);
 
-                Dim name = proteinFileReader.ProteinName
-                Dim description = proteinFileReader.ProteinDescription
-                Dim sequence As String
+                yield return udtProteinInfo;
+            }
 
-                If RemoveSymbolCharacters Then
-                    sequence = reReplaceSymbols.Replace(proteinFileReader.ProteinSequence, String.Empty)
-                Else
-                    sequence = proteinFileReader.ProteinSequence
-                End If
+            // Close the SQL Reader
+            reader.Close();
+        }
 
-                If ChangeProteinSequencesToLowercase Then
-                    If IgnoreILDifferences Then
-                        ' Replace all L characters with I
-                        sequence = sequence.ToLower().Replace("l"c, "i"c)
-                    Else
-                        sequence = sequence.ToLower()
-                    End If
-                ElseIf ChangeProteinSequencesToUppercase Then
-                    If IgnoreILDifferences Then
-                        ' Replace all L characters with I
-                        sequence = sequence.ToUpper.Replace("L"c, "I"c)
-                    Else
-                        sequence = sequence.ToUpper
-                    End If
-                Else
-                    If IgnoreILDifferences Then
-                        ' Replace all L characters with I
-                        sequence = sequence.Replace("L"c, "I"c).Replace("l"c, "i"c)
-                    End If
-                End If
+        private void InitializeLocalVariables()
+        {
+            const int MAX_FILE_CREATE_ATTEMPTS = 10;
 
-                ' Store this protein in the SQLite DB
-                nameFld.Value = name
-                descriptionFld.Value = description
-                sequenceFld.Value = sequence
+            AssumeDelimitedFile = false;
+            AssumeFastaFile = false;
 
-                ' Use mProteinCount to assign UniqueSequenceID values
-                uniqueSequenceIDFld.Value = mProteinCount
+            mDelimitedInputFileDelimiter = '\t';
+            DelimitedFileFormatCode = DelimitedFileReader.eDelimitedFileFormatCode.ProteinName_Description_Sequence;
+            DelimitedFileSkipFirstLine = false;
 
-                percentCoverageFld.Value = 0
+            FastaFileOptions = new FastaFileOptionsClass();
 
-                cmd.ExecuteNonQuery()
+            mProteinCount = 0;
 
-                mProteinCount += 1
+            RemoveSymbolCharacters = true;
 
-                RaiseEvent ProteinCached(mProteinCount)
+            ChangeProteinSequencesToLowercase = false;
+            ChangeProteinSequencesToUppercase = false;
 
-                If mProteinCount Mod 100 = 0 Then
-                    RaiseEvent ProteinCachedWithProgress(mProteinCount, proteinFileReader.PercentFileProcessed)
-                End If
+            IgnoreILDifferences = false;
+            int fileAttemptCount = 0;
+            bool success = false;
+            while (!success && fileAttemptCount < MAX_FILE_CREATE_ATTEMPTS)
+            {
+                // Define the path to the SQLite database
+                if (fileAttemptCount == 0)
+                {
+                    mSQLiteDBFilePath = DefineSQLiteDBPath(SQL_LITE_PROTEIN_CACHE_FILENAME);
+                }
+                else
+                {
+                    mSQLiteDBFilePath = DefineSQLiteDBPath(Path.GetFileNameWithoutExtension(SQL_LITE_PROTEIN_CACHE_FILENAME) +
+                                                           fileAttemptCount.ToString() +
+                                                           Path.GetExtension(SQL_LITE_PROTEIN_CACHE_FILENAME));
+                }
 
-                success = True
-            Loop
+                try
+                {
+                    // If the file exists, we need to delete it
+                    if (File.Exists(mSQLiteDBFilePath))
+                    {
+                        OnDebugEvent("InitializeLocalVariables: deleting " + mSQLiteDBFilePath);
+                        File.Delete(mSQLiteDBFilePath);
+                    }
 
-            ' Finalize the SQL Transaction
-            SQLTransaction.Commit()
+                    if (!File.Exists(mSQLiteDBFilePath))
+                    {
+                        success = true;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    // Error deleting the file
+                    OnWarningEvent("Exception in InitializeLocalVariables: " + ex.Message);
+                }
 
-            ' Set Synchronous mode to 1   (this may not be truly necessary)
-            cmd.CommandText = "PRAGMA synchronous=1"
-            cmd.ExecuteNonQuery()
+                fileAttemptCount += 1;
+            }
 
-            ' Close the SQLite DB
-            cmd.Dispose()
-            sqlConnection.Close()
+            mSQLiteDBConnectionString = "Data Source=" + mSQLiteDBFilePath + ";";
+        }
 
-            ' Close the protein file
-            proteinFileReader.CloseFile()
+        /// <summary>
+        /// Examines the file's extension and true if it ends in .fasta or .fsa or .faa
+        /// </summary>
+        /// <param name="filePath"></param>
+        /// <returns></returns>
+        public static bool IsFastaFile(string filePath)
+        {
+            string proteinFileExtension = Path.GetExtension(filePath).ToLower();
 
-            RaiseEvent ProteinCachingComplete()
+            if ((proteinFileExtension ?? "") == ".fasta" || (proteinFileExtension ?? "") == ".fsa" || (proteinFileExtension ?? "") == ".faa")
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
 
-            If success Then
-                OnStatusEvent("Done: Processed " & proteinsProcessed.ToString("###,##0") & " proteins (" & inputFileLinesRead.ToString("###,###,##0") & " lines)")
-            Else
-                OnErrorEvent(mStatusMessage)
-            End If
+        public bool ParseProteinFile(string proteinInputFilePath)
+        {
+            // If outputFileNameBaseOverride is defined, then uses that name for the protein output filename rather than auto-defining the name
 
-        Catch ex As Exception
-            ReportError("Error reading protein input file (" & proteinInputFilePath & "): " & ex.Message, ex)
-            success = False
-        End Try
+            // Create the SQLite DB
+            var sqlConnection = ConnectToSQLiteDB(true);
 
-        Return success
+            // SQL query to Create the Table
+            var cmd = sqlConnection.CreateCommand();
+            cmd.CommandText = "CREATE TABLE udtProteinInfoType( " +
+                              "Name TEXT, " +
+                              "Description TEXT, "
+                              + "sequence TEXT, "
+                              + "UniquesequenceID INTEGER PRIMARY KEY, " +
+                              "PercentCoverage REAL);"; // , NonUniquePeptideCount INTEGER, UniquePeptideCount INTEGER);"
 
-    End Function
+            OnDebugEvent("ParseProteinFile: Creating table with " + cmd.CommandText);
 
-    Private Sub ReportError(errorMessage As String, Optional ex As Exception = Nothing)
-        OnErrorEvent(errorMessage, ex)
-        mStatusMessage = errorMessage
-    End Sub
+            cmd.ExecuteNonQuery();
 
-    ' Options class
-    Public Class FastaFileOptionsClass
+            // Define a RegEx to replace all of the non-letter characters
+            var reReplaceSymbols = new Regex("[^A-Za-z]", RegexOptions.Compiled);
 
-        Public Sub New()
-            mProteinLineStartChar = ">"c
-            mProteinLineAccessionEndChar = " "c
+            ProteinFileReaderBaseClass proteinFileReader = null;
 
-        End Sub
+            bool success;
 
-#Region "Classwide Variables"
+            try
+            {
+                if (proteinInputFilePath == null || proteinInputFilePath.Length == 0)
+                {
+                    ReportError("Empty protein input file path");
+                    success = false;
+                }
+                else
+                {
+                    if (AssumeFastaFile || IsFastaFile(proteinInputFilePath))
+                    {
+                        mParsedFileIsFastaFile = true;
+                    }
+                    else if (AssumeDelimitedFile)
+                    {
+                        mParsedFileIsFastaFile = false;
+                    }
+                    else
+                    {
+                        mParsedFileIsFastaFile = true;
+                    }
 
-        Private mProteinLineStartChar As Char
-        Private mProteinLineAccessionEndChar As Char
+                    if (mParsedFileIsFastaFile)
+                    {
+                        proteinFileReader = new FastaFileReader()
+                        {
+                            ProteinLineStartChar = FastaFileOptions.ProteinLineStartChar,
+                            ProteinLineAccessionEndChar = FastaFileOptions.ProteinLineAccessionEndChar
+                        };
+                    }
+                    else
+                    {
+                        proteinFileReader = new DelimitedFileReader()
+                        {
+                            Delimiter = mDelimitedInputFileDelimiter,
+                            DelimitedFileFormatCode = DelimitedFileFormatCode,
+                            SkipFirstLine = DelimitedFileSkipFirstLine
+                        };
+                    }
 
-#End Region
+                    // Verify that the input file exists
+                    if (!File.Exists(proteinInputFilePath))
+                    {
+                        ReportError("Protein input file not found: " + proteinInputFilePath);
+                        success = false;
+                    }
+                    // Attempt to open the input file
+                    else if (!proteinFileReader.OpenFile(proteinInputFilePath))
+                    {
+                        ReportError("Error opening protein input file: " + proteinInputFilePath);
+                        success = false;
+                    }
+                    else
+                        success = true;
+                }
+            }
+            catch (Exception ex)
+            {
+                ReportError("Error opening protein input file (" + proteinInputFilePath + "): " + ex.Message, ex);
+                success = false;
+            }
 
-#Region "Processing Options Interface Functions"
+            // Abort processing if we couldn't successfully open the input file
+            if (!success)
+                return false;
 
-        Public Property ProteinLineStartChar As Char
-            Get
-                Return mProteinLineStartChar
-            End Get
-            Set
-                If Not Value = Nothing Then
-                    mProteinLineStartChar = Value
-                End If
-            End Set
-        End Property
+            try
+            {
+                // Read each protein in the input file and process appropriately
+                mProteinCount = 0;
 
-        Public Property ProteinLineAccessionEndChar As Char
-            Get
-                Return mProteinLineAccessionEndChar
-            End Get
-            Set
-                If Not Value = Nothing Then
-                    mProteinLineAccessionEndChar = Value
-                End If
-            End Set
-        End Property
+                ProteinCachingStart?.Invoke();
 
-#End Region
+                // Create a parameterized Insert query
+                cmd.CommandText = " INSERT INTO udtProteinInfoType(Name, Description, sequence, UniquesequenceID, PercentCoverage) " +
+                                  " VALUES (?, ?, ?, ?, ?)";
 
-    End Class
+                var nameFld = cmd.CreateParameter();
+                var descriptionFld = cmd.CreateParameter();
+                var sequenceFld = cmd.CreateParameter();
+                var uniqueSequenceIDFld = cmd.CreateParameter();
+                var percentCoverageFld = cmd.CreateParameter();
+                cmd.Parameters.Add(nameFld);
+                cmd.Parameters.Add(descriptionFld);
+                cmd.Parameters.Add(sequenceFld);
+                cmd.Parameters.Add(uniqueSequenceIDFld);
+                cmd.Parameters.Add(percentCoverageFld);
 
-End Class
+                // Begin a SQL Transaction
+                var SQLTransaction = sqlConnection.BeginTransaction();
+
+                int proteinsProcessed = 0;
+                int inputFileLinesRead = 0;
+
+                do
+                {
+                    bool inputProteinFound = proteinFileReader.ReadNextProteinEntry();
+                    if (!inputProteinFound)
+                    {
+                        break;
+                    }
+
+                    proteinsProcessed += 1;
+                    inputFileLinesRead = proteinFileReader.LinesRead;
+
+                    string name = proteinFileReader.ProteinName;
+                    string description = proteinFileReader.ProteinDescription;
+                    string sequence;
+
+                    if (RemoveSymbolCharacters)
+                    {
+                        sequence = reReplaceSymbols.Replace(proteinFileReader.ProteinSequence, string.Empty);
+                    }
+                    else
+                    {
+                        sequence = proteinFileReader.ProteinSequence;
+                    }
+
+                    if (ChangeProteinSequencesToLowercase)
+                    {
+                        if (IgnoreILDifferences)
+                        {
+                            // Replace all L characters with I
+                            sequence = sequence.ToLower().Replace('l', 'i');
+                        }
+                        else
+                        {
+                            sequence = sequence.ToLower();
+                        }
+                    }
+                    else if (ChangeProteinSequencesToUppercase)
+                    {
+                        if (IgnoreILDifferences)
+                        {
+                            // Replace all L characters with I
+                            sequence = sequence.ToUpper().Replace('L', 'I');
+                        }
+                        else
+                        {
+                            sequence = sequence.ToUpper();
+                        }
+                    }
+                    else if (IgnoreILDifferences)
+                    {
+                        // Replace all L characters with I
+                        sequence = sequence.Replace('L', 'I').Replace('l', 'i');
+                    }
+
+                    // Store this protein in the SQLite DB
+                    nameFld.Value = name;
+                    descriptionFld.Value = description;
+                    sequenceFld.Value = sequence;
+
+                    // Use mProteinCount to assign UniqueSequenceID values
+                    uniqueSequenceIDFld.Value = mProteinCount;
+
+                    percentCoverageFld.Value = 0;
+
+                    cmd.ExecuteNonQuery();
+
+                    mProteinCount += 1;
+
+                    ProteinCached?.Invoke(mProteinCount);
+
+                    if (mProteinCount % 100 == 0)
+                    {
+                        ProteinCachedWithProgress?.Invoke(mProteinCount, proteinFileReader.PercentFileProcessed());
+                    }
+
+                    success = true;
+                }
+                while (true);
+
+                // Finalize the SQL Transaction
+                SQLTransaction.Commit();
+
+                // Set Synchronous mode to 1   (this may not be truly necessary)
+                cmd.CommandText = "PRAGMA synchronous=1";
+                cmd.ExecuteNonQuery();
+
+                // Close the SQLite DB
+                cmd.Dispose();
+                sqlConnection.Close();
+
+                // Close the protein file
+                proteinFileReader.CloseFile();
+
+                ProteinCachingComplete?.Invoke();
+
+                if (success)
+                {
+                    OnStatusEvent("Done: Processed " + proteinsProcessed.ToString("###,##0") + " proteins (" + inputFileLinesRead.ToString("###,###,##0") + " lines)");
+                }
+                else
+                {
+                    OnErrorEvent(mStatusMessage);
+                }
+            }
+            catch (Exception ex)
+            {
+                ReportError("Error reading protein input file (" + proteinInputFilePath + "): " + ex.Message, ex);
+                success = false;
+            }
+
+            return success;
+        }
+
+        private void ReportError(string errorMessage, Exception ex = null)
+        {
+            OnErrorEvent(errorMessage, ex);
+            mStatusMessage = errorMessage;
+        }
+
+        // Options class
+        public class FastaFileOptionsClass
+        {
+            public FastaFileOptionsClass()
+            {
+                mProteinLineStartChar = '>';
+                mProteinLineAccessionEndChar = ' ';
+            }
+
+            #region "Classwide Variables"
+
+            private char mProteinLineStartChar;
+            private char mProteinLineAccessionEndChar;
+
+            #endregion
+
+            #region "Processing Options Interface Functions"
+
+            public char ProteinLineStartChar
+            {
+                get => mProteinLineStartChar;
+                set
+                {
+                    if (value != default)
+                    {
+                        mProteinLineStartChar = value;
+                    }
+                }
+            }
+
+            public char ProteinLineAccessionEndChar
+            {
+                get => mProteinLineAccessionEndChar;
+                set
+                {
+                    if (value != default)
+                    {
+                        mProteinLineAccessionEndChar = value;
+                    }
+                }
+            }
+
+            #endregion
+        }
+    }
+}

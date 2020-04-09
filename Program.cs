@@ -1,313 +1,357 @@
-﻿Option Strict On
+﻿// -------------------------------------------------------------------------------
+// Written by Matthew Monroe and Nikša Blonder for the Department of Energy (PNNL, Richland, WA)
+// Program started June 14, 2005
+//
+// E-mail: matthew.monroe@pnnl.gov or proteomics@pnnl.gov
+// Website: https://omics.pnl.gov/ or https://panomics.pnnl.gov/
+// -------------------------------------------------------------------------------
+//
+// Licensed under the 2-Clause BSD License; you may not use this file except
+// in compliance with the License.  You may obtain a copy of the License at
+// https://opensource.org/licenses/BSD-2-Clause
+//
+// Copyright 2018 Battelle Memorial Institute
 
-' -------------------------------------------------------------------------------
-' Written by Matthew Monroe and Nikša Blonder for the Department of Energy (PNNL, Richland, WA)
-' Program started June 14, 2005
-'
-' E-mail: matthew.monroe@pnnl.gov or proteomics@pnnl.gov
-' Website: https://omics.pnl.gov/ or https://panomics.pnnl.gov/
-' -------------------------------------------------------------------------------
-'
-' Licensed under the 2-Clause BSD License; you may not use this file except
-' in compliance with the License.  You may obtain a copy of the License at
-' https://opensource.org/licenses/BSD-2-Clause
-'
-' Copyright 2018 Battelle Memorial Institute
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Runtime.InteropServices;
+using System.Windows.Forms;
+using PRISM;
+using PRISM.FileProcessor;
 
-Imports System.Runtime.InteropServices
-Imports PRISM
+namespace ProteinCoverageSummarizerGUI
+{
+    /// <summary>
+    /// This program uses clsProteinCoverageSummarizer to read in a file with protein sequences along with
+    /// an accompanying file with peptide sequences and compute the percent coverage of each of the proteins
+    ///
+    /// Example command Line
+    /// I:PeptideInputFilePath /R:ProteinInputFilePath /O:OutputDirectoryPath /P:ParameterFilePath
+    /// </summary>
+    public static class Program
+    {
+        public const string PROGRAM_DATE = "March 30, 2020";
 
-''' <summary>
-''' This program uses clsProteinCoverageSummarizer to read in a file with protein sequences along with
-''' an accompanying file with peptide sequences and compute the percent coverage of each of the proteins
-'''
-''' Example command Line
-''' /I:PeptideInputFilePath /R:ProteinInputFilePath /O:OutputDirectoryPath /P:ParameterFilePath
-''' </summary>
-Public Module Program
+        private static string mPeptideInputFilePath;
+        private static string mProteinInputFilePath;
+        private static string mOutputDirectoryPath;
+        private static string mParameterFilePath;
 
-    Public Const PROGRAM_DATE As String = "March 30, 2020"
+        private static bool mIgnoreILDifferences;
+        private static bool mOutputProteinSequence;
+        private static bool mSaveProteinToPeptideMappingFile;
+        private static bool mSkipCoverageComputationSteps;
+        private static bool mDebugMode;
+        private static bool mKeepDB;
 
-    Private mPeptideInputFilePath As String
-    Private mProteinInputFilePath As String
-    Private mOutputDirectoryPath As String
-    Private mParameterFilePath As String
+        private static clsProteinCoverageSummarizerRunner mProteinCoverageSummarizer;
+        private static DateTime mLastProgressReportTime;
+        private static int mLastProgressReportValue;
 
-    Private mIgnoreILDifferences As Boolean
-    Private mOutputProteinSequence As Boolean
-    Private mSaveProteinToPeptideMappingFile As Boolean
-    Private mSkipCoverageComputationSteps As Boolean
-    Private mDebugMode As Boolean
-    Private mKeepDB As Boolean
+        [DllImport("kernel32.dll")]
+        private static extern IntPtr GetConsoleWindow();
 
-    Private mProteinCoverageSummarizer As clsProteinCoverageSummarizerRunner
-    Private mLastProgressReportTime As DateTime
-    Private mLastProgressReportValue As Integer
+        [DllImport("user32.dll")]
+        private static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
 
-    <DllImport("kernel32.dll")>
-    Private Function GetConsoleWindow() As IntPtr
-    End Function
+        private const int SW_HIDE = 0;
+        private const int SW_SHOW = 5;
 
-    <DllImport("user32.dll")>
-    Private Function ShowWindow(hWnd As IntPtr, nCmdShow As Integer) As Boolean
-    End Function
+        public static int Main()
+        {
+            // Returns 0 if no error, error code if an error
+            int returnCode;
+            var commandLineParser = new clsParseCommandLine();
+            bool proceed;
 
-    Const SW_HIDE As Integer = 0
-    Const SW_SHOW As Integer = 5
+            returnCode = 0;
+            mPeptideInputFilePath = string.Empty;
+            mProteinInputFilePath = string.Empty;
+            mParameterFilePath = string.Empty;
 
-    Public Function Main() As Integer
-        ' Returns 0 if no error, error code if an error
-        Dim returnCode As Integer
-        Dim commandLineParser As New clsParseCommandLine()
-        Dim proceed As Boolean
+            mIgnoreILDifferences = false;
+            mOutputProteinSequence = true;
+            mSaveProteinToPeptideMappingFile = false;
+            mSkipCoverageComputationSteps = false;
+            mDebugMode = false;
+            mKeepDB = false;
 
-        returnCode = 0
-        mPeptideInputFilePath = String.Empty
-        mProteinInputFilePath = String.Empty
-        mParameterFilePath = String.Empty
+            try
+            {
+                proceed = false;
+                if (commandLineParser.ParseCommandLine())
+                {
+                    if (SetOptionsUsingCommandLineParameters(commandLineParser))
+                        proceed = true;
+                }
 
-        mIgnoreILDifferences = False
-        mOutputProteinSequence = True
-        mSaveProteinToPeptideMappingFile = False
-        mSkipCoverageComputationSteps = False
-        mDebugMode = False
-        mKeepDB = False
-
-        Try
-            proceed = False
-            If commandLineParser.ParseCommandLine Then
-                If SetOptionsUsingCommandLineParameters(commandLineParser) Then proceed = True
-            End If
-
-            If Not commandLineParser.NeedToShowHelp And String.IsNullOrEmpty(mProteinInputFilePath) Then
-                ShowGUI()
-            ElseIf Not proceed OrElse commandLineParser.NeedToShowHelp OrElse commandLineParser.ParameterCount = 0 OrElse mPeptideInputFilePath.Length = 0 Then
-                ShowProgramHelp()
-                returnCode = -1
-            Else
-                If (String.IsNullOrWhiteSpace(mParameterFilePath) And
-                    Not mSaveProteinToPeptideMappingFile And
-                    mSkipCoverageComputationSteps) Then
-                    ConsoleMsgUtils.ShowWarning("You used /K but didn't specify /M; no results will be saved")
-                    ConsoleMsgUtils.ShowWarning("It is advised that you use only /M (and don't use /K)")
-                End If
-
-                Try
-                    mProteinCoverageSummarizer = New clsProteinCoverageSummarizerRunner() With {
-                        .ProteinInputFilePath = mProteinInputFilePath,
-                        .CallingAppHandlesEvents = False,
-                        .IgnoreILDifferences = mIgnoreILDifferences,
-                        .OutputProteinSequence = mOutputProteinSequence,
-                        .SaveProteinToPeptideMappingFile = mSaveProteinToPeptideMappingFile,
-                        .SearchAllProteinsSkipCoverageComputationSteps = mSkipCoverageComputationSteps,
-                        .KeepDB = mKeepDB
+                if (!commandLineParser.NeedToShowHelp & string.IsNullOrEmpty(mProteinInputFilePath))
+                {
+                    ShowGUI();
+                }
+                else if (!proceed || commandLineParser.NeedToShowHelp || commandLineParser.ParameterCount == 0 || mPeptideInputFilePath.Length == 0)
+                {
+                    ShowProgramHelp();
+                    returnCode = -1;
+                }
+                else
+                {
+                    if (string.IsNullOrWhiteSpace(mParameterFilePath) &&
+                        !mSaveProteinToPeptideMappingFile &&
+                        mSkipCoverageComputationSteps)
+                    {
+                        ConsoleMsgUtils.ShowWarning("You used /K but didn't specify /M; no results will be saved");
+                        ConsoleMsgUtils.ShowWarning("It is advised that you use only /M (and don't use /K)");
                     }
 
-                    AddHandler mProteinCoverageSummarizer.StatusEvent, AddressOf ProteinCoverageSummarizer_StatusEvent
-                    AddHandler mProteinCoverageSummarizer.ErrorEvent, AddressOf ProteinCoverageSummarizer_ErrorEvent
-                    AddHandler mProteinCoverageSummarizer.WarningEvent, AddressOf ProteinCoverageSummarizer_WarningEvent
+                    try
+                    {
+                        mProteinCoverageSummarizer = new clsProteinCoverageSummarizerRunner()
+                        {
+                            ProteinInputFilePath = mProteinInputFilePath,
+                            CallingAppHandlesEvents = false,
+                            IgnoreILDifferences = mIgnoreILDifferences,
+                            OutputProteinSequence = mOutputProteinSequence,
+                            SaveProteinToPeptideMappingFile = mSaveProteinToPeptideMappingFile,
+                            SearchAllProteinsSkipCoverageComputationSteps = mSkipCoverageComputationSteps,
+                            KeepDB = mKeepDB
+                        };
 
-                    AddHandler mProteinCoverageSummarizer.ProgressUpdate, AddressOf ProteinCoverageSummarizer_ProgressChanged
-                    AddHandler mProteinCoverageSummarizer.ProgressReset, AddressOf ProteinCoverageSummarizer_ProgressReset
+                        mProteinCoverageSummarizer.StatusEvent += ProteinCoverageSummarizer_StatusEvent;
+                        mProteinCoverageSummarizer.ErrorEvent += ProteinCoverageSummarizer_ErrorEvent;
+                        mProteinCoverageSummarizer.WarningEvent += ProteinCoverageSummarizer_WarningEvent;
 
-                    mProteinCoverageSummarizer.ProcessFilesWildcard(mPeptideInputFilePath, mOutputDirectoryPath, mParameterFilePath)
+                        mProteinCoverageSummarizer.ProgressUpdate += ProteinCoverageSummarizer_ProgressChanged;
+                        mProteinCoverageSummarizer.ProgressReset += ProteinCoverageSummarizer_ProgressReset;
 
-                Catch ex As Exception
-                    ShowErrorMessage("Error initializing Protein File Parser General Options " & ex.Message)
-                End Try
-
-            End If
-
-        Catch ex As Exception
-            ShowErrorMessage("Error occurred in modMain->Main: " & Environment.NewLine & ex.Message)
-            returnCode = -1
-        End Try
-
-        Return returnCode
-
-    End Function
-
-    Private Sub DisplayProgressPercent(percentComplete As Integer, addCarriageReturn As Boolean)
-        If addCarriageReturn Then
-            Console.WriteLine()
-        End If
-        If percentComplete > 100 Then percentComplete = 100
-        Console.Write("Processing: " & percentComplete.ToString() & "% ")
-        If addCarriageReturn Then
-            Console.WriteLine()
-        End If
-    End Sub
-
-    Private Function GetAppVersion() As String
-        Return FileProcessor.ProcessFilesOrDirectoriesBase.GetAppVersion(PROGRAM_DATE)
-    End Function
-
-    Private Function SetOptionsUsingCommandLineParameters(commandLineParser As clsParseCommandLine) As Boolean
-        ' Returns True if no problems; otherwise, returns false
-        ' /I:PeptideInputFilePath /R: ProteinInputFilePath /O:OutputDirectoryPath /P:ParameterFilePath
-
-        Dim value As String = String.Empty
-        Dim validParameters = New List(Of String) From {"I", "O", "R", "P", "G", "H", "M", "K", "Debug", "KeepDB"}
-
-        Try
-            ' Make sure no invalid parameters are present
-            If commandLineParser.InvalidParametersPresent(validParameters) Then
-                ShowErrorMessage("Invalid command line parameters",
-                  (From item In commandLineParser.InvalidParameters(validParameters) Select "/" + item).ToList())
-                Return False
-            Else
-                With commandLineParser
-                    ' Query commandLineParser to see if various parameters are present
-                    If .RetrieveValueForParameter("I", value) Then
-                        mPeptideInputFilePath = value
-                    ElseIf .NonSwitchParameterCount > 0 Then
-                        mPeptideInputFilePath = .RetrieveNonSwitchParameter(0)
-                    End If
-
-                    If .RetrieveValueForParameter("O", value) Then mOutputDirectoryPath = value
-                    If .RetrieveValueForParameter("R", value) Then mProteinInputFilePath = value
-                    If .RetrieveValueForParameter("P", value) Then mParameterFilePath = value
-                    If .RetrieveValueForParameter("H", value) Then mOutputProteinSequence = False
-
-                    mIgnoreILDifferences = .IsParameterPresent("G")
-                    mSaveProteinToPeptideMappingFile = .IsParameterPresent("M")
-                    mSkipCoverageComputationSteps = .IsParameterPresent("K")
-                    mDebugMode = .IsParameterPresent("Debug")
-                    mKeepDB = .IsParameterPresent("KeepDB")
-                End With
-
-                Return True
-            End If
-
-        Catch ex As Exception
-            ShowErrorMessage("Error parsing the command line parameters: " & Environment.NewLine & ex.Message)
-        End Try
-
-        Return False
-
-    End Function
-
-    Private Sub ShowErrorMessage(message As String)
-        ConsoleMsgUtils.ShowError(message)
-    End Sub
-
-    Private Sub ShowErrorMessage(title As String, errorMessages As List(Of String))
-        ConsoleMsgUtils.ShowErrors(title, errorMessages)
-    End Sub
-
-    Private Sub ShowGUI()
-        Dim objFormMain As GUI
-
-        Application.EnableVisualStyles()
-        Application.DoEvents()
-
-        Try
-            Dim handle = GetConsoleWindow()
-
-            If Not mDebugMode Then
-                ' Hide the console
-                ShowWindow(handle, SW_HIDE)
-            End If
-
-            objFormMain = New GUI With {
-                .KeepDB = mKeepDB
+                        mProteinCoverageSummarizer.ProcessFilesWildcard(mPeptideInputFilePath, mOutputDirectoryPath, mParameterFilePath);
+                    }
+                    catch (Exception ex)
+                    {
+                        ShowErrorMessage("Error initializing Protein File Parser General Options " + ex.Message);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                ShowErrorMessage("Error occurred in modMain->Main: " + Environment.NewLine + ex.Message);
+                returnCode = -1;
             }
 
-            objFormMain.ShowDialog()
+            return returnCode;
+        }
 
-            If Not mDebugMode Then
-                ' Show the console
-                ShowWindow(handle, SW_SHOW)
-            End If
-        Catch ex As Exception
-            ConsoleMsgUtils.ShowWarning("Error in ShowGUI: " + ex.Message)
-            ConsoleMsgUtils.ShowWarning(StackTraceFormatter.GetExceptionStackTraceMultiLine(ex))
+        private static void DisplayProgressPercent(int percentComplete, bool addCarriageReturn)
+        {
+            if (addCarriageReturn)
+            {
+                Console.WriteLine();
+            }
 
-            MsgBox("Error in ShowGUI: " & ex.Message, MsgBoxStyle.Exclamation Or MsgBoxStyle.OkOnly, "Error")
-        End Try
+            if (percentComplete > 100)
+                percentComplete = 100;
+            Console.Write("Processing: " + percentComplete.ToString() + "% ");
+            if (addCarriageReturn)
+            {
+                Console.WriteLine();
+            }
+        }
 
-    End Sub
+        private static string GetAppVersion()
+        {
+            return ProcessFilesOrDirectoriesBase.GetAppVersion(PROGRAM_DATE);
+        }
 
-    Private Sub ShowProgramHelp()
+        private static bool SetOptionsUsingCommandLineParameters(clsParseCommandLine commandLineParser)
+        {
+            // Returns True if no problems; otherwise, returns false
+            // /I:PeptideInputFilePath /R: ProteinInputFilePath /O:OutputDirectoryPath /P:ParameterFilePath
 
-        Try
-            Console.WriteLine(ConsoleMsgUtils.WrapParagraph(
-                "This program reads in a .fasta or .txt file containing protein names and sequences (and optionally descriptions). " &
-                "The program also reads in a .txt file containing peptide sequences and protein names (though protein name is optional) " &
-                "then uses this information to compute the sequence coverage percent for each protein."))
-            Console.WriteLine()
-            Console.WriteLine("Program syntax:" & Environment.NewLine & Path.GetFileName(FileProcessor.ProcessFilesOrDirectoriesBase.GetAppPath()))
-            Console.WriteLine("  /I:PeptideInputFilePath /R:ProteinInputFilePath [/O:OutputDirectoryName]")
-            Console.WriteLine("  [/P:ParameterFilePath] [/G] [/H] [/M] [/K] [/Debug] [/KeepDB]")
-            Console.WriteLine()
-            Console.WriteLine(ConsoleMsgUtils.WrapParagraph(
-                "The input file path can contain the wildcard character *. If a wildcard is present, the same protein input file path " &
-                "will be used for each of the peptide input files matched."))
-            Console.WriteLine()
-            Console.WriteLine(ConsoleMsgUtils.WrapParagraph(
-                "The output directory name is optional. If omitted, the output files will be created in the same directory as the input file. " &
-                "If included, a subdirectory is created with the name OutputDirectoryName."))
-            Console.WriteLine()
-            Console.WriteLine(ConsoleMsgUtils.WrapParagraph(
-                "The parameter file path is optional. If included, it should point to a valid XML parameter file."))
-            Console.WriteLine()
-            Console.WriteLine(ConsoleMsgUtils.WrapParagraph(
-                "Use /G to ignore I/L differences when finding peptides in proteins or computing coverage."))
-            Console.WriteLine("Use /H to suppress (hide) the protein sequence in the _coverage.txt file.")
-            Console.WriteLine("Use /M to enable the creation of a protein to peptide mapping file.")
-            Console.WriteLine("Use /K to skip protein coverage computation steps")
-            Console.WriteLine()
-            Console.WriteLine("Use /Debug to keep the console open to see additional debug messages")
-            Console.WriteLine("Use /KeepDB to keep the SQLite database after processing (by default it is deleted)")
-            Console.WriteLine()
+            string value = string.Empty;
+            var validParameters = new List<string>() { "I", "O", "R", "P", "G", "H", "M", "K", "Debug", "KeepDB" };
+            try
+            {
+                // Make sure no invalid parameters are present
+                if (commandLineParser.InvalidParametersPresent(validParameters))
+                {
+                    ShowErrorMessage("Invalid command line parameters",
+                        (from item in commandLineParser.InvalidParameters(validParameters) select ("/" + item)).ToList());
+                    return false;
+                }
+                else
+                {
+                    // Query commandLineParser to see if various parameters are present
+                    if (commandLineParser.RetrieveValueForParameter("I", out value))
+                    {
+                        mPeptideInputFilePath = value;
+                    }
+                    else if (commandLineParser.NonSwitchParameterCount > 0)
+                    {
+                        mPeptideInputFilePath = commandLineParser.RetrieveNonSwitchParameter(0);
+                    }
 
-            Console.WriteLine("Program written by Matthew Monroe and Nikša Blonder for the Department of Energy (PNNL, Richland, WA) in 2005")
-            Console.WriteLine("Version: " & GetAppVersion())
-            Console.WriteLine()
+                    if (commandLineParser.RetrieveValueForParameter("O", out value))
+                        mOutputDirectoryPath = value;
+                    if (commandLineParser.RetrieveValueForParameter("R", out value))
+                        mProteinInputFilePath = value;
+                    if (commandLineParser.RetrieveValueForParameter("P", out value))
+                        mParameterFilePath = value;
+                    if (commandLineParser.RetrieveValueForParameter("H", out value))
+                        mOutputProteinSequence = false;
 
-            Console.WriteLine("E-mail: matthew.monroe@pnnl.gov or proteomics@pnnl.gov")
-            Console.WriteLine("Website: https://omics.pnl.gov or https://panomics.pnl.gov/")
-            Console.WriteLine()
+                    mIgnoreILDifferences = commandLineParser.IsParameterPresent("G");
+                    mSaveProteinToPeptideMappingFile = commandLineParser.IsParameterPresent("M");
+                    mSkipCoverageComputationSteps = commandLineParser.IsParameterPresent("K");
+                    mDebugMode = commandLineParser.IsParameterPresent("Debug");
+                    mKeepDB = commandLineParser.IsParameterPresent("KeepDB");
+                    return true;
+                }
+            }
+            catch (Exception ex)
+            {
+                ShowErrorMessage("Error parsing the command line parameters: " + Environment.NewLine + ex.Message);
+            }
 
-        Catch ex As Exception
-            ShowErrorMessage("Error displaying the program syntax: " & ex.Message)
-        End Try
+            return false;
+        }
 
-    End Sub
+        private static void ShowErrorMessage(string message)
+        {
+            ConsoleMsgUtils.ShowError(message);
+        }
 
-    Private Sub ProteinCoverageSummarizer_StatusEvent(message As String)
-        Console.WriteLine(message)
-    End Sub
+        private static void ShowErrorMessage(string title, List<string> errorMessages)
+        {
+            ConsoleMsgUtils.ShowErrors(title, errorMessages);
+        }
 
-    Private Sub ProteinCoverageSummarizer_WarningEvent(message As String)
-        ConsoleMsgUtils.ShowWarning(message)
-    End Sub
+        private static void ShowGUI()
+        {
+            GUI objFormMain;
 
-    Private Sub ProteinCoverageSummarizer_ErrorEvent(message As String, ex As Exception)
-        ShowErrorMessage(message)
-    End Sub
+            Application.EnableVisualStyles();
+            Application.DoEvents();
+            try
+            {
+                var handle = GetConsoleWindow();
 
-    Private Sub ProteinCoverageSummarizer_ProgressChanged(taskDescription As String, percentComplete As Single)
-        Const PERCENT_REPORT_INTERVAL = 25
-        Const PROGRESS_DOT_INTERVAL_MSEC = 250
+                if (!mDebugMode)
+                {
+                    // Hide the console
+                    ShowWindow(handle, SW_HIDE);
+                }
 
-        If percentComplete >= mLastProgressReportValue Then
-            If mLastProgressReportValue > 0 Then
-                Console.WriteLine()
-            End If
-            DisplayProgressPercent(mLastProgressReportValue, False)
-            mLastProgressReportValue += PERCENT_REPORT_INTERVAL
-            mLastProgressReportTime = DateTime.UtcNow
-        Else
-            If DateTime.UtcNow.Subtract(mLastProgressReportTime).TotalMilliseconds > PROGRESS_DOT_INTERVAL_MSEC Then
-                mLastProgressReportTime = DateTime.UtcNow
-                Console.Write(".")
-            End If
-        End If
-    End Sub
+                objFormMain = new GUI() { KeepDB = mKeepDB };
 
-    Private Sub ProteinCoverageSummarizer_ProgressReset()
-        mLastProgressReportTime = DateTime.UtcNow
-        mLastProgressReportValue = 0
-    End Sub
-End Module
+                objFormMain.ShowDialog();
+
+                if (!mDebugMode)
+                {
+                    // Show the console
+                    ShowWindow(handle, SW_SHOW);
+                }
+            }
+            catch (Exception ex)
+            {
+                ConsoleMsgUtils.ShowWarning("Error in ShowGUI: " + ex.Message);
+                ConsoleMsgUtils.ShowWarning(StackTraceFormatter.GetExceptionStackTraceMultiLine(ex));
+
+                MessageBox.Show("Error in ShowGUI: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+            }
+        }
+
+        private static void ShowProgramHelp()
+        {
+            try
+            {
+                Console.WriteLine(ConsoleMsgUtils.WrapParagraph(
+                    "This program reads in a .fasta or .txt file containing protein names and sequences (and optionally descriptions). " +
+                    "The program also reads in a .txt file containing peptide sequences and protein names (though protein name is optional) " +
+                    "then uses this information to compute the sequence coverage percent for each protein."));
+                Console.WriteLine();
+                Console.WriteLine("Program syntax:" + Environment.NewLine + Path.GetFileName(ProcessFilesOrDirectoriesBase.GetAppPath()));
+                Console.WriteLine("  /I:PeptideInputFilePath /R:ProteinInputFilePath [/O:OutputDirectoryName]");
+                Console.WriteLine("  [/P:ParameterFilePath] [/G] [/H] [/M] [/K] [/Debug] [/KeepDB]");
+                Console.WriteLine();
+                Console.WriteLine(ConsoleMsgUtils.WrapParagraph(
+                    "The input file path can contain the wildcard character *. If a wildcard is present, the same protein input file path " +
+                    "will be used for each of the peptide input files matched."));
+                Console.WriteLine();
+                Console.WriteLine(ConsoleMsgUtils.WrapParagraph(
+                    "The output directory name is optional. If omitted, the output files will be created in the same directory as the input file. " +
+                    "If included, a subdirectory is created with the name OutputDirectoryName."));
+                Console.WriteLine();
+                Console.WriteLine(ConsoleMsgUtils.WrapParagraph(
+                    "The parameter file path is optional. If included, it should point to a valid XML parameter file."));
+                Console.WriteLine();
+                Console.WriteLine(ConsoleMsgUtils.WrapParagraph(
+                    "Use /G to ignore I/L differences when finding peptides in proteins or computing coverage."));
+                Console.WriteLine("Use /H to suppress (hide) the protein sequence in the _coverage.txt file.");
+                Console.WriteLine("Use /M to enable the creation of a protein to peptide mapping file.");
+                Console.WriteLine("Use /K to skip protein coverage computation steps");
+                Console.WriteLine();
+                Console.WriteLine("Use /Debug to keep the console open to see additional debug messages");
+                Console.WriteLine("Use /KeepDB to keep the SQLite database after processing (by default it is deleted)");
+                Console.WriteLine();
+
+                Console.WriteLine("Program written by Matthew Monroe and Nikša Blonder for the Department of Energy (PNNL, Richland, WA) in 2005");
+                Console.WriteLine("Version: " + GetAppVersion());
+                Console.WriteLine();
+
+                Console.WriteLine("E-mail: matthew.monroe@pnnl.gov or proteomics@pnnl.gov");
+                Console.WriteLine("Website: https://omics.pnl.gov or https://panomics.pnl.gov/");
+                Console.WriteLine();
+            }
+            catch (Exception ex)
+            {
+                ShowErrorMessage("Error displaying the program syntax: " + ex.Message);
+            }
+        }
+
+        private static void ProteinCoverageSummarizer_StatusEvent(string message)
+        {
+            Console.WriteLine(message);
+        }
+
+        private static void ProteinCoverageSummarizer_WarningEvent(string message)
+        {
+            ConsoleMsgUtils.ShowWarning(message);
+        }
+
+        private static void ProteinCoverageSummarizer_ErrorEvent(string message, Exception ex)
+        {
+            ShowErrorMessage(message);
+        }
+
+        private static void ProteinCoverageSummarizer_ProgressChanged(string taskDescription, float percentComplete)
+        {
+            const int PERCENT_REPORT_INTERVAL = 25;
+            const int PROGRESS_DOT_INTERVAL_MSEC = 250;
+
+            if (percentComplete >= mLastProgressReportValue)
+            {
+                if (mLastProgressReportValue > 0)
+                {
+                    Console.WriteLine();
+                }
+
+                DisplayProgressPercent(mLastProgressReportValue, false);
+                mLastProgressReportValue += PERCENT_REPORT_INTERVAL;
+                mLastProgressReportTime = DateTime.UtcNow;
+            }
+            else if (DateTime.UtcNow.Subtract(mLastProgressReportTime).TotalMilliseconds > PROGRESS_DOT_INTERVAL_MSEC)
+            {
+                mLastProgressReportTime = DateTime.UtcNow;
+                Console.Write(".");
+            }
+        }
+
+        private static void ProteinCoverageSummarizer_ProgressReset()
+        {
+            mLastProgressReportTime = DateTime.UtcNow;
+            mLastProgressReportValue = 0;
+        }
+    }
+}
