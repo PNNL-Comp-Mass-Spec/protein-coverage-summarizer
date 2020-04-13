@@ -542,6 +542,7 @@ namespace ProteinCoverageSummarizer
                             }
 
                             // Update the protein counts at targetIndex
+                            // NOTE: The following is valid only because udtPeptideStats is an array, and not a generic collection
                             udtPeptideStats[targetIndex].UniquePeptideCount += 1;
                             udtPeptideStats[targetIndex].NonUniquePeptideCount += myEnumerator.Current.Value;
                         }
@@ -771,6 +772,7 @@ namespace ProteinCoverageSummarizer
                                 // Search through all Protein sequences and capitalize matches for Peptide Sequence
 
                                 string proteinPeptideKey = Convert.ToString(mCachedProteinInfo[proteinIndex].UniqueSequenceID) + "::" + peptideSequenceForKey;
+                                // NOTE: The following is valid only because mCachedProteinInfo is an array, and not a generic collection
                                 mCachedProteinInfo[proteinIndex].Sequence = CapitalizeMatchingProteinSequenceLetters(
                                     mCachedProteinInfo[proteinIndex].Sequence, peptideSequenceToSearchOn,
                                     proteinPeptideKey, prefixResidue, suffixResidue,
@@ -784,6 +786,7 @@ namespace ProteinCoverageSummarizer
                                 string proteinPeptideKey = Convert.ToString(mCachedProteinInfo[proteinIndex].UniqueSequenceID) + "::" + peptideSequenceForKey;
 
                                 // Capitalize matching residues in sequence
+                                // NOTE: The following is valid only because mCachedProteinInfo is an array, and not a generic collection
                                 mCachedProteinInfo[proteinIndex].Sequence = CapitalizeMatchingProteinSequenceLetters(
                                     mCachedProteinInfo[proteinIndex].Sequence, peptideSequenceToSearchOn,
                                     proteinPeptideKey, prefixResidue, suffixResidue,
@@ -1040,6 +1043,7 @@ namespace ProteinCoverageSummarizer
                                 capitalLetterCount += 1;
                         }
 
+                        // NOTE: The following is valid only because mCachedProteinInfo is an array, and not a generic collection
                         mCachedProteinInfo[proteinIndex].PercentCoverage = capitalLetterCount / (double)mCachedProteinInfo[proteinIndex].Sequence.Length;
                         if (mCachedProteinInfo[proteinIndex].PercentCoverage > 0)
                         {
@@ -1754,12 +1758,13 @@ namespace ProteinCoverageSummarizer
             foreach (var udtProtein in ProteinDataCache.GetCachedProteins(startIndex, endIndex))
             {
                 var cached = mCachedProteinInfo[mCachedProteinInfoCount];
+                // NOTE: cached is a struct, and therefore is a copy of the values in the array
                 cached.UniqueSequenceID = udtProtein.UniqueSequenceID;
                 cached.Description = udtProtein.Description;
                 cached.Name = udtProtein.Name;
                 cached.Sequence = udtProtein.Sequence;
                 cached.PercentCoverage = udtProtein.PercentCoverage;
-                // C# Structs in collections: make sure we store the updated value
+                // Update the values in the array. The other option would be to index the array for each of the assignments above.
                 mCachedProteinInfo[mCachedProteinInfoCount] = cached;
 
                 mCachedProteinInfoCount += 1;
@@ -2085,6 +2090,7 @@ namespace ProteinCoverageSummarizer
 
                         if (proteinSequenceUpdated)
                         {
+                            // NOTE: The following is valid only because mCachedProteinInfo is an array, and not a generic collection
                             mCachedProteinInfo[proteinIndex].Sequence = string.Copy(proteinSequence);
                             proteinUpdated[proteinIndex] = true;
                         }

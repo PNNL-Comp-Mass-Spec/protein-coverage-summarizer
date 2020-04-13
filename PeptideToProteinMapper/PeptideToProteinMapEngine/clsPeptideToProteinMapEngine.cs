@@ -784,15 +784,14 @@ namespace PeptideToProteinMapEngine
                             }
                         }
 
-                        {
-                            var info = proteinMapInfo[proteinMapInfoCount];
-                            info.ProteinID = currentProteinID;
-                            info.Peptide = splitLine[1];
-                            info.ResidueStart = int.Parse(splitLine[2]);
-                            info.ResidueEnd = int.Parse(splitLine[3]);
-                            // C# struct in collection - make sure we store the updated values
-                            proteinMapInfo[proteinMapInfoCount] = info;
-                        }
+                        var info = proteinMapInfo[proteinMapInfoCount];
+                        // NOTE: info is a struct, and therefore is a copy of the values in the array
+                        info.ProteinID = currentProteinID;
+                        info.Peptide = splitLine[1];
+                        info.ResidueStart = int.Parse(splitLine[2]);
+                        info.ResidueEnd = int.Parse(splitLine[3]);
+                        // Update the values in the array. The other option would be to index the array for each of the assignments above.
+                        proteinMapInfo[proteinMapInfoCount] = info;
 
                         proteinMapInfoCount += 1;
                         if (currentLine % 1000 == 0)
