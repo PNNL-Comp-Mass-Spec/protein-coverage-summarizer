@@ -119,28 +119,51 @@ namespace ProteinCoverageSummarizerGUI
 
         private bool ConfirmInputFilePaths()
         {
-            if (txtProteinInputFilePath.Text.Length == 0 & txtPeptideInputFilePath.Text.Length == 0)
+            if (txtProteinInputFilePath.Text.Length == 0 && txtPeptideInputFilePath.Text.Length == 0)
             {
                 ShowErrorMessage("Please define the input file paths", "Missing Value");
                 txtProteinInputFilePath.Focus();
                 return false;
             }
-            else if (txtProteinInputFilePath.Text.Length == 0)
+
+            if (txtProteinInputFilePath.Text.Length == 0)
             {
                 ShowErrorMessage("Please define Protein input file path", "Missing Value");
                 txtProteinInputFilePath.Focus();
                 return false;
             }
-            else if (txtPeptideInputFilePath.Text.Length == 0)
+
+            if (txtPeptideInputFilePath.Text.Length == 0)
             {
                 ShowErrorMessage("Please define Peptide input file path", "Missing Value");
                 txtPeptideInputFilePath.Focus();
                 return false;
             }
-            else
+
+            try
             {
-                return true;
+                if (!File.Exists(txtProteinInputFilePath.Text))
+                {
+                    ShowErrorMessage("Protein input file path not found: " + txtProteinInputFilePath.Text, "Missing File");
+                    txtProteinInputFilePath.Focus();
+                    return false;
+                }
+
+                if (!File.Exists(txtPeptideInputFilePath.Text))
+                {
+                    ShowErrorMessage("Peptide input file path not found: " + txtPeptideInputFilePath.Text, "Missing File");
+                    txtPeptideInputFilePath.Focus();
+                    return false;
+                }
             }
+            catch (Exception ex)
+            {
+                ShowErrorMessage("Error confirming that the input files exist: " + ex.Message, "Error");
+                txtPeptideInputFilePath.Focus();
+                return false;
+            }
+
+            return true;
         }
 
         private void CreateSummaryDataTable(string strResultsFilePath)
