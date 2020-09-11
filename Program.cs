@@ -17,6 +17,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
+using System.Threading;
 using System.Windows.Forms;
 using PRISM;
 using PRISM.FileProcessor;
@@ -32,9 +33,9 @@ namespace ProteinCoverageSummarizerGUI
     /// </summary>
     public static class Program
     {
-        public const string PROGRAM_DATE = "March 30, 2020";
         // Ignore Spelling: Nikša
 
+        public const string PROGRAM_DATE = "September 11, 2020";
 
         private static string mPeptideInputFilePath;
         private static string mProteinInputFilePath;
@@ -61,6 +62,8 @@ namespace ProteinCoverageSummarizerGUI
         private const int SW_HIDE = 0;
         private const int SW_SHOW = 5;
 
+        // Enable single thread apartment (STA) mode
+        [STAThread]
         public static int Main()
         {
 
