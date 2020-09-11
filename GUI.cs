@@ -34,6 +34,8 @@ namespace ProteinCoverageSummarizerGUI
     /// </summary>
     public partial class GUI : Form
     {
+        // Ignore Spelling: Textbox, CrLf, chk, ini, Nikša
+
         public GUI() : base()
         {
             base.Closing += GUI_Closing;
@@ -46,6 +48,7 @@ namespace ProteinCoverageSummarizerGUI
         }
 
         #region "Constants and Enums"
+
         private const string XML_SETTINGS_FILE_NAME = "ProteinCoverageSummarizerSettings.xml";
         private const string XML_SECTION_GUI_OPTIONS = "GUIOptions";
 
@@ -74,9 +77,11 @@ namespace ProteinCoverageSummarizerGUI
             UseDataGrid = 1,
             UseCustom = 2
         }
+
         #endregion
 
-        #region "Classwide variables"
+        #region "Class wide variables"
+
         private DataSet mDSCoverageResults;
         private int mProteinSequenceColIndex;
         private bool mProteinDescriptionColVisible;
@@ -90,6 +95,7 @@ namespace ProteinCoverageSummarizerGUI
         #endregion
 
         #region "Properties"
+
         public bool KeepDB { get; set; }
 
         #endregion

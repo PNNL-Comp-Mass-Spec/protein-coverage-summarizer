@@ -39,12 +39,15 @@ namespace ProteinCoverageSummarizer
     [CLSCompliant(true)]
     public class clsProteinCoverageSummarizer : EventNotifier
     {
+        // Ignore Spelling: Nikša, udt, Lf, struct
+
         public clsProteinCoverageSummarizer()
         {
             InitializeVariables();
         }
 
         #region "Constants and Enums"
+
         public const string XML_SECTION_PROCESSING_OPTIONS = "ProcessingOptions";
 
         public const int OUTPUT_FILE_PROTEIN_DESCRIPTION_COLUMN_NUMBER = 3;
@@ -679,8 +682,8 @@ namespace ProteinCoverageSummarizer
 
         /// <summary>
         /// Searches for proteins that contain the peptides in peptideList
-        /// If proteinNameForPeptide is blank or mSearchAllProteinsForPeptideSequence=True then searches all proteins
-        /// Otherwise, only searches protein proteinNameForPeptide
+        /// If proteinNameForPeptide is blank or mSearchAllProteinsForPeptideSequence=True, searches all proteins
+        /// Otherwise, only searches the protein specified by proteinNameForPeptide
         /// </summary>
         /// <param name="peptideList">Dictionary containing the peptides to search; peptides must be in the format Prefix.Peptide.Suffix where Prefix and Suffix are single characters; peptides are assumed to only contain letters (no symbols)</param>
         /// <param name="proteinNameForPeptides">The protein to search; only used if mSearchAllProteinsForPeptideSequence=False</param>
@@ -1269,8 +1272,8 @@ namespace ProteinCoverageSummarizer
             proteinToPepMapFilePath = string.Empty;
             try
             {
-                // Initialize sepChars
-                var sepChars = new char[] { PeptideInputFileDelimiter };
+                // Initialize delimiter array
+                var sepChars = new[] { PeptideInputFileDelimiter };
 
                 // Initialize some dictionaries
 

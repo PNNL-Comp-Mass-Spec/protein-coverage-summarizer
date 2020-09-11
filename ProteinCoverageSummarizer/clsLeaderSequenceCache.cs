@@ -27,20 +27,25 @@ namespace ProteinCoverageSummarizer
     /// </summary>
     public class clsLeaderSequenceCache
     {
+        // Ignore Spelling: structs, leucines
+
         public clsLeaderSequenceCache()
         {
             InitializeVariables();
         }
 
         #region "Constants and Enums"
+
         public const int DEFAULT_LEADER_SEQUENCE_LENGTH = 5;
         public const int MINIMUM_LEADER_SEQUENCE_LENGTH = 5;
 
         private const int INITIAL_LEADER_SEQUENCE_COUNT_TO_RESERVE = 10000;
         public const int MAX_LEADER_SEQUENCE_COUNT = 500000;
+
         #endregion
 
         #region "Structures"
+
         public struct udtPeptideSequenceInfoType
         {
             /// <summary>
@@ -98,7 +103,8 @@ namespace ProteinCoverageSummarizer
 
         #endregion
 
-        #region "Classwide Variables"
+        #region "Class wide Variables"
+
         private Dictionary<string, int> mLeaderSequences;
 
         public int mCachedPeptideCount;
@@ -138,6 +144,7 @@ namespace ProteinCoverageSummarizer
         #endregion
 
         #region "Properties"
+
         public int CachedPeptideCount => mCachedPeptideCount;
 
         public string ErrorMessage => mErrorMessage;

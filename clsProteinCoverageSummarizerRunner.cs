@@ -29,7 +29,8 @@ namespace ProteinCoverageSummarizerGUI
             InitializeVariables();
         }
 
-        #region "Classwide variables"
+        #region "Class wide variables"
+
         private clsProteinCoverageSummarizer mProteinCoverageSummarizer;
 
         private string mStatusMessage;

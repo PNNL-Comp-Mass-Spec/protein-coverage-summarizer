@@ -36,6 +36,8 @@ namespace ProteinCoverageSummarizer
     [CLSCompliant(true)]
     public class clsProteinFileDataCache : EventNotifier
     {
+        // Ignore Spelling: Nikša, udt, Uniquesequence
+
         public clsProteinFileDataCache()
         {
             mFileDate = "July 26, 2019";
@@ -49,6 +51,7 @@ namespace ProteinCoverageSummarizer
         #endregion
 
         #region "Structures"
+
         public struct udtProteinInfoType
         {
             public string Name;
@@ -72,7 +75,8 @@ namespace ProteinCoverageSummarizer
 
         #endregion
 
-        #region "Classwide Variables"
+        #region "Class wide Variables"
+
         protected string mFileDate;
         private string mStatusMessage;
 
@@ -83,7 +87,7 @@ namespace ProteinCoverageSummarizer
         private int mProteinCount;
         private bool mParsedFileIsFastaFile;
 
-        // SQLite Connection String and filepath
+        // SQLite Connection String and file path
         private string mSQLiteDBConnectionString = string.Empty;
         private string mSQLiteDBFilePath = SQL_LITE_PROTEIN_CACHE_FILENAME;
 
@@ -727,7 +731,7 @@ namespace ProteinCoverageSummarizer
                 mProteinLineAccessionEndChar = ' ';
             }
 
-            #region "Classwide Variables"
+            #region "Class wide Variables"
 
             private char mProteinLineStartChar;
             private char mProteinLineAccessionEndChar;

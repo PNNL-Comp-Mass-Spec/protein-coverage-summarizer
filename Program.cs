@@ -33,6 +33,8 @@ namespace ProteinCoverageSummarizerGUI
     public static class Program
     {
         public const string PROGRAM_DATE = "March 30, 2020";
+        // Ignore Spelling: Nikša
+
 
         private static string mPeptideInputFilePath;
         private static string mProteinInputFilePath;

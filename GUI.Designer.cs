@@ -16,6 +16,8 @@ namespace ProteinCoverageSummarizerGUI
 {
     partial class GUI
     {
+        // Ignore Spelling: txt, mnu, fra, cmd, chk, cbo, dg, lbl, rtf, Sql, Tol
+
         /// <summary>
         /// Required designer variable.
         /// </summary>
