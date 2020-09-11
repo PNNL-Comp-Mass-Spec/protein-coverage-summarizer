@@ -4,7 +4,7 @@
 ; This file uses Protein Coverage Summarizer files from bin\AnyCPU
 ; Those come from the Debug AnyCPU build of ProteinCoverageSummarizerGUI.sln
 
-#define ApplicationVersion GetFileVersion('..\bin\AnyCPU\ProteinCoverageSummarizer.dll')
+#define ApplicationVersion GetFileVersion('..\bin\Release\ProteinCoverageSummarizer.dll')
 
 [CustomMessages]
 AppName=Protein Coverage Summarizer
