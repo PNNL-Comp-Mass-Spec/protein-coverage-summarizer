@@ -199,7 +199,7 @@ namespace ProteinCoverageSummarizerGUI
 
         public override bool ProcessFile(string strInputFilePath, string strOutputFolderPath, string strParameterFilePath, bool blnResetErrorCode)
         {
-            bool blnSuccess;
+            mStatusMessage = string.Empty;
 
             if (blnResetErrorCode)
             {
@@ -216,18 +216,42 @@ namespace ProteinCoverageSummarizerGUI
 
                 // Call mProteinCoverageSummarizer.ProcessFile to perform the work
                 mProteinCoverageSummarizer.KeepDB = KeepDB;
-                blnSuccess = mProteinCoverageSummarizer.ProcessFile(strInputFilePath, strOutputFolderPath, strParameterFilePath, true);
+                var success = mProteinCoverageSummarizer.ProcessFile(strInputFilePath, strOutputFolderPath, strParameterFilePath, true);
+
+                if (!success)
+                {
+                    switch (mProteinCoverageSummarizer.ErrorCode)
+                    {
+                        case clsProteinCoverageSummarizer.eProteinCoverageErrorCodes.InvalidInputFilePath:
+                            SetBaseClassErrorCode(ProcessFilesErrorCodes.InvalidInputFilePath);
+                            break;
+
+                        case clsProteinCoverageSummarizer.eProteinCoverageErrorCodes.ErrorReadingParameterFile:
+                            SetBaseClassErrorCode(ProcessFilesErrorCodes.InvalidParameterFile);
+                            break;
+
+                        case clsProteinCoverageSummarizer.eProteinCoverageErrorCodes.FilePathError:
+                            SetBaseClassErrorCode(ProcessFilesErrorCodes.FilePathError);
+                            break;
+
+                        default:
+                            SetBaseClassErrorCode(ProcessFilesErrorCodes.UnspecifiedError);
+                            break;
+                    }
+
+                    mStatusMessage = mProteinCoverageSummarizer.ErrorMessage;
+                }
 
                 mProteinCoverageSummarizer.ProteinDataCache.DeleteSQLiteDBFile("clsProteinCoverageSummarizerRunner.ProcessFile_Complete");
+
+                return success;
             }
             catch (Exception ex)
             {
                 mStatusMessage = "Error in ProcessFile:" + Environment.NewLine + ex.Message;
                 OnErrorEvent(mStatusMessage, ex);
-                blnSuccess = false;
+                return false;
             }
-
-            return blnSuccess;
         }
 
         private void ProteinCoverageSummarizer_ProgressChanged(string taskDescription, float percentComplete)

@@ -1126,9 +1126,16 @@ namespace ProteinCoverageSummarizerGUI
                         CreateSummaryDataTable(mProteinCoverageSummarizer.ResultsFilePath);
                     }
 
-                    if (lblStatus.Text.StartsWith("Done (9"))
+                    if (blnSuccess && lblStatus.Text.StartsWith("Done (9"))
                     {
                         lblStatus.Text = "Done";
+                    }
+                    else if (!blnSuccess)
+                    {
+                        if (string.IsNullOrWhiteSpace(mProteinCoverageSummarizer.StatusMessage))
+                            lblStatus.Text = "Error: " + mProteinCoverageSummarizer.GetErrorMessage();
+                        else
+                            lblStatus.Text = "Error: " + mProteinCoverageSummarizer.StatusMessage;
                     }
                 }
                 else
