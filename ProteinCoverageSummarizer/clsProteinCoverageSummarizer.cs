@@ -16,7 +16,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
-using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
 using PRISM;
 using ProteinFileReader;
@@ -58,7 +57,7 @@ namespace ProteinCoverageSummarizer
 
         protected const int PROTEIN_CHUNK_COUNT = 50000;
 
-        public enum ePeptideFileColumnOrderingCode : int
+        public enum ePeptideFileColumnOrderingCode
         {
             SequenceOnly = 0,
             ProteinName_PeptideSequence = 1
@@ -90,6 +89,7 @@ namespace ProteinCoverageSummarizer
         #endregion
 
         #region "Structures"
+
         protected struct udtPeptideCountStatsType
         {
             public int UniquePeptideCount;
@@ -98,7 +98,8 @@ namespace ProteinCoverageSummarizer
 
         #endregion
 
-        #region "Classwide variables"
+        #region "Class wide variables"
+
         public clsProteinFileDataCache ProteinDataCache;
         private clsLeaderSequenceCache mLeaderSequenceCache;
 
@@ -142,6 +143,7 @@ namespace ProteinCoverageSummarizer
         #endregion
 
         #region "Progress Events and Variables"
+
         public event ProgressResetEventHandler ProgressReset;
 
         /// <summary>
@@ -233,17 +235,14 @@ namespace ProteinCoverageSummarizer
 
         public void AbortProcessingNow()
         {
-            if (mLeaderSequenceCache != null)
-            {
-                mLeaderSequenceCache.AbortProcessingNow();
-            }
+            mLeaderSequenceCache?.AbortProcessingNow();
         }
 
         private bool BooleanArrayContainsTrueEntries(IList<bool> arrayToCheck, int arrayLength)
         {
-            bool containsTrueEntries = false;
+            var containsTrueEntries = false;
 
-            for (int index = 0; index < arrayLength; index++)
+            for (var index = 0; index < arrayLength; index++)
             {
                 if (arrayToCheck[index])
                 {
@@ -271,7 +270,7 @@ namespace ProteinCoverageSummarizer
             // prefix and suffix are only used if mMatchPeptidePrefixAndSuffixToProtein = true
 
             // Note: This is a count of the number of times the peptide is present in the protein sequence (typically 1); this value is not stored anywhere
-            int peptideCount = 0;
+            var peptideCount = 0;
 
             bool currentMatchValid;
 
@@ -331,9 +330,9 @@ namespace ProteinCoverageSummarizer
                 {
                     if (currentMatchValid)
                     {
-                        int nextStartIndex = charIndex + peptideSequence.Length;
+                        var nextStartIndex = charIndex + peptideSequence.Length;
 
-                        string newProteinSequence = string.Empty;
+                        var newProteinSequence = string.Empty;
                         if (charIndex > 0)
                         {
                             newProteinSequence = proteinSequence.Substring(0, charIndex);
@@ -421,7 +420,7 @@ namespace ProteinCoverageSummarizer
                 outputFileName = outputFileBaseName + suffixToAppend;
             }
 
-            string outputFilePath = Path.Combine(GetOutputDirectoryPath(outputDirectoryPath, inputFilePath), outputFileName);
+            var outputFilePath = Path.Combine(GetOutputDirectoryPath(outputDirectoryPath, inputFilePath), outputFileName);
 
             return outputFilePath;
         }
@@ -467,8 +466,7 @@ namespace ProteinCoverageSummarizer
             // The data in mProteinPeptideStats is copied into array peptideStats for fast lookup
             // This is necessary since use of the enumerator returned by mProteinPeptideStats.GetEnumerator
             // for every protein in ProteinDataCache.mProteins leads to very slow program performance
-            int peptideStatsCount = 0;
-            udtPeptideCountStatsType[] udtPeptideStats = null;
+            var peptideStatsCount = 0;
 
             if (string.IsNullOrEmpty(mResultsFilePath))
             {
@@ -488,12 +486,12 @@ namespace ProteinCoverageSummarizer
             using (var writer = new StreamWriter(new FileStream(mResultsFilePath, FileMode.Create, FileAccess.Write, FileShare.Read)))
             {
                 // Note: If the column ordering is changed, be sure to update OUTPUT_FILE_PROTEIN_DESCRIPTION_COLUMN_NUMBER and OUTPUT_FILE_PROTEIN_SEQUENCE_COLUMN_NUMBER
-                string dataLine = "Protein Name" + "\t" +
-                                  "Percent Coverage" + "\t" +
-                                  "Protein Description" + "\t" +
-                                  "Non Unique Peptide Count" + "\t" +
-                                  "Unique Peptide Count" + "\t" +
-                                  "Protein Residue Count";
+                var dataLine = "Protein Name" + "\t" +
+                               "Percent Coverage" + "\t" +
+                               "Protein Description" + "\t" +
+                               "Non Unique Peptide Count" + "\t" +
+                               "Unique Peptide Count" + "\t" +
+                               "Protein Residue Count";
 
                 if (OutputProteinSequence)
                 {
@@ -506,27 +504,26 @@ namespace ProteinCoverageSummarizer
                 var proteinIDLookup = new Dictionary<int, int>();
 
                 // Populate udtPeptideStats() using dictionary mProteinPeptideStats
+                udtPeptideCountStatsType[] udtPeptideStats;
                 if (TrackPeptideCounts)
                 {
 
                     // Initially reserve space for INITIAL_PROTEIN_COUNT_RESERVE proteins
                     udtPeptideStats = new udtPeptideCountStatsType[INITIAL_PROTEIN_COUNT_RESERVE];
 
-                    var myEnumerator = mProteinPeptideStats.GetEnumerator();
-                    while (myEnumerator.MoveNext())
+                    foreach (var item in mProteinPeptideStats)
                     {
-                        string proteinPeptideKey = myEnumerator.Current.Key;
+                        var proteinPeptideKey = item.Key;
 
                         // proteinPeptideKey will be of the form 1234::K.ABCDEFR.A
                         // Look for the first colon
-                        int colonIndex = proteinPeptideKey.IndexOf(':');
+                        var colonIndex = proteinPeptideKey.IndexOf(':');
 
                         if (colonIndex > 0)
                         {
-                            int proteinID = Convert.ToInt32(proteinPeptideKey.Substring(0, colonIndex));
-                            int targetIndex;
+                            var proteinID = Convert.ToInt32(proteinPeptideKey.Substring(0, colonIndex));
 
-                            if (!proteinIDLookup.TryGetValue(proteinID, out targetIndex))
+                            if (!proteinIDLookup.TryGetValue(proteinID, out var targetIndex))
                             {
                                 // ID not found; so add it
 
@@ -547,7 +544,7 @@ namespace ProteinCoverageSummarizer
                             // Update the protein counts at targetIndex
                             // NOTE: The following is valid only because udtPeptideStats is an array, and not a generic collection
                             udtPeptideStats[targetIndex].UniquePeptideCount += 1;
-                            udtPeptideStats[targetIndex].NonUniquePeptideCount += myEnumerator.Current.Value;
+                            udtPeptideStats[targetIndex].NonUniquePeptideCount += item.Value;
                         }
                     }
 
@@ -565,16 +562,15 @@ namespace ProteinCoverageSummarizer
                 }
 
                 // Query the SQLite DB to extract the protein information
-                int proteinsProcessed = 0;
+                var proteinsProcessed = 0;
                 foreach (var udtProtein in ProteinDataCache.GetCachedProteins())
                 {
-                    int uniquePeptideCount = 0;
-                    int nonUniquePeptideCount = 0;
+                    var uniquePeptideCount = 0;
+                    var nonUniquePeptideCount = 0;
 
                     if (TrackPeptideCounts)
                     {
-                        int targetIndex;
-                        if (proteinIDLookup.TryGetValue(udtProtein.UniqueSequenceID, out targetIndex))
+                        if (proteinIDLookup.TryGetValue(udtProtein.UniqueSequenceID, out var targetIndex))
                         {
                             uniquePeptideCount = udtPeptideStats[targetIndex].UniquePeptideCount;
                             nonUniquePeptideCount = udtPeptideStats[targetIndex].NonUniquePeptideCount;
@@ -610,7 +606,7 @@ namespace ProteinCoverageSummarizer
 
         private int DetermineLineTerminatorSize(string inputFilePath)
         {
-            int terminatorSize = 2;
+            var terminatorSize = 2;
 
             try
             {
@@ -619,7 +615,7 @@ namespace ProteinCoverageSummarizer
                 {
                     while (fsInFile.Position < fsInFile.Length && fsInFile.Position < 100000)
                     {
-                        int intByte = fsInFile.ReadByte();
+                        var intByte = fsInFile.ReadByte();
 
                         if (intByte == 10)
                         {
@@ -645,7 +641,8 @@ namespace ProteinCoverageSummarizer
 
                             break;
                         }
-                        else if (intByte == 13)
+
+                        if (intByte == 13)
                         {
                             // Found carriage return
                             if (fsInFile.Position < fsInFile.Length)
@@ -701,34 +698,29 @@ namespace ProteinCoverageSummarizer
                     proteinNameForPeptides = string.Empty;
                 }
 
-                int expectedPeptideIterations = Convert.ToInt32(Math.Ceiling(ProteinDataCache.GetProteinCountCached() / (double)PROTEIN_CHUNK_COUNT)) * peptideList.Count;
+                var expectedPeptideIterations = Convert.ToInt32(Math.Ceiling(ProteinDataCache.GetProteinCountCached() / (double)PROTEIN_CHUNK_COUNT)) * peptideList.Count;
                 if (expectedPeptideIterations < 1)
                     expectedPeptideIterations = 1;
 
                 UpdateProgress("Finding matching proteins for peptide list", 0,
                     eProteinCoverageProcessingSteps.SearchProteinsAgainstShortPeptides);
 
-                int startIndex = 0;
+                var startIndex = 0;
                 do
                 {
                     // Extract up to PROTEIN_CHUNK_COUNT proteins from the SQLite database
                     // Store the information in the four local arrays
-                    int proteinCount = ReadProteinInfoChunk(startIndex, proteinUpdated, false);
+                    var proteinCount = ReadProteinInfoChunk(startIndex, proteinUpdated, false);
 
-                    int peptideIterationsComplete = 0;
+                    var peptideIterationsComplete = 0;
 
                     // Iterate through the peptides in peptideList
-                    var myEnumerator = peptideList.GetEnumerator();
-
-                    while (myEnumerator.MoveNext())
+                    foreach (var peptide in peptideList)
                     {
-                        char prefixResidue;
-                        char suffixResidue;
-
                         // Retrieve the next peptide from peptideList
                         // Use GetCleanPeptideSequence() to extract out the sequence, prefix, and suffix letters (we're setting removeSymbolCharacters to False since that should have been done before the peptides were stored in peptideList)
                         // Make sure the peptide sequence has uppercase letters
-                        string peptideSequenceClean = GetCleanPeptideSequence(myEnumerator.Current.Key, out prefixResidue, out suffixResidue, false).ToUpper();
+                        var peptideSequenceClean = GetCleanPeptideSequence(peptide.Key, out var prefixResidue, out var suffixResidue, false).ToUpper();
 
                         string peptideSequenceForKeySource;
                         string peptideSequenceForKey;
@@ -763,9 +755,9 @@ namespace ProteinCoverageSummarizer
                         }
 
                         // Search for peptideSequence in the protein sequences
-                        for (int proteinIndex = 0; proteinIndex < proteinCount; proteinIndex++)
+                        for (var proteinIndex = 0; proteinIndex < proteinCount; proteinIndex++)
                         {
-                            bool matchFound = false;
+                            var matchFound = false;
                             var matchIsNew = default(bool);
                             var startResidue = default(int);
                             var endResidue = default(int);
@@ -774,7 +766,7 @@ namespace ProteinCoverageSummarizer
                             {
                                 // Search through all Protein sequences and capitalize matches for Peptide Sequence
 
-                                string proteinPeptideKey = Convert.ToString(mCachedProteinInfo[proteinIndex].UniqueSequenceID) + "::" + peptideSequenceForKey;
+                                var proteinPeptideKey = Convert.ToString(mCachedProteinInfo[proteinIndex].UniqueSequenceID) + "::" + peptideSequenceForKey;
                                 // NOTE: The following is valid only because mCachedProteinInfo is an array, and not a generic collection
                                 mCachedProteinInfo[proteinIndex].Sequence = CapitalizeMatchingProteinSequenceLetters(
                                     mCachedProteinInfo[proteinIndex].Sequence, peptideSequenceToSearchOn,
@@ -782,11 +774,11 @@ namespace ProteinCoverageSummarizer
                                     out matchFound, out matchIsNew,
                                     out startResidue, out endResidue);
                             }
-                            // Only search protein proteinNameForPeptide
+                            // Only search proteinNameForPeptide
                             else if ((mCachedProteinInfo[proteinIndex].Name ?? "") == (proteinNameForPeptides ?? ""))
                             {
                                 // Define the peptide match key using the Unique Sequence ID, two colons, and the peptide sequence
-                                string proteinPeptideKey = Convert.ToString(mCachedProteinInfo[proteinIndex].UniqueSequenceID) + "::" + peptideSequenceForKey;
+                                var proteinPeptideKey = Convert.ToString(mCachedProteinInfo[proteinIndex].UniqueSequenceID) + "::" + peptideSequenceForKey;
 
                                 // Capitalize matching residues in sequence
                                 // NOTE: The following is valid only because mCachedProteinInfo is an array, and not a generic collection
@@ -859,18 +851,18 @@ namespace ProteinCoverageSummarizer
                     // Create a parameterized Update query
                     cmd.CommandText = "UPDATE udtProteinInfoType Set Sequence = ? Where UniqueSequenceID = ?";
 
-                    var SequenceFld = cmd.CreateParameter();
-                    var UniqueSequenceIDFld = cmd.CreateParameter();
-                    cmd.Parameters.Add(SequenceFld);
-                    cmd.Parameters.Add(UniqueSequenceIDFld);
+                    var sequenceFld = cmd.CreateParameter();
+                    var uniqueSequenceIDFld = cmd.CreateParameter();
+                    cmd.Parameters.Add(sequenceFld);
+                    cmd.Parameters.Add(uniqueSequenceIDFld);
 
                     // Update each protein that has proteinUpdated(proteinIndex) = True
-                    for (int proteinIndex = 0; proteinIndex < proteinCount; proteinIndex++)
+                    for (var proteinIndex = 0; proteinIndex < proteinCount; proteinIndex++)
                     {
                         if (proteinUpdated[proteinIndex])
                         {
-                            UniqueSequenceIDFld.Value = mCachedProteinInfo[proteinIndex].UniqueSequenceID;
-                            SequenceFld.Value = mCachedProteinInfo[proteinIndex].Sequence;
+                            uniqueSequenceIDFld.Value = mCachedProteinInfo[proteinIndex].UniqueSequenceID;
+                            sequenceFld.Value = mCachedProteinInfo[proteinIndex].Sequence;
                             cmd.ExecuteNonQuery();
                         }
                     }
@@ -878,7 +870,7 @@ namespace ProteinCoverageSummarizer
                     dbTrans.Commit();
                 }
 
-                // Close the Sql Reader
+                // Close the SQL Reader
                 sqlConnection.Close();
                 sqlConnection.Dispose();
             }
@@ -901,7 +893,7 @@ namespace ProteinCoverageSummarizer
             out char suffixResidue,
             bool removeSymbolCharacters)
         {
-            prefixResidue = default(char);
+            prefixResidue = default;
             suffixResidue = default;
 
             if (peptideSequence.Length >= 4)
@@ -1006,12 +998,12 @@ namespace ProteinCoverageSummarizer
                     outputDirectoryPath = Path.GetDirectoryName(outputFilePath);
                 }
 
-                if (!Directory.Exists(outputDirectoryPath))
+                if (!string.IsNullOrWhiteSpace(outputDirectoryPath) && !Directory.Exists(outputDirectoryPath))
                 {
                     Directory.CreateDirectory(outputDirectoryPath);
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 outputDirectoryPath = GetAppDirectoryPath();
             }
@@ -1026,20 +1018,20 @@ namespace ProteinCoverageSummarizer
             UpdateProgress("Computing percent coverage", 0,
                 eProteinCoverageProcessingSteps.ComputePercentCoverage);
 
-            int startIndex = 0;
-            int index = 0;
+            var startIndex = 0;
+            var index = 0;
             do
             {
                 // Extract up to PROTEIN_CHUNK_COUNT proteins from the SQLite database
                 // Store the information in the four local arrays
-                int proteinCount = ReadProteinInfoChunk(startIndex, proteinUpdated, false);
+                var proteinCount = ReadProteinInfoChunk(startIndex, proteinUpdated, false);
 
-                for (int proteinIndex = 0; proteinIndex < proteinCount; proteinIndex++)
+                for (var proteinIndex = 0; proteinIndex < proteinCount; proteinIndex++)
                 {
                     if (mCachedProteinInfo[proteinIndex].Sequence != null)
                     {
                         var charArray = mCachedProteinInfo[proteinIndex].Sequence.ToCharArray();
-                        int capitalLetterCount = 0;
+                        var capitalLetterCount = 0;
                         foreach (var character in charArray)
                         {
                             if (char.IsUpper(character))
@@ -1096,7 +1088,7 @@ namespace ProteinCoverageSummarizer
                     cmd.Parameters.Add(UniqueSequenceIDFld);
 
                     // Update each protein that has proteinUpdated(proteinIndex) = True
-                    for (int proteinIndex = 0; proteinIndex < proteinCount; proteinIndex++)
+                    for (var proteinIndex = 0; proteinIndex < proteinCount; proteinIndex++)
                     {
                         if (proteinUpdated[proteinIndex])
                         {
@@ -1109,7 +1101,7 @@ namespace ProteinCoverageSummarizer
                     dbTrans.Commit();
                 }
 
-                // Close the Sql Reader
+                // Close the SQL Reader
                 sqlConnection.Close();
                 sqlConnection.Dispose();
             }
@@ -1128,18 +1120,14 @@ namespace ProteinCoverageSummarizer
         /// <returns>True if the protein is new and was added tomProteinPeptideStats </returns>
         private bool IncrementCountByKey(IDictionary<string, int> dictionaryToUpdate, string keyName)
         {
-            int value;
-
-            if (dictionaryToUpdate.TryGetValue(keyName, out value))
+            if (dictionaryToUpdate.TryGetValue(keyName, out var value))
             {
                 dictionaryToUpdate[keyName] = value + 1;
                 return false;
             }
-            else
-            {
-                dictionaryToUpdate.Add(keyName, 1);
-                return true;
-            }
+
+            dictionaryToUpdate.Add(keyName, 1);
+            return true;
         }
 
         private void InitializeVariables()
@@ -1179,7 +1167,7 @@ namespace ProteinCoverageSummarizer
 
             // Define the percent complete values to use for the start of each processing step
 
-            mPercentCompleteStartLevels = new float[PERCENT_COMPLETE_LEVEL_COUNT];
+            mPercentCompleteStartLevels = new float[PERCENT_COMPLETE_LEVEL_COUNT + 1];
 
             mPercentCompleteStartLevels[(int)eProteinCoverageProcessingSteps.Starting] = 0;
             mPercentCompleteStartLevels[(int)eProteinCoverageProcessingSteps.CacheProteins] = 1;
@@ -1206,17 +1194,15 @@ namespace ProteinCoverageSummarizer
                 if (!File.Exists(parameterFilePath))
                 {
                     // See if parameterFilePath points to a file in the same directory as the application
-                    string alternateFilePath = Path.Combine(GetAppDirectoryPath(), Path.GetFileName(parameterFilePath));
+                    var alternateFilePath = Path.Combine(GetAppDirectoryPath(), Path.GetFileName(parameterFilePath));
                     if (!File.Exists(alternateFilePath))
                     {
                         // Parameter file still not found
                         SetErrorMessage("Parameter file not found: " + parameterFilePath);
                         return false;
                     }
-                    else
-                    {
-                        parameterFilePath = string.Copy(alternateFilePath);
-                    }
+
+                    parameterFilePath = string.Copy(alternateFilePath);
                 }
 
                 var settingsFileReader = new XmlSettingsFileAccessor();
@@ -1303,7 +1289,7 @@ namespace ProteinCoverageSummarizer
                     return false;
                 }
 
-                string progressMessageBase = "Reading peptides from " + Path.GetFileName(peptideInputFilePath);
+                var progressMessageBase = "Reading peptides from " + Path.GetFileName(peptideInputFilePath);
                 if (UseLeaderSequenceHashTable)
                 {
                     progressMessageBase += " and finding leader sequences";
@@ -1321,10 +1307,10 @@ namespace ProteinCoverageSummarizer
                     eProteinCoverageProcessingSteps.DetermineShortestPeptideLength);
 
                 // Open the file and read, at most, the first 100,000 characters to see if it contains CrLf or just Lf
-                int terminatorSize = DetermineLineTerminatorSize(peptideInputFilePath);
+                var terminatorSize = DetermineLineTerminatorSize(peptideInputFilePath);
 
                 // Possibly open the file and read the first few line to make sure the number of columns is appropriate
-                bool success = ValidateColumnCountInInputFile(peptideInputFilePath);
+                var success = ValidateColumnCountInInputFile(peptideInputFilePath);
                 if (!success)
                 {
                     return false;
@@ -1368,15 +1354,13 @@ namespace ProteinCoverageSummarizer
                     {
                         return false;
                     }
-                    else
-                    {
-                        progressMessageBase += " (leader seq length = " + mLeaderSequenceCache.LeaderSequenceMinimumLength.ToString() + ")";
 
-                        UpdateProgress(progressMessageBase);
-                    }
+                    progressMessageBase += " (leader seq length = " + mLeaderSequenceCache.LeaderSequenceMinimumLength.ToString() + ")";
+
+                    UpdateProgress(progressMessageBase);
                 }
 
-                int invalidLineCount = 0;
+                var invalidLineCount = 0;
 
                 // Open the peptide file and read in the lines
                 using (var reader = new StreamReader(new FileStream(peptideInputFilePath, FileMode.Open, FileAccess.Read, FileShare.Read)))
@@ -1396,7 +1380,7 @@ namespace ProteinCoverageSummarizer
                         mProteinToPeptideMappingOutputFile.WriteLine("Protein Name" + "\t" + "Peptide Sequence" + "\t" + "Residue Start" + "\t" + "Residue End");
                     }
 
-                    int currentLine = 1;
+                    var currentLine = 1;
                     long bytesRead = 0;
 
                     while (!reader.EndOfStream)
@@ -1404,7 +1388,7 @@ namespace ProteinCoverageSummarizer
                         if (mAbortProcessing)
                             break;
 
-                        string dataLine = reader.ReadLine();
+                        var dataLine = reader.ReadLine();
                         if (dataLine == null)
                             continue;
 
@@ -1424,9 +1408,9 @@ namespace ProteinCoverageSummarizer
                         }
                         else if (dataLine.Length > 0)
                         {
-                            bool validLine = false;
-                            string proteinName = "";
-                            string peptideSequence = "";
+                            var validLine = false;
+                            var proteinName = "";
+                            var peptideSequence = "";
 
                             try
                             {
@@ -1453,7 +1437,7 @@ namespace ProteinCoverageSummarizer
                                         break;
                                 }
                             }
-                            catch (Exception ex)
+                            catch (Exception)
                             {
                                 validLine = false;
                             }
@@ -1463,9 +1447,7 @@ namespace ProteinCoverageSummarizer
                                 // Check for and remove prefix and suffix letters
                                 // Also possibly remove symbol characters
 
-                                char prefixResidue;
-                                char suffixResidue;
-                                peptideSequence = GetCleanPeptideSequence(peptideSequence, out prefixResidue, out suffixResidue, RemoveSymbolCharacters);
+                                peptideSequence = GetCleanPeptideSequence(peptideSequence, out var prefixResidue, out var suffixResidue, RemoveSymbolCharacters);
 
                                 if (UseLeaderSequenceHashTable &&
                                     peptideSequence.Length >= mLeaderSequenceCache.LeaderSequenceMinimumLength)
@@ -1492,7 +1474,7 @@ namespace ProteinCoverageSummarizer
                                         shortPeptideCache.Clear();
                                     }
 
-                                    string peptideSequenceToCache = prefixResidue + "." + peptideSequence + "." + suffixResidue;
+                                    var peptideSequenceToCache = prefixResidue + "." + peptideSequence + "." + suffixResidue;
 
                                     IncrementCountByKey(shortPeptideCache, peptideSequenceToCache);
                                 }
@@ -1560,7 +1542,7 @@ namespace ProteinCoverageSummarizer
 
         private bool ParseProteinInputFile()
         {
-            bool success = false;
+            var success = false;
             try
             {
                 mProgressStepDescription = "Reading protein input file";
@@ -1571,7 +1553,7 @@ namespace ProteinCoverageSummarizer
                     // .fasta or .fsa file
                     ProteinDataCache.AssumeFastaFile = true;
                 }
-                else if ((Path.GetExtension(ProteinInputFilePath).ToLower() ?? "") == ".txt")
+                else if (string.Equals(Path.GetExtension(ProteinInputFilePath), ".txt", StringComparison.OrdinalIgnoreCase))
                 {
                     ProteinDataCache.AssumeDelimitedFile = true;
                 }
@@ -1617,9 +1599,7 @@ namespace ProteinCoverageSummarizer
             string parameterFilePath,
             bool resetErrorCode)
         {
-            string proteinToPepMapFilePath = string.Empty;
-
-            return ProcessFile(inputFilePath, outputDirectoryPath, parameterFilePath, resetErrorCode, out proteinToPepMapFilePath);
+            return ProcessFile(inputFilePath, outputDirectoryPath, parameterFilePath, resetErrorCode, out _);
         }
 
         public bool ProcessFile(
@@ -1674,7 +1654,8 @@ namespace ProteinCoverageSummarizer
                     SetErrorCode(eProteinCoverageErrorCodes.InvalidInputFilePath);
                     return false;
                 }
-                else if (!File.Exists(ProteinInputFilePath))
+
+                if (!File.Exists(ProteinInputFilePath))
                 {
                     SetErrorMessage("Protein input file not found: " + ProteinInputFilePath);
                     SetErrorCode(eProteinCoverageErrorCodes.InvalidInputFilePath);
@@ -1749,7 +1730,7 @@ namespace ProteinCoverageSummarizer
             // Extract up to PROTEIN_CHUNK_COUNT proteins from the SQLite database
             // Store the information in the four local arrays
 
-            int endIndex = startIndex + PROTEIN_CHUNK_COUNT - 1;
+            var endIndex = startIndex + PROTEIN_CHUNK_COUNT - 1;
 
             mCachedProteinInfoStartIndex = startIndex;
             mCachedProteinInfoCount = 0;
@@ -1767,6 +1748,7 @@ namespace ProteinCoverageSummarizer
                 cached.Name = udtProtein.Name;
                 cached.Sequence = udtProtein.Sequence;
                 cached.PercentCoverage = udtProtein.PercentCoverage;
+
                 // Update the values in the array. The other option would be to index the array for each of the assignments above.
                 mCachedProteinInfo[mCachedProteinInfoCount] = cached;
 
@@ -1785,21 +1767,21 @@ namespace ProteinCoverageSummarizer
         {
             try
             {
-                string dataPlusAllProteinsFile = ConstructOutputFilePath(peptideInputFilePath, FILENAME_SUFFIX_SOURCE_PLUS_ALL_PROTEINS,
+                var dataPlusAllProteinsFile = ConstructOutputFilePath(peptideInputFilePath, FILENAME_SUFFIX_SOURCE_PLUS_ALL_PROTEINS,
                     outputDirectoryPath, outputFileBaseName);
 
                 UpdateProgress("Creating the data plus all-proteins output file: " + Path.GetFileName(dataPlusAllProteinsFile));
 
                 using (var dataPlusProteinsWriter = new StreamWriter(new FileStream(dataPlusAllProteinsFile, FileMode.Create, FileAccess.Write, FileShare.Read)))
                 {
-                    int currentLine = 1;
+                    var currentLine = 1;
                     long bytesRead = 0;
 
                     using (var reader = new StreamReader(new FileStream(peptideInputFilePath, FileMode.Open, FileAccess.Read, FileShare.Read)))
                     {
                         while (!reader.EndOfStream)
                         {
-                            string dataLine = reader.ReadLine();
+                            var dataLine = reader.ReadLine();
                             if (dataLine == null)
                                 continue;
 
@@ -1818,8 +1800,8 @@ namespace ProteinCoverageSummarizer
                             }
                             else if (dataLine.Length > 0)
                             {
-                                bool validLine = false;
-                                string peptideSequence = "";
+                                var validLine = false;
+                                var peptideSequence = "";
 
                                 try
                                 {
@@ -1846,7 +1828,7 @@ namespace ProteinCoverageSummarizer
                                             break;
                                     }
                                 }
-                                catch (Exception ex)
+                                catch (Exception)
                                 {
                                     validLine = false;
                                 }
@@ -1857,14 +1839,11 @@ namespace ProteinCoverageSummarizer
                                 }
                                 else
                                 {
-                                    char prefixResidue;
-                                    char suffixResidue;
-                                    peptideSequence = GetCleanPeptideSequence(peptideSequence, out prefixResidue, out suffixResidue, RemoveSymbolCharacters);
+                                    peptideSequence = GetCleanPeptideSequence(peptideSequence, out _, out _, RemoveSymbolCharacters);
 
-                                    List<string> proteins = null;
-                                    if (mPeptideToProteinMapResults.TryGetValue(peptideSequence, out proteins))
+                                    if (mPeptideToProteinMapResults.TryGetValue(peptideSequence, out var proteins))
                                     {
-                                        foreach (string protein in proteins)
+                                        foreach (var protein in proteins)
                                             dataPlusProteinsWriter.WriteLine(dataLine + "\t" + protein);
                                     }
                                     else if (currentLine == 1)
@@ -1896,7 +1875,7 @@ namespace ProteinCoverageSummarizer
 
         private void SearchProteinsUsingLeaderSequences()
         {
-            int leaderSequenceMinimumLength = mLeaderSequenceCache.LeaderSequenceMinimumLength;
+            var leaderSequenceMinimumLength = mLeaderSequenceCache.LeaderSequenceMinimumLength;
 
             var proteinUpdated = new bool[PROTEIN_CHUNK_COUNT];
 
@@ -1905,30 +1884,30 @@ namespace ProteinCoverageSummarizer
 
             try
             {
-                string progressMessageBase = "Comparing proteins to peptide leader sequences";
+                var progressMessageBase = "Comparing proteins to peptide leader sequences";
                 OnStatusEvent(progressMessageBase);
 
-                int proteinProcessIterations = 0;
-                int proteinProcessIterationsExpected = Convert.ToInt32(Math.Ceiling(ProteinDataCache.GetProteinCountCached() / (double)PROTEIN_CHUNK_COUNT)) * PROTEIN_CHUNK_COUNT;
+                var proteinProcessIterations = 0;
+                var proteinProcessIterationsExpected = Convert.ToInt32(Math.Ceiling(ProteinDataCache.GetProteinCountCached() / (double)PROTEIN_CHUNK_COUNT)) * PROTEIN_CHUNK_COUNT;
                 if (proteinProcessIterationsExpected < 1)
                     proteinProcessIterationsExpected = 1;
 
                 UpdateProgress(progressMessageBase, 0,
                     eProteinCoverageProcessingSteps.SearchProteinsUsingLeaderSequences);
 
-                int startIndex = 0;
+                var startIndex = 0;
                 do
                 {
                     // Extract up to PROTEIN_CHUNK_COUNT proteins from the SQLite database
                     // Store the information in the four local arrays
-                    int proteinCount = ReadProteinInfoChunk(startIndex, proteinUpdated, false);
+                    var proteinCount = ReadProteinInfoChunk(startIndex, proteinUpdated, false);
 
-                    for (int proteinIndex = 0; proteinIndex < proteinCount; proteinIndex++)
+                    for (var proteinIndex = 0; proteinIndex < proteinCount; proteinIndex++)
                     {
-                        string proteinSequence = string.Copy(mCachedProteinInfo[proteinIndex].Sequence);
-                        bool proteinSequenceUpdated = false;
+                        var proteinSequence = string.Copy(mCachedProteinInfo[proteinIndex].Sequence);
+                        var proteinSequenceUpdated = false;
 
-                        for (int proteinSeqCharIndex = 0; proteinSeqCharIndex <= proteinSequence.Length - leaderSequenceMinimumLength; proteinSeqCharIndex++)
+                        for (var proteinSeqCharIndex = 0; proteinSeqCharIndex <= proteinSequence.Length - leaderSequenceMinimumLength; proteinSeqCharIndex++)
                         {
                             int cachedPeptideMatchIndex;
 
@@ -1968,7 +1947,7 @@ namespace ProteinCoverageSummarizer
                                     }
 
                                     // Cache the peptide length in peptideLength
-                                    int peptideLength = mLeaderSequenceCache.mCachedPeptideSeqInfo[cachedPeptideMatchIndex].PeptideSequence.Length;
+                                    var peptideLength = mLeaderSequenceCache.mCachedPeptideSeqInfo[cachedPeptideMatchIndex].PeptideSequence.Length;
 
                                     // Only compare the full sequence to the protein if:
                                     // a) the protein name matches (or mSearchAllProteinsForPeptideSequence = True) and
@@ -1976,7 +1955,7 @@ namespace ProteinCoverageSummarizer
                                     if (testPeptide && proteinSeqCharIndex + peptideLength <= proteinSequence.Length)
                                     {
                                         // See if the full sequence matches the protein
-                                        bool matchFound = false;
+                                        var matchFound = false;
                                         if (SearchAllProteinsSkipCoverageComputationSteps)
                                         {
                                             // No need to capitalize proteinSequence since it's already capitalized
@@ -2007,7 +1986,7 @@ namespace ProteinCoverageSummarizer
 
                                         if (matchFound)
                                         {
-                                            int endIndex = proteinSeqCharIndex + peptideLength - 1;
+                                            var endIndex = proteinSeqCharIndex + peptideLength - 1;
                                             if (MatchPeptidePrefixAndSuffixToProtein)
                                             {
                                                 matchFound = ValidatePrefixAndSuffix(proteinSequence, mLeaderSequenceCache.mCachedPeptideSeqInfo[cachedPeptideMatchIndex].PrefixLtoI, mLeaderSequenceCache.mCachedPeptideSeqInfo[cachedPeptideMatchIndex].SuffixLtoI, proteinSeqCharIndex, endIndex);
@@ -2041,8 +2020,8 @@ namespace ProteinCoverageSummarizer
                                                 if (!SearchAllProteinsSkipCoverageComputationSteps)
                                                 {
                                                     // Capitalize the protein sequence letters where this peptide matched
-                                                    int nextStartIndex = endIndex + 1;
-                                                    string newProteinSequence = string.Empty;
+                                                    var nextStartIndex = endIndex + 1;
+                                                    var newProteinSequence = string.Empty;
                                                     if (proteinSeqCharIndex > 0)
                                                     {
                                                         newProteinSequence = proteinSequence.Substring(0, proteinSeqCharIndex);
@@ -2059,7 +2038,7 @@ namespace ProteinCoverageSummarizer
 
                                                 if (TrackPeptideCounts)
                                                 {
-                                                    string proteinPeptideKey = Convert.ToString(mCachedProteinInfo[proteinIndex].UniqueSequenceID) + "::" + peptideSequenceForKey;
+                                                    var proteinPeptideKey = Convert.ToString(mCachedProteinInfo[proteinIndex].UniqueSequenceID) + "::" + peptideSequenceForKey;
 
                                                     matchIsNew = IncrementCountByKey(mProteinPeptideStats, proteinPeptideKey);
                                                 }
@@ -2136,8 +2115,7 @@ namespace ProteinCoverageSummarizer
         private void StorePeptideToProteinMatch(string cleanPeptideSequence, string proteinName)
         {
             // Store the mapping between peptide sequence and protein name
-            List<string> proteins = null;
-            if (mPeptideToProteinMapResults.TryGetValue(cleanPeptideSequence, out proteins))
+            if (mPeptideToProteinMapResults.TryGetValue(cleanPeptideSequence, out var proteins))
             {
                 proteins.Add(proteinName);
             }
@@ -2150,7 +2128,6 @@ namespace ProteinCoverageSummarizer
 
         private bool ValidateColumnCountInInputFile(string peptideInputFilePath)
         {
-            bool success;
             if (PeptideFileFormatCode == ePeptideFileColumnOrderingCode.SequenceOnly)
             {
                 // Simply return true; don't even pre-read the file
@@ -2163,9 +2140,10 @@ namespace ProteinCoverageSummarizer
                 return true;
             }
 
-            var argePeptideFileColumnOrdering = PeptideFileFormatCode;
-            success = ValidateColumnCountInInputFile(peptideInputFilePath, ref argePeptideFileColumnOrdering, PeptideFileSkipFirstLine, PeptideInputFileDelimiter);
-            PeptideFileFormatCode = argePeptideFileColumnOrdering;
+            var peptideFileColumnOrdering = PeptideFileFormatCode;
+
+            var success = ValidateColumnCountInInputFile(peptideInputFilePath, ref peptideFileColumnOrdering, PeptideFileSkipFirstLine, PeptideInputFileDelimiter);
+            PeptideFileFormatCode = peptideFileColumnOrdering;
 
             if (success)
             {
@@ -2199,14 +2177,14 @@ namespace ProteinCoverageSummarizer
             // Open the file and read in the lines
             using (var reader = new StreamReader(new FileStream(peptideInputFilePath, FileMode.Open, FileAccess.Read, FileShare.Read)))
             {
-                int currentLine = 1;
+                var currentLine = 1;
                 while (!reader.EndOfStream && currentLine < 3)
                 {
-                    string lineIn = reader.ReadLine();
+                    var lineIn = reader.ReadLine();
                     if (lineIn == null)
                         continue;
 
-                    string dataLine = lineIn.TrimEnd();
+                    var dataLine = lineIn.TrimEnd();
 
                     if (currentLine == 1 && skipFirstLine)
                     {
@@ -2227,7 +2205,7 @@ namespace ProteinCoverageSummarizer
                                 }
                             }
                         }
-                        catch (Exception ex)
+                        catch (Exception)
                         {
                             // Ignore the error
                         }
@@ -2242,7 +2220,7 @@ namespace ProteinCoverageSummarizer
 
         private bool ValidatePrefixAndSuffix(string proteinSequence, char prefixResidue, char suffixResidue, int startIndex, int endIndex)
         {
-            bool matchValid = true;
+            var matchValid = true;
 
             if (char.IsLetter(prefixResidue))
             {
@@ -2286,9 +2264,9 @@ namespace ProteinCoverageSummarizer
 
         private void WriteEntryToProteinToPeptideMappingFile(string proteinName, string peptideSequenceForKey, int startResidue, int endResidue)
         {
-            if (SaveProteinToPeptideMappingFile && mProteinToPeptideMappingOutputFile != null)
+            if (SaveProteinToPeptideMappingFile)
             {
-                mProteinToPeptideMappingOutputFile.WriteLine(proteinName + "\t" + peptideSequenceForKey + "\t" + startResidue + "\t" + endResidue);
+                mProteinToPeptideMappingOutputFile?.WriteLine(proteinName + "\t" + peptideSequenceForKey + "\t" + startResidue + "\t" + endResidue);
             }
         }
 
@@ -2359,8 +2337,8 @@ namespace ProteinCoverageSummarizer
                 percentComplete = 100;
             }
 
-            float startPercent = mPercentCompleteStartLevels[(int)eCurrentProcessingStep];
-            float endPercent = mPercentCompleteStartLevels[(int)eCurrentProcessingStep + 1];
+            var startPercent = mPercentCompleteStartLevels[(int)eCurrentProcessingStep];
+            var endPercent = mPercentCompleteStartLevels[(int)eCurrentProcessingStep + 1];
 
             // Use the start and end percent complete values for the specified processing step to convert percentComplete to an overall percent complete value
             mProgressPercentComplete = startPercent + Convert.ToSingle(percentComplete / 100.0 * (endPercent - startPercent));
@@ -2384,7 +2362,7 @@ namespace ProteinCoverageSummarizer
         {
             const int CONSOLE_UPDATE_INTERVAL_SECONDS = 3;
 
-            if (DateTime.UtcNow.Subtract(lastUpdate).TotalSeconds >= (double)CONSOLE_UPDATE_INTERVAL_SECONDS)
+            if (DateTime.UtcNow.Subtract(lastUpdate).TotalSeconds >= CONSOLE_UPDATE_INTERVAL_SECONDS)
             {
                 lastUpdate = DateTime.UtcNow;
                 Console.Write(".");

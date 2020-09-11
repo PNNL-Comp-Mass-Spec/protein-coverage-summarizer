@@ -169,10 +169,7 @@ namespace ProteinCoverageSummarizerGUI
         public override void AbortProcessingNow()
         {
             base.AbortProcessingNow();
-            if (mProteinCoverageSummarizer != null)
-            {
-                mProteinCoverageSummarizer.AbortProcessingNow();
-            }
+            mProteinCoverageSummarizer?.AbortProcessingNow();
         }
 
         public override string GetErrorMessage()

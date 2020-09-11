@@ -145,21 +145,11 @@ namespace ProteinCoverageSummarizerGUI
 
         private void CreateSummaryDataTable(string strResultsFilePath)
         {
-            StreamReader srInFile;
             long bytesRead = 0;
 
-            int intLineCount;
-            int intIndex;
-
-            string strLineIn;
-            string[] strSplitLine;
-
-            bool blnProteinDescriptionPresent;
-
-            DataRow objNewRow;
             try
             {
-                if (strResultsFilePath == null || strResultsFilePath.Length == 0)
+                if (string.IsNullOrWhiteSpace(strResultsFilePath))
                 {
                     // Output file not available
                     return;
@@ -177,14 +167,15 @@ namespace ProteinCoverageSummarizerGUI
                 mDSCoverageResults.Tables[COVERAGE_RESULTS_DATA_TABLE].Clear();
 
                 // Open the file and read in the lines
-                srInFile = new StreamReader(strResultsFilePath);
-                intLineCount = 1;
-                blnProteinDescriptionPresent = false;
+                var srInFile = new StreamReader(strResultsFilePath);
+                var intLineCount = 1;
+                var blnProteinDescriptionPresent = false;
 
                 while (srInFile.Peek() != -1)
                 {
-                    strLineIn = srInFile.ReadLine();
-                    bytesRead += strLineIn.Length + 2;           // Add 2 for CrLf
+                    var strLineIn = srInFile.ReadLine();
+                    if (strLineIn != null)
+                        bytesRead += strLineIn.Length + 2;           // Add 2 for CrLf
 
                     if (intLineCount == 1)
                     {
@@ -192,9 +183,10 @@ namespace ProteinCoverageSummarizerGUI
                     }
                     else
                     {
-                        strSplitLine = strLineIn.Split('\t');
+                        var strSplitLine = strLineIn.Split('\t');
 
-                        objNewRow = mDSCoverageResults.Tables[COVERAGE_RESULTS_DATA_TABLE].NewRow();
+                        var objNewRow = mDSCoverageResults.Tables[COVERAGE_RESULTS_DATA_TABLE].NewRow();
+                        int intIndex;
                         for (intIndex = 0; intIndex <= strSplitLine.Length - 1; intIndex++)
                         {
                             if (intIndex > clsProteinCoverageSummarizer.OUTPUT_FILE_PROTEIN_SEQUENCE_COLUMN_NUMBER - 1)
@@ -230,7 +222,7 @@ namespace ProteinCoverageSummarizerGUI
                                         break;
                                 }
                             }
-                            catch (Exception ex)
+                            catch (Exception)
                             {
                                 // Ignore errors while populating the table
                             }
@@ -281,8 +273,9 @@ namespace ProteinCoverageSummarizerGUI
 
                 lblProgress.Text = "Results loaded";
             }
-            catch (Exception ex)
+            catch (Exception)
             {
+                // Ignore errors here
             }
         }
 
@@ -303,7 +296,7 @@ namespace ProteinCoverageSummarizerGUI
 
         private void EnableDisableControls()
         {
-            bool blnFastaFile = clsProteinFileDataCache.IsFastaFile(txtProteinInputFilePath.Text);
+            var blnFastaFile = clsProteinFileDataCache.IsFastaFile(txtProteinInputFilePath.Text);
 
             cboProteinInputFileColumnOrdering.Enabled = !blnFastaFile;
             cboProteinInputFileColumnDelimiter.Enabled = !blnFastaFile;
@@ -321,11 +314,9 @@ namespace ProteinCoverageSummarizerGUI
         {
             // Prompts the user to select a file to load the options from
 
-            string strFilePath;
-
             var objOpenFile = new OpenFileDialog();
 
-            strFilePath = mXmlSettingsFilePath;
+            var strFilePath = mXmlSettingsFilePath;
 
             objOpenFile.AddExtension = true;
             objOpenFile.CheckFileExists = true;
@@ -373,14 +364,11 @@ namespace ProteinCoverageSummarizerGUI
 
         private void IniFileLoadOptions(string strFilePath, bool blnUpdateIOPaths)
         {
-            XmlSettingsFileAccessor objSettingsFile;
-
             var objProteinCoverageSummarizer = new clsProteinCoverageSummarizerRunner();
-            DelimitedFileReader.eDelimitedFileFormatCode eColumnOrdering;
 
             try
             {
-                if (strFilePath == null || strFilePath.Length == 0)
+                if (string.IsNullOrWhiteSpace(strFilePath))
                 {
                     // No parameter file specified; nothing to load
                     return;
@@ -392,7 +380,7 @@ namespace ProteinCoverageSummarizerGUI
                     return;
                 }
 
-                objSettingsFile = new XmlSettingsFileAccessor();
+                var objSettingsFile = new XmlSettingsFileAccessor();
 
                 if (objSettingsFile.LoadSettings(strFilePath))
                 {
@@ -427,11 +415,12 @@ namespace ProteinCoverageSummarizerGUI
                         }
                         else
                         {
+                            DelimitedFileReader.eDelimitedFileFormatCode eColumnOrdering;
                             try
                             {
                                 eColumnOrdering = (DelimitedFileReader.eDelimitedFileFormatCode)objSettingsFile.GetParam(clsProteinCoverageSummarizer.XML_SECTION_PROCESSING_OPTIONS, "DelimitedProteinFileFormatCode", cboProteinInputFileColumnOrdering.SelectedIndex + PROTEIN_INPUT_FILE_INDEX_OFFSET);
                             }
-                            catch (Exception ex)
+                            catch (Exception)
                             {
                                 eColumnOrdering = DelimitedFileReader.eDelimitedFileFormatCode.ProteinName_Sequence;
                             }
@@ -440,7 +429,7 @@ namespace ProteinCoverageSummarizerGUI
                             {
                                 cboProteinInputFileColumnOrdering.SelectedIndex = (int)eColumnOrdering - PROTEIN_INPUT_FILE_INDEX_OFFSET;
                             }
-                            catch (Exception ex)
+                            catch (Exception)
                             {
                                 if (cboProteinInputFileColumnOrdering.Items.Count > 0)
                                 {
@@ -452,7 +441,7 @@ namespace ProteinCoverageSummarizerGUI
                             {
                                 eColumnOrdering = (DelimitedFileReader.eDelimitedFileFormatCode)objSettingsFile.GetParam(clsProteinCoverageSummarizer.XML_SECTION_PROCESSING_OPTIONS, "PeptideFileFormatCode", cboPeptideInputFileColumnOrdering.SelectedIndex);
                             }
-                            catch (Exception ex)
+                            catch (Exception)
                             {
                                 eColumnOrdering = DelimitedFileReader.eDelimitedFileFormatCode.ProteinName_Sequence;
                             }
@@ -461,7 +450,7 @@ namespace ProteinCoverageSummarizerGUI
                             {
                                 cboPeptideInputFileColumnOrdering.SelectedIndex = (int)eColumnOrdering;
                             }
-                            catch (Exception ex)
+                            catch (Exception)
                             {
                                 if (cboPeptideInputFileColumnOrdering.Items.Count > 0)
                                 {
@@ -495,7 +484,7 @@ namespace ProteinCoverageSummarizerGUI
             }
             catch (Exception ex)
             {
-                ShowErrorMessage("Error calling LoadParameterFileSettings: " + ex.ToString());
+                ShowErrorMessage("Error calling LoadParameterFileSettings: " + ex);
             }
 
             try
@@ -504,7 +493,7 @@ namespace ProteinCoverageSummarizerGUI
             }
             catch (Exception ex)
             {
-                ShowErrorMessage("Error calling LoadProcessingClassOptions: " + ex.ToString());
+                ShowErrorMessage("Error calling LoadProcessingClassOptions: " + ex);
             }
         }
 
@@ -532,7 +521,7 @@ namespace ProteinCoverageSummarizerGUI
             {
                 objSettingsFile.LoadSettings(strSettingsFilePath, true);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return;
             }
@@ -576,7 +565,7 @@ namespace ProteinCoverageSummarizerGUI
 
                 objSettingsFile.SaveSettings();
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 ShowErrorMessage("Error storing parameter in settings file: " + Path.GetFileName(strSettingsFilePath), "Error");
             }
@@ -650,7 +639,7 @@ namespace ProteinCoverageSummarizerGUI
             }
             catch (Exception ex)
             {
-                ShowErrorMessage("Error in InitializeDataGrid: " + ex.ToString());
+                ShowErrorMessage("Error in InitializeDataGrid: " + ex);
             }
         }
 
@@ -684,7 +673,7 @@ namespace ProteinCoverageSummarizerGUI
             {
                 return LookupColumnDelimiterChar(delimiterCombobox.SelectedIndex, delimiterTextBox.Text, defaultDelimiter);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return '\t';
             }
@@ -711,7 +700,7 @@ namespace ProteinCoverageSummarizerGUI
                     break;
             }
 
-            if (delimiter == null || delimiter.Length == 0)
+            if (string.IsNullOrEmpty(delimiter))
             {
                 delimiter = string.Copy(Convert.ToString(defaultDelimiter));
             }
@@ -720,7 +709,7 @@ namespace ProteinCoverageSummarizerGUI
             {
                 return delimiter[0];
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return '\t';
             }
@@ -821,14 +810,13 @@ namespace ProteinCoverageSummarizerGUI
 
         private void SelectProteinInputFile()
         {
-            DialogResult eResult;
             var dlgOpenFileDialog = new OpenFileDialog()
             {
                 Filter = "Fasta Files (*.fasta)|*.fasta|Text Files(*.txt)|*.txt|All Files (*.*)|*.*",
                 FilterIndex = 3
             };
 
-            eResult = dlgOpenFileDialog.ShowDialog();
+            var eResult = dlgOpenFileDialog.ShowDialog();
             if (eResult == DialogResult.OK)
             {
                 txtProteinInputFilePath.Text = dlgOpenFileDialog.FileName;
@@ -838,17 +826,14 @@ namespace ProteinCoverageSummarizerGUI
 
         private void SelectPeptideInputFile()
         {
-            DialogResult eResult;
-            OpenFileDialog dlgOpenFileDialog;
-
-            dlgOpenFileDialog = new OpenFileDialog()
+            var dlgOpenFileDialog = new OpenFileDialog()
             {
                 InitialDirectory = mLastFolderUsed,
                 Filter = "Text Files(*.txt)|*.txt|All Files (*.*)|*.*",
                 FilterIndex = 1
             };
 
-            eResult = dlgOpenFileDialog.ShowDialog();
+            var eResult = dlgOpenFileDialog.ShowDialog();
             if (eResult == DialogResult.OK)
             {
                 txtPeptideInputFilePath.Text = dlgOpenFileDialog.FileName;
@@ -893,7 +878,7 @@ namespace ProteinCoverageSummarizerGUI
                 objProteinCoverageSummarizer.MatchPeptidePrefixAndSuffixToProtein = chkMatchPeptidePrefixAndSuffixToProtein.Checked;
                 objProteinCoverageSummarizer.IgnoreILDifferences = chkIgnoreILDifferences.Checked;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return false;
             }
@@ -921,14 +906,9 @@ namespace ProteinCoverageSummarizerGUI
             MessageBox.Show(message.ToString(), "About", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
-        private void ShowRichTextStart()
-        {
-            ShowRichTextStart(eSequenceDisplayConstants.UsePrevious);
-        }
+        private bool lastSequenceWasDataGrid;
 
-        private bool lastSequenceWasDataGrid = false;
-
-        private void ShowRichTextStart(eSequenceDisplayConstants eSequenceDisplayMode)
+        private void ShowRichTextStart(eSequenceDisplayConstants eSequenceDisplayMode = eSequenceDisplayConstants.UsePrevious)
         {
             bool useDataGrid;
 
@@ -953,13 +933,13 @@ namespace ProteinCoverageSummarizerGUI
                 {
                     if (dgResults.CurrentRowIndex >= 0)
                     {
-                        if (dgResults[dgResults.CurrentRowIndex, mProteinSequenceColIndex] is object)
+                        if (dgResults[dgResults.CurrentRowIndex, mProteinSequenceColIndex] != null)
                         {
                             ShowRichText(Convert.ToString(dgResults[dgResults.CurrentRowIndex, mProteinSequenceColIndex]), rtfRichTextBox);
                         }
                     }
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     // Ignore errors here
                 }
@@ -982,25 +962,14 @@ namespace ProteinCoverageSummarizerGUI
 
         private void ShowRichText(string strSequenceToShow, RichTextBox objRichTextBox)
         {
-            int intIndex;
-            int intModValue;
-
-            int intCharCount;
-            int intUppercaseCount;
-            float sngCoveragePercent;
-
-            string strRtf;
-            Regex reReplaceSymbols;
-
             // Define a RegEx to remove whitespace characters
-            reReplaceSymbols = new Regex(@"[ \t\r\n]", RegexOptions.Compiled);
-
-            bool blnInUpperRegion;
+            var reReplaceSymbols = new Regex(@"[ \t\r\n]", RegexOptions.Compiled);
 
             try
             {
                 // Lookup the number of characters per line
                 var switchExpr = cboCharactersPerLine.SelectedIndex;
+                int intModValue;
                 switch (switchExpr)
                 {
                     case 0:
@@ -1022,17 +991,18 @@ namespace ProteinCoverageSummarizerGUI
 
                 // Define the base RTF text
                 // ReSharper disable StringLiteralTypo
-                strRtf = @"{\rtf1\ansi\ansicpg1252\deff0\deflang1033{\fonttbl{\f0\fnil\fcharset0 Courier New;}}" +
-                    @"{\colortbl\red0\green0\blue0;\red255\green0\blue0;}" +
-                    @"\viewkind4\uc1\pard\f0\fs20 ";
+                var strRtf = @"{\rtf1\ansi\ansicpg1252\deff0\deflang1033{\fonttbl{\f0\fnil\fcharset0 Courier New;}}" +
+                             @"{\colortbl\red0\green0\blue0;\red255\green0\blue0;}" +
+                             @"\viewkind4\uc1\pard\f0\fs20 ";
                 // ReSharper restore StringLiteralTypo
 
-                blnInUpperRegion = false;
-                intCharCount = 0;
-                intUppercaseCount = 0;
+                var blnInUpperRegion = false;
+                var intCharCount = 0;
+                var intUppercaseCount = 0;
                 if (strSequenceToShow == null)
                     strSequenceToShow = string.Empty;
 
+                int intIndex;
                 for (intIndex = 0; intIndex <= strSequenceToShow.Length - 1; intIndex++)
                 {
                     if (intIndex > 0)
@@ -1042,7 +1012,7 @@ namespace ProteinCoverageSummarizerGUI
                             // Add a new line
                             strRtf += @"\par ";
                         }
-                        else if (chkAddSpace.Checked == true && intIndex % 10 == 0)
+                        else if (chkAddSpace.Checked && intIndex % 10 == 0)
                         {
                             // Add a space every 10 residues
                             strRtf += " ";
@@ -1083,6 +1053,7 @@ namespace ProteinCoverageSummarizerGUI
 
                 txtRTFCode.Text = objRichTextBox.Rtf;
 
+                float sngCoveragePercent;
                 if (intCharCount > 0)
                 {
                     sngCoveragePercent = Convert.ToSingle(intUppercaseCount / (double)intCharCount * 100);
@@ -1102,7 +1073,6 @@ namespace ProteinCoverageSummarizerGUI
 
         private void Start()
         {
-            bool blnSuccess;
             try
             {
                 Cursor.Current = Cursors.WaitCursor;
@@ -1123,7 +1093,7 @@ namespace ProteinCoverageSummarizerGUI
                 this.mProteinCoverageSummarizer.ProgressUpdate += ProteinCoverageSummarizer_ProgressChanged;
                 this.mProteinCoverageSummarizer.ProgressReset += ProteinCoverageSummarizer_ProgressReset;
 
-                blnSuccess = SetOptionsFromGUI(mProteinCoverageSummarizer);
+                var blnSuccess = SetOptionsFromGUI(mProteinCoverageSummarizer);
                 if (blnSuccess)
                 {
                     blnSuccess = mProteinCoverageSummarizer.ProcessFile(txtPeptideInputFilePath.Text, txtOutputFolderPath.Text);
@@ -1166,14 +1136,17 @@ namespace ProteinCoverageSummarizerGUI
         {
 
             // Define the coverage results table style
-            var tsResults = new DataGridTableStyle();
-
             // Setting the MappingName of the table style to COVERAGE_RESULTS_DATA_TABLE will cause this style to be used with that table
-            tsResults.MappingName = COVERAGE_RESULTS_DATA_TABLE;
-            tsResults.AllowSorting = true;
-            tsResults.ColumnHeadersVisible = true;
-            tsResults.RowHeadersVisible = true;
-            tsResults.ReadOnly = true;
+
+            var tsResults = new DataGridTableStyle
+            {
+                MappingName = COVERAGE_RESULTS_DATA_TABLE,
+                AllowSorting = true,
+                ColumnHeadersVisible = true,
+                RowHeadersVisible = true,
+                ReadOnly = true
+            };
+
             DataGridUtils.AppendColumnToTableStyle(tsResults, COL_NAME_PROTEIN_NAME, COL_NAME_PROTEIN_NAME, 100);
             DataGridUtils.AppendColumnToTableStyle(tsResults, COL_NAME_PROTEIN_COVERAGE, COL_NAME_PROTEIN_COVERAGE, 95);
             if (mProteinDescriptionColVisible)
@@ -1191,7 +1164,6 @@ namespace ProteinCoverageSummarizerGUI
             DataGridUtils.AppendColumnToTableStyle(tsResults, COL_NAME_PROTEIN_SEQUENCE, COL_NAME_PROTEIN_SEQUENCE, 0);
 
             // Add the DataGridTableStyle to the data grid's TableStyles collection
-            var withBlock = dgResults;
             dgResults.TableStyles.Clear();
 
             if (!dgResults.TableStyles.Contains(tsResults))
@@ -1261,6 +1233,7 @@ namespace ProteinCoverageSummarizerGUI
         #endregion
 
         #region "Textbox handlers"
+
         private void txtCoverage_KeyPress(object sender, KeyPressEventArgs e)
         {
             TextBoxUtils.TextBoxKeyPressHandler(txtCoverage, e, false, false, false, false, false, false, false, false, false, false, true);
@@ -1311,6 +1284,7 @@ namespace ProteinCoverageSummarizerGUI
         #endregion
 
         #region "Menu Handlers"
+
         private void mnuFileExit_Click(object sender, EventArgs e)
         {
             CloseProgram();
@@ -1355,6 +1329,7 @@ namespace ProteinCoverageSummarizerGUI
         {
             IniFileSaveOptions(GetSettingsFilePath(), true);
         }
+
         #endregion
 
         private void GUI_Closing(object sender, CancelEventArgs e)

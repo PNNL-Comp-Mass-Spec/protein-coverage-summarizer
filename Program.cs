@@ -63,12 +63,11 @@ namespace ProteinCoverageSummarizerGUI
 
         public static int Main()
         {
-            // Returns 0 if no error, error code if an error
-            int returnCode;
-            var commandLineParser = new clsParseCommandLine();
-            bool proceed;
 
-            returnCode = 0;
+            // Returns 0 if no error, error code if an error
+            var commandLineParser = new clsParseCommandLine();
+
+            var returnCode = 0;
             mPeptideInputFilePath = string.Empty;
             mProteinInputFilePath = string.Empty;
             mParameterFilePath = string.Empty;
@@ -82,7 +81,7 @@ namespace ProteinCoverageSummarizerGUI
 
             try
             {
-                proceed = false;
+                var proceed = false;
                 if (commandLineParser.ParseCommandLine())
                 {
                     if (SetOptionsUsingCommandLineParameters(commandLineParser))
@@ -171,7 +170,6 @@ namespace ProteinCoverageSummarizerGUI
             // Returns True if no problems; otherwise, returns false
             // /I:PeptideInputFilePath /R: ProteinInputFilePath /O:OutputDirectoryPath /P:ParameterFilePath
 
-            string value = string.Empty;
             var validParameters = new List<string>() { "I", "O", "R", "P", "G", "H", "M", "K", "Debug", "KeepDB" };
             try
             {
@@ -182,34 +180,36 @@ namespace ProteinCoverageSummarizerGUI
                         (from item in commandLineParser.InvalidParameters(validParameters) select ("/" + item)).ToList());
                     return false;
                 }
-                else
+
+                // Query commandLineParser to see if various parameters are present
+                if (commandLineParser.RetrieveValueForParameter("I", out var inputFilePath))
                 {
-                    // Query commandLineParser to see if various parameters are present
-                    if (commandLineParser.RetrieveValueForParameter("I", out value))
-                    {
-                        mPeptideInputFilePath = value;
-                    }
-                    else if (commandLineParser.NonSwitchParameterCount > 0)
-                    {
-                        mPeptideInputFilePath = commandLineParser.RetrieveNonSwitchParameter(0);
-                    }
-
-                    if (commandLineParser.RetrieveValueForParameter("O", out value))
-                        mOutputDirectoryPath = value;
-                    if (commandLineParser.RetrieveValueForParameter("R", out value))
-                        mProteinInputFilePath = value;
-                    if (commandLineParser.RetrieveValueForParameter("P", out value))
-                        mParameterFilePath = value;
-                    if (commandLineParser.RetrieveValueForParameter("H", out value))
-                        mOutputProteinSequence = false;
-
-                    mIgnoreILDifferences = commandLineParser.IsParameterPresent("G");
-                    mSaveProteinToPeptideMappingFile = commandLineParser.IsParameterPresent("M");
-                    mSkipCoverageComputationSteps = commandLineParser.IsParameterPresent("K");
-                    mDebugMode = commandLineParser.IsParameterPresent("Debug");
-                    mKeepDB = commandLineParser.IsParameterPresent("KeepDB");
-                    return true;
+                    mPeptideInputFilePath = inputFilePath;
                 }
+                else if (commandLineParser.NonSwitchParameterCount > 0)
+                {
+                    mPeptideInputFilePath = commandLineParser.RetrieveNonSwitchParameter(0);
+                }
+
+                if (commandLineParser.RetrieveValueForParameter("O", out var outputDirectoryPath))
+                    mOutputDirectoryPath = outputDirectoryPath;
+
+                if (commandLineParser.RetrieveValueForParameter("R", out var proteinFile))
+                    mProteinInputFilePath = proteinFile;
+
+                if (commandLineParser.RetrieveValueForParameter("P", out var parameterFile))
+                    mParameterFilePath = parameterFile;
+
+                if (commandLineParser.RetrieveValueForParameter("H", out _))
+                    mOutputProteinSequence = false;
+
+                mIgnoreILDifferences = commandLineParser.IsParameterPresent("G");
+                mSaveProteinToPeptideMappingFile = commandLineParser.IsParameterPresent("M");
+                mSkipCoverageComputationSteps = commandLineParser.IsParameterPresent("K");
+                mDebugMode = commandLineParser.IsParameterPresent("Debug");
+                mKeepDB = commandLineParser.IsParameterPresent("KeepDB");
+
+                return true;
             }
             catch (Exception ex)
             {
@@ -224,15 +224,13 @@ namespace ProteinCoverageSummarizerGUI
             ConsoleMsgUtils.ShowError(message);
         }
 
-        private static void ShowErrorMessage(string title, List<string> errorMessages)
+        private static void ShowErrorMessage(string title, IEnumerable<string> errorMessages)
         {
             ConsoleMsgUtils.ShowErrors(title, errorMessages);
         }
 
         private static void ShowGUI()
         {
-            GUI objFormMain;
-
             Application.EnableVisualStyles();
             Application.DoEvents();
             try
@@ -245,7 +243,7 @@ namespace ProteinCoverageSummarizerGUI
                     ShowWindow(handle, SW_HIDE);
                 }
 
-                objFormMain = new GUI() { KeepDB = mKeepDB };
+                var objFormMain = new GUI() { KeepDB = mKeepDB };
 
                 objFormMain.ShowDialog();
 
@@ -355,5 +353,6 @@ namespace ProteinCoverageSummarizerGUI
             mLastProgressReportTime = DateTime.UtcNow;
             mLastProgressReportValue = 0;
         }
+
     }
 }

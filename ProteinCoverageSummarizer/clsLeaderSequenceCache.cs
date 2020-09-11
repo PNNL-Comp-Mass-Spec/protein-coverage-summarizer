@@ -187,10 +187,8 @@ namespace ProteinCoverageSummarizer
                     mErrorMessage = "Peptide length is shorter than " + LeaderSequenceMinimumLength.ToString() + "; unable to cache the peptide";
                     return false;
                 }
-                else
-                {
-                    mErrorMessage = string.Empty;
-                }
+
+                mErrorMessage = string.Empty;
 
                 // Make sure the residues are capitalized
                 peptideSequence = peptideSequence.ToUpper();
@@ -198,9 +196,9 @@ namespace ProteinCoverageSummarizer
                     prefixResidue = char.ToUpper(prefixResidue);
                 if (char.IsLetter(suffixResidue))
                     suffixResidue = char.ToUpper(suffixResidue);
-                string leaderSequence = peptideSequence.Substring(0, LeaderSequenceMinimumLength);
-                char prefixResidueLtoI = prefixResidue;
-                char suffixResidueLtoI = suffixResidue;
+                var leaderSequence = peptideSequence.Substring(0, LeaderSequenceMinimumLength);
+                var prefixResidueLtoI = prefixResidue;
+                var suffixResidueLtoI = suffixResidue;
                 if (IgnoreILDifferences)
                 {
                     // Replace all L characters with I
@@ -212,10 +210,8 @@ namespace ProteinCoverageSummarizer
                         suffixResidueLtoI = 'I';
                 }
 
-                int hashIndexPointer;
-
                 // Look for leaderSequence in mLeaderSequences
-                if (!mLeaderSequences.TryGetValue(leaderSequence, out hashIndexPointer))
+                if (!mLeaderSequences.TryGetValue(leaderSequence, out var hashIndexPointer))
                 {
                     // leaderSequence was not found; add it and initialize intHashIndexPointer
                     hashIndexPointer = mLeaderSequences.Count;
@@ -267,7 +263,7 @@ namespace ProteinCoverageSummarizer
             bool peptideFileSkipFirstLine, char peptideInputFileDelimiter,
             int columnNumWithPeptideSequence)
         {
-            // Parses inputFilePath examining column columnNumWithPeptideSequence to determine the minimum peptide sequence length present
+            // Parses inputFilePath examining column number columnNumWithPeptideSequence to determine the minimum peptide sequence length present
             // Updates mLeaderSequenceMinimumLength if successful, though the minimum length is not allowed to be less than MINIMUM_LEADER_SEQUENCE_LENGTH
 
             // columnNumWithPeptideSequence should be 1 if the peptide sequence is in the first column, 2 if in the second, etc.
@@ -277,20 +273,20 @@ namespace ProteinCoverageSummarizer
 
             try
             {
-                int validPeptideCount = 0;
-                int leaderSeqMinimumLength = 0;
+                var validPeptideCount = 0;
+                var leaderSeqMinimumLength = 0;
 
                 // Open the file and read in the lines
                 using (var reader = new StreamReader(new FileStream(inputFilePath, FileMode.Open, FileAccess.Read, FileShare.Read)))
                 {
-                    int linesRead = 1;
+                    var linesRead = 1;
                     long bytesRead = 0;
 
                     while (!reader.EndOfStream)
                     {
                         if (mAbortProcessing)
                             break;
-                        string dataLine = reader.ReadLine();
+                        var dataLine = reader.ReadLine();
                         if (dataLine == null)
                             continue;
                         bytesRead += dataLine.Length + terminatorSize;
@@ -310,7 +306,7 @@ namespace ProteinCoverageSummarizer
                         else if (dataLine.Length > 0)
                         {
                             bool validLine;
-                            string peptideSequence = "";
+                            var peptideSequence = "";
 
                             try
                             {
@@ -327,7 +323,7 @@ namespace ProteinCoverageSummarizer
 
                                 validLine = true;
                             }
-                            catch (Exception ex)
+                            catch (Exception)
                             {
                                 validLine = false;
                             }
@@ -395,9 +391,7 @@ namespace ProteinCoverageSummarizer
             // Returns the index value if found, or -1 if not found
             // Calls SortIndices if mIndicesSorted = False
 
-            int targetHashIndex;
-
-            if (!mLeaderSequences.TryGetValue(leaderSequenceToFind, out targetHashIndex))
+            if (!mLeaderSequences.TryGetValue(leaderSequenceToFind, out var targetHashIndex))
             {
                 return -1;
             }
@@ -410,7 +404,7 @@ namespace ProteinCoverageSummarizer
                 SortIndices();
             }
 
-            int cachedPeptideMatchIndex = Array.BinarySearch(mCachedPeptideToHashIndexPointer, 0, mCachedPeptideCount, targetHashIndex);
+            var cachedPeptideMatchIndex = Array.BinarySearch(mCachedPeptideToHashIndexPointer, 0, mCachedPeptideCount, targetHashIndex);
 
             while (cachedPeptideMatchIndex > 0 && mCachedPeptideToHashIndexPointer[cachedPeptideMatchIndex - 1] == targetHashIndex)
                 cachedPeptideMatchIndex -= 1;
@@ -426,15 +420,11 @@ namespace ProteinCoverageSummarizer
                 {
                     return intCachedPeptideMatchIndexCurrent + 1;
                 }
-                else
-                {
-                    return -1;
-                }
-            }
-            else
-            {
+
                 return -1;
             }
+
+            return -1;
         }
 
         public void InitializeCachedPeptides()

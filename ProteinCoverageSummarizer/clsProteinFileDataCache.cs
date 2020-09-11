@@ -146,7 +146,7 @@ namespace ProteinCoverageSummarizer
 
         public SQLiteConnection ConnectToSQLiteDB(bool disableJournaling)
         {
-            if (mSQLiteDBConnectionString == null || mSQLiteDBConnectionString.Length == 0)
+            if (string.IsNullOrWhiteSpace(mSQLiteDBConnectionString))
             {
                 OnDebugEvent("ConnectToSQLiteDB: Unable to open the SQLite database because mSQLiteDBConnectionString is empty");
                 return null;
@@ -176,8 +176,8 @@ namespace ProteinCoverageSummarizer
         private string DefineSQLiteDBPath(string SQLiteDBFileName)
         {
             string dbPath;
-            string directoryPath = string.Empty;
-            string filePath = string.Empty;
+            var directoryPath = string.Empty;
+            var filePath = string.Empty;
 
             bool success;
 
@@ -230,7 +230,7 @@ namespace ProteinCoverageSummarizer
                     OnDebugEvent("Deleting " + filePath);
                     File.Delete(filePath);
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     // Ignore errors here
                 }
@@ -238,7 +238,7 @@ namespace ProteinCoverageSummarizer
 
             if (success)
             {
-                dbPath = Path.Combine(directoryPath, SQLiteDBFileName);
+                dbPath = Path.Combine(directoryPath ?? string.Empty, SQLiteDBFileName);
             }
             else
             {
@@ -279,7 +279,8 @@ namespace ProteinCoverageSummarizer
                     OnDebugEvent("DeleteSQLiteDBFile: SQLiteDBFilePath is not defined or is empty; nothing to do; calling method: " + callingMethod);
                     return;
                 }
-                else if (!File.Exists(mSQLiteDBFilePath))
+
+                if (!File.Exists(mSQLiteDBFilePath))
                 {
                     OnDebugEvent(string.Format("DeleteSQLiteDBFile: File doesn't exist; nothing to do ({0}); calling method: {1}", mSQLiteDBFilePath, callingMethod));
                     return;
@@ -289,7 +290,7 @@ namespace ProteinCoverageSummarizer
                 GC.Collect();
                 Thread.Sleep(500);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 // Ignore errors here
             }
@@ -300,9 +301,9 @@ namespace ProteinCoverageSummarizer
                 return;
             }
 
-            for (int retryIndex = 0; retryIndex < MAX_RETRY_ATTEMPT_COUNT ; retryIndex++)
+            for (var retryIndex = 0; retryIndex < MAX_RETRY_ATTEMPT_COUNT ; retryIndex++)
             {
-                int retryHoldOffSeconds = retryIndex + 1;
+                var retryHoldOffSeconds = retryIndex + 1;
                 try
                 {
                     if (!string.IsNullOrEmpty(mSQLiteDBFilePath))
@@ -350,7 +351,7 @@ namespace ProteinCoverageSummarizer
                 mSQLitePersistentConnection = ConnectToSQLiteDB(false);
             }
 
-            string sqlQuery =
+            var sqlQuery =
                 " SELECT UniqueSequenceID, Name, Description, Sequence, PercentCoverage" +
                 " FROM udtProteinInfoType";
 
@@ -363,14 +364,12 @@ namespace ProteinCoverageSummarizer
                 sqlQuery += " WHERE UniqueSequenceID BETWEEN " + Convert.ToString(startIndex) + " AND " + Convert.ToString(endIndex);
             }
 
-            SQLiteCommand cmd;
-            cmd = mSQLitePersistentConnection.CreateCommand();
+            var cmd = mSQLitePersistentConnection.CreateCommand();
             cmd.CommandText = sqlQuery;
 
             OnDebugEvent("GetCachedProteinFromSQLiteDB: running query " + cmd.CommandText);
 
-            SQLiteDataReader reader;
-            reader = cmd.ExecuteReader();
+            var reader = cmd.ExecuteReader();
 
             while (reader.Read())
             {
@@ -383,15 +382,14 @@ namespace ProteinCoverageSummarizer
                 // NonUniquePeptideCount INTEGER,
                 // UniquePeptideCount INTEGER
 
-                var udtProteinInfo = new udtProteinInfoType();
-
-                udtProteinInfo.UniqueSequenceID = Convert.ToInt32(reader["UniqueSequenceID"]);
-
-                udtProteinInfo.Name = Convert.ToString(reader["Name"]);
-                udtProteinInfo.PercentCoverage = Convert.ToDouble(reader["PercentCoverage"]);
-                udtProteinInfo.Description = Convert.ToString(reader["Description"]);
-
-                udtProteinInfo.Sequence = Convert.ToString(reader["Sequence"]);
+                var udtProteinInfo = new udtProteinInfoType
+                {
+                    UniqueSequenceID = Convert.ToInt32(reader["UniqueSequenceID"]),
+                    Name = Convert.ToString(reader["Name"]),
+                    PercentCoverage = Convert.ToDouble(reader["PercentCoverage"]),
+                    Description = Convert.ToString(reader["Description"]),
+                    Sequence = Convert.ToString(reader["Sequence"])
+                };
 
                 yield return udtProteinInfo;
             }
@@ -421,8 +419,8 @@ namespace ProteinCoverageSummarizer
             ChangeProteinSequencesToUppercase = false;
 
             IgnoreILDifferences = false;
-            int fileAttemptCount = 0;
-            bool success = false;
+            var fileAttemptCount = 0;
+            var success = false;
             while (!success && fileAttemptCount < MAX_FILE_CREATE_ATTEMPTS)
             {
                 // Define the path to the SQLite database
@@ -470,16 +468,14 @@ namespace ProteinCoverageSummarizer
         /// <returns></returns>
         public static bool IsFastaFile(string filePath)
         {
-            string proteinFileExtension = Path.GetExtension(filePath).ToLower();
+            var proteinFileExtension = Path.GetExtension(filePath).ToLower();
 
-            if ((proteinFileExtension ?? "") == ".fasta" || (proteinFileExtension ?? "") == ".fsa" || (proteinFileExtension ?? "") == ".faa")
+            if (proteinFileExtension == ".fasta" || proteinFileExtension == ".fsa" || proteinFileExtension == ".faa")
             {
                 return true;
             }
-            else
-            {
-                return false;
-            }
+
+            return false;
         }
 
         public bool ParseProteinFile(string proteinInputFilePath)
@@ -511,7 +507,7 @@ namespace ProteinCoverageSummarizer
 
             try
             {
-                if (proteinInputFilePath == null || proteinInputFilePath.Length == 0)
+                if (string.IsNullOrWhiteSpace(proteinInputFilePath))
                 {
                     ReportError("Empty protein input file path");
                     success = false;
@@ -600,12 +596,12 @@ namespace ProteinCoverageSummarizer
                 // Begin a SQL Transaction
                 var SQLTransaction = sqlConnection.BeginTransaction();
 
-                int proteinsProcessed = 0;
-                int inputFileLinesRead = 0;
+                var proteinsProcessed = 0;
+                var inputFileLinesRead = 0;
 
-                do
+                while (true)
                 {
-                    bool inputProteinFound = proteinFileReader.ReadNextProteinEntry();
+                    var inputProteinFound = proteinFileReader.ReadNextProteinEntry();
                     if (!inputProteinFound)
                     {
                         break;
@@ -614,8 +610,8 @@ namespace ProteinCoverageSummarizer
                     proteinsProcessed += 1;
                     inputFileLinesRead = proteinFileReader.LinesRead;
 
-                    string name = proteinFileReader.ProteinName;
-                    string description = proteinFileReader.ProteinDescription;
+                    var name = proteinFileReader.ProteinName;
+                    var description = proteinFileReader.ProteinDescription;
                     string sequence;
 
                     if (RemoveSymbolCharacters)
@@ -680,7 +676,7 @@ namespace ProteinCoverageSummarizer
 
                     success = true;
                 }
-                while (true);
+
 
                 // Finalize the SQL Transaction
                 SQLTransaction.Commit();
