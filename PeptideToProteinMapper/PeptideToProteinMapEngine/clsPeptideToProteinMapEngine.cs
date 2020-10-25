@@ -1250,7 +1250,7 @@ namespace PeptideToProteinMapEngine
                 var xData = (udtProteinIDMapInfoType)x;
                 var peptide = Convert.ToString(y);
 
-                return xData.Peptide.CompareTo(peptide);
+                return String.Compare(xData.Peptide, peptide, StringComparison.Ordinal);
             }
         }
 
@@ -1258,13 +1258,13 @@ namespace PeptideToProteinMapEngine
         {
             public int Compare(udtPepToProteinMappingType x, udtPepToProteinMappingType y)
             {
-                var pepCompare = x.Peptide.CompareTo(y.Peptide);
+                var pepCompare = String.Compare(x.Peptide, y.Peptide, StringComparison.Ordinal);
                 if (pepCompare != 0)
                 {
                     return pepCompare;
                 }
 
-                return x.Protein.CompareTo(y.Protein);
+                return String.Compare(x.Protein, y.Protein, StringComparison.Ordinal);
             }
         }
 
