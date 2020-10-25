@@ -29,6 +29,7 @@ namespace PeptideToProteinMapEngine
     /// </summary>
     public class clsPeptideToProteinMapEngine : PRISM.FileProcessor.ProcessFilesBase
     {
+        // Ignore Spelling: phos, struct
 
         #region "Constants and Enums"
 
@@ -97,7 +98,8 @@ namespace PeptideToProteinMapEngine
         }
         #endregion
 
-        #region "Classwide variables"
+        #region "Class wide variables"
+
         protected clsProteinCoverageSummarizer mProteinCoverageSummarizer;
 
         // When processing an inspect search result file, if you provide the inspect parameter file name,
@@ -107,14 +109,14 @@ namespace PeptideToProteinMapEngine
 
         private string mStatusMessage;
 
-        // The following is used when the input file is Sequest, X!Tandem, Inspect, or MS-GF+ results file
+        // The following is used when the input file is SEQUEST, X!Tandem, Inspect, or MS-GF+ results file
         // Keys are peptide sequences; values are Lists of scan numbers that each peptide was observed in
         // Keys may have mod symbols in them; those symbols will be removed in PreProcessDataWriteOutPeptides
         private SortedList<string, SortedSet<int>> mUniquePeptideList;
 
         // Mod names must be lower case, and 4 characters in length (or shorter)
         // Only used with Inspect since mods in MS-GF+ are simply numbers, e.g. R.DNFM+15.995SATQAVEYGLVDAVM+15.995TK.R
-        // while mods in Sequest and XTandem are symbols (*, #, @)
+        // while mods in SEQUEST and XTandem are symbols (*, #, @)
         private List<string> mInspectModNameList;
 
         #endregion
@@ -1095,7 +1097,7 @@ namespace PeptideToProteinMapEngine
                             break;
 
                         case ePeptideInputFileFormatConstants.PHRPFile:
-                            // Sequest, X!Tandem, Inspect, or MS-GF+ PHRP data file; need to pre-process it
+                            // SEQUEST, X!Tandem, Inspect, or MS-GF+ PHRP data file; need to pre-process it
                             // Make sure RemoveSymbolCharacters is true
                             Options.RemoveSymbolCharacters = true;
 
@@ -1151,7 +1153,7 @@ namespace PeptideToProteinMapEngine
 
                     if (success && proteinToPepMapFilePath.Length > 0)
                     {
-                        UpdateProgress("Postprocessing", PERCENT_COMPLETE_POSTPROCESSING);
+                        UpdateProgress("Post-processing", PERCENT_COMPLETE_POSTPROCESSING);
 
                         switch (eInputFileFormat)
                         {
@@ -1161,7 +1163,7 @@ namespace PeptideToProteinMapEngine
                                 break;
 
                             default:
-                                // Sequest, X!Tandem, Inspect, or MS-GF+ PHRP data file; need to post-process the results file
+                                // SEQUEST, X!Tandem, Inspect, or MS-GF+ PHRP data file; need to post-process the results file
                                 success = PostProcessPSMResultsFile(inputFilePathWork, proteinToPepMapFilePath, DeleteTempFiles);
                                 break;
                         }

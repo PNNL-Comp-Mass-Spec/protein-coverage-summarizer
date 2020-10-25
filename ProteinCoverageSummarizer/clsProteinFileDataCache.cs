@@ -36,7 +36,7 @@ namespace ProteinCoverageSummarizer
     [CLSCompliant(true)]
     public class clsProteinFileDataCache : EventNotifier
     {
-        // Ignore Spelling: Nikša, udt, Uniquesequence
+        // Ignore Spelling: Nikša, udt, A-Za-z
 
         #region "Constants and Enums"
 

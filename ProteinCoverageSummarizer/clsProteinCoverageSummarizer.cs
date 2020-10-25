@@ -38,7 +38,7 @@ namespace ProteinCoverageSummarizer
     [CLSCompliant(true)]
     public class clsProteinCoverageSummarizer : EventNotifier
     {
-        // Ignore Spelling: Nikša, udt, Lf, struct
+        // Ignore Spelling: Nikša, udt, Lf, struct, A-Za-z
 
         #region "Constants and Enums"
 

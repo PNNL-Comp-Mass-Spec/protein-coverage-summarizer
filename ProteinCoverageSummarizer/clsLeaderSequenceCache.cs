@@ -27,7 +27,7 @@ namespace ProteinCoverageSummarizer
     /// </summary>
     public class clsLeaderSequenceCache
     {
-        // Ignore Spelling: structs, leucines
+        // Ignore Spelling: structs, leucines, A-Za-z
 
         public clsLeaderSequenceCache()
         {

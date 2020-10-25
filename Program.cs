@@ -35,7 +35,7 @@ namespace ProteinCoverageSummarizerGUI
     {
         // Ignore Spelling: Nikša
 
-        public const string PROGRAM_DATE = "September 11, 2020";
+        public const string PROGRAM_DATE = "October 24, 2020";
 
         private static string mParameterFilePath;
 
@@ -253,7 +253,9 @@ namespace ProteinCoverageSummarizerGUI
                 Console.WriteLine(ConsoleMsgUtils.WrapParagraph(
                     "This program reads in a .fasta or .txt file containing protein names and sequences (and optionally descriptions). " +
                     "The program also reads in a .txt file containing peptide sequences and protein names (though protein name is optional) " +
-                    "then uses this information to compute the sequence coverage percent for each protein."));
+                    "then uses this information to compute the sequence coverage percent for each protein. " +
+                    "Recognizes files where the first line is column headers, reading peptides from the first column that starts with 'Peptide' " +
+                    "and proteins from the first column that starts with 'Protein'"));
                 Console.WriteLine();
                 Console.WriteLine("Program syntax:" + Environment.NewLine + Path.GetFileName(ProcessFilesOrDirectoriesBase.GetAppPath()));
                 Console.WriteLine("  /I:PeptideInputFilePath /R:ProteinInputFilePath [/O:OutputDirectoryName]");

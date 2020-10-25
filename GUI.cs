@@ -34,7 +34,7 @@ namespace ProteinCoverageSummarizerGUI
     /// </summary>
     public partial class GUI : Form
     {
-        // Ignore Spelling: Textbox, CrLf, chk, ini, Nikša
+        // Ignore Spelling: CrLf, chk, ini, Nikša
 
         public GUI() : base()
         {
@@ -1267,7 +1267,7 @@ namespace ProteinCoverageSummarizerGUI
 
         #endregion
 
-        #region "Textbox handlers"
+        #region "TextBox handlers"
 
         private void txtCoverage_KeyPress(object sender, KeyPressEventArgs e)
         {
