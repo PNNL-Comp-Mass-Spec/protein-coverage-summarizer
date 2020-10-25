@@ -301,7 +301,7 @@ namespace PeptideToProteinMapper
             ConsoleMsgUtils.ShowError(message);
         }
 
-        private static void ShowErrorMessage(string title, List<string> errorMessages)
+        private static void ShowErrorMessage(string title, IEnumerable<string> errorMessages)
         {
             ConsoleMsgUtils.ShowErrors(title, errorMessages);
         }
@@ -415,7 +415,7 @@ namespace PeptideToProteinMapper
                 if (taskDescription == (mVerboseLoggingMostRecentMessage ?? ""))
                 {
                     mVerboseLogFile.WriteLine(DateTime.Now.ToString("yyyy-MM-dd hh:mm:ss tt") + "\t" +
-                                              percentComplete.ToString() + "\t" +
+                                              percentComplete + "\t" +
                                               ".");
                 }
                 else
@@ -423,7 +423,7 @@ namespace PeptideToProteinMapper
                     mVerboseLoggingMostRecentMessage = string.Copy(taskDescription);
 
                     mVerboseLogFile.WriteLine(DateTime.Now.ToString("yyyy-MM-dd hh:mm:ss tt") + "\t" +
-                                              percentComplete.ToString() + "\t" +
+                                              percentComplete + "\t" +
                                               taskDescription);
                 }
             }
