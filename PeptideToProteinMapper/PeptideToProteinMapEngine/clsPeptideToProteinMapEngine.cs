@@ -514,13 +514,12 @@ namespace PeptideToProteinMapEngine
                                 cachedData.Sort(cachedDataComparer);
                             }
 
-                            for (int cacheIndex = 0; cacheIndex < cachedData.Count; cacheIndex++)
+                            foreach (var data in cachedData)
                             {
-                                var data = cachedData[cacheIndex];
                                 writer.WriteLine(data.Peptide + "\t" +
-                                    data.Protein + "\t" +
-                                    data.ResidueStart.ToString() + "\t" +
-                                    data.ResidueEnd.ToString());
+                                                 data.Protein + "\t" +
+                                                 data.ResidueStart + "\t" +
+                                                 data.ResidueEnd);
                             }
                         }
                     }
