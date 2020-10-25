@@ -53,10 +53,8 @@ namespace PeptideToProteinMapEngine
             PeptideListFile = 1,             // First column is peptide sequence
             ProteinAndPeptideFile = 2,       // First column is protein name, second column is peptide sequence
             InspectResultsFile = 3,          // Inspect results file; pre-process the file to determine the peptides present, then determine the proteins that contain the given peptides
-            [Obsolete("Old Name")]
-            MSGFDBResultsFile = 4,
             MSGFPlusResultsFile = 4,         // MS-GF+ results file; pre-process the file to determine the peptides present, then determine the proteins that contain the given peptides
-            PHRPFile = 5                    // Sequest, Inspect, X!Tandem, or MS-GF+ synopsis or first-hits file created by PHRP; pre-process the file to determine the peptides present, then determine the proteins that contain the given peptides
+            PHRPFile = 5                     // SEQUEST, Inspect, X!Tandem, or MS-GF+ synopsis or first-hits file created by PHRP; pre-process the file to determine the peptides present, then determine the proteins that contain the given peptides
         }
 
         #endregion
@@ -122,20 +120,6 @@ namespace PeptideToProteinMapEngine
         #endregion
 
         #region "Properties"
-
-        // ReSharper disable UnusedMember.Global
-
-        /// <summary>
-        /// Legacy property; superseded by DeleteTempFiles
-        /// </summary>
-        /// <value></value>
-        /// <returns></returns>
-        /// <remarks></remarks>
-        public bool DeleteInspectTempFiles
-        {
-            get => DeleteTempFiles;
-            set => DeleteTempFiles = value;
-        }
 
         public bool DeleteTempFiles { get; set; }
 
