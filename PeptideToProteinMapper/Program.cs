@@ -56,13 +56,12 @@ namespace PeptideToProteinMapper
 
         private static void CreateVerboseLogFile()
         {
-            string logFilePath;
-            bool openingExistingFile;
             try
             {
-                logFilePath = Path.GetFileNameWithoutExtension(Assembly.GetExecutingAssembly().Location);
+                var logFilePath = Path.GetFileNameWithoutExtension(Assembly.GetExecutingAssembly().Location);
                 logFilePath += "_VerboseLog_" + DateTime.Now.ToString("yyyy-MM-dd") + ".txt";
-                openingExistingFile = File.Exists(logFilePath);
+
+                var openingExistingFile = File.Exists(logFilePath);
                 mVerboseLogFile = new StreamWriter(new FileStream(logFilePath, FileMode.Append, FileAccess.Write, FileShare.Read)) { AutoFlush = true };
 
                 if (!openingExistingFile)
