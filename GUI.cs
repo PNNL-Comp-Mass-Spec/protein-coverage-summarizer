@@ -1121,21 +1121,23 @@ namespace ProteinCoverageSummarizerGUI
                 this.mProteinCoverageSummarizer.ProgressUpdate += ProteinCoverageSummarizer_ProgressChanged;
                 this.mProteinCoverageSummarizer.ProgressReset += ProteinCoverageSummarizer_ProgressReset;
 
-                var blnSuccess = SetOptionsFromGUI(mProteinCoverageSummarizer);
-                if (blnSuccess)
+                var success = SetOptionsFromGUI(mProteinCoverageSummarizer);
+                if (success)
                 {
-                    blnSuccess = mProteinCoverageSummarizer.ProcessFile(txtPeptideInputFilePath.Text, txtOutputFolderPath.Text);
+                    success = mProteinCoverageSummarizer.ProcessFile(txtPeptideInputFilePath.Text, txtOutputFolderPath.Text);
 
-                    if (blnSuccess & !(mProteinCoverageSummarizer.SearchAllProteinsForPeptideSequence & mProteinCoverageSummarizer.SearchAllProteinsSkipCoverageComputationSteps))
+                    if (success &&
+                        !(mProteinCoverageSummarizer.Options.SearchAllProteinsForPeptideSequence &&
+                          mProteinCoverageSummarizer.Options.SearchAllProteinsSkipCoverageComputationSteps))
                     {
                         CreateSummaryDataTable(mProteinCoverageSummarizer.ResultsFilePath);
                     }
 
-                    if (blnSuccess && lblStatus.Text.StartsWith("Done (9"))
+                    if (success && lblStatus.Text.StartsWith("Done (9"))
                     {
                         lblStatus.Text = "Done";
                     }
-                    else if (!blnSuccess)
+                    else if (!success)
                     {
                         if (string.IsNullOrWhiteSpace(mProteinCoverageSummarizer.StatusMessage))
                             lblStatus.Text = "Error: " + mProteinCoverageSummarizer.GetErrorMessage();
