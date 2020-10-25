@@ -105,8 +105,6 @@ namespace PeptideToProteinMapEngine
         // names will be extracted and used when "cleaning" the peptides prior to looking for matching proteins
         private string mInspectParameterFilePath;
 
-        private string mStatusMessage;
-
         // The following is used when the input file is SEQUEST, X!Tandem, Inspect, or MS-GF+ results file
         // Keys are peptide sequences; values are Lists of scan numbers that each peptide was observed in
         // Keys may have mod symbols in them; those symbols will be removed in PreProcessDataWriteOutPeptides
@@ -138,8 +136,8 @@ namespace PeptideToProteinMapEngine
 
         public ePeptideInputFileFormatConstants PeptideInputFileFormat { get; set; }
 
+        public string StatusMessage { get; private set; }
 
-        public string StatusMessage => mStatusMessage;
         #endregion
 
         /// <summary>
@@ -268,8 +266,8 @@ namespace PeptideToProteinMapEngine
             }
             catch (Exception ex)
             {
-                mStatusMessage = "Error reading the Inspect parameter file (" + Path.GetFileName(inspectParamFilePath) + ")";
-                HandleException(mStatusMessage, ex);
+                StatusMessage = "Error reading the Inspect parameter file (" + Path.GetFileName(inspectParamFilePath) + ")";
+                HandleException(StatusMessage, ex);
             }
 
             return false;
@@ -288,7 +286,7 @@ namespace PeptideToProteinMapEngine
             mInspectParameterFilePath = string.Empty;
 
             AbortProcessing = false;
-            mStatusMessage = string.Empty;
+            StatusMessage = string.Empty;
 
             mProteinCoverageSummarizer = new clsProteinCoverageSummarizer(Options);
             RegisterEvents(mProteinCoverageSummarizer);
@@ -350,8 +348,8 @@ namespace PeptideToProteinMapEngine
             }
             catch (Exception ex)
             {
-                mStatusMessage = "Error looking for a header line in " + Path.GetFileName(filePath);
-                HandleException(mStatusMessage, ex);
+                StatusMessage = "Error looking for a header line in " + Path.GetFileName(filePath);
+                HandleException(StatusMessage, ex);
                 return false;
             }
         }
@@ -381,9 +379,9 @@ namespace PeptideToProteinMapEngine
 
                 if (mUniquePeptideList == null || mUniquePeptideList.Count == 0)
                 {
-                    mStatusMessage = "Error in PostProcessPSMResultsFile: mUniquePeptideList is empty; this is unexpected; unable to continue";
+                    StatusMessage = "Error in PostProcessPSMResultsFile: mUniquePeptideList is empty; this is unexpected; unable to continue";
 
-                    HandleException(mStatusMessage, new Exception("Empty Array"));
+                    HandleException(StatusMessage, new Exception("Empty Array"));
 
                     return false;
                 }
@@ -567,8 +565,8 @@ namespace PeptideToProteinMapEngine
             }
             catch (Exception ex)
             {
-                mStatusMessage = "Error writing the Inspect or MS-GF+ peptide to protein map file in PostProcessPSMResultsFile";
-                HandleException(mStatusMessage, ex);
+                StatusMessage = "Error writing the Inspect or MS-GF+ peptide to protein map file in PostProcessPSMResultsFile";
+                HandleException(StatusMessage, ex);
             }
 
             return false;
@@ -692,8 +690,8 @@ namespace PeptideToProteinMapEngine
             }
             catch (Exception ex)
             {
-                mStatusMessage = "Error reading the newly created protein to peptide mapping file (" + Path.GetFileName(proteinToPepMapFilePath) + ")";
-                HandleException(mStatusMessage, ex);
+                StatusMessage = "Error reading the newly created protein to peptide mapping file (" + Path.GetFileName(proteinToPepMapFilePath) + ")";
+                HandleException(StatusMessage, ex);
             }
 
             return false;
@@ -746,7 +744,7 @@ namespace PeptideToProteinMapEngine
             }
             else
             {
-                mStatusMessage = "Unrecognized file type: " + eFileType.ToString() + "; will look for column header 'Peptide'";
+                StatusMessage = "Unrecognized file type: " + eFileType.ToString() + "; will look for column header 'Peptide'";
 
                 terminatorSize = 2;
                 peptideSequenceColIndex = -1;
@@ -759,9 +757,9 @@ namespace PeptideToProteinMapEngine
                 if (!File.Exists(inputFilePath))
                 {
                     SetBaseClassErrorCode(ProcessFilesErrorCodes.InvalidInputFilePath);
-                    mStatusMessage = "File not found: " + inputFilePath;
+                    StatusMessage = "File not found: " + inputFilePath;
 
-                    ShowErrorMessage(mStatusMessage);
+                    ShowErrorMessage(StatusMessage);
                     return string.Empty;
                 }
 
@@ -818,9 +816,9 @@ namespace PeptideToProteinMapEngine
                                 if (peptideSequenceColIndex < 0)
                                 {
                                     SetBaseClassErrorCode(ProcessFilesErrorCodes.LocalizedError);
-                                    mStatusMessage = "Peptide column not found; unable to continue";
+                                    StatusMessage = "Peptide column not found; unable to continue";
 
-                                    ShowErrorMessage(mStatusMessage);
+                                    ShowErrorMessage(StatusMessage);
                                     return string.Empty;
                                 }
                             }
@@ -859,8 +857,8 @@ namespace PeptideToProteinMapEngine
             }
             catch (Exception ex)
             {
-                mStatusMessage = "Error reading " + toolDescription + " input file in PreProcessPSMResultsFile";
-                HandleException(mStatusMessage, ex);
+                StatusMessage = "Error reading " + toolDescription + " input file in PreProcessPSMResultsFile";
+                HandleException(StatusMessage, ex);
             }
 
             return string.Empty;
@@ -873,9 +871,9 @@ namespace PeptideToProteinMapEngine
                 if (!File.Exists(inputFilePath))
                 {
                     SetBaseClassErrorCode(ProcessFilesErrorCodes.InvalidInputFilePath);
-                    mStatusMessage = "File not found: " + inputFilePath;
+                    StatusMessage = "File not found: " + inputFilePath;
 
-                    ShowErrorMessage(mStatusMessage);
+                    ShowErrorMessage(StatusMessage);
                     return string.Empty;
                 }
 
@@ -939,8 +937,8 @@ namespace PeptideToProteinMapEngine
             }
             catch (Exception ex)
             {
-                mStatusMessage = "Error reading PSM input file in PreProcessPHRPDataFile";
-                HandleException(mStatusMessage, ex);
+                StatusMessage = "Error reading PSM input file in PreProcessPHRPDataFile";
+                HandleException(StatusMessage, ex);
             }
 
             return string.Empty;
@@ -1001,8 +999,8 @@ namespace PeptideToProteinMapEngine
             }
             catch (Exception ex)
             {
-                mStatusMessage = "Error writing the Unique Peptides file in PreProcessDataWriteOutPeptides";
-                HandleException(mStatusMessage, ex);
+                StatusMessage = "Error writing the Unique Peptides file in PreProcessDataWriteOutPeptides";
+                HandleException(StatusMessage, ex);
                 return string.Empty;
             }
         }
@@ -1132,7 +1130,7 @@ namespace PeptideToProteinMapEngine
                                                                      out proteinToPepMapFilePath, outputFileBaseName);
                     if (!success)
                     {
-                        mStatusMessage = "Error running ProteinCoverageSummarizer: " + mProteinCoverageSummarizer.ErrorMessage;
+                        StatusMessage = "Error running ProteinCoverageSummarizer: " + mProteinCoverageSummarizer.ErrorMessage;
                     }
 
                     if (success && proteinToPepMapFilePath.Length > 0)
