@@ -444,9 +444,9 @@ namespace ProteinCoverageSummarizer
             var cmd = sqlConnection.CreateCommand();
             cmd.CommandText = "CREATE TABLE udtProteinInfoType( " +
                               "Name TEXT, " +
-                              "Description TEXT, "
-                              + "sequence TEXT, "
-                              + "UniquesequenceID INTEGER PRIMARY KEY, " +
+                              "Description TEXT, " +
+                              "Sequence TEXT, " +
+                              "UniqueSequenceID INTEGER PRIMARY KEY, " +
                               "PercentCoverage REAL);"; // , NonUniquePeptideCount INTEGER, UniquePeptideCount INTEGER);"
 
             OnDebugEvent("ParseProteinFile: Creating table with " + cmd.CommandText);
@@ -534,7 +534,7 @@ namespace ProteinCoverageSummarizer
                 ProteinCachingStart?.Invoke();
 
                 // Create a parameterized Insert query
-                cmd.CommandText = " INSERT INTO udtProteinInfoType(Name, Description, sequence, UniquesequenceID, PercentCoverage) " +
+                cmd.CommandText = " INSERT INTO udtProteinInfoType(Name, Description, Sequence, UniqueSequenceID, PercentCoverage) " +
                                   " VALUES (?, ?, ?, ?, ?)";
 
                 var nameFld = cmd.CreateParameter();
