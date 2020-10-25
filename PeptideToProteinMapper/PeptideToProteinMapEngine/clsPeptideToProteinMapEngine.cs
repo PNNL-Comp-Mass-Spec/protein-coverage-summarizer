@@ -124,12 +124,7 @@ namespace PeptideToProteinMapEngine
         public string InspectParameterFilePath
         {
             get => mInspectParameterFilePath;
-            set
-            {
-                if (value == null)
-                    value = string.Empty;
-                mInspectParameterFilePath = value;
-            }
+            set => mInspectParameterFilePath = value ?? string.Empty;
         }
 
         public ProteinCoverageSummarizerOptions Options { get; }
@@ -153,10 +148,7 @@ namespace PeptideToProteinMapEngine
         public override void AbortProcessingNow()
         {
             base.AbortProcessingNow();
-            if (mProteinCoverageSummarizer != null)
-            {
-                mProteinCoverageSummarizer.AbortProcessingNow();
-            }
+            mProteinCoverageSummarizer?.AbortProcessingNow();
         }
 
         public ePeptideInputFileFormatConstants DetermineResultsFileFormat(string filePath)
@@ -177,7 +169,8 @@ namespace PeptideToProteinMapEngine
             {
                 return ePeptideInputFileFormatConstants.MSGFPlusResultsFile;
             }
-            else if (PeptideInputFileFormat != ePeptideInputFileFormatConstants.AutoDetermine & PeptideInputFileFormat != ePeptideInputFileFormatConstants.Unknown)
+
+            if (PeptideInputFileFormat != ePeptideInputFileFormatConstants.AutoDetermine & PeptideInputFileFormat != ePeptideInputFileFormatConstants.Unknown)
             {
                 return PeptideInputFileFormat;
             }
@@ -212,7 +205,7 @@ namespace PeptideToProteinMapEngine
                     inspectModNames.Clear();
                 }
 
-                if (inspectParamFilePath == null || inspectParamFilePath.Length == 0)
+                if (string.IsNullOrEmpty(inspectParamFilePath))
                 {
                     return false;
                 }
@@ -243,7 +236,7 @@ namespace PeptideToProteinMapEngine
                                 // Split the line on commas
                                 var splitLine = lineIn.Split(',');
 
-                                if (splitLine.Length >= 5 && (splitLine[0].ToLower().Trim() ?? "") == "mod")
+                                if (splitLine.Length >= 5 && (splitLine[0].ToLower().Trim()) == "mod")
                                 {
                                     var modName = splitLine[4].ToLower();
 
@@ -497,7 +490,7 @@ namespace PeptideToProteinMapEngine
                                         ShowMessage("Warning: Unexpected protein ID lookup array mismatch for ID " + proteinMapInfo[matchIndex].ProteinID.ToString());
                                     }
                                 }
-                                catch (Exception ex)
+                                catch (Exception)
                                 {
                                     // This code shouldn't be reached
                                     // Ignore errors occur
@@ -506,7 +499,7 @@ namespace PeptideToProteinMapEngine
                                 var cachedDataEntry = new udtPepToProteinMappingType()
                                 {
                                     Peptide = string.Copy(peptideEntry.Key),
-                                    Protein = string.Copy(protein),
+                                    Protein = string.Copy(protein ?? string.Empty),
                                     ResidueStart = proteinMapInfo[matchIndex].ResidueStart,
                                     ResidueEnd = proteinMapInfo[matchIndex].ResidueEnd
                                 };
@@ -540,8 +533,9 @@ namespace PeptideToProteinMapEngine
                         LogMessage("Deleting " + Path.GetFileName(peptideListFilePath));
                         File.Delete(peptideListFilePath);
                     }
-                    catch (Exception ex)
+                    catch (Exception)
                     {
+                        // Ignore errors here
                     }
 
                     try
@@ -549,8 +543,9 @@ namespace PeptideToProteinMapEngine
                         LogMessage("Deleting " + Path.GetFileName(proteinToPepMapFilePath));
                         File.Delete(proteinToPepMapFilePath);
                     }
-                    catch (Exception ex)
+                    catch (Exception)
                     {
+                        // Ignore errors here
                     }
                 }
 
@@ -634,7 +629,7 @@ namespace PeptideToProteinMapEngine
                             Array.Copy(oldProteinMapInfo, proteinMapInfo, Math.Min(proteinMapInfo.Length * 2, oldProteinMapInfo.Length));
                         }
 
-                        if (currentProtein.Length == 0 || (currentProtein ?? "") != (splitLine[0] ?? ""))
+                        if (currentProtein.Length == 0 || currentProtein != splitLine[0])
                         {
                             // Determine the Protein ID for this protein
 
@@ -954,7 +949,7 @@ namespace PeptideToProteinMapEngine
                 {
                     var inputFileInfo = new FileInfo(inputFilePath);
 
-                    peptideListFilePath = Path.Combine(inputFileInfo.DirectoryName, peptideListFileName);
+                    peptideListFilePath = Path.Combine(inputFileInfo.DirectoryName ?? string.Empty, peptideListFileName);
                 }
 
                 LogMessage("Creating " + Path.GetFileName(peptideListFileName));
@@ -1007,7 +1002,7 @@ namespace PeptideToProteinMapEngine
 
             try
             {
-                if (inputFilePath == null || inputFilePath.Length == 0)
+                if (string.IsNullOrEmpty(inputFilePath))
                 {
                     ShowMessage("Input file name is empty");
                     SetBaseClassErrorCode(ProcessFilesErrorCodes.InvalidInputFilePath);
@@ -1224,14 +1219,18 @@ namespace PeptideToProteinMapEngine
         #endregion
 
         #region "IComparer Classes"
+
         protected class ProteinIDMapInfoComparer : IComparer
         {
             public int Compare(object x, object y)
             {
+                if (x == null || y == null)
+                    return 0;
+
                 var xData = (udtProteinIDMapInfoType)x;
                 var yData = (udtProteinIDMapInfoType)y;
 
-                var pepCompare = xData.Peptide.CompareTo(yData.Peptide);
+                var pepCompare = string.Compare(xData.Peptide, yData.Peptide, StringComparison.Ordinal);
                 if (pepCompare != 0)
                 {
                     return pepCompare;
@@ -1245,6 +1244,8 @@ namespace PeptideToProteinMapEngine
         {
             public int Compare(object x, object y)
             {
+                if (x == null || y == null)
+                    return 0;
 
                 var xData = (udtProteinIDMapInfoType)x;
                 var peptide = Convert.ToString(y);

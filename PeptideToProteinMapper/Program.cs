@@ -149,10 +149,7 @@ namespace PeptideToProteinMapper
 
                         mPeptideToProteinMapEngine.ProcessFilesWildcard(options.PeptideInputFilePath, options.OutputDirectoryPath, mParameterFilePath);
 
-                        if (mVerboseLogFile != null)
-                        {
-                            mVerboseLogFile.Close();
-                        }
+                        mVerboseLogFile?.Close();
                     }
                     catch (Exception ex)
                     {
@@ -414,7 +411,8 @@ namespace PeptideToProteinMapper
             {
                 if (taskDescription == null)
                     taskDescription = string.Empty;
-                if ((taskDescription ?? "") == (mVerboseLoggingMostRecentMessage ?? ""))
+
+                if (taskDescription == (mVerboseLoggingMostRecentMessage ?? ""))
                 {
                     mVerboseLogFile.WriteLine(DateTime.Now.ToString("yyyy-MM-dd hh:mm:ss tt") + "\t" +
                                               percentComplete.ToString() + "\t" +
