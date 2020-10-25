@@ -107,7 +107,7 @@ namespace ProteinCoverageSummarizerGUI
 
         private void AutoDefineSearchAllProteins()
         {
-            if (cboPeptideInputFileColumnOrdering.SelectedIndex == (int)DelimitedFileReader.eDelimitedFileFormatCode.SequenceOnly)
+            if (cboPeptideInputFileColumnOrdering.SelectedIndex == (int)ProteinCoverageSummarizerOptions.PeptideFileColumnOrderingCode.SequenceOnly)
             {
                 chkSearchAllProteinsForPeptideSequence.Checked = true;
             }
@@ -438,19 +438,20 @@ namespace ProteinCoverageSummarizerGUI
                         }
                         else
                         {
-                            DelimitedFileReader.eDelimitedFileFormatCode eColumnOrdering;
+                            DelimitedFileReader.eDelimitedFileFormatCode proteinInputFileColumnOrder;
                             try
                             {
-                                eColumnOrdering = (DelimitedFileReader.eDelimitedFileFormatCode)objSettingsFile.GetParam(clsProteinCoverageSummarizer.XML_SECTION_PROCESSING_OPTIONS, "DelimitedProteinFileFormatCode", cboProteinInputFileColumnOrdering.SelectedIndex + PROTEIN_INPUT_FILE_INDEX_OFFSET);
+                                proteinInputFileColumnOrder = (DelimitedFileReader.eDelimitedFileFormatCode)objSettingsFile
+                                    .GetParam(clsProteinCoverageSummarizer.XML_SECTION_PROCESSING_OPTIONS, "DelimitedProteinFileFormatCode", cboProteinInputFileColumnOrdering.SelectedIndex + PROTEIN_INPUT_FILE_INDEX_OFFSET);
                             }
                             catch (Exception)
                             {
-                                eColumnOrdering = DelimitedFileReader.eDelimitedFileFormatCode.ProteinName_Sequence;
+                                proteinInputFileColumnOrder = DelimitedFileReader.eDelimitedFileFormatCode.ProteinName_Sequence;
                             }
 
                             try
                             {
-                                cboProteinInputFileColumnOrdering.SelectedIndex = (int)eColumnOrdering - PROTEIN_INPUT_FILE_INDEX_OFFSET;
+                                cboProteinInputFileColumnOrdering.SelectedIndex = (int)proteinInputFileColumnOrder - PROTEIN_INPUT_FILE_INDEX_OFFSET;
                             }
                             catch (Exception)
                             {
@@ -460,18 +461,20 @@ namespace ProteinCoverageSummarizerGUI
                                 }
                             }
 
+                            ProteinCoverageSummarizerOptions.PeptideFileColumnOrderingCode peptideInputFileColumnOrder;
                             try
                             {
-                                eColumnOrdering = (DelimitedFileReader.eDelimitedFileFormatCode)objSettingsFile.GetParam(clsProteinCoverageSummarizer.XML_SECTION_PROCESSING_OPTIONS, "PeptideFileFormatCode", cboPeptideInputFileColumnOrdering.SelectedIndex);
+                                peptideInputFileColumnOrder = (ProteinCoverageSummarizerOptions.PeptideFileColumnOrderingCode)objSettingsFile
+                                    .GetParam(clsProteinCoverageSummarizer.XML_SECTION_PROCESSING_OPTIONS, "PeptideFileFormatCode", cboPeptideInputFileColumnOrdering.SelectedIndex);
                             }
                             catch (Exception)
                             {
-                                eColumnOrdering = DelimitedFileReader.eDelimitedFileFormatCode.ProteinName_Sequence;
+                                peptideInputFileColumnOrder = ProteinCoverageSummarizerOptions.PeptideFileColumnOrderingCode.UseHeaderNames;
                             }
 
                             try
                             {
-                                cboPeptideInputFileColumnOrdering.SelectedIndex = (int)eColumnOrdering;
+                                cboPeptideInputFileColumnOrdering.SelectedIndex = (int)peptideInputFileColumnOrder;
                             }
                             catch (Exception)
                             {
@@ -670,19 +673,19 @@ namespace ProteinCoverageSummarizerGUI
         {
             try
             {
-                chkPeptideFileSkipFirstLine.Checked = objProteinCoverageSummarizer.PeptideFileSkipFirstLine;
-                chkProteinFileSkipFirstLine.Checked = objProteinCoverageSummarizer.ProteinDataDelimitedFileSkipFirstLine;
+                chkPeptideFileSkipFirstLine.Checked = objProteinCoverageSummarizer.Options.PeptideFileSkipFirstLine;
+                chkProteinFileSkipFirstLine.Checked = objProteinCoverageSummarizer.Options.ProteinDataOptions.DelimitedFileSkipFirstLine;
 
-                chkOutputProteinSequence.Checked = objProteinCoverageSummarizer.OutputProteinSequence;
-                chkSearchAllProteinsForPeptideSequence.Checked = objProteinCoverageSummarizer.SearchAllProteinsForPeptideSequence;
+                chkOutputProteinSequence.Checked = objProteinCoverageSummarizer.Options.OutputProteinSequence;
+                chkSearchAllProteinsForPeptideSequence.Checked = objProteinCoverageSummarizer.Options.SearchAllProteinsForPeptideSequence;
 
-                chkSaveProteinToPeptideMappingFile.Checked = objProteinCoverageSummarizer.SaveProteinToPeptideMappingFile;
-                chkSearchAllProteinsSkipCoverageComputationSteps.Checked = objProteinCoverageSummarizer.SearchAllProteinsSkipCoverageComputationSteps;
+                chkSaveProteinToPeptideMappingFile.Checked = objProteinCoverageSummarizer.Options.SaveProteinToPeptideMappingFile;
+                chkSearchAllProteinsSkipCoverageComputationSteps.Checked = objProteinCoverageSummarizer.Options.SearchAllProteinsSkipCoverageComputationSteps;
 
-                chkTrackPeptideCounts.Checked = objProteinCoverageSummarizer.TrackPeptideCounts;
-                chkRemoveSymbolCharacters.Checked = objProteinCoverageSummarizer.RemoveSymbolCharacters;
-                chkMatchPeptidePrefixAndSuffixToProtein.Checked = objProteinCoverageSummarizer.MatchPeptidePrefixAndSuffixToProtein;
-                chkIgnoreILDifferences.Checked = objProteinCoverageSummarizer.IgnoreILDifferences;
+                chkTrackPeptideCounts.Checked = objProteinCoverageSummarizer.Options.TrackPeptideCounts;
+                chkRemoveSymbolCharacters.Checked = objProteinCoverageSummarizer.Options.RemoveSymbolCharacters;
+                chkMatchPeptidePrefixAndSuffixToProtein.Checked = objProteinCoverageSummarizer.Options.MatchPeptidePrefixAndSuffixToProtein;
+                chkIgnoreILDifferences.Checked = objProteinCoverageSummarizer.Options.IgnoreILDifferences;
             }
             catch (Exception ex)
             {
@@ -775,10 +778,11 @@ namespace ProteinCoverageSummarizerGUI
             cboProteinInputFileColumnOrdering.SelectedIndex = (int)DelimitedFileReader.eDelimitedFileFormatCode.ProteinName_Description_Sequence - PROTEIN_INPUT_FILE_INDEX_OFFSET;
 
             cboPeptideInputFileColumnOrdering.Items.Clear();
-            cboPeptideInputFileColumnOrdering.Items.Insert((int)DelimitedFileReader.eDelimitedFileFormatCode.SequenceOnly, "Sequence Only");
-            cboPeptideInputFileColumnOrdering.Items.Insert((int)DelimitedFileReader.eDelimitedFileFormatCode.ProteinName_Sequence, "ProteinName and Sequence");
+            cboPeptideInputFileColumnOrdering.Items.Insert((int)ProteinCoverageSummarizerOptions.PeptideFileColumnOrderingCode.SequenceOnly, "Sequence Only");
+            cboPeptideInputFileColumnOrdering.Items.Insert((int)ProteinCoverageSummarizerOptions.PeptideFileColumnOrderingCode.ProteinName_PeptideSequence, "ProteinName and Sequence");
+            cboPeptideInputFileColumnOrdering.Items.Insert((int)ProteinCoverageSummarizerOptions.PeptideFileColumnOrderingCode.UseHeaderNames, "Look for headers Peptide and Protein)");
 
-            cboPeptideInputFileColumnOrdering.SelectedIndex = (int)DelimitedFileReader.eDelimitedFileFormatCode.ProteinName_Sequence;
+            cboPeptideInputFileColumnOrdering.SelectedIndex = (int)ProteinCoverageSummarizerOptions.PeptideFileColumnOrderingCode.UseHeaderNames;
         }
 
         private void ResetToDefaults()
@@ -788,7 +792,7 @@ namespace ProteinCoverageSummarizerGUI
             txtProteinInputFileColumnDelimiter.Text = ";";
             chkProteinFileSkipFirstLine.Checked = false;
 
-            cboPeptideInputFileColumnOrdering.SelectedIndex = (int)DelimitedFileReader.eDelimitedFileFormatCode.ProteinName_Sequence;
+            cboPeptideInputFileColumnOrdering.SelectedIndex = (int)ProteinCoverageSummarizerOptions.PeptideFileColumnOrderingCode.UseHeaderNames;
             cboPeptideInputFileColumnDelimiter.SelectedIndex = 1;
             txtPeptideInputFileColumnDelimiter.Text = ";";
             chkPeptideFileSkipFirstLine.Checked = false;
@@ -868,38 +872,38 @@ namespace ProteinCoverageSummarizerGUI
         {
             try
             {
-                objProteinCoverageSummarizer.ProteinInputFilePath = txtProteinInputFilePath.Text;
+                objProteinCoverageSummarizer.Options.ProteinInputFilePath = txtProteinInputFilePath.Text;
 
-                objProteinCoverageSummarizer.ProteinDataDelimitedFileFormatCode = (DelimitedFileReader.eDelimitedFileFormatCode)(cboProteinInputFileColumnOrdering.SelectedIndex + PROTEIN_INPUT_FILE_INDEX_OFFSET);
-                objProteinCoverageSummarizer.ProteinDataDelimitedFileDelimiter = LookupColumnDelimiter(cboProteinInputFileColumnDelimiter, txtProteinInputFileColumnDelimiter, '\t');
-                objProteinCoverageSummarizer.ProteinDataDelimitedFileSkipFirstLine = chkProteinFileSkipFirstLine.Checked;
-                objProteinCoverageSummarizer.ProteinDataRemoveSymbolCharacters = chkRemoveSymbolCharacters.Checked;
-                objProteinCoverageSummarizer.ProteinDataIgnoreILDifferences = chkIgnoreILDifferences.Checked;
+                objProteinCoverageSummarizer.Options.ProteinDataOptions.DelimitedFileFormatCode = (DelimitedFileReader.eDelimitedFileFormatCode)(cboProteinInputFileColumnOrdering.SelectedIndex + PROTEIN_INPUT_FILE_INDEX_OFFSET);
+                objProteinCoverageSummarizer.Options.ProteinDataOptions.DelimitedInputFileDelimiter = LookupColumnDelimiter(cboProteinInputFileColumnDelimiter, txtProteinInputFileColumnDelimiter, '\t');
+                objProteinCoverageSummarizer.Options.ProteinDataOptions.DelimitedFileSkipFirstLine = chkProteinFileSkipFirstLine.Checked;
+                objProteinCoverageSummarizer.Options.ProteinDataOptions.RemoveSymbolCharacters = chkRemoveSymbolCharacters.Checked;
+                objProteinCoverageSummarizer.Options.ProteinDataOptions.IgnoreILDifferences = chkIgnoreILDifferences.Checked;
 
                 // peptide file options
-                objProteinCoverageSummarizer.PeptideFileFormatCode = (clsProteinCoverageSummarizer.ePeptideFileColumnOrderingCode)Convert.ToInt32(cboPeptideInputFileColumnOrdering.SelectedIndex);
-                objProteinCoverageSummarizer.PeptideInputFileDelimiter = LookupColumnDelimiter(cboPeptideInputFileColumnDelimiter, txtPeptideInputFileColumnDelimiter, '\t');
-                objProteinCoverageSummarizer.PeptideFileSkipFirstLine = chkPeptideFileSkipFirstLine.Checked;
+                objProteinCoverageSummarizer.Options.PeptideFileFormatCode = (ProteinCoverageSummarizerOptions.PeptideFileColumnOrderingCode)Convert.ToInt32(cboPeptideInputFileColumnOrdering.SelectedIndex);
+                objProteinCoverageSummarizer.Options.PeptideInputFileDelimiter = LookupColumnDelimiter(cboPeptideInputFileColumnDelimiter, txtPeptideInputFileColumnDelimiter, '\t');
+                objProteinCoverageSummarizer.Options.PeptideFileSkipFirstLine = chkPeptideFileSkipFirstLine.Checked;
 
                 // processing options
-                objProteinCoverageSummarizer.OutputProteinSequence = chkOutputProteinSequence.Checked;
-                objProteinCoverageSummarizer.SearchAllProteinsForPeptideSequence = chkSearchAllProteinsForPeptideSequence.Checked;
+                objProteinCoverageSummarizer.Options.OutputProteinSequence = chkOutputProteinSequence.Checked;
+                objProteinCoverageSummarizer.Options.SearchAllProteinsForPeptideSequence = chkSearchAllProteinsForPeptideSequence.Checked;
 
-                objProteinCoverageSummarizer.SaveProteinToPeptideMappingFile = chkSaveProteinToPeptideMappingFile.Checked;
+                objProteinCoverageSummarizer.Options.SaveProteinToPeptideMappingFile = chkSaveProteinToPeptideMappingFile.Checked;
 
                 if (chkSaveProteinToPeptideMappingFile.Checked)
                 {
-                    objProteinCoverageSummarizer.SearchAllProteinsSkipCoverageComputationSteps = chkSearchAllProteinsSkipCoverageComputationSteps.Checked;
+                    objProteinCoverageSummarizer.Options.SearchAllProteinsSkipCoverageComputationSteps = chkSearchAllProteinsSkipCoverageComputationSteps.Checked;
                 }
                 else
                 {
-                    objProteinCoverageSummarizer.SearchAllProteinsSkipCoverageComputationSteps = false;
+                    objProteinCoverageSummarizer.Options.SearchAllProteinsSkipCoverageComputationSteps = false;
                 }
 
-                objProteinCoverageSummarizer.TrackPeptideCounts = chkTrackPeptideCounts.Checked;
-                objProteinCoverageSummarizer.RemoveSymbolCharacters = chkRemoveSymbolCharacters.Checked;
-                objProteinCoverageSummarizer.MatchPeptidePrefixAndSuffixToProtein = chkMatchPeptidePrefixAndSuffixToProtein.Checked;
-                objProteinCoverageSummarizer.IgnoreILDifferences = chkIgnoreILDifferences.Checked;
+                objProteinCoverageSummarizer.Options.TrackPeptideCounts = chkTrackPeptideCounts.Checked;
+                objProteinCoverageSummarizer.Options.RemoveSymbolCharacters = chkRemoveSymbolCharacters.Checked;
+                objProteinCoverageSummarizer.Options.MatchPeptidePrefixAndSuffixToProtein = chkMatchPeptidePrefixAndSuffixToProtein.Checked;
+                objProteinCoverageSummarizer.Options.IgnoreILDifferences = chkIgnoreILDifferences.Checked;
             }
             catch (Exception)
             {
@@ -1105,9 +1109,10 @@ namespace ProteinCoverageSummarizerGUI
 
                 mProteinCoverageSummarizer = new clsProteinCoverageSummarizerRunner()
                 {
-                    CallingAppHandlesEvents = true,
-                    KeepDB = KeepDB
+                    CallingAppHandlesEvents = true
                 };
+
+                mProteinCoverageSummarizer.Options.KeepDB = KeepDB;
 
                 this.mProteinCoverageSummarizer.StatusEvent += ProteinCoverageSummarizer_StatusEvent;
                 this.mProteinCoverageSummarizer.ErrorEvent += ProteinCoverageSummarizer_ErrorEvent;

@@ -17,10 +17,10 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
-using System.Threading;
 using System.Windows.Forms;
 using PRISM;
 using PRISM.FileProcessor;
+using ProteinCoverageSummarizer;
 
 namespace ProteinCoverageSummarizerGUI
 {
@@ -37,19 +37,8 @@ namespace ProteinCoverageSummarizerGUI
 
         public const string PROGRAM_DATE = "September 11, 2020";
 
-        private static string mPeptideInputFilePath;
-        private static string mProteinInputFilePath;
-        private static string mOutputDirectoryPath;
         private static string mParameterFilePath;
 
-        private static bool mIgnoreILDifferences;
-        private static bool mOutputProteinSequence;
-        private static bool mSaveProteinToPeptideMappingFile;
-        private static bool mSkipCoverageComputationSteps;
-        private static bool mDebugMode;
-        private static bool mKeepDB;
-
-        private static clsProteinCoverageSummarizerRunner mProteinCoverageSummarizer;
         private static DateTime mLastProgressReportTime;
         private static int mLastProgressReportValue;
 
@@ -71,31 +60,25 @@ namespace ProteinCoverageSummarizerGUI
             var commandLineParser = new clsParseCommandLine();
 
             var returnCode = 0;
-            mPeptideInputFilePath = string.Empty;
-            mProteinInputFilePath = string.Empty;
-            mParameterFilePath = string.Empty;
 
-            mIgnoreILDifferences = false;
-            mOutputProteinSequence = true;
-            mSaveProteinToPeptideMappingFile = false;
-            mSkipCoverageComputationSteps = false;
-            mDebugMode = false;
-            mKeepDB = false;
+            mParameterFilePath = string.Empty;
 
             try
             {
+                var options = new ProteinCoverageSummarizerOptions();
+
                 var proceed = false;
                 if (commandLineParser.ParseCommandLine())
                 {
-                    if (SetOptionsUsingCommandLineParameters(commandLineParser))
+                    if (SetOptionsUsingCommandLineParameters(commandLineParser, options))
                         proceed = true;
                 }
 
-                if (!commandLineParser.NeedToShowHelp & string.IsNullOrEmpty(mProteinInputFilePath))
+                if (!commandLineParser.NeedToShowHelp & string.IsNullOrEmpty(options.ProteinInputFilePath))
                 {
-                    ShowGUI();
+                    ShowGUI(options);
                 }
-                else if (!proceed || commandLineParser.NeedToShowHelp || commandLineParser.ParameterCount == 0 || mPeptideInputFilePath.Length == 0)
+                else if (!proceed || commandLineParser.NeedToShowHelp || commandLineParser.ParameterCount == 0 || options.PeptideInputFilePath.Length == 0)
                 {
                     ShowProgramHelp();
                     returnCode = -1;
@@ -103,34 +86,31 @@ namespace ProteinCoverageSummarizerGUI
                 else
                 {
                     if (string.IsNullOrWhiteSpace(mParameterFilePath) &&
-                        !mSaveProteinToPeptideMappingFile &&
-                        mSkipCoverageComputationSteps)
+                        !options.SaveProteinToPeptideMappingFile &&
+                        options.SearchAllProteinsSkipCoverageComputationSteps)
                     {
-                        ConsoleMsgUtils.ShowWarning("You used /K but didn't specify /M; no results will be saved");
+                        ConsoleMsgUtils.ShowWarning(ConsoleMsgUtils.WrapParagraph(
+                            "You used /K to skip protein coverage computation but didn't specify /M " +
+                            "to create a protein to peptide mapping file; no results will be saved"));
+                        Console.WriteLine();
                         ConsoleMsgUtils.ShowWarning("It is advised that you use only /M (and don't use /K)");
                     }
 
                     try
                     {
-                        mProteinCoverageSummarizer = new clsProteinCoverageSummarizerRunner()
+                        var proteinCoverageSummarizer = new clsProteinCoverageSummarizerRunner(options)
                         {
-                            ProteinInputFilePath = mProteinInputFilePath,
-                            CallingAppHandlesEvents = false,
-                            IgnoreILDifferences = mIgnoreILDifferences,
-                            OutputProteinSequence = mOutputProteinSequence,
-                            SaveProteinToPeptideMappingFile = mSaveProteinToPeptideMappingFile,
-                            SearchAllProteinsSkipCoverageComputationSteps = mSkipCoverageComputationSteps,
-                            KeepDB = mKeepDB
+                            CallingAppHandlesEvents = false
                         };
 
-                        mProteinCoverageSummarizer.StatusEvent += ProteinCoverageSummarizer_StatusEvent;
-                        mProteinCoverageSummarizer.ErrorEvent += ProteinCoverageSummarizer_ErrorEvent;
-                        mProteinCoverageSummarizer.WarningEvent += ProteinCoverageSummarizer_WarningEvent;
+                        proteinCoverageSummarizer.StatusEvent += ProteinCoverageSummarizer_StatusEvent;
+                        proteinCoverageSummarizer.ErrorEvent += ProteinCoverageSummarizer_ErrorEvent;
+                        proteinCoverageSummarizer.WarningEvent += ProteinCoverageSummarizer_WarningEvent;
 
-                        mProteinCoverageSummarizer.ProgressUpdate += ProteinCoverageSummarizer_ProgressChanged;
-                        mProteinCoverageSummarizer.ProgressReset += ProteinCoverageSummarizer_ProgressReset;
+                        proteinCoverageSummarizer.ProgressUpdate += ProteinCoverageSummarizer_ProgressChanged;
+                        proteinCoverageSummarizer.ProgressReset += ProteinCoverageSummarizer_ProgressReset;
 
-                        mProteinCoverageSummarizer.ProcessFilesWildcard(mPeptideInputFilePath, mOutputDirectoryPath, mParameterFilePath);
+                        proteinCoverageSummarizer.ProcessFilesWildcard(options.PeptideInputFilePath, options.OutputDirectoryPath, mParameterFilePath);
                     }
                     catch (Exception ex)
                     {
@@ -168,12 +148,12 @@ namespace ProteinCoverageSummarizerGUI
             return ProcessFilesOrDirectoriesBase.GetAppVersion(PROGRAM_DATE);
         }
 
-        private static bool SetOptionsUsingCommandLineParameters(clsParseCommandLine commandLineParser)
+        private static bool SetOptionsUsingCommandLineParameters(clsParseCommandLine commandLineParser, ProteinCoverageSummarizerOptions options)
         {
             // Returns True if no problems; otherwise, returns false
             // /I:PeptideInputFilePath /R: ProteinInputFilePath /O:OutputDirectoryPath /P:ParameterFilePath
 
-            var validParameters = new List<string>() { "I", "O", "R", "P", "G", "H", "M", "K", "Debug", "KeepDB" };
+            var validParameters = new List<string>() { "I", "O", "R", "P", "G", "H", "M", "K", "D", "Debug", "KeepDB" };
             try
             {
                 // Make sure no invalid parameters are present
@@ -187,30 +167,31 @@ namespace ProteinCoverageSummarizerGUI
                 // Query commandLineParser to see if various parameters are present
                 if (commandLineParser.RetrieveValueForParameter("I", out var inputFilePath))
                 {
-                    mPeptideInputFilePath = inputFilePath;
+                    options.PeptideInputFilePath = inputFilePath;
                 }
                 else if (commandLineParser.NonSwitchParameterCount > 0)
                 {
-                    mPeptideInputFilePath = commandLineParser.RetrieveNonSwitchParameter(0);
+                    options.PeptideInputFilePath = commandLineParser.RetrieveNonSwitchParameter(0);
                 }
 
                 if (commandLineParser.RetrieveValueForParameter("O", out var outputDirectoryPath))
-                    mOutputDirectoryPath = outputDirectoryPath;
+                    options.OutputDirectoryPath = outputDirectoryPath;
 
                 if (commandLineParser.RetrieveValueForParameter("R", out var proteinFile))
-                    mProteinInputFilePath = proteinFile;
+                    options.ProteinInputFilePath = proteinFile;
 
                 if (commandLineParser.RetrieveValueForParameter("P", out var parameterFile))
                     mParameterFilePath = parameterFile;
 
                 if (commandLineParser.RetrieveValueForParameter("H", out _))
-                    mOutputProteinSequence = false;
+                    options.OutputProteinSequence = false;
 
-                mIgnoreILDifferences = commandLineParser.IsParameterPresent("G");
-                mSaveProteinToPeptideMappingFile = commandLineParser.IsParameterPresent("M");
-                mSkipCoverageComputationSteps = commandLineParser.IsParameterPresent("K");
-                mDebugMode = commandLineParser.IsParameterPresent("Debug");
-                mKeepDB = commandLineParser.IsParameterPresent("KeepDB");
+                options.IgnoreILDifferences = commandLineParser.IsParameterPresent("G");
+                options.SaveProteinToPeptideMappingFile = commandLineParser.IsParameterPresent("M");
+                options.SearchAllProteinsSkipCoverageComputationSteps = commandLineParser.IsParameterPresent("K");
+                options.SaveSourceDataPlusProteinsFile = commandLineParser.IsParameterPresent("D");
+                options.DebugMode = commandLineParser.IsParameterPresent("Debug");
+                options.KeepDB = commandLineParser.IsParameterPresent("KeepDB");
 
                 return true;
             }
@@ -232,7 +213,7 @@ namespace ProteinCoverageSummarizerGUI
             ConsoleMsgUtils.ShowErrors(title, errorMessages);
         }
 
-        private static void ShowGUI()
+        private static void ShowGUI(ProteinCoverageSummarizerOptions options)
         {
             Application.EnableVisualStyles();
             Application.DoEvents();
@@ -240,17 +221,17 @@ namespace ProteinCoverageSummarizerGUI
             {
                 var handle = GetConsoleWindow();
 
-                if (!mDebugMode)
+                if (!options.DebugMode)
                 {
                     // Hide the console
                     ShowWindow(handle, SW_HIDE);
                 }
 
-                var objFormMain = new GUI() { KeepDB = mKeepDB };
+                var objFormMain = new GUI() { KeepDB = options.KeepDB };
 
                 objFormMain.ShowDialog();
 
-                if (!mDebugMode)
+                if (!options.DebugMode)
                 {
                     // Show the console
                     ShowWindow(handle, SW_SHOW);

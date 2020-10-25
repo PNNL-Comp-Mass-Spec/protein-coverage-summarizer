@@ -47,6 +47,8 @@
     <Compile Include="clsProteinFileDataCache.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ProteinCoverageSummarizerOptions.cs" />
+    <Compile Include="ProteinDataCacheOptions.cs" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="PRISM-Library">

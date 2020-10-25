@@ -38,12 +38,6 @@ namespace ProteinCoverageSummarizer
     {
         // Ignore Spelling: Nikša, udt, Uniquesequence
 
-        public clsProteinFileDataCache()
-        {
-            mFileDate = "July 26, 2019";
-            InitializeLocalVariables();
-        }
-
         #region "Constants and Enums"
 
         protected const string SQL_LITE_PROTEIN_CACHE_FILENAME = "tmpProteinInfoCache.db3";
@@ -77,13 +71,6 @@ namespace ProteinCoverageSummarizer
 
         #region "Class wide Variables"
 
-        protected string mFileDate;
-        private string mStatusMessage;
-
-        private char mDelimitedInputFileDelimiter;                              // Only used for delimited protein input files, not for fasta files
-
-        public FastaFileOptionsClass FastaFileOptions;
-
         private int mProteinCount;
         private bool mParsedFileIsFastaFile;
 
@@ -102,47 +89,30 @@ namespace ProteinCoverageSummarizer
 
         #region "Processing Options Interface Functions"
 
-        /// <summary>
-        /// When True, assume the input file is a tab-delimited text file
-        /// </summary>
-        /// <returns></returns>
-        /// <remarks>Ignored if AssumeFastaFile is True</remarks>
-        public bool AssumeDelimitedFile { get; set; }
+        public ProteinDataCacheOptions Options { get; }
 
-        /// <summary>
-        /// When True, assume the input file is a FASTA text file
-        /// </summary>
-        /// <returns></returns>
-        public bool AssumeFastaFile { get; set; }
-        public bool ChangeProteinSequencesToLowercase { get; set; }
-        public bool ChangeProteinSequencesToUppercase { get; set; }
-        public DelimitedFileReader.eDelimitedFileFormatCode DelimitedFileFormatCode { get; set; }
-
-        public char DelimitedFileDelimiter
-        {
-            get => mDelimitedInputFileDelimiter;
-            set
-            {
-                if (value != default)
-                {
-                    mDelimitedInputFileDelimiter = value;
-                }
-            }
-        }
-
-        public bool DelimitedFileSkipFirstLine { get; set; }
-        public bool IgnoreILDifferences { get; set; }
-
-        /// <summary>
-        /// When this is True, the SQLite Database will not be deleted after processing finishes
-        /// </summary>
-        public bool KeepDB { get; set; }
-
-        public bool RemoveSymbolCharacters { get; set; }
-
-        public string StatusMessage => mStatusMessage;
+        public string StatusMessage { get; private set; }
 
         #endregion
+
+
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        public clsProteinFileDataCache()
+        {
+            Options = new ProteinDataCacheOptions();
+            InitializeLocalVariables();
+        }
+
+        /// <summary>
+        /// Constructor that accepts an options class
+        /// </summary>
+        public clsProteinFileDataCache(ProteinDataCacheOptions options)
+        {
+            Options = options;
+            InitializeLocalVariables();
+        }
 
         public SQLiteConnection ConnectToSQLiteDB(bool disableJournaling)
         {
@@ -295,7 +265,7 @@ namespace ProteinCoverageSummarizer
                 // Ignore errors here
             }
 
-            if (KeepDB & !forceDelete)
+            if (Options.KeepDB & !forceDelete)
             {
                 OnDebugEvent("DeleteSQLiteDBFile: KeepDB is true; not deleting " + mSQLiteDBFilePath);
                 return;
@@ -402,23 +372,8 @@ namespace ProteinCoverageSummarizer
         {
             const int MAX_FILE_CREATE_ATTEMPTS = 10;
 
-            AssumeDelimitedFile = false;
-            AssumeFastaFile = false;
-
-            mDelimitedInputFileDelimiter = '\t';
-            DelimitedFileFormatCode = DelimitedFileReader.eDelimitedFileFormatCode.ProteinName_Description_Sequence;
-            DelimitedFileSkipFirstLine = false;
-
-            FastaFileOptions = new FastaFileOptionsClass();
-
             mProteinCount = 0;
 
-            RemoveSymbolCharacters = true;
-
-            ChangeProteinSequencesToLowercase = false;
-            ChangeProteinSequencesToUppercase = false;
-
-            IgnoreILDifferences = false;
             var fileAttemptCount = 0;
             var success = false;
             while (!success && fileAttemptCount < MAX_FILE_CREATE_ATTEMPTS)
@@ -514,11 +469,11 @@ namespace ProteinCoverageSummarizer
                 }
                 else
                 {
-                    if (AssumeFastaFile || IsFastaFile(proteinInputFilePath))
+                    if (Options.AssumeFastaFile || IsFastaFile(proteinInputFilePath))
                     {
                         mParsedFileIsFastaFile = true;
                     }
-                    else if (AssumeDelimitedFile)
+                    else if (Options.AssumeDelimitedFile)
                     {
                         mParsedFileIsFastaFile = false;
                     }
@@ -531,17 +486,17 @@ namespace ProteinCoverageSummarizer
                     {
                         proteinFileReader = new FastaFileReader()
                         {
-                            ProteinLineStartChar = FastaFileOptions.ProteinLineStartChar,
-                            ProteinLineAccessionEndChar = FastaFileOptions.ProteinLineAccessionEndChar
+                            ProteinLineStartChar = Options.FastaFileOptions.ProteinLineStartChar,
+                            ProteinLineAccessionEndChar = Options.FastaFileOptions.ProteinLineAccessionEndChar
                         };
                     }
                     else
                     {
                         proteinFileReader = new DelimitedFileReader()
                         {
-                            Delimiter = mDelimitedInputFileDelimiter,
-                            DelimitedFileFormatCode = DelimitedFileFormatCode,
-                            SkipFirstLine = DelimitedFileSkipFirstLine
+                            Delimiter = Options.DelimitedInputFileDelimiter,
+                            DelimitedFileFormatCode = Options.DelimitedFileFormatCode,
+                            SkipFirstLine = Options.DelimitedFileSkipFirstLine
                         };
                     }
 
@@ -614,7 +569,7 @@ namespace ProteinCoverageSummarizer
                     var description = proteinFileReader.ProteinDescription;
                     string sequence;
 
-                    if (RemoveSymbolCharacters)
+                    if (Options.RemoveSymbolCharacters)
                     {
                         sequence = reReplaceSymbols.Replace(proteinFileReader.ProteinSequence, string.Empty);
                     }
@@ -623,9 +578,9 @@ namespace ProteinCoverageSummarizer
                         sequence = proteinFileReader.ProteinSequence;
                     }
 
-                    if (ChangeProteinSequencesToLowercase)
+                    if (Options.ChangeProteinSequencesToLowercase)
                     {
-                        if (IgnoreILDifferences)
+                        if (Options.IgnoreILDifferences)
                         {
                             // Replace all L characters with I
                             sequence = sequence.ToLower().Replace('l', 'i');
@@ -635,9 +590,9 @@ namespace ProteinCoverageSummarizer
                             sequence = sequence.ToLower();
                         }
                     }
-                    else if (ChangeProteinSequencesToUppercase)
+                    else if (Options.ChangeProteinSequencesToUppercase)
                     {
-                        if (IgnoreILDifferences)
+                        if (Options.IgnoreILDifferences)
                         {
                             // Replace all L characters with I
                             sequence = sequence.ToUpper().Replace('L', 'I');
@@ -647,7 +602,7 @@ namespace ProteinCoverageSummarizer
                             sequence = sequence.ToUpper();
                         }
                     }
-                    else if (IgnoreILDifferences)
+                    else if (Options.IgnoreILDifferences)
                     {
                         // Replace all L characters with I
                         sequence = sequence.Replace('L', 'I').Replace('l', 'i');
@@ -700,7 +655,7 @@ namespace ProteinCoverageSummarizer
                 }
                 else
                 {
-                    OnErrorEvent(mStatusMessage);
+                    OnErrorEvent(StatusMessage);
                 }
             }
             catch (Exception ex)
@@ -715,7 +670,7 @@ namespace ProteinCoverageSummarizer
         private void ReportError(string errorMessage, Exception ex = null)
         {
             OnErrorEvent(errorMessage, ex);
-            mStatusMessage = errorMessage;
+            StatusMessage = errorMessage;
         }
 
         // Options class

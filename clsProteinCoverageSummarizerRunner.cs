@@ -14,7 +14,6 @@
 
 using System;
 using ProteinCoverageSummarizer;
-using ProteinFileReader;
 
 namespace ProteinCoverageSummarizerGUI
 {
@@ -24,11 +23,6 @@ namespace ProteinCoverageSummarizerGUI
     /// </summary>
     public class clsProteinCoverageSummarizerRunner : PRISM.FileProcessor.ProcessFilesBase
     {
-        public clsProteinCoverageSummarizerRunner()
-        {
-            InitializeVariables();
-        }
-
         #region "Class wide variables"
 
         private clsProteinCoverageSummarizer mProteinCoverageSummarizer;
@@ -41,130 +35,34 @@ namespace ProteinCoverageSummarizerGUI
 
         public bool CallingAppHandlesEvents { get; set; }
 
-        public bool IgnoreILDifferences
-        {
-            get => mProteinCoverageSummarizer.IgnoreILDifferences;
-            set => mProteinCoverageSummarizer.IgnoreILDifferences = value;
-        }
-
-        /// <summary>
-        /// When this is True, the SQLite Database will not be deleted after processing finishes
-        /// </summary>
-        public bool KeepDB
-        {
-            get => mProteinCoverageSummarizer.KeepDB;
-            set => mProteinCoverageSummarizer.KeepDB = value;
-        }
-
-        public bool MatchPeptidePrefixAndSuffixToProtein
-        {
-            get => mProteinCoverageSummarizer.MatchPeptidePrefixAndSuffixToProtein;
-            set => mProteinCoverageSummarizer.MatchPeptidePrefixAndSuffixToProtein = value;
-        }
-
-        public bool OutputProteinSequence
-        {
-            get => mProteinCoverageSummarizer.OutputProteinSequence;
-            set => mProteinCoverageSummarizer.OutputProteinSequence = value;
-        }
-
-        public clsProteinCoverageSummarizer.ePeptideFileColumnOrderingCode PeptideFileFormatCode
-        {
-            get => mProteinCoverageSummarizer.PeptideFileFormatCode;
-            set => mProteinCoverageSummarizer.PeptideFileFormatCode = value;
-        }
-
-        public bool PeptideFileSkipFirstLine
-        {
-            get => mProteinCoverageSummarizer.PeptideFileSkipFirstLine;
-            set => mProteinCoverageSummarizer.PeptideFileSkipFirstLine = value;
-        }
-
-        public char PeptideInputFileDelimiter
-        {
-            get => mProteinCoverageSummarizer.PeptideInputFileDelimiter;
-            set => mProteinCoverageSummarizer.PeptideInputFileDelimiter = value;
-        }
-
-        public char ProteinDataDelimitedFileDelimiter
-        {
-            get => mProteinCoverageSummarizer.ProteinDataCache.DelimitedFileDelimiter;
-            set => mProteinCoverageSummarizer.ProteinDataCache.DelimitedFileDelimiter = value;
-        }
-
-        public DelimitedFileReader.eDelimitedFileFormatCode ProteinDataDelimitedFileFormatCode
-        {
-            get => mProteinCoverageSummarizer.ProteinDataCache.DelimitedFileFormatCode;
-            set => mProteinCoverageSummarizer.ProteinDataCache.DelimitedFileFormatCode = value;
-        }
-
-        public bool ProteinDataDelimitedFileSkipFirstLine
-        {
-            get => mProteinCoverageSummarizer.ProteinDataCache.DelimitedFileSkipFirstLine;
-            set => mProteinCoverageSummarizer.ProteinDataCache.DelimitedFileSkipFirstLine = value;
-        }
-
-        public bool ProteinDataRemoveSymbolCharacters
-        {
-            get => mProteinCoverageSummarizer.ProteinDataCache.RemoveSymbolCharacters;
-            set => mProteinCoverageSummarizer.ProteinDataCache.RemoveSymbolCharacters = value;
-        }
-
-        public bool ProteinDataIgnoreILDifferences
-        {
-            get => mProteinCoverageSummarizer.ProteinDataCache.IgnoreILDifferences;
-            set => mProteinCoverageSummarizer.ProteinDataCache.IgnoreILDifferences = value;
-        }
-
-        public string ProteinInputFilePath
-        {
-            get => mProteinCoverageSummarizer.ProteinInputFilePath;
-            set => mProteinCoverageSummarizer.ProteinInputFilePath = value;
-        }
+        public ProteinCoverageSummarizerOptions Options { get; }
 
         public string ProteinToPeptideMappingFilePath => mProteinCoverageSummarizer.ProteinToPeptideMappingFilePath;
 
-        public bool RemoveSymbolCharacters
-        {
-            get => mProteinCoverageSummarizer.RemoveSymbolCharacters;
-            set => mProteinCoverageSummarizer.RemoveSymbolCharacters = value;
-        }
-
         public string ResultsFilePath => mProteinCoverageSummarizer.ResultsFilePath;
-
-        public bool SaveProteinToPeptideMappingFile
-        {
-            get => mProteinCoverageSummarizer.SaveProteinToPeptideMappingFile;
-            set => mProteinCoverageSummarizer.SaveProteinToPeptideMappingFile = value;
-        }
-
-        public bool SearchAllProteinsForPeptideSequence
-        {
-            get => mProteinCoverageSummarizer.SearchAllProteinsForPeptideSequence;
-            set => mProteinCoverageSummarizer.SearchAllProteinsForPeptideSequence = value;
-        }
-
-        public bool UseLeaderSequenceHashTable
-        {
-            get => mProteinCoverageSummarizer.UseLeaderSequenceHashTable;
-            set => mProteinCoverageSummarizer.UseLeaderSequenceHashTable = value;
-        }
-
-        public bool SearchAllProteinsSkipCoverageComputationSteps
-        {
-            get => mProteinCoverageSummarizer.SearchAllProteinsSkipCoverageComputationSteps;
-            set => mProteinCoverageSummarizer.SearchAllProteinsSkipCoverageComputationSteps = value;
-        }
 
         public string StatusMessage => mStatusMessage;
 
-        public bool TrackPeptideCounts
+        #endregion
+
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        public clsProteinCoverageSummarizerRunner()
         {
-            get => mProteinCoverageSummarizer.TrackPeptideCounts;
-            set => mProteinCoverageSummarizer.TrackPeptideCounts = value;
+            Options = new ProteinCoverageSummarizerOptions();
+            InitializeVariables();
         }
 
-        #endregion
+        /// <summary>
+        /// Constructor that accepts an options class
+        /// </summary>
+        /// <param name="options"></param>
+        public clsProteinCoverageSummarizerRunner(ProteinCoverageSummarizerOptions options)
+        {
+            Options = options;
+            InitializeVariables();
+        }
 
         public override void AbortProcessingNow()
         {
@@ -184,7 +82,7 @@ namespace ProteinCoverageSummarizerGUI
             AbortProcessing = false;
             mStatusMessage = string.Empty;
 
-            mProteinCoverageSummarizer = new clsProteinCoverageSummarizer();
+            mProteinCoverageSummarizer = new clsProteinCoverageSummarizer(Options);
             RegisterEvents(mProteinCoverageSummarizer);
 
             this.mProteinCoverageSummarizer.ProgressChanged += this.ProteinCoverageSummarizer_ProgressChanged;
@@ -215,7 +113,7 @@ namespace ProteinCoverageSummarizerGUI
                 }
 
                 // Call mProteinCoverageSummarizer.ProcessFile to perform the work
-                mProteinCoverageSummarizer.KeepDB = KeepDB;
+                mProteinCoverageSummarizer.Options.KeepDB = Options.KeepDB;
                 var success = mProteinCoverageSummarizer.ProcessFile(strInputFilePath, strOutputFolderPath, strParameterFilePath, true);
 
                 if (!success)

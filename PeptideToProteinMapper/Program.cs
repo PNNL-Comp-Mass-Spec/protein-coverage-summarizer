@@ -20,10 +20,10 @@ using System.Reflection;
 using System.Threading;
 using PeptideToProteinMapEngine;
 using PRISM;
+using ProteinCoverageSummarizer;
 
 namespace PeptideToProteinMapper
 {
-
     /// <summary>
     /// This program uses PeptideToProteinMapEngine.dll to read in a file with peptide sequences, then
     /// searches for the given peptides in a protein sequence file (.Fasta or tab-delimited text)
@@ -37,17 +37,9 @@ namespace PeptideToProteinMapper
     /// </summary>
     public static class Program
     {
-        public const string PROGRAM_DATE = "March 30, 2020";
-        private static string mPeptideInputFilePath;
-        private static string mProteinInputFilePath;
-        private static string mOutputDirectoryPath;
+
         private static string mParameterFilePath;
         private static string mInspectParameterFilePath;
-        private static bool mIgnoreILDifferences;
-        private static bool mOutputProteinSequence;
-        private static bool mSaveProteinToPeptideMappingFile;
-        private static bool mSaveSourceDataPlusProteinsFile;
-        private static bool mSkipCoverageComputationSteps;
         private static clsPeptideToProteinMapEngine.ePeptideInputFileFormatConstants mInputFileFormatCode;
         private static bool mLogMessagesToFile;
         private static string mLogFilePath = string.Empty;
@@ -86,23 +78,12 @@ namespace PeptideToProteinMapper
         public static int Main()
         {
             // Returns 0 if no error, error code if an error
-            int returnCode;
             var commandLineParser = new clsParseCommandLine();
-            bool proceed;
 
-            returnCode = 0;
-            mPeptideInputFilePath = string.Empty;
-            mProteinInputFilePath = string.Empty;
+            var returnCode = 0;
+
             mParameterFilePath = string.Empty;
             mInspectParameterFilePath = string.Empty;
-
-            mIgnoreILDifferences = false;
-            mOutputProteinSequence = true;
-
-            mSaveProteinToPeptideMappingFile = true;
-            mSaveSourceDataPlusProteinsFile = false;
-
-            mSkipCoverageComputationSteps = false;
             mInputFileFormatCode = clsPeptideToProteinMapEngine.ePeptideInputFileFormatConstants.AutoDetermine;
 
             mLogMessagesToFile = false;
@@ -111,10 +92,12 @@ namespace PeptideToProteinMapper
 
             try
             {
-                proceed = false;
+                var options = new ProteinCoverageSummarizerOptions();
+
+                var proceed = false;
                 if (commandLineParser.ParseCommandLine())
                 {
-                    if (SetOptionsUsingCommandLineParameters(commandLineParser))
+                    if (SetOptionsUsingCommandLineParameters(commandLineParser, options))
                         proceed = true;
                 }
 
@@ -132,32 +115,27 @@ namespace PeptideToProteinMapper
                             CreateVerboseLogFile();
                         }
 
-                        if (string.IsNullOrWhiteSpace(mPeptideInputFilePath))
+                        if (string.IsNullOrWhiteSpace(options.PeptideInputFilePath))
                         {
                             ShowErrorMessage("Peptide input file must be defined via /I (or by listing the filename just after the .exe)");
                             returnCode = -1;
                             return returnCode;
                         }
-                        else if (string.IsNullOrWhiteSpace(mProteinInputFilePath))
+
+                        if (string.IsNullOrWhiteSpace(options.ProteinInputFilePath))
                         {
                             ShowErrorMessage("Protein input file must be defined via /R");
                             returnCode = -1;
                             return returnCode;
                         }
 
-                        mPeptideToProteinMapEngine = new clsPeptideToProteinMapEngine()
+                        mPeptideToProteinMapEngine = new clsPeptideToProteinMapEngine(options)
                         {
-                            ProteinInputFilePath = mProteinInputFilePath,
                             LogMessagesToFile = mLogMessagesToFile,
                             LogFilePath = mLogFilePath,
                             LogDirectoryPath = mLogDirectoryPath,
                             PeptideInputFileFormat = mInputFileFormatCode,
-                            InspectParameterFilePath = mInspectParameterFilePath,
-                            IgnoreILDifferences = mIgnoreILDifferences,
-                            OutputProteinSequence = mOutputProteinSequence,
-                            SaveProteinToPeptideMappingFile = mSaveProteinToPeptideMappingFile,
-                            SaveSourceDataPlusProteinsFile = mSaveSourceDataPlusProteinsFile,
-                            SearchAllProteinsSkipCoverageComputationSteps = mSkipCoverageComputationSteps
+                            InspectParameterFilePath = mInspectParameterFilePath
                         };
 
                         mPeptideToProteinMapEngine.StatusEvent += PeptideToProteinMapEngine_StatusEvent;
@@ -167,7 +145,7 @@ namespace PeptideToProteinMapper
                         mPeptideToProteinMapEngine.ProgressUpdate += PeptideToProteinMapEngine_ProgressChanged;
                         mPeptideToProteinMapEngine.ProgressReset += PeptideToProteinMapEngine_ProgressReset;
 
-                        mPeptideToProteinMapEngine.ProcessFilesWildcard(mPeptideInputFilePath, mOutputDirectoryPath, mParameterFilePath);
+                        mPeptideToProteinMapEngine.ProcessFilesWildcard(options.PeptideInputFilePath, options.OutputDirectoryPath, mParameterFilePath);
 
                         if (mVerboseLogFile != null)
                         {
@@ -213,14 +191,12 @@ namespace PeptideToProteinMapper
             return PRISM.FileProcessor.ProcessFilesOrDirectoriesBase.GetAppVersion(PROGRAM_DATE);
         }
 
-        private static bool SetOptionsUsingCommandLineParameters(clsParseCommandLine CommandLineParser)
+        private static bool SetOptionsUsingCommandLineParameters(clsParseCommandLine CommandLineParser, ProteinCoverageSummarizerOptions options)
         {
             // Returns True if no problems; otherwise, returns false
             // /I:PeptideInputFilePath /R: ProteinInputFilePath /O:OutputDirectoryPath /P:ParameterFilePath
 
-            string value = string.Empty;
-            var validParameters = new List<string>() { "I", "O", "R", "P", "F", "N", "G", "H", "K", "A", "L", "LogDir", "LogFolder", "VerboseLog" };
-            int intValue;
+            var validParameters = new List<string> { "I", "O", "R", "P", "F", "N", "G", "H", "K", "A", "L", "LogDir", "LogFolder", "VerboseLog" };
 
             try
             {
@@ -231,81 +207,87 @@ namespace PeptideToProteinMapper
                         (from item in CommandLineParser.InvalidParameters(validParameters) select ("/" + item)).ToList());
                     return false;
                 }
-                else
+
+                // Query commandLineParser to see if various parameters are present
+                if (CommandLineParser.RetrieveValueForParameter("I", out var inputFilePath))
                 {
-                    // Query commandLineParser to see if various parameters are present
-                    if (CommandLineParser.RetrieveValueForParameter("I", out value))
-                    {
-                        mPeptideInputFilePath = value;
-                    }
-                    else if (CommandLineParser.NonSwitchParameterCount > 0)
-                    {
-                        mPeptideInputFilePath = CommandLineParser.RetrieveNonSwitchParameter(0);
-                    }
-
-                    if (CommandLineParser.RetrieveValueForParameter("O", out value))
-                        mOutputDirectoryPath = value;
-                    if (CommandLineParser.RetrieveValueForParameter("R", out value))
-                        mProteinInputFilePath = value;
-                    if (CommandLineParser.RetrieveValueForParameter("P", out value))
-                        mParameterFilePath = value;
-                    if (CommandLineParser.RetrieveValueForParameter("F", out value))
-                    {
-                        if (int.TryParse(value, out intValue))
-                        {
-                            try
-                            {
-                                mInputFileFormatCode = (clsPeptideToProteinMapEngine.ePeptideInputFileFormatConstants) intValue;
-                            }
-                            catch (Exception ex)
-                            {
-                                // Conversion failed; leave mInputFileFormatCode unchanged
-                            }
-                        }
-                    }
-
-                    if (CommandLineParser.RetrieveValueForParameter("N", out value))
-                        mInspectParameterFilePath = value;
-                    if (CommandLineParser.RetrieveValueForParameter("G", out value))
-                        mIgnoreILDifferences = true;
-                    if (CommandLineParser.RetrieveValueForParameter("H", out value))
-                        mOutputProteinSequence = false;
-                    if (CommandLineParser.RetrieveValueForParameter("K", out value))
-                        mSkipCoverageComputationSteps = true;
-                    if (CommandLineParser.RetrieveValueForParameter("A", out value))
-                        mSaveSourceDataPlusProteinsFile = true;
-                    if (CommandLineParser.RetrieveValueForParameter("L", out value))
-                    {
-                        mLogMessagesToFile = true;
-                        if (!string.IsNullOrEmpty(value))
-                        {
-                            mLogFilePath = value;
-                        }
-                    }
-
-                    if (CommandLineParser.RetrieveValueForParameter("LogDir", out value))
-                    {
-                        mLogMessagesToFile = true;
-                        if (!string.IsNullOrEmpty(value))
-                        {
-                            mLogDirectoryPath = value;
-                        }
-                    }
-
-                    if (CommandLineParser.RetrieveValueForParameter("LogFolder", out value))
-                    {
-                        mLogMessagesToFile = true;
-                        if (!string.IsNullOrEmpty(value))
-                        {
-                            mLogDirectoryPath = value;
-                        }
-                    }
-
-                    if (CommandLineParser.RetrieveValueForParameter("VerboseLog", out value))
-                        mVerboseLogging = true;
-
-                    return true;
+                    options.PeptideInputFilePath = inputFilePath;
                 }
+                else if (CommandLineParser.NonSwitchParameterCount > 0)
+                {
+                    options.PeptideInputFilePath = CommandLineParser.RetrieveNonSwitchParameter(0);
+                }
+
+                if (CommandLineParser.RetrieveValueForParameter("O", out var outputDirectoryPath))
+                    options.OutputDirectoryPath = outputDirectoryPath;
+
+                if (CommandLineParser.RetrieveValueForParameter("R", out var proteinInputFilePath))
+                    options.ProteinInputFilePath = proteinInputFilePath;
+
+                if (CommandLineParser.RetrieveValueForParameter("P", out var parameterFilePath))
+                    mParameterFilePath = parameterFilePath;
+
+                if (CommandLineParser.RetrieveValueForParameter("F", out var inputFileFormatCode))
+                {
+                    if (int.TryParse(inputFileFormatCode, out var inputFileFormatCodeValue))
+                    {
+                        try
+                        {
+                            mInputFileFormatCode = (clsPeptideToProteinMapEngine.ePeptideInputFileFormatConstants)inputFileFormatCodeValue;
+                        }
+                        catch (Exception)
+                        {
+                            // Conversion failed; leave mInputFileFormatCode unchanged
+                        }
+                    }
+                }
+
+                if (CommandLineParser.RetrieveValueForParameter("N", out var inspectParameterFilePath))
+                    mInspectParameterFilePath = inspectParameterFilePath;
+
+                if (CommandLineParser.RetrieveValueForParameter("G", out _))
+                    options.IgnoreILDifferences = true;
+
+                if (CommandLineParser.RetrieveValueForParameter("H", out _))
+                    options.OutputProteinSequence = false;
+
+                if (CommandLineParser.RetrieveValueForParameter("K", out _))
+                    options.SearchAllProteinsSkipCoverageComputationSteps = true;
+
+                if (CommandLineParser.RetrieveValueForParameter("A", out _))
+                    options.SaveSourceDataPlusProteinsFile = true;
+
+                if (CommandLineParser.RetrieveValueForParameter("L", out var logFilePath))
+                {
+                    mLogMessagesToFile = true;
+                    if (!string.IsNullOrEmpty(logFilePath))
+                    {
+                        mLogFilePath = logFilePath;
+                    }
+                }
+
+                if (CommandLineParser.RetrieveValueForParameter("LogDir", out var logDirectoryPath))
+                {
+                    mLogMessagesToFile = true;
+                    if (!string.IsNullOrEmpty(logDirectoryPath))
+                    {
+                        mLogDirectoryPath = logDirectoryPath;
+                    }
+                }
+
+                if (CommandLineParser.RetrieveValueForParameter("LogFolder", out var logFolderPath))
+                {
+                    mLogMessagesToFile = true;
+                    if (!string.IsNullOrEmpty(logFolderPath))
+                    {
+                        mLogDirectoryPath = logFolderPath;
+                    }
+                }
+
+                if (CommandLineParser.RetrieveValueForParameter("VerboseLog", out _))
+                    mVerboseLogging = true;
+
+                return true;
             }
             catch (Exception ex)
             {
