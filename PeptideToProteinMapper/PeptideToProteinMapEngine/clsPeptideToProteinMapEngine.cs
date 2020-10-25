@@ -163,15 +163,17 @@ namespace PeptideToProteinMapEngine
         {
             // Examine the filePath to determine the file format
 
-            if (Path.GetFileName(filePath).ToLower().EndsWith(FILENAME_SUFFIX_INSPECT_RESULTS_FILE.ToLower()))
+            if (Path.GetFileName(filePath).EndsWith(FILENAME_SUFFIX_INSPECT_RESULTS_FILE, StringComparison.OrdinalIgnoreCase))
             {
                 return ePeptideInputFileFormatConstants.InspectResultsFile;
             }
-            else if (Path.GetFileName(filePath).ToLower().EndsWith(FILENAME_SUFFIX_MSGFDB_RESULTS_FILE.ToLower()))
+
+            if (Path.GetFileName(filePath).EndsWith(FILENAME_SUFFIX_MSGFDB_RESULTS_FILE, StringComparison.OrdinalIgnoreCase))
             {
                 return ePeptideInputFileFormatConstants.MSGFPlusResultsFile;
             }
-            else if (Path.GetFileName(filePath).ToLower().EndsWith(FILENAME_SUFFIX_MSGFPLUS_RESULTS_FILE.ToLower()))
+
+            if (Path.GetFileName(filePath).EndsWith(FILENAME_SUFFIX_MSGFPLUS_RESULTS_FILE, StringComparison.OrdinalIgnoreCase))
             {
                 return ePeptideInputFileFormatConstants.MSGFPlusResultsFile;
             }
@@ -234,7 +236,7 @@ namespace PeptideToProteinMapEngine
                             {
                                 // Comment line; skip it
                             }
-                            else if (lineIn.ToLower().StartsWith("mod"))
+                            else if (lineIn.StartsWith("mod", StringComparison.OrdinalIgnoreCase))
                             {
                                 // Modification definition line
 
@@ -335,7 +337,7 @@ namespace PeptideToProteinMapEngine
                                     headerFound = true;
                                 }
                             }
-                            else if (dataCols.Any(dataColumn => dataColumn.ToLower().StartsWith("peptide")))
+                            else if (dataCols.Any(dataColumn => dataColumn.StartsWith("peptide", StringComparison.OrdinalIgnoreCase)))
                             {
                                 headerFound = true;
                             }
@@ -793,12 +795,12 @@ namespace PeptideToProteinMapEngine
                                 var splitLine = lineIn.Split(sepChars);
                                 for (var index = 0; index < splitLine.Length; index++)
                                 {
-                                    if (peptideSequenceColIndex < 0 && (splitLine[index].ToLower() ?? "") == "peptide")
+                                    if (peptideSequenceColIndex < 0 && string.Equals(splitLine[index], "peptide", StringComparison.OrdinalIgnoreCase))
                                     {
                                         peptideSequenceColIndex = index;
                                     }
 
-                                    if (scanColIndex < 0 && splitLine[index].ToLower().StartsWith("scan"))
+                                    if (scanColIndex < 0 && splitLine[index].StartsWith("scan", StringComparison.OrdinalIgnoreCase))
                                     {
                                         scanColIndex = index;
                                     }
