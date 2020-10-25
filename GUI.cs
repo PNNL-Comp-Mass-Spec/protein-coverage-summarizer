@@ -111,10 +111,6 @@ namespace ProteinCoverageSummarizerGUI
             {
                 chkSearchAllProteinsForPeptideSequence.Checked = true;
             }
-            else
-            {
-                chkSearchAllProteinsForPeptideSequence.Checked = false;
-            }
         }
 
         private bool ConfirmInputFilePaths()
