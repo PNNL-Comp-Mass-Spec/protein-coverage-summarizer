@@ -277,6 +277,7 @@ namespace ProteinCoverageSummarizerGUI
                 Console.WriteLine("Use /H to suppress (hide) the protein sequence in the _coverage.txt file.");
                 Console.WriteLine("Use /M to enable the creation of a protein to peptide mapping file.");
                 Console.WriteLine("Use /K to skip protein coverage computation steps");
+                Console.WriteLine("Use /D to duplicate the input file, creating a new file with one line per peptide/protein combo");
                 Console.WriteLine();
                 Console.WriteLine("Use /Debug to keep the console open to see additional debug messages");
                 Console.WriteLine("Use /KeepDB to keep the SQLite database after processing (by default it is deleted)");
