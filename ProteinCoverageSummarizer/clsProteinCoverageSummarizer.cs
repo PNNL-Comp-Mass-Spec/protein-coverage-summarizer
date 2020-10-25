@@ -1863,150 +1863,148 @@ namespace ProteinCoverageSummarizer
                                 cachedPeptideMatchIndex = mLeaderSequenceCache.GetFirstPeptideIndexForLeaderSequence(proteinSequence.Substring(proteinSeqCharIndex, leaderSequenceMinimumLength).ToUpper());
                             }
 
-                            if (cachedPeptideMatchIndex >= 0)
+
+                            // If cachedPeptideMatchIndex >= 0, the mLeaderSequenceCache contains 1 or more peptides
+                            //   that start with proteinSequence.Substring(proteinSeqCharIndex, leaderSequenceMinimumLength)
+                            // Test each of the peptides against this protein
+
+                            while (cachedPeptideMatchIndex >= 0)
                             {
-                                // mLeaderSequenceCache contains 1 or more peptides that start with proteinSequence.Substring(proteinSeqCharIndex, leaderSequenceMinimumLength)
-                                // Test each of the peptides against this protein
+                                bool testPeptide;
 
-                                do
+                                if (Options.SearchAllProteinsForPeptideSequence)
                                 {
-                                    bool testPeptide;
+                                    testPeptide = true;
+                                }
+                                // Make sure that the protein for cachedPeptideMatchIndex matches this protein name
+                                else if (string.Equals(mLeaderSequenceCache.mCachedPeptideSeqInfo[cachedPeptideMatchIndex].ProteinName, mCachedProteinInfo[proteinIndex].Name, StringComparison.CurrentCultureIgnoreCase))
+                                {
+                                    testPeptide = true;
+                                }
+                                else
+                                {
+                                    testPeptide = false;
+                                }
 
-                                    if (SearchAllProteinsForPeptideSequence)
-                                    {
-                                        testPeptide = true;
-                                    }
-                                    // Make sure that the protein for cachedPeptideMatchIndex matches this protein name
-                                    else if (string.Equals(mLeaderSequenceCache.mCachedPeptideSeqInfo[cachedPeptideMatchIndex].ProteinName, mCachedProteinInfo[proteinIndex].Name, StringComparison.CurrentCultureIgnoreCase))
-                                    {
-                                        testPeptide = true;
-                                    }
-                                    else
-                                    {
-                                        testPeptide = false;
-                                    }
+                                // Cache the peptide length in peptideLength
+                                var peptideLength = mLeaderSequenceCache.mCachedPeptideSeqInfo[cachedPeptideMatchIndex].PeptideSequence.Length;
 
-                                    // Cache the peptide length in peptideLength
-                                    var peptideLength = mLeaderSequenceCache.mCachedPeptideSeqInfo[cachedPeptideMatchIndex].PeptideSequence.Length;
-
-                                    // Only compare the full sequence to the protein if:
-                                    // a) the protein name matches (or mSearchAllProteinsForPeptideSequence = True) and
-                                    // b) the peptide sequence doesn't pass the end of the protein
-                                    if (testPeptide && proteinSeqCharIndex + peptideLength <= proteinSequence.Length)
+                                // Only compare the full sequence to the protein if:
+                                // a) the protein name matches (or mSearchAllProteinsForPeptideSequence = True) and
+                                // b) the peptide sequence doesn't pass the end of the protein
+                                if (testPeptide && proteinSeqCharIndex + peptideLength <= proteinSequence.Length)
+                                {
+                                    // See if the full sequence matches the protein
+                                    var matchFound = false;
+                                    if (Options.SearchAllProteinsSkipCoverageComputationSteps)
                                     {
-                                        // See if the full sequence matches the protein
-                                        var matchFound = false;
-                                        if (SearchAllProteinsSkipCoverageComputationSteps)
+                                        // No need to capitalize proteinSequence since it's already capitalized
+                                        if (Options.IgnoreILDifferences)
                                         {
-                                            // No need to capitalize proteinSequence since it's already capitalized
-                                            if (IgnoreILDifferences)
-                                            {
-                                                if ((proteinSequence.Substring(proteinSeqCharIndex, peptideLength) ?? "") == (mLeaderSequenceCache.mCachedPeptideSeqInfo[cachedPeptideMatchIndex].PeptideSequenceLtoI ?? ""))
-                                                {
-                                                    matchFound = true;
-                                                }
-                                            }
-                                            else if ((proteinSequence.Substring(proteinSeqCharIndex, peptideLength) ?? "") == (mLeaderSequenceCache.mCachedPeptideSeqInfo[cachedPeptideMatchIndex].PeptideSequence ?? ""))
+                                            if ((proteinSequence.Substring(proteinSeqCharIndex, peptideLength) ?? "") == (mLeaderSequenceCache.mCachedPeptideSeqInfo[cachedPeptideMatchIndex].PeptideSequenceLtoI ?? ""))
                                             {
                                                 matchFound = true;
                                             }
                                         }
-                                        // Need to change proteinSequence to all caps when comparing to .PeptideSequence
-                                        else if (IgnoreILDifferences)
-                                        {
-                                            if ((proteinSequence.Substring(proteinSeqCharIndex, peptideLength).ToUpper() ?? "") == (mLeaderSequenceCache.mCachedPeptideSeqInfo[cachedPeptideMatchIndex].PeptideSequenceLtoI ?? ""))
-                                            {
-                                                matchFound = true;
-                                            }
-                                        }
-                                        else if ((proteinSequence.Substring(proteinSeqCharIndex, peptideLength).ToUpper() ?? "") == (mLeaderSequenceCache.mCachedPeptideSeqInfo[cachedPeptideMatchIndex].PeptideSequence ?? ""))
+                                        else if ((proteinSequence.Substring(proteinSeqCharIndex, peptideLength) ?? "") == (mLeaderSequenceCache.mCachedPeptideSeqInfo[cachedPeptideMatchIndex].PeptideSequence ?? ""))
                                         {
                                             matchFound = true;
+                                        }
+                                    }
+                                    // Need to change proteinSequence to all caps when comparing to .PeptideSequence
+                                    else if (Options.IgnoreILDifferences)
+                                    {
+                                        if ((proteinSequence.Substring(proteinSeqCharIndex, peptideLength).ToUpper() ?? "") == (mLeaderSequenceCache.mCachedPeptideSeqInfo[cachedPeptideMatchIndex].PeptideSequenceLtoI ?? ""))
+                                        {
+                                            matchFound = true;
+                                        }
+                                    }
+                                    else if ((proteinSequence.Substring(proteinSeqCharIndex, peptideLength).ToUpper() ?? "") == (mLeaderSequenceCache.mCachedPeptideSeqInfo[cachedPeptideMatchIndex].PeptideSequence ?? ""))
+                                    {
+                                        matchFound = true;
+                                    }
+
+                                    if (matchFound)
+                                    {
+                                        var endIndex = proteinSeqCharIndex + peptideLength - 1;
+                                        if (Options.MatchPeptidePrefixAndSuffixToProtein)
+                                        {
+                                            matchFound = ValidatePrefixAndSuffix(proteinSequence, mLeaderSequenceCache.mCachedPeptideSeqInfo[cachedPeptideMatchIndex].PrefixLtoI, mLeaderSequenceCache.mCachedPeptideSeqInfo[cachedPeptideMatchIndex].SuffixLtoI, proteinSeqCharIndex, endIndex);
                                         }
 
                                         if (matchFound)
                                         {
-                                            var endIndex = proteinSeqCharIndex + peptideLength - 1;
-                                            if (MatchPeptidePrefixAndSuffixToProtein)
+                                            string peptideSequenceForKeySource;
+                                            string peptideSequenceForKey;
+                                            if (Options.MatchPeptidePrefixAndSuffixToProtein)
                                             {
-                                                matchFound = ValidatePrefixAndSuffix(proteinSequence, mLeaderSequenceCache.mCachedPeptideSeqInfo[cachedPeptideMatchIndex].PrefixLtoI, mLeaderSequenceCache.mCachedPeptideSeqInfo[cachedPeptideMatchIndex].SuffixLtoI, proteinSeqCharIndex, endIndex);
+                                                peptideSequenceForKeySource = ConstructPeptideSequenceForKey(mLeaderSequenceCache.mCachedPeptideSeqInfo[cachedPeptideMatchIndex].PeptideSequence, mLeaderSequenceCache.mCachedPeptideSeqInfo[cachedPeptideMatchIndex].Prefix, mLeaderSequenceCache.mCachedPeptideSeqInfo[cachedPeptideMatchIndex].Suffix);
+                                            }
+                                            else
+                                            {
+                                                // I'm purposely not using String.Copy() here in order to obtain increased speed
+                                                peptideSequenceForKeySource = mLeaderSequenceCache.mCachedPeptideSeqInfo[cachedPeptideMatchIndex].PeptideSequence;
                                             }
 
-                                            if (matchFound)
+                                            if (Options.IgnoreILDifferences)
                                             {
-                                                string peptideSequenceForKeySource;
-                                                string peptideSequenceForKey;
-                                                if (MatchPeptidePrefixAndSuffixToProtein)
-                                                {
-                                                    peptideSequenceForKeySource = ConstructPeptideSequenceForKey(mLeaderSequenceCache.mCachedPeptideSeqInfo[cachedPeptideMatchIndex].PeptideSequence, mLeaderSequenceCache.mCachedPeptideSeqInfo[cachedPeptideMatchIndex].Prefix, mLeaderSequenceCache.mCachedPeptideSeqInfo[cachedPeptideMatchIndex].Suffix);
-                                                }
-                                                else
-                                                {
-                                                    // I'm purposely not using String.Copy() here in order to obtain increased speed
-                                                    peptideSequenceForKeySource = mLeaderSequenceCache.mCachedPeptideSeqInfo[cachedPeptideMatchIndex].PeptideSequence;
-                                                }
+                                                // Replace all L characters with I
+                                                peptideSequenceForKey = peptideSequenceForKeySource.Replace('L', 'I');
+                                            }
+                                            else
+                                            {
+                                                // I'm purposely not using String.Copy() here in order to obtain increased speed
+                                                peptideSequenceForKey = peptideSequenceForKeySource;
+                                            }
 
-                                                if (IgnoreILDifferences)
+                                            if (!Options.SearchAllProteinsSkipCoverageComputationSteps)
+                                            {
+                                                // Capitalize the protein sequence letters where this peptide matched
+                                                var nextStartIndex = endIndex + 1;
+                                                var newProteinSequence = string.Empty;
+                                                if (proteinSeqCharIndex > 0)
                                                 {
-                                                    // Replace all L characters with I
-                                                    peptideSequenceForKey = peptideSequenceForKeySource.Replace('L', 'I');
-                                                }
-                                                else
-                                                {
-                                                    // I'm purposely not using String.Copy() here in order to obtain increased speed
-                                                    peptideSequenceForKey = peptideSequenceForKeySource;
+                                                    newProteinSequence = proteinSequence.Substring(0, proteinSeqCharIndex);
                                                 }
 
-                                                if (!SearchAllProteinsSkipCoverageComputationSteps)
+                                                newProteinSequence += proteinSequence.Substring(proteinSeqCharIndex, nextStartIndex - proteinSeqCharIndex).ToUpper();
+                                                newProteinSequence += proteinSequence.Substring(nextStartIndex);
+                                                proteinSequence = string.Copy(newProteinSequence);
+
+                                                proteinSequenceUpdated = true;
+                                            }
+
+                                            bool matchIsNew;
+
+                                            if (Options.TrackPeptideCounts)
+                                            {
+                                                var proteinPeptideKey = Convert.ToString(mCachedProteinInfo[proteinIndex].UniqueSequenceID) + "::" + peptideSequenceForKey;
+
+                                                matchIsNew = IncrementCountByKey(mProteinPeptideStats, proteinPeptideKey);
+                                            }
+                                            else
+                                            {
+                                                // Must always assume the match is new since not tracking peptide counts
+                                                matchIsNew = true;
+                                            }
+
+                                            if (matchIsNew)
+                                            {
+                                                if (Options.SaveProteinToPeptideMappingFile)
                                                 {
-                                                    // Capitalize the protein sequence letters where this peptide matched
-                                                    var nextStartIndex = endIndex + 1;
-                                                    var newProteinSequence = string.Empty;
-                                                    if (proteinSeqCharIndex > 0)
-                                                    {
-                                                        newProteinSequence = proteinSequence.Substring(0, proteinSeqCharIndex);
-                                                    }
-
-                                                    newProteinSequence += proteinSequence.Substring(proteinSeqCharIndex, nextStartIndex - proteinSeqCharIndex).ToUpper();
-                                                    newProteinSequence += proteinSequence.Substring(nextStartIndex);
-                                                    proteinSequence = string.Copy(newProteinSequence);
-
-                                                    proteinSequenceUpdated = true;
+                                                    WriteEntryToProteinToPeptideMappingFile(mCachedProteinInfo[proteinIndex].Name, peptideSequenceForKeySource, proteinSeqCharIndex + 1, endIndex + 1);
                                                 }
 
-                                                bool matchIsNew;
-
-                                                if (TrackPeptideCounts)
+                                                if (Options.SaveSourceDataPlusProteinsFile)
                                                 {
-                                                    var proteinPeptideKey = Convert.ToString(mCachedProteinInfo[proteinIndex].UniqueSequenceID) + "::" + peptideSequenceForKey;
-
-                                                    matchIsNew = IncrementCountByKey(mProteinPeptideStats, proteinPeptideKey);
-                                                }
-                                                else
-                                                {
-                                                    // Must always assume the match is new since not tracking peptide counts
-                                                    matchIsNew = true;
-                                                }
-
-                                                if (matchIsNew)
-                                                {
-                                                    if (SaveProteinToPeptideMappingFile)
-                                                    {
-                                                        WriteEntryToProteinToPeptideMappingFile(mCachedProteinInfo[proteinIndex].Name, peptideSequenceForKeySource, proteinSeqCharIndex + 1, endIndex + 1);
-                                                    }
-
-                                                    if (SaveSourceDataPlusProteinsFile)
-                                                    {
-                                                        StorePeptideToProteinMatch(mLeaderSequenceCache.mCachedPeptideSeqInfo[cachedPeptideMatchIndex].PeptideSequence, mCachedProteinInfo[proteinIndex].Name);
-                                                    }
+                                                    StorePeptideToProteinMatch(mLeaderSequenceCache.mCachedPeptideSeqInfo[cachedPeptideMatchIndex].PeptideSequence, mCachedProteinInfo[proteinIndex].Name);
                                                 }
                                             }
                                         }
                                     }
-
-                                    cachedPeptideMatchIndex = mLeaderSequenceCache.GetNextPeptideWithLeaderSequence(cachedPeptideMatchIndex);
                                 }
-                                while (cachedPeptideMatchIndex >= 0);
+
+                                cachedPeptideMatchIndex = mLeaderSequenceCache.GetNextPeptideWithLeaderSequence(cachedPeptideMatchIndex);
                             }
                         }
 
