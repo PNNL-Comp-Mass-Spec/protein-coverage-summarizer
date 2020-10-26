@@ -46,7 +46,7 @@ namespace PeptideToProteinMapEngine
         protected const float PERCENT_COMPLETE_RUNNING_PROTEIN_COVERAGE_SUMMARIZER = 5;
         protected const float PERCENT_COMPLETE_POSTPROCESSING = 95;
 
-        public enum ePeptideInputFileFormatConstants
+        public enum PeptideInputFileFormatConstants
         {
             Unknown = -1,
             AutoDetermine = 0,
@@ -129,7 +129,7 @@ namespace PeptideToProteinMapEngine
 
         public ProteinCoverageSummarizerOptions Options { get; }
 
-        public ePeptideInputFileFormatConstants PeptideInputFileFormat { get; set; }
+        public PeptideInputFileFormatConstants PeptideInputFileFormat { get; set; }
 
         public string StatusMessage { get; private set; }
 
@@ -151,26 +151,26 @@ namespace PeptideToProteinMapEngine
             mProteinCoverageSummarizer?.AbortProcessingNow();
         }
 
-        public ePeptideInputFileFormatConstants DetermineResultsFileFormat(string filePath)
+        public PeptideInputFileFormatConstants DetermineResultsFileFormat(string filePath)
         {
             // Examine the filePath to determine the file format
 
             if (Path.GetFileName(filePath).EndsWith(FILENAME_SUFFIX_INSPECT_RESULTS_FILE, StringComparison.OrdinalIgnoreCase))
             {
-                return ePeptideInputFileFormatConstants.InspectResultsFile;
+                return PeptideInputFileFormatConstants.InspectResultsFile;
             }
 
             if (Path.GetFileName(filePath).EndsWith(FILENAME_SUFFIX_MSGFDB_RESULTS_FILE, StringComparison.OrdinalIgnoreCase))
             {
-                return ePeptideInputFileFormatConstants.MSGFPlusResultsFile;
+                return PeptideInputFileFormatConstants.MSGFPlusResultsFile;
             }
 
             if (Path.GetFileName(filePath).EndsWith(FILENAME_SUFFIX_MSGFPLUS_RESULTS_FILE, StringComparison.OrdinalIgnoreCase))
             {
-                return ePeptideInputFileFormatConstants.MSGFPlusResultsFile;
+                return PeptideInputFileFormatConstants.MSGFPlusResultsFile;
             }
 
-            if (PeptideInputFileFormat != ePeptideInputFileFormatConstants.AutoDetermine & PeptideInputFileFormat != ePeptideInputFileFormatConstants.Unknown)
+            if (PeptideInputFileFormat != PeptideInputFileFormatConstants.AutoDetermine && PeptideInputFileFormat != PeptideInputFileFormatConstants.Unknown)
             {
                 return PeptideInputFileFormat;
             }
@@ -179,17 +179,17 @@ namespace PeptideToProteinMapEngine
             if (baseNameLCase.EndsWith("_MSGFDB", StringComparison.OrdinalIgnoreCase) ||
                 baseNameLCase.EndsWith("_MSGFPlus", StringComparison.OrdinalIgnoreCase))
             {
-                return ePeptideInputFileFormatConstants.MSGFPlusResultsFile;
+                return PeptideInputFileFormatConstants.MSGFPlusResultsFile;
             }
 
             var eResultType = clsPHRPReader.AutoDetermineResultType(filePath);
             if (eResultType != clsPHRPReader.ePeptideHitResultType.Unknown)
             {
-                return ePeptideInputFileFormatConstants.PHRPFile;
+                return PeptideInputFileFormatConstants.PHRPFile;
             }
 
             ShowMessage("Unable to determine the format of the input file based on the filename suffix; will assume the first column contains peptide sequence");
-            return ePeptideInputFileFormatConstants.PeptideListFile;
+            return PeptideInputFileFormatConstants.PeptideListFile;
         }
 
         public bool ExtractModInfoFromInspectParamFile(string inspectParamFilePath, ref List<string> inspectModNames)
@@ -274,7 +274,7 @@ namespace PeptideToProteinMapEngine
 
         private void InitializeVariables()
         {
-            PeptideInputFileFormat = ePeptideInputFileFormatConstants.AutoDetermine;
+            PeptideInputFileFormat = PeptideInputFileFormatConstants.AutoDetermine;
             DeleteTempFiles = true;
 
             mInspectParameterFilePath = string.Empty;
@@ -297,7 +297,7 @@ namespace PeptideToProteinMapEngine
         /// Examine it to determine if it looks like a header line
         /// </summary>
         /// <returns></returns>
-        private bool IsHeaderLinePresent(string filePath, ePeptideInputFileFormatConstants eInputFileFormat)
+        private bool IsHeaderLinePresent(string filePath, PeptideInputFileFormatConstants inputFileFormat)
         {
             var sepChars = new[] { '\t' };
 
@@ -316,14 +316,14 @@ namespace PeptideToProteinMapEngine
                         {
                             var dataCols = dataLine.Split(sepChars);
 
-                            if (eInputFileFormat == ePeptideInputFileFormatConstants.ProteinAndPeptideFile)
+                            if (inputFileFormat == PeptideInputFileFormatConstants.ProteinAndPeptideFile)
                             {
                                 if (dataCols.Length > 1 && dataCols[1].StartsWith("peptide", StringComparison.InvariantCultureIgnoreCase))
                                 {
                                     headerFound = true;
                                 }
                             }
-                            else if (eInputFileFormat == ePeptideInputFileFormatConstants.PeptideListFile)
+                            else if (inputFileFormat == PeptideInputFileFormatConstants.PeptideListFile)
                             {
                                 if (dataCols[0].StartsWith("peptide", StringComparison.InvariantCultureIgnoreCase))
                                 {
@@ -697,12 +697,12 @@ namespace PeptideToProteinMapEngine
                 }
             }
 
-            return PreProcessPSMResultsFile(inputFilePath, outputDirectoryPath, ePeptideInputFileFormatConstants.InspectResultsFile);
+            return PreProcessPSMResultsFile(inputFilePath, outputDirectoryPath, PeptideInputFileFormatConstants.InspectResultsFile);
         }
 
         protected string PreProcessPSMResultsFile(string inputFilePath,
                                                   string outputDirectoryPath,
-                                                  ePeptideInputFileFormatConstants eFileType)
+                                                  PeptideInputFileFormatConstants inputFileFormat)
         {
             int terminatorSize;
 
@@ -712,7 +712,7 @@ namespace PeptideToProteinMapEngine
             int scanColIndex;
             string toolDescription;
 
-            if (eFileType == ePeptideInputFileFormatConstants.InspectResultsFile)
+            if (inputFileFormat == PeptideInputFileFormatConstants.InspectResultsFile)
             {
                 // Assume inspect results file line terminators are only a single byte (it doesn't matter if the terminators are actually two bytes)
                 terminatorSize = 1;
@@ -722,7 +722,7 @@ namespace PeptideToProteinMapEngine
                 scanColIndex = 1;
                 toolDescription = "Inspect";
             }
-            else if (eFileType == ePeptideInputFileFormatConstants.MSGFPlusResultsFile)
+            else if (inputFileFormat == PeptideInputFileFormatConstants.TabDelimitedText)
             {
                 terminatorSize = 2;
                 peptideSequenceColIndex = -1;
@@ -731,7 +731,7 @@ namespace PeptideToProteinMapEngine
             }
             else
             {
-                StatusMessage = "Unrecognized file type: " + eFileType.ToString() + "; will look for column header 'Peptide'";
+                StatusMessage = "Unrecognized file type code: " + inputFileFormat + "; will look for column header 'Peptide'";
 
                 terminatorSize = 2;
                 peptideSequenceColIndex = -1;
@@ -1018,8 +1018,8 @@ namespace PeptideToProteinMapEngine
                 else
                 {
                     LogMessage("Processing " + Path.GetFileName(inputFilePath));
-                    ePeptideInputFileFormatConstants eInputFileFormat;
-                    if (PeptideInputFileFormat == ePeptideInputFileFormatConstants.AutoDetermine)
+                    PeptideInputFileFormatConstants eInputFileFormat;
+                    if (PeptideInputFileFormat == PeptideInputFileFormatConstants.AutoDetermine)
                     {
                         eInputFileFormat = DetermineResultsFileFormat(inputFilePath);
                     }
@@ -1028,7 +1028,7 @@ namespace PeptideToProteinMapEngine
                         eInputFileFormat = PeptideInputFileFormat;
                     }
 
-                    if (eInputFileFormat == ePeptideInputFileFormatConstants.Unknown)
+                    if (eInputFileFormat == PeptideInputFileFormatConstants.Unknown)
                     {
                         ShowMessage("Input file type not recognized");
                         return false;
@@ -1042,7 +1042,7 @@ namespace PeptideToProteinMapEngine
 
                     switch (eInputFileFormat)
                     {
-                        case ePeptideInputFileFormatConstants.InspectResultsFile:
+                        case PeptideInputFileFormatConstants.InspectResultsFile:
                             // Inspect search results file; need to pre-process it
                             inputFilePathWork = PreProcessInspectResultsFile(inputFilePath, outputDirectoryPath, mInspectParameterFilePath);
                             outputFileBaseName = Path.GetFileNameWithoutExtension(inputFilePath);
@@ -1052,7 +1052,7 @@ namespace PeptideToProteinMapEngine
                             mProteinCoverageSummarizer.Options.MatchPeptidePrefixAndSuffixToProtein = false;
                             break;
 
-                        case ePeptideInputFileFormatConstants.MSGFPlusResultsFile:
+                        case PeptideInputFileFormatConstants.MSGFPlusResultsFile:
                             // MS-GF+ search results file; need to pre-process it
                             // Make sure RemoveSymbolCharacters is true
                             Options.RemoveSymbolCharacters = true;
@@ -1065,7 +1065,7 @@ namespace PeptideToProteinMapEngine
                             mProteinCoverageSummarizer.Options.MatchPeptidePrefixAndSuffixToProtein = false;
                             break;
 
-                        case ePeptideInputFileFormatConstants.PHRPFile:
+                        case PeptideInputFileFormatConstants.PHRPFile:
                             // SEQUEST, X!Tandem, Inspect, or MS-GF+ PHRP data file; need to pre-process it
                             // Make sure RemoveSymbolCharacters is true
                             Options.RemoveSymbolCharacters = true;
@@ -1085,7 +1085,7 @@ namespace PeptideToProteinMapEngine
                             inputFilePathWork = string.Copy(inputFilePath);
                             outputFileBaseName = string.Empty;
 
-                            if (eInputFileFormat == ePeptideInputFileFormatConstants.ProteinAndPeptideFile)
+                            if (eInputFileFormat == PeptideInputFileFormatConstants.ProteinAndPeptideFile)
                             {
                                 mProteinCoverageSummarizer.Options.PeptideFileFormatCode = ProteinCoverageSummarizerOptions.PeptideFileColumnOrderingCode.ProteinName_PeptideSequence;
                             }
@@ -1124,8 +1124,8 @@ namespace PeptideToProteinMapEngine
 
                         switch (eInputFileFormat)
                         {
-                            case ePeptideInputFileFormatConstants.PeptideListFile:
-                            case ePeptideInputFileFormatConstants.ProteinAndPeptideFile:
+                            case PeptideInputFileFormatConstants.PeptideListFile:
+                            case PeptideInputFileFormatConstants.ProteinAndPeptideFile:
                                 // No post-processing is required
                                 break;
 

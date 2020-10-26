@@ -120,15 +120,15 @@ namespace ProteinCoverageSummarizerGUI
                 {
                     switch (mProteinCoverageSummarizer.ErrorCode)
                     {
-                        case clsProteinCoverageSummarizer.eProteinCoverageErrorCodes.InvalidInputFilePath:
+                        case clsProteinCoverageSummarizer.ProteinCoverageErrorCodes.InvalidInputFilePath:
                             SetBaseClassErrorCode(ProcessFilesErrorCodes.InvalidInputFilePath);
                             break;
 
-                        case clsProteinCoverageSummarizer.eProteinCoverageErrorCodes.ErrorReadingParameterFile:
+                        case clsProteinCoverageSummarizer.ProteinCoverageErrorCodes.ErrorReadingParameterFile:
                             SetBaseClassErrorCode(ProcessFilesErrorCodes.InvalidParameterFile);
                             break;
 
-                        case clsProteinCoverageSummarizer.eProteinCoverageErrorCodes.FilePathError:
+                        case clsProteinCoverageSummarizer.ProteinCoverageErrorCodes.FilePathError:
                             SetBaseClassErrorCode(ProcessFilesErrorCodes.FilePathError);
                             break;
 

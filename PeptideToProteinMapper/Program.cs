@@ -43,7 +43,7 @@ namespace PeptideToProteinMapper
 
         private static string mParameterFilePath;
         private static string mInspectParameterFilePath;
-        private static clsPeptideToProteinMapEngine.ePeptideInputFileFormatConstants mInputFileFormatCode;
+        private static clsPeptideToProteinMapEngine.PeptideInputFileFormatConstants mInputFileFormatCode;
         private static bool mLogMessagesToFile;
         private static string mLogFilePath = string.Empty;
         private static string mLogDirectoryPath = string.Empty;
@@ -86,7 +86,7 @@ namespace PeptideToProteinMapper
 
             mParameterFilePath = string.Empty;
             mInspectParameterFilePath = string.Empty;
-            mInputFileFormatCode = clsPeptideToProteinMapEngine.ePeptideInputFileFormatConstants.AutoDetermine;
+            mInputFileFormatCode = clsPeptideToProteinMapEngine.PeptideInputFileFormatConstants.AutoDetermine;
 
             mLogMessagesToFile = false;
             mLogFilePath = string.Empty;
@@ -232,7 +232,7 @@ namespace PeptideToProteinMapper
                     {
                         try
                         {
-                            mInputFileFormatCode = (clsPeptideToProteinMapEngine.ePeptideInputFileFormatConstants)inputFileFormatCodeValue;
+                            mInputFileFormatCode = (clsPeptideToProteinMapEngine.PeptideInputFileFormatConstants)inputFileFormatCodeValue;
                         }
                         catch (Exception)
                         {
@@ -335,12 +335,12 @@ namespace PeptideToProteinMapper
                 Console.WriteLine();
 
                 Console.WriteLine("Use /F to specify the peptide input file format code.  Options are:");
-                Console.WriteLine("   " + clsPeptideToProteinMapEngine.ePeptideInputFileFormatConstants.AutoDetermine + "=Auto Determine: Treated as /F:1 unless name ends in _inspect.txt, then /F:3");
-                Console.WriteLine("   " + clsPeptideToProteinMapEngine.ePeptideInputFileFormatConstants.PeptideListFile + "=Peptide sequence in the 1st column (subsequent columns are ignored)");
-                Console.WriteLine("   " + clsPeptideToProteinMapEngine.ePeptideInputFileFormatConstants.ProteinAndPeptideFile + "=Protein name in 1st column and peptide sequence 2nd column");
-                Console.WriteLine("   " + clsPeptideToProteinMapEngine.ePeptideInputFileFormatConstants.InspectResultsFile + "=Inspect search results file (peptide sequence in the 3rd column)");
-                Console.WriteLine("   " + clsPeptideToProteinMapEngine.ePeptideInputFileFormatConstants.MSGFPlusResultsFile + "=MS-GF+ search results file (peptide sequence in the column titled 'Peptide'; optionally scan number in the column titled 'Scan')");
-                Console.WriteLine("   " + clsPeptideToProteinMapEngine.ePeptideInputFileFormatConstants.PHRPFile + "=SEQUEST, X!Tandem, Inspect, or MS-GF+ PHRP data file");
+                Console.WriteLine("   " + clsPeptideToProteinMapEngine.PeptideInputFileFormatConstants.AutoDetermine + "=Auto Determine: Treated as /F:1 unless name ends in _inspect.txt, then /F:3");
+                Console.WriteLine("   " + clsPeptideToProteinMapEngine.PeptideInputFileFormatConstants.PeptideListFile + "=Peptide sequence in the 1st column (subsequent columns are ignored)");
+                Console.WriteLine("   " + clsPeptideToProteinMapEngine.PeptideInputFileFormatConstants.ProteinAndPeptideFile + "=Protein name in 1st column and peptide sequence 2nd column");
+                Console.WriteLine("   " + clsPeptideToProteinMapEngine.PeptideInputFileFormatConstants.InspectResultsFile + "=Inspect search results file (peptide sequence in the 3rd column)");
+                Console.WriteLine("   " + clsPeptideToProteinMapEngine.PeptideInputFileFormatConstants.MSGFPlusResultsFile + "=MS-GF+ search results file (peptide sequence in the column titled 'Peptide'; optionally scan number in the column titled 'Scan')");
+                Console.WriteLine("   " + clsPeptideToProteinMapEngine.PeptideInputFileFormatConstants.PHRPFile + "=SEQUEST, X!Tandem, Inspect, or MS-GF+ PHRP data file");
                 Console.WriteLine();
 
                 Console.WriteLine(ConsoleMsgUtils.WrapParagraph(

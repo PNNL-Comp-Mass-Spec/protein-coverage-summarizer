@@ -52,7 +52,7 @@ namespace ProteinCoverageSummarizer
 
         protected const int PROTEIN_CHUNK_COUNT = 50000;
 
-        public enum eProteinCoverageErrorCodes
+        public enum ProteinCoverageErrorCodes
         {
             NoError = 0,
             InvalidInputFilePath = 1,
@@ -62,7 +62,7 @@ namespace ProteinCoverageSummarizer
         }
 
         // Note: if you add/remove any steps, update PERCENT_COMPLETE_LEVEL_COUNT and update the population of mPercentCompleteStartLevels()
-        public enum eProteinCoverageProcessingSteps
+        public enum ProteinCoverageProcessingSteps
         {
             Starting = 0,
             CacheProteins = 1,
@@ -105,7 +105,6 @@ namespace ProteinCoverageSummarizer
 
         private StreamWriter mProteinToPeptideMappingOutputFile;
 
-        private eProteinCoverageErrorCodes mErrorCode;
         private string mErrorMessage;
 
         private bool mAbortProcessing;
@@ -139,7 +138,7 @@ namespace ProteinCoverageSummarizer
         /// <param name="percentComplete">Value between 0 and 100, but can contain decimal percentage values</param>
         public event ProgressChangedEventHandler ProgressChanged;
 
-        protected eProteinCoverageProcessingSteps mCurrentProcessingStep = eProteinCoverageProcessingSteps.Starting;
+        protected ProteinCoverageProcessingSteps mCurrentProcessingStep = ProteinCoverageProcessingSteps.Starting;
         protected string mProgressStepDescription = string.Empty;
 
         /// <summary>
@@ -154,7 +153,7 @@ namespace ProteinCoverageSummarizer
 
         #region "Properties"
 
-        public eProteinCoverageErrorCodes ErrorCode => mErrorCode;
+        public ProteinCoverageErrorCodes ErrorCode { get; private set; }
 
         public string ErrorMessage => GetErrorMessage();
 
@@ -434,8 +433,8 @@ namespace ProteinCoverageSummarizer
                 }
             }
 
-            UpdateProgress("Creating the protein coverage file: " + Path.GetFileName(mResultsFilePath), 0,
-                eProteinCoverageProcessingSteps.WriteProteinCoverageFile);
+            UpdateProgress("Creating the protein coverage file: " + Path.GetFileName(ResultsFilePath), 0,
+                ProteinCoverageProcessingSteps.WriteProteinCoverageFile);
 
             using (var writer = new StreamWriter(new FileStream(mResultsFilePath, FileMode.Create, FileAccess.Write, FileShare.Read)))
             {
@@ -548,7 +547,7 @@ namespace ProteinCoverageSummarizer
                     if (proteinsProcessed % 25 == 0)
                     {
                         UpdateProgress(proteinsProcessed / Convert.ToSingle(ProteinDataCache.GetProteinCountCached()) * 100,
-                            eProteinCoverageProcessingSteps.WriteProteinCoverageFile);
+                            ProteinCoverageProcessingSteps.WriteProteinCoverageFile);
                     }
 
                     if (mAbortProcessing)
@@ -657,7 +656,7 @@ namespace ProteinCoverageSummarizer
                     expectedPeptideIterations = 1;
 
                 UpdateProgress("Finding matching proteins for peptide list", 0,
-                    eProteinCoverageProcessingSteps.SearchProteinsAgainstShortPeptides);
+                    ProteinCoverageProcessingSteps.SearchProteinsAgainstShortPeptides);
 
                 var startIndex = 0;
                 do
@@ -769,7 +768,7 @@ namespace ProteinCoverageSummarizer
                         if (peptideIterationsComplete % 10 == 0)
                         {
                             UpdateProgress(Convert.ToSingle(peptideIterationsComplete / (double)expectedPeptideIterations * 100),
-                                eProteinCoverageProcessingSteps.SearchProteinsAgainstShortPeptides);
+                                ProteinCoverageProcessingSteps.SearchProteinsAgainstShortPeptides);
                         }
                     }
 
@@ -876,10 +875,10 @@ namespace ProteinCoverageSummarizer
 
             switch (ErrorCode)
             {
-                case eProteinCoverageErrorCodes.NoError:
+                case ProteinCoverageErrorCodes.NoError:
                     message = string.Empty;
                     break;
-                case eProteinCoverageErrorCodes.InvalidInputFilePath:
+                case ProteinCoverageErrorCodes.InvalidInputFilePath:
                     message = "Invalid input file path";
                     break;
                 // case eProteinCoverageErrorCodes.InvalidOutputDirectoryPath:
@@ -896,13 +895,13 @@ namespace ProteinCoverageSummarizer
                 //     message = "Error creating output files";
                 //     break;
 
-                case eProteinCoverageErrorCodes.ErrorReadingParameterFile:
+                case ProteinCoverageErrorCodes.ErrorReadingParameterFile:
                     message = "Invalid parameter file";
                     break;
-                case eProteinCoverageErrorCodes.FilePathError:
+                case ProteinCoverageErrorCodes.FilePathError:
                     message = "General file path error";
                     break;
-                case eProteinCoverageErrorCodes.UnspecifiedError:
+                case ProteinCoverageErrorCodes.UnspecifiedError:
                     message = "Unspecified error";
                     break;
                 default:
@@ -970,7 +969,7 @@ namespace ProteinCoverageSummarizer
             var proteinUpdated = new bool[PROTEIN_CHUNK_COUNT];
 
             UpdateProgress("Computing percent coverage", 0,
-                eProteinCoverageProcessingSteps.ComputePercentCoverage);
+                ProteinCoverageProcessingSteps.ComputePercentCoverage);
 
             var startIndex = 0;
             var index = 0;
@@ -1003,7 +1002,7 @@ namespace ProteinCoverageSummarizer
                     if (index % 100 == 0)
                     {
                         UpdateProgress(index / Convert.ToSingle(ProteinDataCache.GetProteinCountCached()) * 100,
-                            eProteinCoverageProcessingSteps.ComputePercentCoverage);
+                            ProteinCoverageProcessingSteps.ComputePercentCoverage);
                     }
 
                     index += 1;
@@ -1104,15 +1103,15 @@ namespace ProteinCoverageSummarizer
 
             mPercentCompleteStartLevels = new float[PERCENT_COMPLETE_LEVEL_COUNT + 1];
 
-            mPercentCompleteStartLevels[(int)eProteinCoverageProcessingSteps.Starting] = 0;
-            mPercentCompleteStartLevels[(int)eProteinCoverageProcessingSteps.CacheProteins] = 1;
-            mPercentCompleteStartLevels[(int)eProteinCoverageProcessingSteps.DetermineShortestPeptideLength] = 45;
-            mPercentCompleteStartLevels[(int)eProteinCoverageProcessingSteps.CachePeptides] = 50;
-            mPercentCompleteStartLevels[(int)eProteinCoverageProcessingSteps.SearchProteinsUsingLeaderSequences] = 55;
-            mPercentCompleteStartLevels[(int)eProteinCoverageProcessingSteps.SearchProteinsAgainstShortPeptides] = 90;
-            mPercentCompleteStartLevels[(int)eProteinCoverageProcessingSteps.ComputePercentCoverage] = 95;
-            mPercentCompleteStartLevels[(int)eProteinCoverageProcessingSteps.WriteProteinCoverageFile] = 97;
-            mPercentCompleteStartLevels[(int)eProteinCoverageProcessingSteps.SaveAllProteinsVersionOfInputFile] = 98;
+            mPercentCompleteStartLevels[(int)ProteinCoverageProcessingSteps.Starting] = 0;
+            mPercentCompleteStartLevels[(int)ProteinCoverageProcessingSteps.CacheProteins] = 1;
+            mPercentCompleteStartLevels[(int)ProteinCoverageProcessingSteps.DetermineShortestPeptideLength] = 45;
+            mPercentCompleteStartLevels[(int)ProteinCoverageProcessingSteps.CachePeptides] = 50;
+            mPercentCompleteStartLevels[(int)ProteinCoverageProcessingSteps.SearchProteinsUsingLeaderSequences] = 55;
+            mPercentCompleteStartLevels[(int)ProteinCoverageProcessingSteps.SearchProteinsAgainstShortPeptides] = 90;
+            mPercentCompleteStartLevels[(int)ProteinCoverageProcessingSteps.ComputePercentCoverage] = 95;
+            mPercentCompleteStartLevels[(int)ProteinCoverageProcessingSteps.WriteProteinCoverageFile] = 97;
+            mPercentCompleteStartLevels[(int)ProteinCoverageProcessingSteps.SaveAllProteinsVersionOfInputFile] = 98;
             mPercentCompleteStartLevels[PERCENT_COMPLETE_LEVEL_COUNT] = 100;
         }
 
@@ -1175,7 +1174,7 @@ namespace ProteinCoverageSummarizer
             catch (Exception ex)
             {
                 SetErrorMessage("Error in LoadParameterFileSettings:" + ex.Message, ex);
-                SetErrorCode(eProteinCoverageErrorCodes.ErrorReadingParameterFile);
+                SetErrorCode(ProteinCoverageErrorCodes.ErrorReadingParameterFile);
                 return false;
             }
 
@@ -1239,7 +1238,7 @@ namespace ProteinCoverageSummarizer
                 OnStatusEvent("Parsing " + Path.GetFileName(peptideInputFilePath));
 
                 UpdateProgress(mProgressStepDescription, 0,
-                    eProteinCoverageProcessingSteps.DetermineShortestPeptideLength);
+                    ProteinCoverageProcessingSteps.DetermineShortestPeptideLength);
 
                 // Open the file and read, at most, the first 100,000 characters to see if it contains CrLf or just Lf
                 var terminatorSize = DetermineLineTerminatorSize(peptideInputFilePath);
@@ -1257,7 +1256,8 @@ namespace ProteinCoverageSummarizer
                     // This is a fast process that involves checking the length of each sequence in the input file
 
                     UpdateProgress("Determining the shortest peptide in the input file", 0,
-                        eProteinCoverageProcessingSteps.DetermineShortestPeptideLength);
+                        ProteinCoverageProcessingSteps.DetermineShortestPeptideLength);
+
                     if (mLeaderSequenceCache == null)
                     {
                         mLeaderSequenceCache = new clsLeaderSequenceCache();
@@ -1339,7 +1339,7 @@ namespace ProteinCoverageSummarizer
                         if (currentLine % 500 == 0)
                         {
                             UpdateProgress("Reading peptide input file", Convert.ToSingle(bytesRead / (double)reader.BaseStream.Length * 100),
-                                eProteinCoverageProcessingSteps.CachePeptides);
+                                ProteinCoverageProcessingSteps.CachePeptides);
                         }
 
                         if (currentLine == 1 && Options.PeptideFileSkipFirstLine)
@@ -1554,7 +1554,7 @@ namespace ProteinCoverageSummarizer
 
             if (resetErrorCode)
             {
-                SetErrorCode(eProteinCoverageErrorCodes.NoError);
+                SetErrorCode(ProteinCoverageErrorCodes.NoError);
             }
 
             OnStatusEvent("Initializing");
@@ -1564,9 +1564,9 @@ namespace ProteinCoverageSummarizer
             {
                 SetErrorMessage("Parameter file load error: " + parameterFilePath);
 
-                if (mErrorCode == eProteinCoverageErrorCodes.NoError)
+                if (ErrorCode == ProteinCoverageErrorCodes.NoError)
                 {
-                    SetErrorCode(eProteinCoverageErrorCodes.ErrorReadingParameterFile);
+                    SetErrorCode(ProteinCoverageErrorCodes.ErrorReadingParameterFile);
                 }
 
                 return false;
@@ -1581,7 +1581,7 @@ namespace ProteinCoverageSummarizer
                 if (string.IsNullOrWhiteSpace(inputFilePath))
                 {
                     OnErrorEvent("Input file name is empty");
-                    SetErrorCode(eProteinCoverageErrorCodes.InvalidInputFilePath);
+                    SetErrorCode(ProteinCoverageErrorCodes.InvalidInputFilePath);
                     return false;
                 }
 
@@ -1591,14 +1591,14 @@ namespace ProteinCoverageSummarizer
                 if (string.IsNullOrWhiteSpace(Options.ProteinInputFilePath))
                 {
                     SetErrorMessage("Protein file name is empty");
-                    SetErrorCode(eProteinCoverageErrorCodes.InvalidInputFilePath);
+                    SetErrorCode(ProteinCoverageErrorCodes.InvalidInputFilePath);
                     return false;
                 }
 
                 if (!File.Exists(Options.ProteinInputFilePath))
                 {
                     SetErrorMessage("Protein input file not found: " + Options.ProteinInputFilePath);
-                    SetErrorCode(eProteinCoverageErrorCodes.InvalidInputFilePath);
+                    SetErrorCode(ProteinCoverageErrorCodes.InvalidInputFilePath);
                     return false;
                 }
 
@@ -1606,14 +1606,14 @@ namespace ProteinCoverageSummarizer
 
                 // First read the protein input file
                 mProgressStepDescription = "Reading protein input file: " + Path.GetFileName(Options.ProteinInputFilePath);
-                UpdateProgress(mProgressStepDescription, 0, eProteinCoverageProcessingSteps.CacheProteins);
+                UpdateProgress(mProgressStepDescription, 0, ProteinCoverageProcessingSteps.CacheProteins);
 
                 success = ParseProteinInputFile();
 
                 if (success)
                 {
                     mProgressStepDescription = "Complete reading protein input file: " + Path.GetFileName(Options.ProteinInputFilePath);
-                    UpdateProgress(mProgressStepDescription, 100, eProteinCoverageProcessingSteps.CacheProteins);
+                    UpdateProgress(mProgressStepDescription, 100, ProteinCoverageProcessingSteps.CacheProteins);
 
                     // Now read the peptide input file
                     success = ParsePeptideInputFile(inputFilePath, outputDirectoryPath, outputFileBaseName, out proteinToPepMapFilePath);
@@ -1624,7 +1624,7 @@ namespace ProteinCoverageSummarizer
                     }
 
                     UpdateProgress("Processing complete; deleting the temporary SQLite database", 100,
-                        eProteinCoverageProcessingSteps.WriteProteinCoverageFile);
+                        ProteinCoverageProcessingSteps.WriteProteinCoverageFile);
 
                     // All done; delete the temporary SQLite database
                     ProteinDataCache.DeleteSQLiteDBFile("clsProteinCoverageSummarizer.ProcessFile_Complete");
@@ -1730,7 +1730,7 @@ namespace ProteinCoverageSummarizer
 
                             if (currentLine % 500 == 0)
                             {
-                                UpdateProgress("Creating the data plus all-proteins output file", Convert.ToSingle(bytesRead / (double)reader.BaseStream.Length * 100), eProteinCoverageProcessingSteps.SaveAllProteinsVersionOfInputFile);
+                                UpdateProgress("Creating the data plus all-proteins output file", Convert.ToSingle(bytesRead / (double)reader.BaseStream.Length * 100), ProteinCoverageProcessingSteps.SaveAllProteinsVersionOfInputFile);
                             }
 
                             if (currentLine == 1 && Options.PeptideFileSkipFirstLine)
@@ -1833,7 +1833,7 @@ namespace ProteinCoverageSummarizer
                     proteinProcessIterationsExpected = 1;
 
                 UpdateProgress(progressMessageBase, 0,
-                    eProteinCoverageProcessingSteps.SearchProteinsUsingLeaderSequences);
+                    ProteinCoverageProcessingSteps.SearchProteinsUsingLeaderSequences);
 
                 var startIndex = 0;
                 do
@@ -2018,7 +2018,7 @@ namespace ProteinCoverageSummarizer
                         proteinProcessIterations += 1;
                         if (proteinProcessIterations % 100 == 0)
                         {
-                            UpdateProgress(Convert.ToSingle(proteinProcessIterations / (double)proteinProcessIterationsExpected * 100), eProteinCoverageProcessingSteps.SearchProteinsUsingLeaderSequences);
+                            UpdateProgress(Convert.ToSingle(proteinProcessIterations / (double)proteinProcessIterationsExpected * 100), ProteinCoverageProcessingSteps.SearchProteinsUsingLeaderSequences);
                         }
 
                         if (mAbortProcessing)
@@ -2215,14 +2215,14 @@ namespace ProteinCoverageSummarizer
             ProgressReset?.Invoke();
         }
 
-        protected void SetErrorCode(eProteinCoverageErrorCodes eNewErrorCode)
+        protected void SetErrorCode(ProteinCoverageErrorCodes eNewErrorCode)
         {
             SetErrorCode(eNewErrorCode, false);
         }
 
-        protected void SetErrorCode(eProteinCoverageErrorCodes eNewErrorCode, bool leaveExistingErrorCodeUnchanged)
+        protected void SetErrorCode(ProteinCoverageErrorCodes eNewErrorCode, bool leaveExistingErrorCodeUnchanged)
         {
-            if (leaveExistingErrorCodeUnchanged && mErrorCode != eProteinCoverageErrorCodes.NoError)
+            if (leaveExistingErrorCodeUnchanged && ErrorCode != ProteinCoverageErrorCodes.NoError)
             {
                 // An error code is already defined; do not change it
             }
@@ -2256,12 +2256,12 @@ namespace ProteinCoverageSummarizer
             ProgressChanged?.Invoke(ProgressStepDescription, ProgressPercentComplete);
         }
 
-        protected void UpdateProgress(float percentComplete, eProteinCoverageProcessingSteps eCurrentProcessingStep)
+        protected void UpdateProgress(float percentComplete, ProteinCoverageProcessingSteps eCurrentProcessingStep)
         {
             UpdateProgress(ProgressStepDescription, percentComplete, eCurrentProcessingStep);
         }
 
-        protected void UpdateProgress(string stepDescription, float percentComplete, eProteinCoverageProcessingSteps eCurrentProcessingStep)
+        protected void UpdateProgress(string stepDescription, float percentComplete, ProteinCoverageProcessingSteps eCurrentProcessingStep)
         {
             mProgressStepDescription = string.Copy(stepDescription);
             mCurrentProcessingStep = eCurrentProcessingStep;
@@ -2286,12 +2286,12 @@ namespace ProteinCoverageSummarizer
 
         private void LeaderSequenceCache_ProgressChanged(string taskDescription, float percentComplete)
         {
-            UpdateProgress(percentComplete, eProteinCoverageProcessingSteps.DetermineShortestPeptideLength);
+            UpdateProgress(percentComplete, ProteinCoverageProcessingSteps.DetermineShortestPeptideLength);
         }
 
         private void LeaderSequenceCache_ProgressComplete()
         {
-            UpdateProgress(100, eProteinCoverageProcessingSteps.DetermineShortestPeptideLength);
+            UpdateProgress(100, ProteinCoverageProcessingSteps.DetermineShortestPeptideLength);
         }
 
         private DateTime lastUpdate = DateTime.UtcNow;
@@ -2306,12 +2306,12 @@ namespace ProteinCoverageSummarizer
                 Console.Write(".");
             }
 
-            UpdateProgress(percentFileProcessed, eProteinCoverageProcessingSteps.CacheProteins);
+            UpdateProgress(percentFileProcessed, ProteinCoverageProcessingSteps.CacheProteins);
         }
 
         private void ProteinDataCache_ProteinCachingComplete()
         {
-            UpdateProgress(100, eProteinCoverageProcessingSteps.CacheProteins);
+            UpdateProgress(100, ProteinCoverageProcessingSteps.CacheProteins);
         }
     }
 }

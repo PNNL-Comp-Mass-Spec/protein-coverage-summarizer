@@ -71,7 +71,7 @@ namespace ProteinCoverageSummarizerGUI
             Other = 3
         }
 
-        private enum eSequenceDisplayConstants
+        private enum SequenceDisplayConstants
         {
             UsePrevious = 0,
             UseDataGrid = 1,
@@ -283,7 +283,7 @@ namespace ProteinCoverageSummarizerGUI
                 if (mDSCoverageResults.Tables[COVERAGE_RESULTS_DATA_TABLE].Rows.Count > 0)
                 {
                     dgResults.CurrentRowIndex = 0;
-                    ShowRichTextStart(eSequenceDisplayConstants.UseDataGrid);
+                    ShowRichTextStart(SequenceDisplayConstants.UseDataGrid);
                 }
                 else
                 {
@@ -931,16 +931,16 @@ namespace ProteinCoverageSummarizerGUI
 
         private bool lastSequenceWasDataGrid;
 
-        private void ShowRichTextStart(eSequenceDisplayConstants eSequenceDisplayMode = eSequenceDisplayConstants.UsePrevious)
+        private void ShowRichTextStart(SequenceDisplayConstants eSequenceDisplayMode = SequenceDisplayConstants.UsePrevious)
         {
             bool useDataGrid;
 
             switch (eSequenceDisplayMode)
             {
-                case eSequenceDisplayConstants.UseDataGrid:
+                case SequenceDisplayConstants.UseDataGrid:
                     useDataGrid = true;
                     break;
-                case eSequenceDisplayConstants.UseCustom:
+                case SequenceDisplayConstants.UseCustom:
                     useDataGrid = false;
                     break;
                 default:
@@ -1260,7 +1260,7 @@ namespace ProteinCoverageSummarizerGUI
 
         private void dgResults_CurrentCellChanged(object sender, EventArgs e)
         {
-            ShowRichTextStart(eSequenceDisplayConstants.UseDataGrid);
+            ShowRichTextStart(SequenceDisplayConstants.UseDataGrid);
         }
 
         #endregion
@@ -1275,7 +1275,7 @@ namespace ProteinCoverageSummarizerGUI
         private void txtCustomProteinSequence_Click(object sender, EventArgs e)
         {
             if (txtCustomProteinSequence.TextLength > 0)
-                ShowRichTextStart(eSequenceDisplayConstants.UseCustom);
+                ShowRichTextStart(SequenceDisplayConstants.UseCustom);
         }
 
         private void txtCustomProteinSequence_KeyPress(object sender, KeyPressEventArgs e)
@@ -1285,7 +1285,7 @@ namespace ProteinCoverageSummarizerGUI
 
         private void txtCustomProteinSequence_TextChanged(object sender, EventArgs e)
         {
-            ShowRichTextStart(eSequenceDisplayConstants.UseCustom);
+            ShowRichTextStart(SequenceDisplayConstants.UseCustom);
         }
 
         private void txtOutputFolderPath_KeyPress(object sender, KeyPressEventArgs e)
