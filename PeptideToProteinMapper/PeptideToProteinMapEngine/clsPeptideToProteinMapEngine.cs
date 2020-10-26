@@ -375,11 +375,7 @@ namespace PeptideToProteinMapEngine
                     return false;
                 }
 
-                var proteins = new string[1];
-                var proteinIDPointerArray = new int[1];
-                var proteinMapInfo = new udtProteinIDMapInfoType[1];
-
-                PostProcessPSMResultsFileReadMapFile(proteinToPepMapFilePath, ref proteins, ref proteinIDPointerArray, ref proteinMapInfo);
+                PostProcessPSMResultsFileReadMapFile(proteinToPepMapFilePath, out var proteins, out var proteinIDPointerArray, out var proteinMapInfo);
 
                 // Sort proteinMapInfo on peptide, then on protein
                 Array.Sort(proteinMapInfo, new ProteinIDMapInfoComparer());
@@ -560,22 +556,25 @@ namespace PeptideToProteinMapEngine
         }
 
         protected bool PostProcessPSMResultsFileReadMapFile(string proteinToPepMapFilePath,
-            ref string[] proteins,
-            ref int[] proteinIDPointerArray,
-            ref udtProteinIDMapInfoType[] proteinMapInfo)
+            out string[] proteins,
+            out int[] proteinIDPointerArray,
+            out udtProteinIDMapInfoType[] proteinMapInfo)
         {
-            var terminatorSize = 2;
+            const int terminatorSize = 2;
+
+            bool success;
+
+            var proteinNames = new List<string>();
+            var proteinIDPointers = new List<int>();
+            var proteinMapping = new List<udtProteinIDMapInfoType>();
 
             try
             {
                 // Initialize the protein list dictionary
                 var proteinList = new Dictionary<string, int>();
 
-                var proteinMapInfoCount = 0;
-
                 // Initialize the protein to peptide mapping array
                 // We know the length will be at least as long as mUniquePeptideList, and easily twice that length
-                proteinMapInfo = new udtProteinIDMapInfoType[(mUniquePeptideList.Count * 2)];
 
                 LogMessage("Reading " + Path.GetFileName(proteinToPepMapFilePath));
 
@@ -591,7 +590,7 @@ namespace PeptideToProteinMapEngine
 
                     while (!reader.EndOfStream)
                     {
-                        currentLine += 1;
+                        currentLine++;
 
                         if (AbortProcessing)
                             break;
@@ -621,13 +620,6 @@ namespace PeptideToProteinMapEngine
                             continue;
                         }
 
-                        if (proteinMapInfoCount >= proteinMapInfo.Length)
-                        {
-                            var oldProteinMapInfo = proteinMapInfo;
-                            proteinMapInfo = new udtProteinIDMapInfoType[(proteinMapInfo.Length * 2)];
-                            Array.Copy(oldProteinMapInfo, proteinMapInfo, Math.Min(proteinMapInfo.Length * 2, oldProteinMapInfo.Length));
-                        }
-
                         if (currentProtein.Length == 0 || currentProtein != splitLine[0])
                         {
                             // Determine the Protein ID for this protein
@@ -642,16 +634,17 @@ namespace PeptideToProteinMapEngine
                             }
                         }
 
-                        var info = proteinMapInfo[proteinMapInfoCount];
-                        // NOTE: info is a struct, and therefore is a copy of the values in the array
-                        info.ProteinID = currentProteinID;
-                        info.Peptide = splitLine[1];
-                        info.ResidueStart = int.Parse(splitLine[2]);
-                        info.ResidueEnd = int.Parse(splitLine[3]);
-                        // Update the values in the array. The other option would be to index the array for each of the assignments above.
-                        proteinMapInfo[proteinMapInfoCount] = info;
+                        var proteinInfo = new udtProteinIDMapInfoType
+                        {
+                            ProteinID = currentProteinID,
+                            Peptide = splitLine[1],
+                            ResidueStart = int.Parse(splitLine[2]),
+                            ResidueEnd = int.Parse(splitLine[3])
+                        };
 
-                        proteinMapInfoCount += 1;
+                        // Update the values in the array. The other option would be to index the array for each of the assignments above.
+                        proteinMapping.Add(proteinInfo);
+
                         if (currentLine % 1000 == 0)
                         {
                             UpdateProgress(PERCENT_COMPLETE_POSTPROCESSING +
@@ -660,28 +653,27 @@ namespace PeptideToProteinMapEngine
                     }
                 }
 
-                // Populate proteins() and proteinIDPointerArray() using proteinList
-                proteins = new string[proteinList.Count];
-                proteinIDPointerArray = new int[proteinList.Count];
+                // Populate Lists proteinNames and proteinIDPointers using proteinList
+                foreach (var item in proteinList)
+                {
+                    proteinNames.Add(item.Key);
+                    proteinIDPointers.Add(item.Value);
+                }
 
-                // Note: the Keys and Values are not necessarily sorted, but will be copied in the identical order
-                proteinList.Keys.CopyTo(proteins, 0);
-                proteinList.Values.CopyTo(proteinIDPointerArray, 0);
-
-                // Shrink proteinMapInfo to the appropriate length
-                var oldProteinMapInfo1 = proteinMapInfo;
-                proteinMapInfo = new udtProteinIDMapInfoType[proteinMapInfoCount];
-                Array.Copy(oldProteinMapInfo1, proteinMapInfo, Math.Min(proteinMapInfoCount, oldProteinMapInfo1.Length));
-
-                return true;
+                success = true;
             }
             catch (Exception ex)
             {
                 StatusMessage = "Error reading the newly created protein to peptide mapping file (" + Path.GetFileName(proteinToPepMapFilePath) + ")";
                 HandleException(StatusMessage, ex);
+                success = false;
             }
 
-            return false;
+            proteins = proteinNames.ToArray();
+            proteinIDPointerArray = proteinIDPointers.ToArray();
+            proteinMapInfo = proteinMapping.ToArray();
+
+            return success;
         }
 
         protected string PreProcessInspectResultsFile(string inputFilePath,
