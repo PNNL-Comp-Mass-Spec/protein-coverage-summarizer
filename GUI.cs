@@ -194,8 +194,13 @@ namespace ProteinCoverageSummarizerGUI
                     while (!reader.EndOfStream)
                     {
                         var dataLine = reader.ReadLine();
-                        if (dataLine != null)
-                            bytesRead += dataLine.Length + 2;           // Add 2 for CrLf
+                        if (string.IsNullOrEmpty(dataLine))
+                            continue;
+
+                        bytesRead += dataLine.Length + 2;           // Add 2 for CrLf
+
+                        if (string.IsNullOrWhiteSpace(dataLine))
+                            continue;
 
                         linesRead++;
                         if (linesRead == 1)
@@ -203,9 +208,6 @@ namespace ProteinCoverageSummarizerGUI
                             // Skip the first line (column headers)
                             continue;
                         }
-
-                        if (string.IsNullOrWhiteSpace(dataLine))
-                            continue;
 
                         var lineParts = dataLine.Split('\t');
 
@@ -262,7 +264,7 @@ namespace ProteinCoverageSummarizerGUI
                         // Add the row to the coverage table.
                         mDSCoverageResults.Tables[COVERAGE_RESULTS_DATA_TABLE].Rows.Add(newRow);
 
-                        if (linesRead % 25 == 0)
+                        if (linesRead % 25 == 1)
                         {
                             lblProgress.Text = "Loading results: " + (bytesRead / (double)reader.BaseStream.Length * 100).ToString("0.0") + "% complete";
                         }

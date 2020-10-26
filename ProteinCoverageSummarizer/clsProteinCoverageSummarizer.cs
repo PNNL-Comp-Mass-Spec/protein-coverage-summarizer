@@ -628,11 +628,15 @@ namespace ProteinCoverageSummarizer
             return terminatorSize;
         }
 
+        /// <summary>
+        /// Look for the columnToFind in the first non-blank line of the input file
+        /// </summary>
+        /// <param name="peptideInputFilePath"></param>
+        /// <param name="columnToFind"></param>
+        /// <param name="matchStartIfNotFound"></param>
+        /// <returns>Zero-base column index, or -1 if not found</returns>
         private int FindColumnIndex(string peptideInputFilePath, string columnToFind, bool matchStartIfNotFound = true)
         {
-            var columnIndex = -1;
-
-            // Open the file and read the header line
             using (var reader = new StreamReader(new FileStream(peptideInputFilePath, FileMode.Open, FileAccess.Read, FileShare.Read)))
             {
                 while (!reader.EndOfStream)
@@ -643,14 +647,11 @@ namespace ProteinCoverageSummarizer
 
                     var columnNames = dataLine.Split(Options.PeptideInputFileDelimiter);
 
-                    columnIndex = FindColumnIndex(columnNames, columnToFind, matchStartIfNotFound);
-
-                    break;
+                    return FindColumnIndex(columnNames, columnToFind, matchStartIfNotFound);
                 }
             }
 
-            return columnIndex;
-
+            return -1;
         }
 
         /// <summary>
@@ -969,9 +970,11 @@ namespace ProteinCoverageSummarizer
             ProteinCoverageSummarizerOptions.PeptideFileColumnOrderingCode peptideFileFormatCode,
             string peptideInputFilePath,
             char[] sepChars,
-            out int proteinColumnIndex)
+            out int proteinColumnIndex,
+            out int scanColumnIndex)
         {
             proteinColumnIndex = -1;
+            scanColumnIndex = -1;
 
             switch (peptideFileFormatCode)
             {
@@ -985,8 +988,11 @@ namespace ProteinCoverageSummarizer
                             if (string.IsNullOrWhiteSpace(dataLine))
                                 continue;
 
-                            var peptideColumnIndex = FindColumnIndex(dataLine.Split(sepChars), "peptide");
-                            proteinColumnIndex = FindColumnIndex(dataLine.Split(sepChars), "protein");
+                            var columnNames = dataLine.Split(sepChars);
+
+                            var peptideColumnIndex = FindColumnIndex(columnNames, "peptide");
+                            proteinColumnIndex = FindColumnIndex(columnNames, "protein");
+                            scanColumnIndex = FindColumnIndex(columnNames, "scan");
 
                             return peptideColumnIndex;
                         }
@@ -1316,7 +1322,7 @@ namespace ProteinCoverageSummarizer
                         mProteinToPeptideMappingOutputFile.WriteLine("Protein Name" + "\t" + "Peptide Sequence" + "\t" + "Residue Start" + "\t" + "Residue End");
                     }
 
-                    var peptideColumnIndex = GetPeptideColumnIndex(Options.PeptideFileFormatCode, peptideInputFilePath, sepChars, out var proteinColumnIndex);
+                    var peptideColumnIndex = GetPeptideColumnIndex(Options.PeptideFileFormatCode, peptideInputFilePath, sepChars, out var proteinColumnIndex, out _);
                     if (peptideColumnIndex < 0)
                     {
                         SetErrorMessage("Input file does not have a column named 'Peptide': " + peptideInputFilePath);
@@ -1703,10 +1709,15 @@ namespace ProteinCoverageSummarizer
 
                 UpdateProgress("Creating the data plus all-proteins output file: " + Path.GetFileName(dataPlusAllProteinsFile));
 
-                var peptideColumnIndex = GetPeptideColumnIndex(Options.PeptideFileFormatCode, peptideInputFilePath, sepChars, out _);
+                var peptideColumnIndex = GetPeptideColumnIndex(
+                    Options.PeptideFileFormatCode, peptideInputFilePath, sepChars,
+                    out var proteinColumnIndex, out var scanColumnIndex);
+
                 if (peptideColumnIndex < 0)
                 {
-                    SetErrorMessage("Input file does not have a column named 'Peptide': " + peptideInputFilePath);
+                    SetErrorMessage(string.Format(
+                        "Input file does not have a column named 'Peptide'; cannot create file {0} for {1}",
+                        Path.GetFileName(dataPlusAllProteinsFile), peptideInputFilePath));
                     return;
                 }
 
