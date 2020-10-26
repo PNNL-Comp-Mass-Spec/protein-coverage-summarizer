@@ -315,23 +315,23 @@ namespace PeptideToProteinMapEngine
 
                         if (!string.IsNullOrEmpty(dataLine))
                         {
-                            var dataCols = dataLine.Split(sepChars);
+                            var columnNames = dataLine.Split(sepChars);
 
                             if (inputFileFormat == PeptideInputFileFormatConstants.ProteinAndPeptideFile)
                             {
-                                if (dataCols.Length > 1 && dataCols[1].StartsWith("peptide", StringComparison.OrdinalIgnoreCase))
+                                if (columnNames.Length > 1 && columnNames[1].StartsWith("peptide", StringComparison.OrdinalIgnoreCase))
                                 {
                                     headerFound = true;
                                 }
                             }
                             else if (inputFileFormat == PeptideInputFileFormatConstants.PeptideListFile)
                             {
-                                if (dataCols[0].StartsWith("peptide", StringComparison.OrdinalIgnoreCase))
+                                if (columnNames[0].StartsWith("peptide", StringComparison.OrdinalIgnoreCase))
                                 {
                                     headerFound = true;
                                 }
                             }
-                            else if (dataCols.Any(dataColumn => dataColumn.StartsWith("peptide", StringComparison.OrdinalIgnoreCase)))
+                            else if (columnNames.Any(dataColumn => dataColumn.StartsWith("peptide", StringComparison.OrdinalIgnoreCase)))
                             {
                                 headerFound = true;
                             }
@@ -816,13 +816,14 @@ namespace PeptideToProteinMapEngine
 
                         if (splitLine.Length > peptideSequenceColIndex)
                         {
-                            var scanNumber = default(int);
-                            if (scanColIndex >= 0)
+                            int scanNumber;
+                            if (scanColIndex >= 0 && int.TryParse(splitLine[scanColIndex], out var parsedScanNumber))
                             {
-                                if (!int.TryParse(splitLine[scanColIndex], out scanNumber))
-                                {
-                                    scanNumber = 0;
-                                }
+                                scanNumber = parsedScanNumber;
+                            }
+                            else
+                            {
+                                scanNumber = 0;
                             }
 
                             UpdateUniquePeptideList(splitLine[peptideSequenceColIndex], scanNumber);
