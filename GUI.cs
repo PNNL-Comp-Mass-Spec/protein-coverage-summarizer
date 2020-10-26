@@ -570,6 +570,7 @@ namespace ProteinCoverageSummarizerGUI
                     settingsFile.SetParam(XML_SECTION_PROCESSING_OPTIONS, "SearchAllProteinsForPeptideSequence", chkSearchAllProteinsForPeptideSequence.Checked);
 
                     settingsFile.SetParam(XML_SECTION_PROCESSING_OPTIONS, "SaveProteinToPeptideMappingFile", chkSaveProteinToPeptideMappingFile.Checked);
+                    settingsFile.SetParam(XML_SECTION_PROCESSING_OPTIONS, "SaveSourceDataPlusProteinsFile", chkSaveSourceDataPlusProteinsFile.Checked);
                     settingsFile.SetParam(XML_SECTION_PROCESSING_OPTIONS, "SearchAllProteinsSkipCoverageComputationSteps", chkSearchAllProteinsSkipCoverageComputationSteps.Checked);
 
                     settingsFile.SetParam(XML_SECTION_PROCESSING_OPTIONS, "TrackPeptideCounts", chkTrackPeptideCounts.Checked);
@@ -676,6 +677,7 @@ namespace ProteinCoverageSummarizerGUI
                 chkSearchAllProteinsForPeptideSequence.Checked = proteinCoverageSummarizer.Options.SearchAllProteinsForPeptideSequence;
 
                 chkSaveProteinToPeptideMappingFile.Checked = proteinCoverageSummarizer.Options.SaveProteinToPeptideMappingFile;
+                chkSaveSourceDataPlusProteinsFile.Checked = proteinCoverageSummarizer.Options.SaveSourceDataPlusProteinsFile;
                 chkSearchAllProteinsSkipCoverageComputationSteps.Checked = proteinCoverageSummarizer.Options.SearchAllProteinsSkipCoverageComputationSteps;
 
                 chkTrackPeptideCounts.Checked = proteinCoverageSummarizer.Options.TrackPeptideCounts;
@@ -797,6 +799,7 @@ namespace ProteinCoverageSummarizerGUI
             chkSearchAllProteinsForPeptideSequence.Checked = false;
 
             chkSaveProteinToPeptideMappingFile.Checked = true;
+            chkSaveSourceDataPlusProteinsFile.Checked = false;
             chkSearchAllProteinsSkipCoverageComputationSteps.Checked = false;
 
             chkTrackPeptideCounts.Checked = true;
@@ -886,6 +889,7 @@ namespace ProteinCoverageSummarizerGUI
                 proteinCoverageSummarizer.Options.SearchAllProteinsForPeptideSequence = chkSearchAllProteinsForPeptideSequence.Checked;
 
                 proteinCoverageSummarizer.Options.SaveProteinToPeptideMappingFile = chkSaveProteinToPeptideMappingFile.Checked;
+                proteinCoverageSummarizer.Options.SaveSourceDataPlusProteinsFile = chkSaveSourceDataPlusProteinsFile.Checked;
 
                 if (chkSaveProteinToPeptideMappingFile.Checked)
                 {
