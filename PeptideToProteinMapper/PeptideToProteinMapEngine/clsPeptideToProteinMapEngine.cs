@@ -54,7 +54,8 @@ namespace PeptideToProteinMapEngine
             ProteinAndPeptideFile = 2,       // First column is protein name, second column is peptide sequence
             InspectResultsFile = 3,          // Inspect results file; pre-process the file to determine the peptides present, then determine the proteins that contain the given peptides
             MSGFPlusResultsFile = 4,         // MS-GF+ results file; pre-process the file to determine the peptides present, then determine the proteins that contain the given peptides
-            PHRPFile = 5                     // SEQUEST, Inspect, X!Tandem, or MS-GF+ synopsis or first-hits file created by PHRP; pre-process the file to determine the peptides present, then determine the proteins that contain the given peptides
+            PHRPFile = 5,                    // SEQUEST, Inspect, X!Tandem, or MS-GF+ synopsis or first-hits file created by PHRP; pre-process the file to determine the peptides present, then determine the proteins that contain the given peptides
+            TabDelimitedText = 6             // Generic tab-delimited text file; will look for columns named Peptide and Protein
         }
 
         #endregion
@@ -712,14 +713,21 @@ namespace PeptideToProteinMapEngine
                 // The 3rd column in the Inspect results file should have the peptide sequence
                 peptideSequenceColIndex = 2;
                 scanColIndex = 1;
-                toolDescription = "Inspect";
+                toolDescription = "Inspect results";
+            }
+            else if (inputFileFormat == PeptideInputFileFormatConstants.MSGFPlusResultsFile)
+            {
+                terminatorSize = 2;
+                peptideSequenceColIndex = -1;
+                scanColIndex = -1;
+                toolDescription = "MS-GF+ results";
             }
             else if (inputFileFormat == PeptideInputFileFormatConstants.TabDelimitedText)
             {
                 terminatorSize = 2;
                 peptideSequenceColIndex = -1;
                 scanColIndex = -1;
-                toolDescription = "MS-GF+";
+                toolDescription = "Tab-delimited text";
             }
             else
             {
@@ -728,7 +736,7 @@ namespace PeptideToProteinMapEngine
                 terminatorSize = 2;
                 peptideSequenceColIndex = -1;
                 scanColIndex = -1;
-                toolDescription = "Generic PSM result file";
+                toolDescription = "Generic PSM result";
             }
 
             try
@@ -742,7 +750,7 @@ namespace PeptideToProteinMapEngine
                     return string.Empty;
                 }
 
-                ShowMessage("Pre-processing the " + toolDescription + " results file: " + Path.GetFileName(inputFilePath));
+                ShowMessage("Pre-processing the " + toolDescription + " file: " + Path.GetFileName(inputFilePath));
 
                 // Initialize the peptide list
                 if (mUniquePeptideList == null)
@@ -758,39 +766,33 @@ namespace PeptideToProteinMapEngine
                 // Keep track of PSM counts
                 using (var reader = new StreamReader(new FileStream(inputFilePath, FileMode.Open, FileAccess.Read, FileShare.Read)))
                 {
-                    var currentLine = 1;
+                    var currentLine = 0;
                     long bytesRead = 0;
 
                     while (!reader.EndOfStream)
                     {
                         if (AbortProcessing)
                             break;
+
                         var lineIn = reader.ReadLine();
-                        if (lineIn == null)
+                        if (string.IsNullOrWhiteSpace(lineIn))
                             continue;
+
                         bytesRead += lineIn.Length + terminatorSize;
 
                         lineIn = lineIn.TrimEnd();
 
+                        currentLine++;
                         if (currentLine == 1 && (peptideSequenceColIndex < 0 || lineIn.StartsWith("#")))
                         {
                             // Header line
                             if (peptideSequenceColIndex < 0)
                             {
                                 // Split the header line to look for the "Peptide" and Scan columns
-                                var splitLine = lineIn.Split(sepChars);
-                                for (var index = 0; index < splitLine.Length; index++)
-                                {
-                                    if (peptideSequenceColIndex < 0 && string.Equals(splitLine[index], "peptide", StringComparison.OrdinalIgnoreCase))
-                                    {
-                                        peptideSequenceColIndex = index;
-                                    }
+                                var columnNames = lineIn.Split(sepChars);
 
-                                    if (scanColIndex < 0 && splitLine[index].StartsWith("scan", StringComparison.OrdinalIgnoreCase))
-                                    {
-                                        scanColIndex = index;
-                                    }
-                                }
+                                peptideSequenceColIndex = clsProteinCoverageSummarizer.FindColumnIndex(columnNames, "peptide");
+                                scanColIndex = clsProteinCoverageSummarizer.FindColumnIndex(columnNames, "scan");
 
                                 if (peptideSequenceColIndex < 0)
                                 {

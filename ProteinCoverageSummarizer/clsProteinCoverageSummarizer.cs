@@ -628,6 +628,61 @@ namespace ProteinCoverageSummarizer
             return terminatorSize;
         }
 
+        private int FindColumnIndex(string peptideInputFilePath, string columnToFind, bool matchStartIfNotFound = true)
+        {
+            var columnIndex = -1;
+
+            // Open the file and read the header line
+            using (var reader = new StreamReader(new FileStream(peptideInputFilePath, FileMode.Open, FileAccess.Read, FileShare.Read)))
+            {
+                while (!reader.EndOfStream)
+                {
+                    var dataLine = reader.ReadLine();
+                    if (string.IsNullOrWhiteSpace(dataLine))
+                        continue;
+
+                    var columnNames = dataLine.Split(Options.PeptideInputFileDelimiter);
+
+                    columnIndex = FindColumnIndex(columnNames, columnToFind, matchStartIfNotFound);
+
+                    break;
+                }
+            }
+
+            return columnIndex;
+
+        }
+
+        /// <summary>
+        /// Look for the first column whose name matches columnToFind
+        /// </summary>
+        /// <param name="columnNames"></param>
+        /// <param name="columnToFind"></param>
+        /// <param name="matchStartIfNotFound">Set to True to look for a column that starts with columnName if an exact match is not found</param>
+        /// <returns>Column index if found, or -1 if not found</returns>
+        public static int FindColumnIndex(IReadOnlyList<string> columnNames, string columnToFind, bool matchStartIfNotFound = true)
+        {
+            for (var index = 0; index < columnNames.Count; index++)
+            {
+                if (columnNames[index].Equals(columnToFind, StringComparison.OrdinalIgnoreCase))
+                {
+                    return index;
+                }
+            }
+
+            if (!matchStartIfNotFound)
+                return -1;
+
+            for (var index = 0; index < columnNames.Count; index++)
+            {
+                if (columnNames[index].StartsWith(columnToFind, StringComparison.OrdinalIgnoreCase))
+                {
+                    return index;
+                }
+            }
+
+            return -1;
+        }
 
         /// <summary>
         /// Searches for proteins that contain the peptides in peptideList
@@ -910,6 +965,46 @@ namespace ProteinCoverageSummarizer
             return outputDirectoryPath;
         }
 
+        private int GetPeptideColumnIndex(
+            ProteinCoverageSummarizerOptions.PeptideFileColumnOrderingCode peptideFileFormatCode,
+            string peptideInputFilePath,
+            char[] sepChars,
+            out int proteinColumnIndex)
+        {
+            proteinColumnIndex = -1;
+
+            switch (peptideFileFormatCode)
+            {
+                case ProteinCoverageSummarizerOptions.PeptideFileColumnOrderingCode.UseHeaderNames:
+
+                    using (var reader = new StreamReader(new FileStream(peptideInputFilePath, FileMode.Open, FileAccess.Read, FileShare.Read)))
+                    {
+                        while (!reader.EndOfStream)
+                        {
+                            var dataLine = reader.ReadLine();
+                            if (string.IsNullOrWhiteSpace(dataLine))
+                                continue;
+
+                            var peptideColumnIndex = FindColumnIndex(dataLine.Split(sepChars), "peptide");
+                            proteinColumnIndex = FindColumnIndex(dataLine.Split(sepChars), "protein");
+
+                            return peptideColumnIndex;
+                        }
+                    }
+                    return -1;
+
+                case ProteinCoverageSummarizerOptions.PeptideFileColumnOrderingCode.ProteinName_PeptideSequence:
+                    proteinColumnIndex = 0;
+                    return 1;
+
+                case ProteinCoverageSummarizerOptions.PeptideFileColumnOrderingCode.SequenceOnly:
+                    return 0;
+
+                default:
+                    return -1;
+            }
+        }
+
         private void GetPercentCoverage()
         {
             var proteinUpdated = new bool[PROTEIN_CHUNK_COUNT];
@@ -1166,6 +1261,14 @@ namespace ProteinCoverageSummarizer
                     int columnNumWithPeptideSequence;
                     switch (Options.PeptideFileFormatCode)
                     {
+                        case ProteinCoverageSummarizerOptions.PeptideFileColumnOrderingCode.UseHeaderNames:
+                            columnNumWithPeptideSequence = FindColumnIndex(peptideInputFilePath, "peptide") + 1;
+                            if (columnNumWithPeptideSequence <= 0) {
+                                SetErrorMessage("Input file does not have a column named 'Peptide': " + peptideInputFilePath);
+                                return false;
+                            }
+                            break;
+
                         case ProteinCoverageSummarizerOptions.PeptideFileColumnOrderingCode.ProteinName_PeptideSequence:
                             columnNumWithPeptideSequence = 2;
                             break;
@@ -1213,7 +1316,14 @@ namespace ProteinCoverageSummarizer
                         mProteinToPeptideMappingOutputFile.WriteLine("Protein Name" + "\t" + "Peptide Sequence" + "\t" + "Residue Start" + "\t" + "Residue End");
                     }
 
-                    var currentLine = 1;
+                    var peptideColumnIndex = GetPeptideColumnIndex(Options.PeptideFileFormatCode, peptideInputFilePath, sepChars, out var proteinColumnIndex);
+                    if (peptideColumnIndex < 0)
+                    {
+                        SetErrorMessage("Input file does not have a column named 'Peptide': " + peptideInputFilePath);
+                        return false;
+                    }
+
+                    var currentLine = 0;
                     long bytesRead = 0;
 
                     while (!reader.EndOfStream)
@@ -1592,6 +1702,13 @@ namespace ProteinCoverageSummarizer
                     outputDirectoryPath, outputFileBaseName);
 
                 UpdateProgress("Creating the data plus all-proteins output file: " + Path.GetFileName(dataPlusAllProteinsFile));
+
+                var peptideColumnIndex = GetPeptideColumnIndex(Options.PeptideFileFormatCode, peptideInputFilePath, sepChars, out _);
+                if (peptideColumnIndex < 0)
+                {
+                    SetErrorMessage("Input file does not have a column named 'Peptide': " + peptideInputFilePath);
+                    return;
+                }
 
                 using (var dataPlusProteinsWriter = new StreamWriter(new FileStream(dataPlusAllProteinsFile, FileMode.Create, FileAccess.Write, FileShare.Read)))
                 {
