@@ -786,53 +786,6 @@ namespace ProteinCoverageSummarizer
             }
         }
 
-        private void UpdateSequenceDbDataValues(IList<bool> proteinUpdated, int proteinCount)
-        {
-            try
-            {
-                if (!BooleanArrayContainsTrueEntries(proteinUpdated, proteinCount))
-                {
-                    // All of the entries in proteinUpdated() are False; nothing to update
-                    return;
-                }
-
-                // Store the updated protein sequences in the SQLite database
-                var sqlConnection = ProteinDataCache.ConnectToSQLiteDB(true);
-                using (var dbTrans = sqlConnection.BeginTransaction())
-                using (var cmd = sqlConnection.CreateCommand())
-                {
-                    // Create a parameterized Update query
-                    cmd.CommandText = "UPDATE udtProteinInfoType Set Sequence = ? Where UniqueSequenceID = ?";
-
-                    var sequenceFld = cmd.CreateParameter();
-                    var uniqueSequenceIDFld = cmd.CreateParameter();
-                    cmd.Parameters.Add(sequenceFld);
-                    cmd.Parameters.Add(uniqueSequenceIDFld);
-
-                    // Update each protein that has proteinUpdated(proteinIndex) = True
-                    for (var proteinIndex = 0; proteinIndex < proteinCount; proteinIndex++)
-                    {
-                        if (proteinUpdated[proteinIndex])
-                        {
-                            uniqueSequenceIDFld.Value = mCachedProteinInfo[proteinIndex].UniqueSequenceID;
-                            sequenceFld.Value = mCachedProteinInfo[proteinIndex].Sequence;
-                            cmd.ExecuteNonQuery();
-                        }
-                    }
-
-                    dbTrans.Commit();
-                }
-
-                // Close the SQL Reader
-                sqlConnection.Close();
-                sqlConnection.Dispose();
-            }
-            catch (Exception ex)
-            {
-                SetErrorMessage("Error in UpdateSequenceDbDataValues: " + ex.Message, ex);
-            }
-        }
-
         public static string GetAppDirectoryPath()
         {
             // Could use Application.StartupPath, but .GetExecutingAssembly is better
@@ -1014,54 +967,6 @@ namespace ProteinCoverageSummarizer
                 startIndex += PROTEIN_CHUNK_COUNT;
             }
             while (startIndex < ProteinDataCache.GetProteinCountCached());
-        }
-
-        private void UpdatePercentCoveragesDbDataValues(IList<bool> proteinUpdated, int proteinCount)
-        {
-            try
-            {
-                if (!BooleanArrayContainsTrueEntries(proteinUpdated, proteinCount))
-                {
-                    // All of the entries in proteinUpdated() are False; nothing to update
-                    return;
-                }
-
-                // Store the updated protein coverage values in the SQLite database
-                var sqlConnection = ProteinDataCache.ConnectToSQLiteDB(true);
-
-                using (var dbTrans = sqlConnection.BeginTransaction())
-                using (var cmd = sqlConnection.CreateCommand())
-                {
-                    // Create a parameterized Update query
-                    cmd.CommandText = "UPDATE udtProteinInfoType Set PercentCoverage = ? Where UniqueSequenceID = ?";
-
-                    var PercentCoverageFld = cmd.CreateParameter();
-                    var UniqueSequenceIDFld = cmd.CreateParameter();
-                    cmd.Parameters.Add(PercentCoverageFld);
-                    cmd.Parameters.Add(UniqueSequenceIDFld);
-
-                    // Update each protein that has proteinUpdated(proteinIndex) = True
-                    for (var proteinIndex = 0; proteinIndex < proteinCount; proteinIndex++)
-                    {
-                        if (proteinUpdated[proteinIndex])
-                        {
-                            UniqueSequenceIDFld.Value = mCachedProteinInfo[proteinIndex].UniqueSequenceID;
-                            PercentCoverageFld.Value = mCachedProteinInfo[proteinIndex].PercentCoverage;
-                            cmd.ExecuteNonQuery();
-                        }
-                    }
-
-                    dbTrans.Commit();
-                }
-
-                // Close the SQL Reader
-                sqlConnection.Close();
-                sqlConnection.Dispose();
-            }
-            catch (Exception ex)
-            {
-                SetErrorMessage("Error in UpdatePercentCoveragesDbDataValues: " + ex.Message, ex);
-            }
         }
 
         /// <summary>
@@ -2061,6 +1966,101 @@ namespace ProteinCoverageSummarizer
             {
                 proteins = new List<string>() { proteinName };
                 mPeptideToProteinMapResults.Add(cleanPeptideSequence, proteins);
+            }
+        }
+
+        private void UpdatePercentCoveragesDbDataValues(IList<bool> proteinUpdated, int proteinCount)
+        {
+            try
+            {
+                if (!BooleanArrayContainsTrueEntries(proteinUpdated, proteinCount))
+                {
+                    // All of the entries in proteinUpdated() are False; nothing to update
+                    return;
+                }
+
+                // Store the updated protein coverage values in the SQLite database
+                var sqlConnection = ProteinDataCache.ConnectToSQLiteDB(true);
+
+                using (var dbTrans = sqlConnection.BeginTransaction())
+                using (var cmd = sqlConnection.CreateCommand())
+                {
+                    // Create a parameterized Update query
+                    cmd.CommandText = "UPDATE udtProteinInfoType Set PercentCoverage = ? Where UniqueSequenceID = ?";
+
+                    var PercentCoverageFld = cmd.CreateParameter();
+                    var UniqueSequenceIDFld = cmd.CreateParameter();
+                    cmd.Parameters.Add(PercentCoverageFld);
+                    cmd.Parameters.Add(UniqueSequenceIDFld);
+
+                    // Update each protein that has proteinUpdated(proteinIndex) = True
+                    for (var proteinIndex = 0; proteinIndex < proteinCount; proteinIndex++)
+                    {
+                        if (proteinUpdated[proteinIndex])
+                        {
+                            UniqueSequenceIDFld.Value = mCachedProteinInfo[proteinIndex].UniqueSequenceID;
+                            PercentCoverageFld.Value = mCachedProteinInfo[proteinIndex].PercentCoverage;
+                            cmd.ExecuteNonQuery();
+                        }
+                    }
+
+                    dbTrans.Commit();
+                }
+
+                // Close the SQL Reader
+                sqlConnection.Close();
+                sqlConnection.Dispose();
+            }
+            catch (Exception ex)
+            {
+                SetErrorMessage("Error in UpdatePercentCoveragesDbDataValues: " + ex.Message, ex);
+            }
+        }
+
+        private void UpdateSequenceDbDataValues(IList<bool> proteinUpdated, int proteinCount)
+        {
+            try
+            {
+                if (!BooleanArrayContainsTrueEntries(proteinUpdated, proteinCount))
+                {
+                    // All of the entries in proteinUpdated() are False; nothing to update
+                    return;
+                }
+
+                // Store the updated protein sequences in the SQLite database
+                var sqlConnection = ProteinDataCache.ConnectToSQLiteDB(true);
+                using (var dbTrans = sqlConnection.BeginTransaction())
+                using (var cmd = sqlConnection.CreateCommand())
+                {
+                    // Create a parameterized Update query
+                    cmd.CommandText = "UPDATE udtProteinInfoType Set Sequence = ? Where UniqueSequenceID = ?";
+
+                    var sequenceFld = cmd.CreateParameter();
+                    var uniqueSequenceIDFld = cmd.CreateParameter();
+                    cmd.Parameters.Add(sequenceFld);
+                    cmd.Parameters.Add(uniqueSequenceIDFld);
+
+                    // Update each protein that has proteinUpdated(proteinIndex) = True
+                    for (var proteinIndex = 0; proteinIndex < proteinCount; proteinIndex++)
+                    {
+                        if (proteinUpdated[proteinIndex])
+                        {
+                            uniqueSequenceIDFld.Value = mCachedProteinInfo[proteinIndex].UniqueSequenceID;
+                            sequenceFld.Value = mCachedProteinInfo[proteinIndex].Sequence;
+                            cmd.ExecuteNonQuery();
+                        }
+                    }
+
+                    dbTrans.Commit();
+                }
+
+                // Close the SQL Reader
+                sqlConnection.Close();
+                sqlConnection.Dispose();
+            }
+            catch (Exception ex)
+            {
+                SetErrorMessage("Error in UpdateSequenceDbDataValues: " + ex.Message, ex);
             }
         }
 
