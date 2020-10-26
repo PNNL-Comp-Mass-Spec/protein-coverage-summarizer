@@ -25,15 +25,19 @@ using ProteinCoverageSummarizer;
 namespace PeptideToProteinMapper
 {
     /// <summary>
+    /// <para>
     /// This program uses PeptideToProteinMapEngine.dll to read in a file with peptide sequences, then
     /// searches for the given peptides in a protein sequence file (.Fasta or tab-delimited text)
     /// using ProteinCoverageSummarizer.dll
-    ///
+    /// </para>
+    /// <para>
     /// This program is similar to the ProteinCoverageSummarizer, but it is a console-only application
     /// In addition, this program supports reading Inspect output files
-    ///
+    /// </para>
+    /// <para>
     /// Example command Line
     /// I:PeptideInputFilePath /R:ProteinInputFilePath /O:OutputDirectoryPath /P:ParameterFilePath
+    /// </para>
     /// </summary>
     public static class Program
     {
@@ -120,15 +124,13 @@ namespace PeptideToProteinMapper
                         if (string.IsNullOrWhiteSpace(options.PeptideInputFilePath))
                         {
                             ShowErrorMessage("Peptide input file must be defined via /I (or by listing the filename just after the .exe)");
-                            returnCode = -1;
-                            return returnCode;
+                            return -1;
                         }
 
                         if (string.IsNullOrWhiteSpace(options.ProteinInputFilePath))
                         {
                             ShowErrorMessage("Protein input file must be defined via /R");
-                            returnCode = -1;
-                            return returnCode;
+                            return -1;
                         }
 
                         mPeptideToProteinMapEngine = new clsPeptideToProteinMapEngine(options)

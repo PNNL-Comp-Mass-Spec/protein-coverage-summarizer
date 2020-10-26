@@ -95,7 +95,6 @@ namespace ProteinCoverageSummarizer
 
         #endregion
 
-
         /// <summary>
         /// Constructor
         /// </summary>
@@ -265,7 +264,7 @@ namespace ProteinCoverageSummarizer
                 // Ignore errors here
             }
 
-            if (Options.KeepDB & !forceDelete)
+            if (Options.KeepDB && !forceDelete)
             {
                 OnDebugEvent("DeleteSQLiteDBFile: KeepDB is true; not deleting " + mSQLiteDBFilePath);
                 return;
@@ -410,7 +409,7 @@ namespace ProteinCoverageSummarizer
                     OnWarningEvent("Exception in InitializeLocalVariables: " + ex.Message);
                 }
 
-                fileAttemptCount += 1;
+                fileAttemptCount++;
             }
 
             mSQLiteDBConnectionString = "Data Source=" + mSQLiteDBFilePath + ";";
@@ -425,12 +424,7 @@ namespace ProteinCoverageSummarizer
         {
             var proteinFileExtension = Path.GetExtension(filePath).ToLower();
 
-            if (proteinFileExtension == ".fasta" || proteinFileExtension == ".fsa" || proteinFileExtension == ".faa")
-            {
-                return true;
-            }
-
-            return false;
+            return proteinFileExtension == ".fasta" || proteinFileExtension == ".fsa" || proteinFileExtension == ".faa";
         }
 
         public bool ParseProteinFile(string proteinInputFilePath)
@@ -513,7 +507,9 @@ namespace ProteinCoverageSummarizer
                         success = false;
                     }
                     else
+                    {
                         success = true;
+                    }
                 }
             }
             catch (Exception ex)
@@ -562,7 +558,7 @@ namespace ProteinCoverageSummarizer
                         break;
                     }
 
-                    proteinsProcessed += 1;
+                    proteinsProcessed++;
                     inputFileLinesRead = proteinFileReader.LinesRead;
 
                     var name = proteinFileReader.ProteinName;
@@ -620,7 +616,7 @@ namespace ProteinCoverageSummarizer
 
                     cmd.ExecuteNonQuery();
 
-                    mProteinCount += 1;
+                    mProteinCount++;
 
                     ProteinCached?.Invoke(mProteinCount);
 
@@ -631,7 +627,6 @@ namespace ProteinCoverageSummarizer
 
                     success = true;
                 }
-
 
                 // Finalize the SQL Transaction
                 SQLTransaction.Commit();

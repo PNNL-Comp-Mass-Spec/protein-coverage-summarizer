@@ -318,14 +318,14 @@ namespace PeptideToProteinMapEngine
 
                             if (inputFileFormat == PeptideInputFileFormatConstants.ProteinAndPeptideFile)
                             {
-                                if (dataCols.Length > 1 && dataCols[1].StartsWith("peptide", StringComparison.InvariantCultureIgnoreCase))
+                                if (dataCols.Length > 1 && dataCols[1].StartsWith("peptide", StringComparison.OrdinalIgnoreCase))
                                 {
                                     headerFound = true;
                                 }
                             }
                             else if (inputFileFormat == PeptideInputFileFormatConstants.PeptideListFile)
                             {
-                                if (dataCols[0].StartsWith("peptide", StringComparison.InvariantCultureIgnoreCase))
+                                if (dataCols[0].StartsWith("peptide", StringComparison.OrdinalIgnoreCase))
                                 {
                                     headerFound = true;
                                 }
@@ -461,7 +461,7 @@ namespace PeptideToProteinMapEngine
                         {
                             // Decrement matchIndex until the first match in proteinMapInfo is found
                             while (matchIndex > 0 && proteinMapInfo[matchIndex - 1].Peptide == cleanSequence)
-                                matchIndex -= 1;
+                                matchIndex--;
 
                             // Now write out each of the proteins for this peptide
                             // We're caching results to cachedData so that we can sort by protein name
@@ -506,7 +506,7 @@ namespace PeptideToProteinMapEngine
 
                                 cachedData.Add(cachedDataEntry);
 
-                                matchIndex += 1;
+                                matchIndex++;
                             }
                             while (matchIndex < proteinMapInfo.Length && proteinMapInfo[matchIndex].Peptide == cleanSequence);
                             if (cachedData.Count > 1)
@@ -809,24 +809,29 @@ namespace PeptideToProteinMapEngine
                                     return string.Empty;
                                 }
                             }
+
+                            continue;
                         }
-                        else if (lineIn.Length > 0)
+
+                        if (lineIn.Length == 0)
                         {
-                            var splitLine = lineIn.Split(sepChars);
+                            continue;
+                        }
 
-                            if (splitLine.Length > peptideSequenceColIndex)
+                        var splitLine = lineIn.Split(sepChars);
+
+                        if (splitLine.Length > peptideSequenceColIndex)
+                        {
+                            var scanNumber = default(int);
+                            if (scanColIndex >= 0)
                             {
-                                var scanNumber = default(int);
-                                if (scanColIndex >= 0)
+                                if (!int.TryParse(splitLine[scanColIndex], out scanNumber))
                                 {
-                                    if (!int.TryParse(splitLine[scanColIndex], out scanNumber))
-                                    {
-                                        scanNumber = 0;
-                                    }
+                                    scanNumber = 0;
                                 }
-
-                                UpdateUniquePeptideList(splitLine[peptideSequenceColIndex], scanNumber);
                             }
+
+                            UpdateUniquePeptideList(splitLine[peptideSequenceColIndex], scanNumber);
                         }
 
                         if (currentLine % 1000 == 0)
@@ -834,8 +839,6 @@ namespace PeptideToProteinMapEngine
                             UpdateProgress(PERCENT_COMPLETE_PREPROCESSING +
                                 Convert.ToSingle(bytesRead / (double)reader.BaseStream.Length * 100) * (PERCENT_COMPLETE_RUNNING_PROTEIN_COVERAGE_SUMMARIZER - PERCENT_COMPLETE_PREPROCESSING) / 100);
                         }
-
-                        currentLine += 1;
                     }
                 }
 
@@ -844,7 +847,7 @@ namespace PeptideToProteinMapEngine
             }
             catch (Exception ex)
             {
-                StatusMessage = "Error reading " + toolDescription + " input file in PreProcessPSMResultsFile";
+                StatusMessage = "Error reading the " + toolDescription + " file in PreProcessPSMResultsFile";
                 HandleException(StatusMessage, ex);
             }
 
@@ -914,7 +917,7 @@ namespace PeptideToProteinMapEngine
                         if (mUniquePeptideList.Count % 1000 == 0)
                         {
                             UpdateProgress(PERCENT_COMPLETE_PREPROCESSING +
-                            reader.PercentComplete * (PERCENT_COMPLETE_RUNNING_PROTEIN_COVERAGE_SUMMARIZER - PERCENT_COMPLETE_PREPROCESSING) / 100);
+                                           reader.PercentComplete * (PERCENT_COMPLETE_RUNNING_PROTEIN_COVERAGE_SUMMARIZER - PERCENT_COMPLETE_PREPROCESSING) / 100);
                         }
                     }
                 }
@@ -935,7 +938,6 @@ namespace PeptideToProteinMapEngine
         {
             try
             {
-
                 // Now write out the unique list of peptides to peptideListFilePath
                 var peptideListFileName = Path.GetFileNameWithoutExtension(inputFilePath) + FILENAME_SUFFIX_PSM_UNIQUE_PEPTIDES + ".txt";
                 string peptideListFilePath;
@@ -1229,7 +1231,7 @@ namespace PeptideToProteinMapEngine
                 var xData = (udtProteinIDMapInfoType)x;
                 var yData = (udtProteinIDMapInfoType)y;
 
-                var pepCompare = string.Compare(xData.Peptide, yData.Peptide, StringComparison.Ordinal);
+                var pepCompare = string.CompareOrdinal(xData.Peptide, yData.Peptide);
                 if (pepCompare != 0)
                 {
                     return pepCompare;
@@ -1249,7 +1251,7 @@ namespace PeptideToProteinMapEngine
                 var xData = (udtProteinIDMapInfoType)x;
                 var peptide = Convert.ToString(y);
 
-                return String.Compare(xData.Peptide, peptide, StringComparison.Ordinal);
+                return String.CompareOrdinal(xData.Peptide, peptide);
             }
         }
 
@@ -1257,13 +1259,13 @@ namespace PeptideToProteinMapEngine
         {
             public int Compare(udtPepToProteinMappingType x, udtPepToProteinMappingType y)
             {
-                var pepCompare = String.Compare(x.Peptide, y.Peptide, StringComparison.Ordinal);
+                var pepCompare = String.CompareOrdinal(x.Peptide, y.Peptide);
                 if (pepCompare != 0)
                 {
                     return pepCompare;
                 }
 
-                return String.Compare(x.Protein, y.Protein, StringComparison.Ordinal);
+                return String.CompareOrdinal(x.Protein, y.Protein);
             }
         }
 

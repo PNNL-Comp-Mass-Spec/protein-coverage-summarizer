@@ -25,17 +25,20 @@ using ProteinCoverageSummarizer;
 namespace ProteinCoverageSummarizerGUI
 {
     /// <summary>
+    /// <para>
     /// This program uses clsProteinCoverageSummarizer to read in a file with protein sequences along with
     /// an accompanying file with peptide sequences and compute the percent coverage of each of the proteins
-    ///
+    /// </para>
+    /// <para>
     /// Example command Line
     /// I:PeptideInputFilePath /R:ProteinInputFilePath /O:OutputDirectoryPath /P:ParameterFilePath
+    /// </para>
     /// </summary>
     public static class Program
     {
         // Ignore Spelling: Nikša
 
-        public const string PROGRAM_DATE = "October 24, 2020";
+        public const string PROGRAM_DATE = "October 25, 2020";
 
         private static string mParameterFilePath;
 
@@ -55,7 +58,6 @@ namespace ProteinCoverageSummarizerGUI
         [STAThread]
         public static int Main()
         {
-
             // Returns 0 if no error, error code if an error
             var commandLineParser = new clsParseCommandLine();
 
@@ -74,7 +76,7 @@ namespace ProteinCoverageSummarizerGUI
                         proceed = true;
                 }
 
-                if (!commandLineParser.NeedToShowHelp & string.IsNullOrEmpty(options.ProteinInputFilePath))
+                if (!commandLineParser.NeedToShowHelp && string.IsNullOrEmpty(options.ProteinInputFilePath))
                 {
                     ShowGUI(options);
                 }
@@ -340,6 +342,5 @@ namespace ProteinCoverageSummarizerGUI
             mLastProgressReportTime = DateTime.UtcNow;
             mLastProgressReportValue = 0;
         }
-
     }
 }

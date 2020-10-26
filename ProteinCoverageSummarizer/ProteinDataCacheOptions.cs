@@ -66,6 +66,5 @@ namespace ProteinCoverageSummarizer
 
             IgnoreILDifferences = false;
         }
-
     }
 }

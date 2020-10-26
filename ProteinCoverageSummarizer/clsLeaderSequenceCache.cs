@@ -247,7 +247,7 @@ namespace ProteinCoverageSummarizer
 
                 // Update the peptide to Hash Index pointer array
                 mCachedPeptideToHashIndexPointer[mCachedPeptideCount] = hashIndexPointer;
-                mCachedPeptideCount += 1;
+                mCachedPeptideCount++;
                 mIndicesSorted = false;
 
                 return true;
@@ -353,12 +353,12 @@ namespace ProteinCoverageSummarizer
                                         leaderSeqMinimumLength = peptideSequence.Length;
                                     }
 
-                                    validPeptideCount += 1;
+                                    validPeptideCount++;
                                 }
                             }
                         }
 
-                        linesRead += 1;
+                        linesRead++;
                     }
                 }
 
@@ -407,7 +407,7 @@ namespace ProteinCoverageSummarizer
             var cachedPeptideMatchIndex = Array.BinarySearch(mCachedPeptideToHashIndexPointer, 0, mCachedPeptideCount, targetHashIndex);
 
             while (cachedPeptideMatchIndex > 0 && mCachedPeptideToHashIndexPointer[cachedPeptideMatchIndex - 1] == targetHashIndex)
-                cachedPeptideMatchIndex -= 1;
+                cachedPeptideMatchIndex--;
 
             return cachedPeptideMatchIndex;
         }
