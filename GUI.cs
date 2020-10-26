@@ -1391,7 +1391,7 @@ namespace ProteinCoverageSummarizerGUI
             Console.WriteLine(message);
             if (lblProgress.Text.StartsWith(message))
             {
-                lblStatus.Text = "";
+                lblStatus.Text = string.Empty;
             }
             else
             {

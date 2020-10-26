@@ -279,86 +279,89 @@ namespace ProteinCoverageSummarizer
                 // Open the file and read in the lines
                 using (var reader = new StreamReader(new FileStream(inputFilePath, FileMode.Open, FileAccess.Read, FileShare.Read)))
                 {
-                    var linesRead = 1;
+                    var linesRead = 0;
                     long bytesRead = 0;
 
                     while (!reader.EndOfStream)
                     {
                         if (mAbortProcessing)
                             break;
-                        var dataLine = reader.ReadLine();
-                        if (dataLine == null)
+
+                        var lineIn = reader.ReadLine();
+                        if (string.IsNullOrEmpty(lineIn))
                             continue;
-                        bytesRead += dataLine.Length + terminatorSize;
 
-                        dataLine = dataLine.TrimEnd();
+                        bytesRead += lineIn.Length + terminatorSize;
 
+                        var dataLine = lineIn.TrimEnd();
+
+                        linesRead++;
                         if (linesRead % 100 == 1)
                         {
-                            UpdateProgress("Scanning input file to determine minimum peptide length: " + linesRead.ToString(),
+                            UpdateProgress("Scanning input file to determine minimum peptide length: " + linesRead,
                                            bytesRead / Convert.ToSingle(reader.BaseStream.Length) * 100);
                         }
 
                         if (linesRead == 1 && peptideFileSkipFirstLine)
                         {
                             // Do nothing, skip the first line
+                            continue;
                         }
-                        else if (dataLine.Length > 0)
+
+                        if (dataLine.Length == 0)
+                            continue;
+
+                        bool validLine;
+                        var peptideSequence = string.Empty;
+
+                        try
                         {
-                            bool validLine;
-                            var peptideSequence = "";
+                            var dataCols = dataLine.Split(peptideInputFileDelimiter);
 
-                            try
+                            if (columnNumWithPeptideSequence >= 1 & columnNumWithPeptideSequence < dataCols.Length - 1)
                             {
-                                var dataCols = dataLine.Split(peptideInputFileDelimiter);
-
-                                if (columnNumWithPeptideSequence >= 1 & columnNumWithPeptideSequence < dataCols.Length - 1)
-                                {
-                                    peptideSequence = dataCols[columnNumWithPeptideSequence - 1];
-                                }
-                                else
-                                {
-                                    peptideSequence = dataCols[0];
-                                }
-
-                                validLine = true;
+                                peptideSequence = dataCols[columnNumWithPeptideSequence - 1];
                             }
-                            catch (Exception)
+                            else
                             {
-                                validLine = false;
+                                peptideSequence = dataCols[0];
                             }
 
-                            if (validLine)
-                            {
-                                if (peptideSequence.Length >= 4)
-                                {
-                                    // Check for, and remove any prefix or suffix residues
-                                    if (peptideSequence[1] == '.' && peptideSequence[peptideSequence.Length - 2] == '.')
-                                    {
-                                        peptideSequence = peptideSequence.Substring(2, peptideSequence.Length - 4);
-                                    }
-                                }
-
-                                // Remove any non-letter characters
-                                peptideSequence = reReplaceSymbols.Replace(peptideSequence, string.Empty);
-
-                                if (peptideSequence.Length >= MINIMUM_LEADER_SEQUENCE_LENGTH)
-                                {
-                                    if (validPeptideCount == 0)
-                                    {
-                                        leaderSeqMinimumLength = peptideSequence.Length;
-                                    }
-                                    else if (peptideSequence.Length < leaderSeqMinimumLength)
-                                    {
-                                        leaderSeqMinimumLength = peptideSequence.Length;
-                                    }
-
-                                    validPeptideCount++;
-                                }
-                            }
+                            validLine = true;
+                        }
+                        catch (Exception)
+                        {
+                            validLine = false;
                         }
 
-                        linesRead++;
+                        if (validLine)
+                        {
+                            if (peptideSequence.Length >= 4)
+                            {
+                                // Check for, and remove any prefix or suffix residues
+                                if (peptideSequence[1] == '.' && peptideSequence[peptideSequence.Length - 2] == '.')
+                                {
+                                    peptideSequence = peptideSequence.Substring(2, peptideSequence.Length - 4);
+                                }
+                            }
+
+                            // Remove any non-letter characters
+                            peptideSequence = reReplaceSymbols.Replace(peptideSequence, string.Empty);
+
+                            if (peptideSequence.Length >= MINIMUM_LEADER_SEQUENCE_LENGTH)
+                            {
+                                if (validPeptideCount == 0)
+                                {
+                                    leaderSeqMinimumLength = peptideSequence.Length;
+                                }
+                                else if (peptideSequence.Length < leaderSeqMinimumLength)
+                                {
+                                    leaderSeqMinimumLength = peptideSequence.Length;
+                                }
+
+                                validPeptideCount++;
+                            }
+                        }
                     }
                 }
 

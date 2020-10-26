@@ -219,39 +219,39 @@ namespace PeptideToProteinMapEngine
                     while (!reader.EndOfStream)
                     {
                         var lineIn = reader.ReadLine();
-                        if (lineIn == null)
+
+                        if (string.IsNullOrWhiteSpace(lineIn))
                             continue;
 
-                        lineIn = lineIn.TrimEnd();
+                        var dataLine = lineIn.Trim();
 
-                        if (lineIn.Length > 0)
+                        if (dataLine[0] == '#')
                         {
-                            if (lineIn[0] == '#')
-                            {
-                                // Comment line; skip it
-                            }
-                            else if (lineIn.StartsWith("mod", StringComparison.OrdinalIgnoreCase))
-                            {
-                                // Modification definition line
-
-                                // Split the line on commas
-                                var splitLine = lineIn.Split(',');
-
-                                if (splitLine.Length >= 5 && (splitLine[0].ToLower().Trim()) == "mod")
-                                {
-                                    var modName = splitLine[4].ToLower();
-
-                                    if (modName.Length > 4)
-                                    {
-                                        // Only keep the first 4 characters of the modification name
-                                        modName = modName.Substring(0, 4);
-                                    }
-
-                                    inspectModNames.Add(modName);
-                                    ShowMessage("Found modification: " + lineIn + "   -->   Mod Symbol \"" + modName + "\"");
-                                }
-                            }
+                            // Comment line; skip it
+                            continue;
                         }
+
+                        if (!dataLine.StartsWith("mod", StringComparison.OrdinalIgnoreCase))
+                            continue;
+
+                        // Modification definition line
+
+                        // Split the line on commas
+                        var splitLine = dataLine.Split(',');
+
+                        if (splitLine.Length < 5 || splitLine[0].ToLower().Trim() != "mod")
+                            continue;
+
+                        var modName = splitLine[4].ToLower();
+
+                        if (modName.Length > 4)
+                        {
+                            // Only keep the first 4 characters of the modification name
+                            modName = modName.Substring(0, 4);
+                        }
+
+                        inspectModNames.Add(modName);
+                        ShowMessage("Found modification: " + dataLine + "   -->   Mod Symbol \"" + modName + "\"");
                     }
                 }
 
@@ -309,33 +309,33 @@ namespace PeptideToProteinMapEngine
                 // Read the contents of filePath
                 using (var reader = new StreamReader(new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.Read)))
                 {
-                    if (!reader.EndOfStream)
+                    if (reader.EndOfStream)
+                        return false;
+
+                    var dataLine = reader.ReadLine();
+
+                    if (string.IsNullOrWhiteSpace(dataLine))
+                        return false;
+
+                    var columnNames = dataLine.Split(sepChars);
+
+                    if (inputFileFormat == PeptideInputFileFormatConstants.ProteinAndPeptideFile)
                     {
-                        var dataLine = reader.ReadLine();
-
-                        if (!string.IsNullOrEmpty(dataLine))
+                        if (columnNames.Length > 1 && columnNames[1].StartsWith("peptide", StringComparison.OrdinalIgnoreCase))
                         {
-                            var columnNames = dataLine.Split(sepChars);
-
-                            if (inputFileFormat == PeptideInputFileFormatConstants.ProteinAndPeptideFile)
-                            {
-                                if (columnNames.Length > 1 && columnNames[1].StartsWith("peptide", StringComparison.OrdinalIgnoreCase))
-                                {
-                                    headerFound = true;
-                                }
-                            }
-                            else if (inputFileFormat == PeptideInputFileFormatConstants.PeptideListFile)
-                            {
-                                if (columnNames[0].StartsWith("peptide", StringComparison.OrdinalIgnoreCase))
-                                {
-                                    headerFound = true;
-                                }
-                            }
-                            else if (columnNames.Any(dataColumn => dataColumn.StartsWith("peptide", StringComparison.OrdinalIgnoreCase)))
-                            {
-                                headerFound = true;
-                            }
+                            headerFound = true;
                         }
+                    }
+                    else if (inputFileFormat == PeptideInputFileFormatConstants.PeptideListFile)
+                    {
+                        if (columnNames[0].StartsWith("peptide", StringComparison.OrdinalIgnoreCase))
+                        {
+                            headerFound = true;
+                        }
+                    }
+                    else if (columnNames.Any(dataColumn => dataColumn.StartsWith("peptide", StringComparison.OrdinalIgnoreCase)))
+                    {
+                        headerFound = true;
                     }
                 }
 
@@ -584,37 +584,39 @@ namespace PeptideToProteinMapEngine
                 {
                     var currentProtein = string.Empty;
 
-                    var currentLine = 0;
+                    var linesRead = 0;
                     long bytesRead = 0;
 
                     var currentProteinID = 0;
 
                     while (!reader.EndOfStream)
                     {
-                        currentLine++;
-
                         if (AbortProcessing)
                             break;
+
                         var lineIn = reader.ReadLine();
-                        if (lineIn == null)
+
+                        if (string.IsNullOrEmpty(lineIn))
                             continue;
+
                         bytesRead += lineIn.Length + terminatorSize;
 
-                        lineIn = lineIn.TrimEnd();
+                        var dataLine = lineIn.TrimEnd();
 
-                        if (currentLine == 1)
+                        linesRead++;
+                        if (linesRead == 1)
                         {
                             // Header line; skip it
                             continue;
                         }
 
-                        if (lineIn.Length == 0)
+                        if (string.IsNullOrWhiteSpace(dataLine))
                         {
                             continue;
                         }
 
                         // Split the line
-                        var splitLine = lineIn.Split('\t');
+                        var splitLine = dataLine.Split('\t');
 
                         if (splitLine.Length < 4)
                         {
@@ -646,7 +648,7 @@ namespace PeptideToProteinMapEngine
                         // Update the values in the array. The other option would be to index the array for each of the assignments above.
                         proteinMapping.Add(proteinInfo);
 
-                        if (currentLine % 1000 == 0)
+                        if (linesRead % 1000 == 0)
                         {
                             UpdateProgress(PERCENT_COMPLETE_POSTPROCESSING +
                                 Convert.ToSingle(bytesRead / (double)reader.BaseStream.Length * 100) * (PERCENT_COMPLETE_POSTPROCESSING - PERCENT_COMPLETE_RUNNING_PROTEIN_COVERAGE_SUMMARIZER) / 100);
@@ -766,7 +768,7 @@ namespace PeptideToProteinMapEngine
                 // Keep track of PSM counts
                 using (var reader = new StreamReader(new FileStream(inputFilePath, FileMode.Open, FileAccess.Read, FileShare.Read)))
                 {
-                    var currentLine = 0;
+                    var linesRead = 0;
                     long bytesRead = 0;
 
                     while (!reader.EndOfStream)
@@ -775,21 +777,22 @@ namespace PeptideToProteinMapEngine
                             break;
 
                         var lineIn = reader.ReadLine();
-                        if (string.IsNullOrWhiteSpace(lineIn))
+
+                        if (string.IsNullOrEmpty(lineIn))
                             continue;
 
                         bytesRead += lineIn.Length + terminatorSize;
 
-                        lineIn = lineIn.TrimEnd();
+                        var dataLine = lineIn.TrimEnd();
 
-                        currentLine++;
-                        if (currentLine == 1 && (peptideSequenceColIndex < 0 || lineIn.StartsWith("#")))
+                        linesRead++;
+                        if (linesRead == 1 && (peptideSequenceColIndex < 0 || dataLine.StartsWith("#")))
                         {
                             // Header line
                             if (peptideSequenceColIndex < 0)
                             {
                                 // Split the header line to look for the "Peptide" and Scan columns
-                                var columnNames = lineIn.Split(sepChars);
+                                var columnNames = dataLine.Split(sepChars);
 
                                 peptideSequenceColIndex = clsProteinCoverageSummarizer.FindColumnIndex(columnNames, "peptide");
                                 scanColIndex = clsProteinCoverageSummarizer.FindColumnIndex(columnNames, "scan");
@@ -807,12 +810,12 @@ namespace PeptideToProteinMapEngine
                             continue;
                         }
 
-                        if (lineIn.Length == 0)
+                        if (string.IsNullOrWhiteSpace(dataLine))
                         {
                             continue;
                         }
 
-                        var splitLine = lineIn.Split(sepChars);
+                        var splitLine = dataLine.Split(sepChars);
 
                         if (splitLine.Length > peptideSequenceColIndex)
                         {
@@ -829,7 +832,7 @@ namespace PeptideToProteinMapEngine
                             UpdateUniquePeptideList(splitLine[peptideSequenceColIndex], scanNumber);
                         }
 
-                        if (currentLine % 1000 == 0)
+                        if (linesRead % 1000 == 0)
                         {
                             UpdateProgress(PERCENT_COMPLETE_PREPROCESSING +
                                 Convert.ToSingle(bytesRead / (double)reader.BaseStream.Length * 100) * (PERCENT_COMPLETE_RUNNING_PROTEIN_COVERAGE_SUMMARIZER - PERCENT_COMPLETE_PREPROCESSING) / 100);
