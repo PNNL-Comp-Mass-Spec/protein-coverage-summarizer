@@ -131,7 +131,7 @@ namespace ProteinCoverageSummarizer
 
         public event ProgressCompleteEventHandler ProgressComplete;
 
-        protected string mProgressStepDescription;
+        private string mProgressStepDescription;
 
         /// <summary>
         /// Percent complete
@@ -139,7 +139,7 @@ namespace ProteinCoverageSummarizer
         /// <remarks>
         /// Value between 0 and 100, but can contain decimal percentage values
         /// </remarks>
-        protected float mProgressPercentComplete;
+        private float mProgressPercentComplete;
 
         #endregion
 
@@ -462,28 +462,28 @@ namespace ProteinCoverageSummarizer
             mIndicesSorted = true;
         }
 
-        protected void ResetProgress()
+        private void ResetProgress()
         {
             ProgressReset?.Invoke();
         }
 
-        protected void ResetProgress(string strProgressStepDescription)
+        private void ResetProgress(string strProgressStepDescription)
         {
             UpdateProgress(strProgressStepDescription, 0);
             ProgressReset?.Invoke();
         }
 
-        protected void UpdateProgress(string strProgressStepDescription)
+        private void UpdateProgress(string strProgressStepDescription)
         {
             UpdateProgress(strProgressStepDescription, mProgressPercentComplete);
         }
 
-        protected void UpdateProgress(float sngPercentComplete)
+        private void UpdateProgress(float sngPercentComplete)
         {
             UpdateProgress(ProgressStepDescription, sngPercentComplete);
         }
 
-        protected void UpdateProgress(string strProgressStepDescription, float sngPercentComplete)
+        private void UpdateProgress(string strProgressStepDescription, float sngPercentComplete)
         {
             mProgressStepDescription = string.Copy(strProgressStepDescription);
             if (sngPercentComplete < 0)
@@ -500,7 +500,7 @@ namespace ProteinCoverageSummarizer
             ProgressChanged?.Invoke(ProgressStepDescription, ProgressPercentComplete);
         }
 
-        protected void OperationComplete()
+        private void OperationComplete()
         {
             ProgressComplete?.Invoke();
         }

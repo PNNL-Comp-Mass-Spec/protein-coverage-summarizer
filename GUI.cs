@@ -977,12 +977,12 @@ namespace ProteinCoverageSummarizerGUI
             }
         }
 
-        protected void ShowErrorMessage(string message)
+        private void ShowErrorMessage(string message)
         {
             ShowErrorMessage(message, "Error");
         }
 
-        protected void ShowErrorMessage(string message, string caption)
+        private void ShowErrorMessage(string message, string caption)
         {
             MessageBox.Show(message, caption, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
         }

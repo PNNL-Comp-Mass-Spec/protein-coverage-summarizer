@@ -40,7 +40,7 @@ namespace ProteinCoverageSummarizer
 
         #region "Constants and Enums"
 
-        protected const string SQL_LITE_PROTEIN_CACHE_FILENAME = "tmpProteinInfoCache.db3";
+        private const string SQL_LITE_PROTEIN_CACHE_FILENAME = "tmpProteinInfoCache.db3";
 
         #endregion
 

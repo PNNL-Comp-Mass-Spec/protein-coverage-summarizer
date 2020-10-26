@@ -39,12 +39,12 @@ namespace PeptideToProteinMapEngine
 
         public const string FILENAME_SUFFIX_PEP_TO_PROTEIN_MAPPING = "_PepToProtMap.txt";
 
-        protected const string FILENAME_SUFFIX_PSM_UNIQUE_PEPTIDES = "_peptides";
+        private const string FILENAME_SUFFIX_PSM_UNIQUE_PEPTIDES = "_peptides";
 
         // The following are the initial % complete value displayed during each of these stages
-        protected const float PERCENT_COMPLETE_PREPROCESSING = 0;
-        protected const float PERCENT_COMPLETE_RUNNING_PROTEIN_COVERAGE_SUMMARIZER = 5;
-        protected const float PERCENT_COMPLETE_POSTPROCESSING = 95;
+        private const float PERCENT_COMPLETE_PREPROCESSING = 0;
+        private const float PERCENT_COMPLETE_RUNNING_PROTEIN_COVERAGE_SUMMARIZER = 5;
+        private const float PERCENT_COMPLETE_POSTPROCESSING = 95;
 
         public enum PeptideInputFileFormatConstants
         {
@@ -62,7 +62,7 @@ namespace PeptideToProteinMapEngine
 
         #region "Structures"
 
-        protected struct udtProteinIDMapInfoType
+        private struct udtProteinIDMapInfoType
         {
             public int ProteinID;
             public string Peptide;
@@ -79,7 +79,7 @@ namespace PeptideToProteinMapEngine
             }
         }
 
-        protected struct udtPepToProteinMappingType
+        private struct udtPepToProteinMappingType
         {
             public string Peptide;
             public string Protein;
@@ -99,7 +99,7 @@ namespace PeptideToProteinMapEngine
 
         #region "Class wide variables"
 
-        protected clsProteinCoverageSummarizer mProteinCoverageSummarizer;
+        private clsProteinCoverageSummarizer mProteinCoverageSummarizer;
 
         // When processing an inspect search result file, if you provide the inspect parameter file name,
         // then this program will read the parameter file and look for the "mod," lines.  The user-assigned mod
@@ -355,9 +355,9 @@ namespace PeptideToProteinMapEngine
             return mProteinCoverageSummarizer.LoadParameterFileSettings(parameterFilePath);
         }
 
-        protected bool PostProcessPSMResultsFile(string peptideListFilePath,
-                                                 string proteinToPepMapFilePath,
-                                                 bool deleteWorkingFiles)
+        private bool PostProcessPSMResultsFile(string peptideListFilePath,
+                                               string proteinToPepMapFilePath,
+                                               bool deleteWorkingFiles)
         {
             const string UNKNOWN_PROTEIN_NAME = "__NoMatch__";
 
@@ -556,10 +556,10 @@ namespace PeptideToProteinMapEngine
             return false;
         }
 
-        protected bool PostProcessPSMResultsFileReadMapFile(string proteinToPepMapFilePath,
-            out string[] proteins,
-            out int[] proteinIDPointerArray,
-            out udtProteinIDMapInfoType[] proteinMapInfo)
+        private bool PostProcessPSMResultsFileReadMapFile(string proteinToPepMapFilePath,
+                                                          out string[] proteins,
+                                                          out int[] proteinIDPointerArray,
+                                                          out udtProteinIDMapInfoType[] proteinMapInfo)
         {
             const int terminatorSize = 2;
 
@@ -677,9 +677,9 @@ namespace PeptideToProteinMapEngine
             return success;
         }
 
-        protected string PreProcessInspectResultsFile(string inputFilePath,
-            string outputDirectoryPath,
-            string inspectParamFilePath)
+        private string PreProcessInspectResultsFile(string inputFilePath,
+                                                    string outputDirectoryPath,
+                                                    string inspectParamFilePath)
         {
             // Read inspectParamFilePath to extract the mod names
             if (!ExtractModInfoFromInspectParamFile(inspectParamFilePath, ref mInspectModNameList))
@@ -693,9 +693,9 @@ namespace PeptideToProteinMapEngine
             return PreProcessPSMResultsFile(inputFilePath, outputDirectoryPath, PeptideInputFileFormatConstants.InspectResultsFile);
         }
 
-        protected string PreProcessPSMResultsFile(string inputFilePath,
-                                                  string outputDirectoryPath,
-                                                  PeptideInputFileFormatConstants inputFileFormat)
+        private string PreProcessPSMResultsFile(string inputFilePath,
+                                                string outputDirectoryPath,
+                                                PeptideInputFileFormatConstants inputFileFormat)
         {
             int terminatorSize;
 
@@ -848,7 +848,7 @@ namespace PeptideToProteinMapEngine
             return string.Empty;
         }
 
-        protected string PreProcessPHRPDataFile(string inputFilePath, string outputDirectoryPath)
+        private string PreProcessPHRPDataFile(string inputFilePath, string outputDirectoryPath)
         {
             try
             {
@@ -928,7 +928,7 @@ namespace PeptideToProteinMapEngine
             return string.Empty;
         }
 
-        protected string PreProcessDataWriteOutPeptides(string inputFilePath, string outputDirectoryPath)
+        private string PreProcessDataWriteOutPeptides(string inputFilePath, string outputDirectoryPath)
         {
             try
             {
@@ -1152,7 +1152,7 @@ namespace PeptideToProteinMapEngine
             }
         }
 
-        protected string RemoveInspectMods(string peptide, ref List<string> inspectModNames)
+        private string RemoveInspectMods(string peptide, ref List<string> inspectModNames)
         {
             var prefix = string.Empty;
             var suffix = string.Empty;
@@ -1215,7 +1215,7 @@ namespace PeptideToProteinMapEngine
 
         #region "IComparer Classes"
 
-        protected class ProteinIDMapInfoComparer : IComparer
+        private class ProteinIDMapInfoComparer : IComparer
         {
             public int Compare(object x, object y)
             {
@@ -1235,7 +1235,7 @@ namespace PeptideToProteinMapEngine
             }
         }
 
-        protected class ProteinIDMapInfoPeptideSearchComparer : IComparer
+        private class ProteinIDMapInfoPeptideSearchComparer : IComparer
         {
             public int Compare(object x, object y)
             {
@@ -1249,7 +1249,7 @@ namespace PeptideToProteinMapEngine
             }
         }
 
-        protected class PepToProteinMappingComparer : IComparer<udtPepToProteinMappingType>
+        private class PepToProteinMappingComparer : IComparer<udtPepToProteinMappingType>
         {
             public int Compare(udtPepToProteinMappingType x, udtPepToProteinMappingType y)
             {

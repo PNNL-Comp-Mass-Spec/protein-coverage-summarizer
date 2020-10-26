@@ -50,7 +50,7 @@ namespace ProteinCoverageSummarizer
         public const string FILENAME_SUFFIX_PROTEIN_TO_PEPTIDE_MAPPING = "_ProteinToPeptideMapping.txt";
         public const string FILENAME_SUFFIX_SOURCE_PLUS_ALL_PROTEINS = "_AllProteins.txt";
 
-        protected const int PROTEIN_CHUNK_COUNT = 50000;
+        private const int PROTEIN_CHUNK_COUNT = 50000;
 
         public enum ProteinCoverageErrorCodes
         {
@@ -79,7 +79,7 @@ namespace ProteinCoverageSummarizer
 
         #region "Structures"
 
-        protected struct udtPeptideCountStatsType
+        private struct udtPeptideCountStatsType
         {
             public int UniquePeptideCount;
             public int NonUniquePeptideCount;
@@ -113,7 +113,7 @@ namespace ProteinCoverageSummarizer
         /// of each of the various processing steps performed in this procedure
         /// </summary>
         /// <remarks>The percent complete values range from 0 to 100</remarks>
-        protected float[] mPercentCompleteStartLevels;
+        private float[] mPercentCompleteStartLevels;
 
         #endregion
 
@@ -128,8 +128,8 @@ namespace ProteinCoverageSummarizer
         /// <param name="percentComplete">Value between 0 and 100, but can contain decimal percentage values</param>
         public event ProgressChangedEventHandler ProgressChanged;
 
-        protected ProteinCoverageProcessingSteps mCurrentProcessingStep = ProteinCoverageProcessingSteps.Starting;
-        protected string mProgressStepDescription = string.Empty;
+        private ProteinCoverageProcessingSteps mCurrentProcessingStep = ProteinCoverageProcessingSteps.Starting;
+        private string mProgressStepDescription = string.Empty;
 
         /// <summary>
         /// Percent complete
@@ -137,7 +137,7 @@ namespace ProteinCoverageSummarizer
         /// <remarks>
         /// Value between 0 and 100, but can contain decimal percentage values
         /// </remarks>
-        protected float mProgressPercentComplete;
+        private float mProgressPercentComplete;
 
         #endregion
 
@@ -2282,19 +2282,19 @@ namespace ProteinCoverageSummarizer
         }
 
         // ReSharper disable once UnusedMember.Global
-        protected void ResetProgress(string stepDescription)
+        private void ResetProgress(string stepDescription)
         {
             mProgressStepDescription = string.Copy(stepDescription);
             mProgressPercentComplete = 0;
             ProgressReset?.Invoke();
         }
 
-        protected void SetErrorCode(ProteinCoverageErrorCodes eNewErrorCode)
+        private void SetErrorCode(ProteinCoverageErrorCodes eNewErrorCode)
         {
             SetErrorCode(eNewErrorCode, false);
         }
 
-        protected void SetErrorCode(ProteinCoverageErrorCodes eNewErrorCode, bool leaveExistingErrorCodeUnchanged)
+        private void SetErrorCode(ProteinCoverageErrorCodes eNewErrorCode, bool leaveExistingErrorCodeUnchanged)
         {
             if (leaveExistingErrorCodeUnchanged && ErrorCode != ProteinCoverageErrorCodes.NoError)
             {
@@ -2306,7 +2306,7 @@ namespace ProteinCoverageSummarizer
             }
         }
 
-        protected void SetErrorMessage(string message, Exception ex = null)
+        private void SetErrorMessage(string message, Exception ex = null)
         {
             StatusMessage = message ?? string.Empty;
 
@@ -2317,18 +2317,18 @@ namespace ProteinCoverageSummarizer
             }
         }
 
-        protected void UpdateProgress(string stepDescription)
+        private void UpdateProgress(string stepDescription)
         {
             mProgressStepDescription = string.Copy(stepDescription);
             ProgressChanged?.Invoke(ProgressStepDescription, ProgressPercentComplete);
         }
 
-        protected void UpdateProgress(float percentComplete, ProteinCoverageProcessingSteps eCurrentProcessingStep)
+        private void UpdateProgress(float percentComplete, ProteinCoverageProcessingSteps eCurrentProcessingStep)
         {
             UpdateProgress(ProgressStepDescription, percentComplete, eCurrentProcessingStep);
         }
 
-        protected void UpdateProgress(string stepDescription, float percentComplete, ProteinCoverageProcessingSteps eCurrentProcessingStep)
+        private void UpdateProgress(string stepDescription, float percentComplete, ProteinCoverageProcessingSteps eCurrentProcessingStep)
         {
             mProgressStepDescription = string.Copy(stepDescription);
             mCurrentProcessingStep = eCurrentProcessingStep;
