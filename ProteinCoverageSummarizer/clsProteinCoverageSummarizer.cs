@@ -104,7 +104,7 @@ namespace ProteinCoverageSummarizer
 
         private clsProteinFileDataCache.udtProteinInfoType[] mCachedProteinInfo;
 
-        private Dictionary<string, List<string>> mPeptideToProteinMapResults;
+        private Dictionary<string, SortedSet<string>> mPeptideToProteinMapResults;
 
         private const int PERCENT_COMPLETE_LEVEL_COUNT = 9;
 
@@ -1201,7 +1201,7 @@ namespace ProteinCoverageSummarizer
 
                 if (mPeptideToProteinMapResults == null)
                 {
-                    mPeptideToProteinMapResults = new Dictionary<string, List<string>>();
+                    mPeptideToProteinMapResults = new Dictionary<string, SortedSet<string>>(StringComparer.OrdinalIgnoreCase);
                 }
                 else
                 {
@@ -2046,11 +2046,14 @@ namespace ProteinCoverageSummarizer
             // Store the mapping between peptide sequence and protein name
             if (mPeptideToProteinMapResults.TryGetValue(cleanPeptideSequence, out var proteins))
             {
-                proteins.Add(proteinName);
+                if (!proteins.Contains(proteinName))
+                {
+                    proteins.Add(proteinName);
+                }
             }
             else
             {
-                proteins = new List<string>() { proteinName };
+                proteins = new SortedSet<string>() { proteinName };
                 mPeptideToProteinMapResults.Add(cleanPeptideSequence, proteins);
             }
         }
