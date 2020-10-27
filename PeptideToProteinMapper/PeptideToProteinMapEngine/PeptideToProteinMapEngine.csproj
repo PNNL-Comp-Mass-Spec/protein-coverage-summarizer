@@ -23,7 +23,8 @@
     <WarningLevel>4</WarningLevel>
     <DocumentationFile>bin\Debug\PeptideToProteinMapEngine.xml</DocumentationFile>
     <PlatformTarget>AnyCPU</PlatformTarget>
-    <NoWarn>CS1591,CS1572</NoWarn>
+    <NoWarn>
+    </NoWarn>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -34,7 +35,8 @@
     <WarningLevel>4</WarningLevel>
     <DocumentationFile>bin\Release\PeptideToProteinMapEngine.xml</DocumentationFile>
     <PlatformTarget>AnyCPU</PlatformTarget>
-    <NoWarn>CS1591,CS1572</NoWarn>
+    <NoWarn>
+    </NoWarn>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="PHRPReader">
