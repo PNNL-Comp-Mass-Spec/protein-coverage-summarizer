@@ -42,7 +42,7 @@ There are two options for computing protein coverage and peptide to protein mapp
 ```
 ProteinCoverageSummarizerGUI.exe
   /I:PeptideInputFilePath /R:ProteinInputFilePath [/O:OutputDirectoryName]
-  [/P:ParameterFilePath] [/G] [/H] [/M] [/K] [/Debug] [/KeepDB]
+  [/P:ParameterFilePath] [/G] [/H] [/M] [/K] [/D] [/Debug] [/KeepDB]
 ```
 
 The input file path can contain the wildcard character *. If a wildcard is
@@ -64,6 +64,8 @@ Use `/H` to suppress (hide) the protein sequence in the _coverage.txt file.
 Use `/M` to enable the creation of a protein to peptide mapping file.
 
 Use `/K` to skip protein coverage computation steps
+
+Use `/D` to duplicate the input file, creating a new file with one line per peptide/protein combo
 
 Use `/Debug` to keep the console open to see additional debug messages
 
@@ -96,12 +98,15 @@ The parameter file path is optional. If included, it should point to a valid XML
 parameter file.
 
 Use `/F` to specify the peptide input file format code.  Options are:
-* 0=Auto Determine: Treated as `/F:1` unless name ends in _inspect.txt, then `/F:3`
-* 1=Peptide sequence in the 1st column (subsequent columns are ignored)
-* 2=Protein name in 1st column and peptide sequence 2nd column
-* 3=Inspect search results file (peptide sequence in the 3rd column)
-* 4=MS-GF+ search results file (peptide sequence in the column titled 'Peptide'; optionally scan number in the column titled 'Scan')
-* 5=SEQUEST, X!Tandem, Inspect, or MS-GF+ PHRP data file
+| Format Code | Type           | Comment                                                         |
+|-------------|----------------|-----------------------------------------------------------------|
+| 0           | Auto Determine | Treated as `/F:1` unless name ends in _inspect.txt, then `/F:3` |
+| 1           | Peptide sequence in the 1st column | Subsequent columns are ignored              |
+| 2           | Protein name in 1st column and peptide sequence 2nd column |                     |
+| 3           | Inspect search results file               | Peptide sequence in the 3rd column   |
+| 4           | MS-GF+ search results file                | Peptide sequence in the column titled 'Peptide'; optionally scan number in the column titled 'Scan'     |
+| 5           | Peptide Hit Results Processor (PHRP) file | PHRP creates tab-delimited text files for MS-GF+, X!Tandem, SEQUEST, or Inspect results                 |
+| 6           | Generic tab-delimited text file           | Will look for a column titled 'Peptide'; also looks for Protein and Scan, though these are not required |
 
 When processing an Inspect search results file, use `/N` to specify the Inspect
 parameter file used (required for determining the mod names embedded in the
