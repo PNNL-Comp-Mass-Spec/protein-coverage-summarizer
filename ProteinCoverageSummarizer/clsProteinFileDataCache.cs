@@ -270,7 +270,7 @@ namespace ProteinCoverageSummarizer
                 return;
             }
 
-            for (var retryIndex = 0; retryIndex < MAX_RETRY_ATTEMPT_COUNT ; retryIndex++)
+            for (var retryIndex = 0; retryIndex < MAX_RETRY_ATTEMPT_COUNT; retryIndex++)
             {
                 var retryHoldOffSeconds = retryIndex + 1;
                 try

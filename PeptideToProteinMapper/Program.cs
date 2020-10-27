@@ -81,9 +81,12 @@ namespace PeptideToProteinMapper
             }
         }
 
+        /// <summary>
+        /// Main program
+        /// </summary>
+        /// <returns>0 if no error, error code if an error</returns>
         public static int Main()
         {
-            // Returns 0 if no error, error code if an error
             var commandLineParser = new clsParseCommandLine();
 
             var returnCode = 0;
@@ -342,7 +345,8 @@ namespace PeptideToProteinMapper
                 Console.WriteLine("   " + clsPeptideToProteinMapEngine.PeptideInputFileFormatConstants.ProteinAndPeptideFile + "=Protein name in 1st column and peptide sequence 2nd column");
                 Console.WriteLine("   " + clsPeptideToProteinMapEngine.PeptideInputFileFormatConstants.InspectResultsFile + "=Inspect search results file (peptide sequence in the 3rd column)");
                 Console.WriteLine("   " + clsPeptideToProteinMapEngine.PeptideInputFileFormatConstants.MSGFPlusResultsFile + "=MS-GF+ search results file (peptide sequence in the column titled 'Peptide'; optionally scan number in the column titled 'Scan')");
-                Console.WriteLine("   " + clsPeptideToProteinMapEngine.PeptideInputFileFormatConstants.PHRPFile + "=SEQUEST, X!Tandem, Inspect, or MS-GF+ PHRP data file");
+                Console.WriteLine("   " + clsPeptideToProteinMapEngine.PeptideInputFileFormatConstants.PHRPFile + "=Peptide Hit Results Processor (PHRP) file (for MS-GF+, X!Tandem, SEQUEST, or Inspect results)");
+                Console.WriteLine("   " + clsPeptideToProteinMapEngine.PeptideInputFileFormatConstants.TabDelimitedText + "=Generic tab-delimited text file; will look for column names that start with Peptide, Protein, and Scan");
                 Console.WriteLine();
 
                 Console.WriteLine(ConsoleMsgUtils.WrapParagraph(

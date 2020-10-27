@@ -48,14 +48,38 @@ namespace PeptideToProteinMapEngine
 
         public enum PeptideInputFileFormatConstants
         {
+            /// <summary>
+            /// Unknown file type
+            /// </summary>
             Unknown = -1,
+            /// <summary>
+            /// Auto-determine the file type
+            /// </summary>
             AutoDetermine = 0,
-            PeptideListFile = 1,             // First column is peptide sequence
-            ProteinAndPeptideFile = 2,       // First column is protein name, second column is peptide sequence
-            InspectResultsFile = 3,          // Inspect results file; pre-process the file to determine the peptides present, then determine the proteins that contain the given peptides
-            MSGFPlusResultsFile = 4,         // MS-GF+ results file; pre-process the file to determine the peptides present, then determine the proteins that contain the given peptides
-            PHRPFile = 5,                    // SEQUEST, Inspect, X!Tandem, or MS-GF+ synopsis or first-hits file created by PHRP; pre-process the file to determine the peptides present, then determine the proteins that contain the given peptides
-            TabDelimitedText = 6             // Generic tab-delimited text file; will look for columns named Peptide and Protein
+            /// <summary>
+            ///  First column is peptide sequence
+            /// </summary>
+            PeptideListFile = 1,
+            /// <summary>
+            /// First column is protein name, second column is peptide sequence
+            /// </summary>
+            ProteinAndPeptideFile = 2,
+            /// <summary>
+            /// Inspect results file; pre-process the file to determine the peptides present, then determine the proteins that contain the given peptides
+            /// </summary>
+            InspectResultsFile = 3,
+            /// <summary>
+            /// MS-GF+ results file; pre-process the file to determine the peptides present, then determine the proteins that contain the given peptides
+            /// </summary>
+            MSGFPlusResultsFile = 4,
+            /// <summary>
+            /// SEQUEST, Inspect, X!Tandem, or MS-GF+ synopsis or first-hits file created by Peptide Hit Results Processor (PHRP); pre-processes the file to determine the peptides present, then determine the proteins that contain the given peptides
+            /// </summary>
+            PHRPFile = 5,
+            /// <summary>
+            /// Generic tab-delimited text file; will look for column names that start with Peptide, Protein, and Scan
+            /// </summary>
+            TabDelimitedText = 6
         }
 
         #endregion
