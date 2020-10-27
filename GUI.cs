@@ -437,15 +437,15 @@ namespace ProteinCoverageSummarizerGUI
                         }
                         else
                         {
-                            DelimitedFileReader.eDelimitedFileFormatCode proteinInputFileColumnOrder;
+                            DelimitedProteinFileReader.ProteinFileFormatCode proteinInputFileColumnOrder;
                             try
                             {
-                                proteinInputFileColumnOrder = (DelimitedFileReader.eDelimitedFileFormatCode)settingsFile
+                                proteinInputFileColumnOrder = (DelimitedProteinFileReader.ProteinFileFormatCode)settingsFile
                                     .GetParam(clsProteinCoverageSummarizer.XML_SECTION_PROCESSING_OPTIONS, "DelimitedProteinFileFormatCode", cboProteinInputFileColumnOrdering.SelectedIndex + PROTEIN_INPUT_FILE_INDEX_OFFSET);
                             }
                             catch (Exception)
                             {
-                                proteinInputFileColumnOrder = DelimitedFileReader.eDelimitedFileFormatCode.ProteinName_Sequence;
+                                proteinInputFileColumnOrder = DelimitedProteinFileReader.ProteinFileFormatCode.ProteinName_Sequence;
                             }
 
                             try
@@ -766,16 +766,16 @@ namespace ProteinCoverageSummarizerGUI
             cboCharactersPerLine.SelectedIndex = 0;
 
             cboProteinInputFileColumnOrdering.Items.Clear();
-            // Note: Skipping ProteinFileReader.(int)DelimitedFileReader.eDelimitedFileFormatCode.SequenceOnly since a Protein Sequence Only file is inappropriate for this program
-            cboProteinInputFileColumnOrdering.Items.Insert((int)DelimitedFileReader.eDelimitedFileFormatCode.ProteinName_Sequence - PROTEIN_INPUT_FILE_INDEX_OFFSET, "ProteinName and Sequence");
-            cboProteinInputFileColumnOrdering.Items.Insert((int)DelimitedFileReader.eDelimitedFileFormatCode.ProteinName_Description_Sequence - PROTEIN_INPUT_FILE_INDEX_OFFSET, "ProteinName, Description, Seq");
-            cboProteinInputFileColumnOrdering.Items.Insert((int)DelimitedFileReader.eDelimitedFileFormatCode.UniqueID_Sequence - PROTEIN_INPUT_FILE_INDEX_OFFSET, "UniqueID and Seq");
-            cboProteinInputFileColumnOrdering.Items.Insert((int)DelimitedFileReader.eDelimitedFileFormatCode.ProteinName_PeptideSequence_UniqueID - PROTEIN_INPUT_FILE_INDEX_OFFSET, "ProteinName, Seq, UniqueID");
-            cboProteinInputFileColumnOrdering.Items.Insert((int)DelimitedFileReader.eDelimitedFileFormatCode.ProteinName_PeptideSequence_UniqueID_Mass_NET - PROTEIN_INPUT_FILE_INDEX_OFFSET, "ProteinName, Seq, UniqueID, Mass, Time");
-            cboProteinInputFileColumnOrdering.Items.Insert((int)DelimitedFileReader.eDelimitedFileFormatCode.ProteinName_PeptideSequence_UniqueID_Mass_NET_NETStDev_DiscriminantScore - PROTEIN_INPUT_FILE_INDEX_OFFSET, "ProteinName, Seq, UniqueID, Mass, Time, TimeStDev, DiscriminantScore");
-            cboProteinInputFileColumnOrdering.Items.Insert((int)DelimitedFileReader.eDelimitedFileFormatCode.UniqueID_Sequence_Mass_NET - PROTEIN_INPUT_FILE_INDEX_OFFSET, "UniqueID, Seq, Mass, Time");
+            // Note: Skipping ProteinFileReader.(int)DelimitedProteinFileReader.ProteinFileFormatCode.SequenceOnly since a Protein Sequence Only file is inappropriate for this program
+            cboProteinInputFileColumnOrdering.Items.Insert((int)DelimitedProteinFileReader.ProteinFileFormatCode.ProteinName_Sequence - PROTEIN_INPUT_FILE_INDEX_OFFSET, "ProteinName and Sequence");
+            cboProteinInputFileColumnOrdering.Items.Insert((int)DelimitedProteinFileReader.ProteinFileFormatCode.ProteinName_Description_Sequence - PROTEIN_INPUT_FILE_INDEX_OFFSET, "ProteinName, Description, Seq");
+            cboProteinInputFileColumnOrdering.Items.Insert((int)DelimitedProteinFileReader.ProteinFileFormatCode.UniqueID_Sequence - PROTEIN_INPUT_FILE_INDEX_OFFSET, "UniqueID and Seq");
+            cboProteinInputFileColumnOrdering.Items.Insert((int)DelimitedProteinFileReader.ProteinFileFormatCode.ProteinName_PeptideSequence_UniqueID - PROTEIN_INPUT_FILE_INDEX_OFFSET, "ProteinName, Seq, UniqueID");
+            cboProteinInputFileColumnOrdering.Items.Insert((int)DelimitedProteinFileReader.ProteinFileFormatCode.ProteinName_PeptideSequence_UniqueID_Mass_NET - PROTEIN_INPUT_FILE_INDEX_OFFSET, "ProteinName, Seq, UniqueID, Mass, Time");
+            cboProteinInputFileColumnOrdering.Items.Insert((int)DelimitedProteinFileReader.ProteinFileFormatCode.ProteinName_PeptideSequence_UniqueID_Mass_NET_NETStDev_DiscriminantScore - PROTEIN_INPUT_FILE_INDEX_OFFSET, "ProteinName, Seq, UniqueID, Mass, Time, TimeStDev, DiscriminantScore");
+            cboProteinInputFileColumnOrdering.Items.Insert((int)DelimitedProteinFileReader.ProteinFileFormatCode.UniqueID_Sequence_Mass_NET - PROTEIN_INPUT_FILE_INDEX_OFFSET, "UniqueID, Seq, Mass, Time");
 
-            cboProteinInputFileColumnOrdering.SelectedIndex = (int)DelimitedFileReader.eDelimitedFileFormatCode.ProteinName_Description_Sequence - PROTEIN_INPUT_FILE_INDEX_OFFSET;
+            cboProteinInputFileColumnOrdering.SelectedIndex = (int)DelimitedProteinFileReader.ProteinFileFormatCode.ProteinName_Description_Sequence - PROTEIN_INPUT_FILE_INDEX_OFFSET;
 
             cboPeptideInputFileColumnOrdering.Items.Clear();
             cboPeptideInputFileColumnOrdering.Items.Insert((int)ProteinCoverageSummarizerOptions.PeptideFileColumnOrderingCode.SequenceOnly, "Sequence Only");
@@ -787,7 +787,7 @@ namespace ProteinCoverageSummarizerGUI
 
         private void ResetToDefaults()
         {
-            cboProteinInputFileColumnOrdering.SelectedIndex = (int)DelimitedFileReader.eDelimitedFileFormatCode.ProteinName_Sequence - PROTEIN_INPUT_FILE_INDEX_OFFSET;
+            cboProteinInputFileColumnOrdering.SelectedIndex = (int)DelimitedProteinFileReader.ProteinFileFormatCode.ProteinName_Sequence - PROTEIN_INPUT_FILE_INDEX_OFFSET;
             cboProteinInputFileColumnDelimiter.SelectedIndex = 1;
             txtProteinInputFileColumnDelimiter.Text = ";";
             chkProteinFileSkipFirstLine.Checked = false;
@@ -875,7 +875,7 @@ namespace ProteinCoverageSummarizerGUI
             {
                 proteinCoverageSummarizer.Options.ProteinInputFilePath = txtProteinInputFilePath.Text;
 
-                proteinCoverageSummarizer.Options.ProteinDataOptions.DelimitedFileFormatCode = (DelimitedFileReader.eDelimitedFileFormatCode)(cboProteinInputFileColumnOrdering.SelectedIndex + PROTEIN_INPUT_FILE_INDEX_OFFSET);
+                proteinCoverageSummarizer.Options.ProteinDataOptions.DelimitedFileFormatCode = (DelimitedProteinFileReader.ProteinFileFormatCode)(cboProteinInputFileColumnOrdering.SelectedIndex + PROTEIN_INPUT_FILE_INDEX_OFFSET);
                 proteinCoverageSummarizer.Options.ProteinDataOptions.DelimitedInputFileDelimiter = LookupColumnDelimiter(cboProteinInputFileColumnDelimiter, txtProteinInputFileColumnDelimiter, '\t');
                 proteinCoverageSummarizer.Options.ProteinDataOptions.DelimitedFileSkipFirstLine = chkProteinFileSkipFirstLine.Checked;
                 proteinCoverageSummarizer.Options.ProteinDataOptions.RemoveSymbolCharacters = chkRemoveSymbolCharacters.Checked;

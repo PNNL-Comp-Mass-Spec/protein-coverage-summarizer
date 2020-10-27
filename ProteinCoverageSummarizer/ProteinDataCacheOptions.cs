@@ -37,7 +37,7 @@ namespace ProteinCoverageSummarizer
 
         public clsProteinFileDataCache.FastaFileOptionsClass FastaFileOptions;
 
-        public DelimitedFileReader.eDelimitedFileFormatCode DelimitedFileFormatCode { get; set; }
+        public DelimitedProteinFileReader.ProteinFileFormatCode DelimitedFileFormatCode { get; set; }
 
         public bool DelimitedFileSkipFirstLine { get; set; }
 
@@ -56,7 +56,7 @@ namespace ProteinCoverageSummarizer
         public ProteinDataCacheOptions()
         {
             DelimitedInputFileDelimiter = '\t';
-            DelimitedFileFormatCode = DelimitedFileReader.eDelimitedFileFormatCode.ProteinName_Description_Sequence;
+            DelimitedFileFormatCode = DelimitedProteinFileReader.ProteinFileFormatCode.ProteinName_Description_Sequence;
             FastaFileOptions = new clsProteinFileDataCache.FastaFileOptionsClass();
 
             RemoveSymbolCharacters = true;

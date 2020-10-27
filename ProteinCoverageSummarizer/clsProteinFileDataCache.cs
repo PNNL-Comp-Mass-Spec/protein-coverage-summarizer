@@ -478,7 +478,7 @@ namespace ProteinCoverageSummarizer
 
                     if (mParsedFileIsFastaFile)
                     {
-                        proteinFileReader = new FastaFileReader()
+                        proteinFileReader = new FastaFileReader
                         {
                             ProteinLineStartChar = Options.FastaFileOptions.ProteinLineStartChar,
                             ProteinLineAccessionEndChar = Options.FastaFileOptions.ProteinLineAccessionEndChar
@@ -486,7 +486,7 @@ namespace ProteinCoverageSummarizer
                     }
                     else
                     {
-                        proteinFileReader = new DelimitedFileReader()
+                        proteinFileReader = new DelimitedProteinFileReader
                         {
                             Delimiter = Options.DelimitedInputFileDelimiter,
                             DelimitedFileFormatCode = Options.DelimitedFileFormatCode,

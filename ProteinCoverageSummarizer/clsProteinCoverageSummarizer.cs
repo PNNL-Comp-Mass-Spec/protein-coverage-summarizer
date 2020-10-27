@@ -1155,7 +1155,7 @@ namespace ProteinCoverageSummarizer
                         Options.PeptideFileFormatCode = (ProteinCoverageSummarizerOptions.PeptideFileColumnOrderingCode)Convert.ToInt32(settingsFileReader.GetParam(XML_SECTION_PROCESSING_OPTIONS, "PeptideFileFormatCode", (int)Options.PeptideFileFormatCode));
                         ProteinDataCache.Options.DelimitedFileSkipFirstLine = settingsFileReader.GetParam(XML_SECTION_PROCESSING_OPTIONS, "ProteinFileSkipFirstLine", ProteinDataCache.Options.DelimitedFileSkipFirstLine);
                         ProteinDataCache.Options.DelimitedInputFileDelimiter = settingsFileReader.GetParam(XML_SECTION_PROCESSING_OPTIONS, "DelimitedProteinFileDelimiter", Convert.ToString(ProteinDataCache.Options.DelimitedInputFileDelimiter))[0];
-                        ProteinDataCache.Options.DelimitedFileFormatCode = (DelimitedFileReader.eDelimitedFileFormatCode)Convert.ToInt32(settingsFileReader.GetParam(XML_SECTION_PROCESSING_OPTIONS, "DelimitedProteinFileFormatCode", (int)ProteinDataCache.Options.DelimitedFileFormatCode));
+                        ProteinDataCache.Options.DelimitedFileFormatCode = (DelimitedProteinFileReader.ProteinFileFormatCode)Convert.ToInt32(settingsFileReader.GetParam(XML_SECTION_PROCESSING_OPTIONS, "DelimitedProteinFileFormatCode", (int)ProteinDataCache.Options.DelimitedFileFormatCode));
                     }
                 }
                 else
