@@ -15,6 +15,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using PRISM;
@@ -129,6 +130,7 @@ namespace ProteinCoverageSummarizer
         public event ProgressChangedEventHandler ProgressChanged;
 
         private ProteinCoverageProcessingSteps mCurrentProcessingStep = ProteinCoverageProcessingSteps.Starting;
+
         private string mProgressStepDescription = string.Empty;
 
         /// <summary>
@@ -872,10 +874,34 @@ namespace ProteinCoverageSummarizer
             return peptideSequence;
         }
 
+        /// <summary>
+        /// Get the text in the column at the given index
+        /// </summary>
+        /// <param name="lineParts"></param>
+        /// <param name="columnIndex"></param>
+        /// <param name="columnValue"></param>
+        /// <returns>
+        /// True if columnIndex is within range of the items in lineParts
+        /// and if the value is not an empty string
+        /// </returns>
+        private bool GetColumnValueIfNotEmpty(IReadOnlyList<string> lineParts, int columnIndex, out string columnValue)
+        {
+            if (lineParts.Count > columnIndex && !string.IsNullOrWhiteSpace(lineParts[columnIndex]))
+            {
+                columnValue = lineParts[columnIndex];
+                return true;
+            }
+
+            columnValue = string.Empty;
+            return false;
+        }
+
+        /// <summary>
+        /// Get the error message
+        /// </summary>
+        /// <returns>Error message, or an empty string</returns>
         public string GetErrorMessage()
         {
-            // Returns String.Empty if no error
-
             string message;
 
             switch (ErrorCode)
@@ -1723,6 +1749,12 @@ namespace ProteinCoverageSummarizer
                     var linesRead = 0;
                     long bytesRead = 0;
 
+                    var lastScanNumber = string.Empty;
+                    var lastPeptide = string.Empty;
+
+                    // In this list, keys are the text of each read line and values are the protein name for that line
+                    var peptideLines = new List<KeyValuePair<string, string>>();
+
                     using (var reader = new StreamReader(new FileStream(peptideInputFilePath, FileMode.Open, FileAccess.Read, FileShare.Read)))
                     {
                         while (!reader.EndOfStream)
@@ -1753,49 +1785,37 @@ namespace ProteinCoverageSummarizer
                                 continue;
                             }
 
-                            var validLine = false;
-                            var peptideSequence = string.Empty;
+                            // Split the line
+                            var lineParts = dataLine.Split(sepChars);
 
-                            try
+                            if (!GetColumnValueIfNotEmpty(lineParts, peptideColumnIndex, out var peptideSequence))
                             {
-                                // Split the line
-                                var lineParts = dataLine.Split(sepChars);
-
-                                if (lineParts.Length > peptideColumnIndex && !string.IsNullOrWhiteSpace(lineParts[peptideColumnIndex]))
-                                {
-                                    peptideSequence = lineParts[peptideColumnIndex];
-                                    validLine = true;
-                                }
-                            }
-                            catch (Exception)
-                            {
-                                validLine = false;
-                            }
-
-                            if (!validLine)
-                            {
+                                // Either this line does not have enough columns, or the peptide column is empty
                                 dataPlusProteinsWriter.WriteLine(dataLine + "\t" + "?");
+                                continue;
+                            }
+
+                            GetColumnValueIfNotEmpty(lineParts, proteinColumnIndex, out var proteinName);
+                            GetColumnValueIfNotEmpty(lineParts, scanColumnIndex, out var scanNumber);
+
+                            if (scanNumber.Equals(lastScanNumber) && peptideSequence.Equals(lastPeptide))
+                            {
+                                peptideLines.Add(new KeyValuePair<string, string>(dataLine, proteinName));
                             }
                             else
                             {
-                                peptideSequence = GetCleanPeptideSequence(peptideSequence, out _, out _, Options.RemoveSymbolCharacters);
+                                // Write out the cached lines
+                                WriteCachedLinesToAllProteinsFile(lastPeptide, peptideLines, dataPlusProteinsWriter, linesRead);
 
-                                if (mPeptideToProteinMapResults.TryGetValue(peptideSequence, out var proteins))
-                                {
-                                    foreach (var protein in proteins)
-                                        dataPlusProteinsWriter.WriteLine(dataLine + "\t" + protein);
-                                }
-                                else if (linesRead == 1)
-                                {
-                                    // This is likely a header line
-                                    dataPlusProteinsWriter.WriteLine(dataLine + "\t" + "Protein_Name");
-                                }
-                                else
-                                {
-                                    dataPlusProteinsWriter.WriteLine(dataLine + "\t" + "?");
-                                }
+                                lastPeptide = peptideSequence;
+                                lastScanNumber = scanNumber;
+                                peptideLines.Clear();
+                                peptideLines.Add(new KeyValuePair<string, string>(dataLine, proteinName));
                             }
                         }
+
+                        // Write the final cached lines
+                        WriteCachedLinesToAllProteinsFile(lastPeptide, peptideLines, dataPlusProteinsWriter, 2);
                     }
                 }
             }
@@ -2284,6 +2304,72 @@ namespace ProteinCoverageSummarizer
             }
 
             return matchValid;
+        }
+
+        /// <summary>
+        /// Write cached peptide lines to the source plus all proteins data file
+        /// </summary>
+        /// <param name="peptideSequence">Current peptide sequence (with modification symbols)</param>
+        /// <param name="peptideLines">Lines read from the PSM results file; Keys are the text of each line and values are the protein name for that line</param>
+        /// <param name="dataPlusProteinsWriter">Output file writer</param>
+        /// <param name="linesRead">Total number of lines read from the input file</param>
+        private void WriteCachedLinesToAllProteinsFile(
+            string peptideSequence,
+            IReadOnlyCollection<KeyValuePair<string, string>> peptideLines,
+            TextWriter dataPlusProteinsWriter,
+            int linesRead)
+        {
+            if (peptideLines.Count == 0)
+                return;
+
+            var cleanSequence = GetCleanPeptideSequence(peptideSequence, out _, out _, Options.RemoveSymbolCharacters);
+
+            if (!mPeptideToProteinMapResults.TryGetValue(cleanSequence, out var mappedProteins))
+            {
+                if (linesRead == 1)
+                {
+                    // This is likely a header line
+                    dataPlusProteinsWriter.WriteLine(peptideLines.First() + "\t" + "Protein_Name");
+                }
+                else
+                {
+                    foreach (var item in peptideLines)
+                    {
+                        dataPlusProteinsWriter.WriteLine(item.Key + "\t" + "?");
+                    }
+                }
+
+                return;
+            }
+
+            var proteinsWritten = new SortedSet<string>(StringComparer.OrdinalIgnoreCase);
+            var unmatchedLines = new List<string>();
+
+            foreach (var item in peptideLines)
+            {
+                var lineText = item.Key;
+                var lineProtein = item.Value;
+
+                if (mappedProteins.Contains(lineProtein))
+                {
+                    dataPlusProteinsWriter.WriteLine(lineText + "\t" + lineProtein);
+                    proteinsWritten.Add(lineProtein);
+                }
+                else
+                {
+                    unmatchedLines.Add(lineText);
+                }
+            }
+
+            foreach (var protein in mappedProteins.Where(protein => !proteinsWritten.Contains(protein)))
+            {
+                dataPlusProteinsWriter.WriteLine(peptideLines.First().Key + "\t" + protein);
+            }
+
+            foreach (var item in unmatchedLines)
+            {
+                dataPlusProteinsWriter.WriteLine(item + "\t");
+            }
         }
 
         private void WriteEntryToProteinToPeptideMappingFile(string proteinName, string peptideSequenceForKey, int startResidue, int endResidue)
