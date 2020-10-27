@@ -145,14 +145,29 @@ namespace ProteinCoverageSummarizer
 
         #region "Properties"
 
+        /// <summary>
+        /// Error code
+        /// </summary>
         public ProteinCoverageErrorCodes ErrorCode { get; private set; }
 
+        /// <summary>
+        /// Error message
+        /// </summary>
         public string ErrorMessage => GetErrorMessage();
 
+        /// <summary>
+        /// Options
+        /// </summary>
         public ProteinCoverageSummarizerOptions Options { get; }
 
+        /// <summary>
+        /// Protein data cache
+        /// </summary>
         public clsProteinFileDataCache ProteinDataCache { get; }
 
+        /// <summary>
+        /// Progress description
+        /// </summary>
         public virtual string ProgressStepDescription => mProgressStepDescription;
 
         /// <summary>
@@ -161,11 +176,19 @@ namespace ProteinCoverageSummarizer
         /// <remarks>Value between 0 and 100, but can contain decimal percentage values</remarks>
         public float ProgressPercentComplete => Convert.ToSingle(Math.Round(mProgressPercentComplete, 2));
 
+        /// <summary>
+        /// Protein to peptide map file path
+        /// </summary>
         public string ProteinToPeptideMappingFilePath { get; private set; }
 
+        /// <summary>
+        /// Results file path
+        /// </summary>
         public string ResultsFilePath { get; private set; }
 
-        // ReSharper disable once UnusedMember.Global
+        /// <summary>
+        /// Status message
+        /// </summary>
         public string StatusMessage { get; private set; }
 
         #endregion
@@ -848,7 +871,16 @@ namespace ProteinCoverageSummarizer
 
         private static readonly Regex reReplaceSymbols = new Regex("[^A-Za-z]", RegexOptions.Compiled);
 
-        public static string GetCleanPeptideSequence(string peptideSequence,
+        /// <summary>
+        /// Get the peptide sequence without the prefix and suffix, and optionally without modification symbols
+        /// </summary>
+        /// <param name="peptideSequence"></param>
+        /// <param name="prefixResidue"></param>
+        /// <param name="suffixResidue"></param>
+        /// <param name="removeSymbolCharacters"></param>
+        /// <returns>Clean peptide sequence</returns>
+        public static string GetCleanPeptideSequence(
+            string peptideSequence,
             out char prefixResidue,
             out char suffixResidue,
             bool removeSymbolCharacters)
@@ -962,7 +994,7 @@ namespace ProteinCoverageSummarizer
         /// </summary>
         /// <param name="outputDirectoryPath"></param>
         /// <param name="outputFilePath"></param>
-        /// <returns></returns>
+        /// <returns>Output directory path</returns>
         /// <remarks>If an error, or unable to determine a directory, returns the directory with the application files</remarks>
         public static string GetOutputDirectoryPath(string outputDirectoryPath, string outputFilePath)
         {
@@ -1132,6 +1164,11 @@ namespace ProteinCoverageSummarizer
             mPercentCompleteStartLevels[PERCENT_COMPLETE_LEVEL_COUNT] = 100;
         }
 
+        /// <summary>
+        /// Load settings from an XML-based parameter file
+        /// </summary>
+        /// <param name="parameterFilePath"></param>
+        /// <returns>True if success (including if parameterFilePath is an empty string), false if an error</returns>
         public bool LoadParameterFileSettings(string parameterFilePath)
         {
             try
@@ -1293,7 +1330,8 @@ namespace ProteinCoverageSummarizer
                     {
                         case ProteinCoverageSummarizerOptions.PeptideFileColumnOrderingCode.UseHeaderNames:
                             columnNumWithPeptideSequence = FindColumnIndex(peptideInputFilePath, "peptide") + 1;
-                            if (columnNumWithPeptideSequence <= 0) {
+                            if (columnNumWithPeptideSequence <= 0)
+                            {
                                 SetErrorMessage("Input file does not have a column named 'Peptide': " + peptideInputFilePath);
                                 return false;
                             }
@@ -1556,7 +1594,16 @@ namespace ProteinCoverageSummarizer
             return success;
         }
 
-        public bool ProcessFile(string inputFilePath,
+        /// <summary>
+        /// Process the file to compute protein sequence coverage
+        /// </summary>
+        /// <param name="inputFilePath"></param>
+        /// <param name="outputDirectoryPath"></param>
+        /// <param name="parameterFilePath"></param>
+        /// <param name="resetErrorCode"></param>
+        /// <returns>True if success, false if an error</returns>
+        public bool ProcessFile(
+            string inputFilePath,
             string outputDirectoryPath,
             string parameterFilePath,
             bool resetErrorCode)
@@ -1564,6 +1611,16 @@ namespace ProteinCoverageSummarizer
             return ProcessFile(inputFilePath, outputDirectoryPath, parameterFilePath, resetErrorCode, out _);
         }
 
+        /// <summary>
+        /// Process the file to compute protein sequence coverage
+        /// </summary>
+        /// <param name="inputFilePath"></param>
+        /// <param name="outputDirectoryPath"></param>
+        /// <param name="parameterFilePath"></param>
+        /// <param name="resetErrorCode"></param>
+        /// <param name="proteinToPepMapFilePath"></param>
+        /// <param name="outputFileBaseName"></param>
+        /// <returns>True if success, false if an error</returns>
         public bool ProcessFile(
             string inputFilePath,
             string outputDirectoryPath,
@@ -1573,6 +1630,8 @@ namespace ProteinCoverageSummarizer
             string outputFileBaseName = "")
         {
             bool success;
+
+            ResetProgress("Starting");
 
             if (resetErrorCode)
             {
@@ -2380,7 +2439,6 @@ namespace ProteinCoverageSummarizer
             }
         }
 
-        // ReSharper disable once UnusedMember.Global
         private void ResetProgress(string stepDescription)
         {
             mProgressStepDescription = string.Copy(stepDescription);
