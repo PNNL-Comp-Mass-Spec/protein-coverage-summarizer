@@ -181,8 +181,8 @@ namespace PeptideToProteinMapEngine
                 return PeptideInputFileFormatConstants.MSGFPlusResultsFile;
             }
 
-            var eResultType = clsPHRPReader.AutoDetermineResultType(filePath);
-            if (eResultType != clsPHRPReader.ePeptideHitResultType.Unknown)
+            var resultType = clsPHRPReader.AutoDetermineResultType(filePath);
+            if (resultType != clsPHRPReader.ePeptideHitResultType.Unknown)
             {
                 return PeptideInputFileFormatConstants.PHRPFile;
             }
@@ -1015,17 +1015,17 @@ namespace PeptideToProteinMapEngine
                 else
                 {
                     LogMessage("Processing " + Path.GetFileName(inputFilePath));
-                    PeptideInputFileFormatConstants eInputFileFormat;
+                    PeptideInputFileFormatConstants inputFileFormat;
                     if (PeptideInputFileFormat == PeptideInputFileFormatConstants.AutoDetermine)
                     {
-                        eInputFileFormat = DetermineResultsFileFormat(inputFilePath);
+                        inputFileFormat = DetermineResultsFileFormat(inputFilePath);
                     }
                     else
                     {
-                        eInputFileFormat = PeptideInputFileFormat;
+                        inputFileFormat = PeptideInputFileFormat;
                     }
 
-                    if (eInputFileFormat == PeptideInputFileFormatConstants.Unknown)
+                    if (inputFileFormat == PeptideInputFileFormatConstants.Unknown)
                     {
                         ShowMessage("Input file type not recognized");
                         return false;
@@ -1037,7 +1037,7 @@ namespace PeptideToProteinMapEngine
                     string inputFilePathWork;
                     string outputFileBaseName;
 
-                    switch (eInputFileFormat)
+                    switch (inputFileFormat)
                     {
                         case PeptideInputFileFormatConstants.InspectResultsFile:
                             // Inspect search results file; need to pre-process it
@@ -1054,7 +1054,7 @@ namespace PeptideToProteinMapEngine
                             // Make sure RemoveSymbolCharacters is true
                             Options.RemoveSymbolCharacters = true;
 
-                            inputFilePathWork = PreProcessPSMResultsFile(inputFilePath, outputDirectoryPath, eInputFileFormat);
+                            inputFilePathWork = PreProcessPSMResultsFile(inputFilePath, outputDirectoryPath, inputFileFormat);
                             outputFileBaseName = Path.GetFileNameWithoutExtension(inputFilePath);
 
                             mProteinCoverageSummarizer.Options.PeptideFileFormatCode = ProteinCoverageSummarizerOptions.PeptideFileColumnOrderingCode.SequenceOnly;
@@ -1082,7 +1082,7 @@ namespace PeptideToProteinMapEngine
                             inputFilePathWork = string.Copy(inputFilePath);
                             outputFileBaseName = string.Empty;
 
-                            if (eInputFileFormat == PeptideInputFileFormatConstants.ProteinAndPeptideFile)
+                            if (inputFileFormat == PeptideInputFileFormatConstants.ProteinAndPeptideFile)
                             {
                                 mProteinCoverageSummarizer.Options.PeptideFileFormatCode = ProteinCoverageSummarizerOptions.PeptideFileColumnOrderingCode.ProteinName_PeptideSequence;
                             }
@@ -1091,7 +1091,7 @@ namespace PeptideToProteinMapEngine
                                 mProteinCoverageSummarizer.Options.PeptideFileFormatCode = ProteinCoverageSummarizerOptions.PeptideFileColumnOrderingCode.SequenceOnly;
                             }
 
-                            if (IsHeaderLinePresent(inputFilePath, eInputFileFormat))
+                            if (IsHeaderLinePresent(inputFilePath, inputFileFormat))
                             {
                                 mProteinCoverageSummarizer.Options.PeptideFileSkipFirstLine = true;
                             }
@@ -1119,7 +1119,7 @@ namespace PeptideToProteinMapEngine
                     {
                         UpdateProgress("Post-processing", PERCENT_COMPLETE_POSTPROCESSING);
 
-                        switch (eInputFileFormat)
+                        switch (inputFileFormat)
                         {
                             case PeptideInputFileFormatConstants.PeptideListFile:
                             case PeptideInputFileFormatConstants.ProteinAndPeptideFile:

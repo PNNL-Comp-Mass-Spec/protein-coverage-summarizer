@@ -844,8 +844,8 @@ namespace ProteinCoverageSummarizerGUI
                 FilterIndex = 3
             };
 
-            var eResult = dlgOpenFileDialog.ShowDialog();
-            if (eResult == DialogResult.OK)
+            var result = dlgOpenFileDialog.ShowDialog();
+            if (result == DialogResult.OK)
             {
                 txtProteinInputFilePath.Text = dlgOpenFileDialog.FileName;
                 mLastFolderUsed = Path.GetDirectoryName(dlgOpenFileDialog.FileName);
@@ -861,8 +861,8 @@ namespace ProteinCoverageSummarizerGUI
                 FilterIndex = 1
             };
 
-            var eResult = dlgOpenFileDialog.ShowDialog();
-            if (eResult == DialogResult.OK)
+            var result = dlgOpenFileDialog.ShowDialog();
+            if (result == DialogResult.OK)
             {
                 txtPeptideInputFilePath.Text = dlgOpenFileDialog.FileName;
                 mLastFolderUsed = Path.GetDirectoryName(dlgOpenFileDialog.FileName);
@@ -937,11 +937,11 @@ namespace ProteinCoverageSummarizerGUI
 
         private bool lastSequenceWasDataGrid;
 
-        private void ShowRichTextStart(SequenceDisplayConstants eSequenceDisplayMode = SequenceDisplayConstants.UsePrevious)
+        private void ShowRichTextStart(SequenceDisplayConstants sequenceDisplayMode = SequenceDisplayConstants.UsePrevious)
         {
             bool useDataGrid;
 
-            switch (eSequenceDisplayMode)
+            switch (sequenceDisplayMode)
             {
                 case SequenceDisplayConstants.UseDataGrid:
                     useDataGrid = true;

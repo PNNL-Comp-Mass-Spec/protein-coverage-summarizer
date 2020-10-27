@@ -886,17 +886,18 @@ namespace ProteinCoverageSummarizer
                 case ProteinCoverageErrorCodes.InvalidInputFilePath:
                     message = "Invalid input file path";
                     break;
-                // case eProteinCoverageErrorCodes.InvalidOutputDirectoryPath:
+
+                // case ProteinCoverageErrorCodes.InvalidOutputDirectoryPath:
                 //     message = "Invalid output directory path";
                 //     break;
-                // case eProteinCoverageErrorCodes.ParameterFileNotFound:
+                // case ProteinCoverageErrorCodes.ParameterFileNotFound:
                 //     message = "Parameter file not found";
                 //     break;
 
-                // case eProteinCoverageErrorCodes.ErrorReadingInputFile:
+                // case ProteinCoverageErrorCodes.ErrorReadingInputFile:
                 //     message = "Error reading input file";
                 //     break;
-                // case eProteinCoverageErrorCodes.ErrorCreatingOutputFiles:
+                // case ProteinCoverageErrorCodes.ErrorCreatingOutputFiles:
                 //     message = "Error creating output files";
                 //     break;
 
@@ -2298,12 +2299,7 @@ namespace ProteinCoverageSummarizer
             ProgressReset?.Invoke();
         }
 
-        private void SetErrorCode(ProteinCoverageErrorCodes eNewErrorCode)
-        {
-            SetErrorCode(eNewErrorCode, false);
-        }
-
-        private void SetErrorCode(ProteinCoverageErrorCodes eNewErrorCode, bool leaveExistingErrorCodeUnchanged)
+        private void SetErrorCode(ProteinCoverageErrorCodes newErrorCode, bool leaveExistingErrorCodeUnchanged = false)
         {
             if (leaveExistingErrorCodeUnchanged && ErrorCode != ProteinCoverageErrorCodes.NoError)
             {
@@ -2311,7 +2307,7 @@ namespace ProteinCoverageSummarizer
             }
             else
             {
-                ErrorCode = eNewErrorCode;
+                ErrorCode = newErrorCode;
             }
         }
 
@@ -2332,15 +2328,15 @@ namespace ProteinCoverageSummarizer
             ProgressChanged?.Invoke(ProgressStepDescription, ProgressPercentComplete);
         }
 
-        private void UpdateProgress(float percentComplete, ProteinCoverageProcessingSteps eCurrentProcessingStep)
+        private void UpdateProgress(float percentComplete, ProteinCoverageProcessingSteps currentProcessingStep)
         {
-            UpdateProgress(ProgressStepDescription, percentComplete, eCurrentProcessingStep);
+            UpdateProgress(ProgressStepDescription, percentComplete, currentProcessingStep);
         }
 
-        private void UpdateProgress(string stepDescription, float percentComplete, ProteinCoverageProcessingSteps eCurrentProcessingStep)
+        private void UpdateProgress(string stepDescription, float percentComplete, ProteinCoverageProcessingSteps currentProcessingStep)
         {
             mProgressStepDescription = string.Copy(stepDescription);
-            mCurrentProcessingStep = eCurrentProcessingStep;
+            mCurrentProcessingStep = currentProcessingStep;
 
             if (percentComplete < 0)
             {
@@ -2351,8 +2347,8 @@ namespace ProteinCoverageSummarizer
                 percentComplete = 100;
             }
 
-            var startPercent = mPercentCompleteStartLevels[(int)eCurrentProcessingStep];
-            var endPercent = mPercentCompleteStartLevels[(int)eCurrentProcessingStep + 1];
+            var startPercent = mPercentCompleteStartLevels[(int)currentProcessingStep];
+            var endPercent = mPercentCompleteStartLevels[(int)currentProcessingStep + 1];
 
             // Use the start and end percent complete values for the specified processing step to convert percentComplete to an overall percent complete value
             mProgressPercentComplete = startPercent + Convert.ToSingle(percentComplete / 100.0 * (endPercent - startPercent));
