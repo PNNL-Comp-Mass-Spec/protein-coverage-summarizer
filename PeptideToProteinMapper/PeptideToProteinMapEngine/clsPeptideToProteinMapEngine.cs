@@ -1077,6 +1077,15 @@ namespace PeptideToProteinMapEngine
                             mProteinCoverageSummarizer.Options.MatchPeptidePrefixAndSuffixToProtein = false;
                             break;
 
+                        case PeptideInputFileFormatConstants.TabDelimitedText:
+                            Options.RemoveSymbolCharacters = true;
+                            mProteinCoverageSummarizer.Options.PeptideFileFormatCode = ProteinCoverageSummarizerOptions.PeptideFileColumnOrderingCode.UseHeaderNames;
+                            mProteinCoverageSummarizer.Options.PeptideFileSkipFirstLine = true;
+
+                            inputFilePathWork = string.Copy(inputFilePath);
+                            outputFileBaseName = string.Empty;
+                            break;
+
                         default:
                             // Pre-process the file to check for a header line
                             inputFilePathWork = string.Copy(inputFilePath);
