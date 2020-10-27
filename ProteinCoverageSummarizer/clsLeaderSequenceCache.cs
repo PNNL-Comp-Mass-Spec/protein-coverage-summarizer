@@ -89,7 +89,6 @@ namespace ProteinCoverageSummarizer
             /// <summary>
             /// Show the peptide sequence, including prefix and suffix
             /// </summary>
-            /// <returns></returns>
             public override string ToString()
             {
                 if (string.IsNullOrWhiteSpace(Prefix.ToString()))
@@ -176,7 +175,6 @@ namespace ProteinCoverageSummarizer
         /// <param name="proteinName">Protein name</param>
         /// <param name="prefixResidue">Prefix residue</param>
         /// <param name="suffixResidue">Suffix residue</param>
-        /// <returns></returns>
         public bool CachePeptide(string peptideSequence, string proteinName, char prefixResidue, char suffixResidue)
         {
             try

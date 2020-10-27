@@ -419,7 +419,6 @@ namespace ProteinCoverageSummarizer
         /// Examines the file's extension and true if it ends in .fasta or .fsa or .faa
         /// </summary>
         /// <param name="filePath"></param>
-        /// <returns></returns>
         public static bool IsFastaFile(string filePath)
         {
             var proteinFileExtension = Path.GetExtension(filePath).ToLower();

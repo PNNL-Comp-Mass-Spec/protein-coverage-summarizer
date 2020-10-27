@@ -9,14 +9,12 @@ namespace ProteinCoverageSummarizer
         /// <summary>
         /// When True, assume the input file is a tab-delimited text file
         /// </summary>
-        /// <returns></returns>
         /// <remarks>Ignored if AssumeFastaFile is True</remarks>
         public bool AssumeDelimitedFile { get; set; }
 
         /// <summary>
         /// When True, assume the input file is a FASTA text file
         /// </summary>
-        /// <returns></returns>
         public bool AssumeFastaFile { get; set; }
 
         public bool ChangeProteinSequencesToLowercase { get; set; }

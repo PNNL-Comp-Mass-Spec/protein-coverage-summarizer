@@ -156,7 +156,6 @@ namespace ProteinCoverageSummarizer
         /// <summary>
         /// Percent complete
         /// </summary>
-        /// <returns></returns>
         /// <remarks>Value between 0 and 100, but can contain decimal percentage values</remarks>
         public float ProgressPercentComplete => Convert.ToSingle(Math.Round(mProgressPercentComplete, 2));
 
@@ -354,7 +353,6 @@ namespace ProteinCoverageSummarizer
         /// <param name="suffixToAppend"></param>
         /// <param name="outputDirectoryPath"></param>
         /// <param name="outputFileBaseName"></param>
-        /// <returns></returns>
         public static string ConstructOutputFilePath(
             string inputFilePath,
             string suffixToAppend,
@@ -692,7 +690,6 @@ namespace ProteinCoverageSummarizer
         /// </summary>
         /// <param name="peptideList">Dictionary containing the peptides to search; peptides must be in the format Prefix.Peptide.Suffix where Prefix and Suffix are single characters; peptides are assumed to only contain letters (no symbols)</param>
         /// <param name="proteinNameForPeptides">The protein to search; only used if mSearchAllProteinsForPeptideSequence=False</param>
-        /// <remarks></remarks>
         private void FindSequenceMatchForPeptideList(IDictionary<string, int> peptideList,
             string proteinNameForPeptides)
         {
@@ -1645,7 +1642,6 @@ namespace ProteinCoverageSummarizer
         /// Read the next chunk of proteins from the database (SequenceID, ProteinName, ProteinSequence)
         /// </summary>
         /// <returns>The number of records read</returns>
-        /// <remarks></remarks>
         private int ReadProteinInfoChunk(int startIndex, bool[] proteinUpdated, bool forceReload)
         {
             // We use a SQLite database to store the protein sequences (to avoid running out of memory when parsing large protein lists)

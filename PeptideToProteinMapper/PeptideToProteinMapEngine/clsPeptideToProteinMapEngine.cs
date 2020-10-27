@@ -72,7 +72,6 @@ namespace PeptideToProteinMapEngine
             /// <summary>
             /// Show the peptide sequence
             /// </summary>
-            /// <returns></returns>
             public override string ToString()
             {
                 return Peptide + ", Protein ID " + ProteinID;
@@ -89,7 +88,6 @@ namespace PeptideToProteinMapEngine
             /// <summary>
             /// Show the peptide sequence
             /// </summary>
-            /// <returns></returns>
             public override string ToString()
             {
                 return Peptide + ", Protein " + Protein;
@@ -297,7 +295,6 @@ namespace PeptideToProteinMapEngine
         /// Open the file and read the first line
         /// Examine it to determine if it looks like a header line
         /// </summary>
-        /// <returns></returns>
         private bool IsHeaderLinePresent(string filePath, PeptideInputFileFormatConstants inputFileFormat)
         {
             var sepChars = new[] { '\t' };
