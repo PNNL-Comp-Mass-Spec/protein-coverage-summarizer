@@ -90,16 +90,16 @@ namespace ProteinCoverageSummarizerGUI
             this.mProteinCoverageSummarizer.ProgressReset += this.ProteinCoverageSummarizer_ProgressReset;
         }
 
-        public bool LoadParameterFileSettings(string strParameterFilePath)
+        public bool LoadParameterFileSettings(string parameterFilePath)
         {
-            return mProteinCoverageSummarizer.LoadParameterFileSettings(strParameterFilePath);
+            return mProteinCoverageSummarizer.LoadParameterFileSettings(parameterFilePath);
         }
 
-        public override bool ProcessFile(string strInputFilePath, string strOutputFolderPath, string strParameterFilePath, bool blnResetErrorCode)
+        public override bool ProcessFile(string inputFilePath, string outputFolderPath, string parameterFilePath, bool resetErrorCode)
         {
             mStatusMessage = string.Empty;
 
-            if (blnResetErrorCode)
+            if (resetErrorCode)
             {
                 base.SetBaseClassErrorCode(ProcessFilesErrorCodes.NoError);
             }
@@ -114,7 +114,7 @@ namespace ProteinCoverageSummarizerGUI
 
                 // Call mProteinCoverageSummarizer.ProcessFile to perform the work
                 mProteinCoverageSummarizer.Options.KeepDB = Options.KeepDB;
-                var success = mProteinCoverageSummarizer.ProcessFile(strInputFilePath, strOutputFolderPath, strParameterFilePath, true);
+                var success = mProteinCoverageSummarizer.ProcessFile(inputFilePath, outputFolderPath, parameterFilePath, true);
 
                 if (!success)
                 {
