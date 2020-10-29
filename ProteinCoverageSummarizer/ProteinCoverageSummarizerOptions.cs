@@ -63,7 +63,7 @@
 
             PeptideFileSkipFirstLine = false;
             PeptideInputFileDelimiter = '\t';
-            PeptideFileFormatCode = PeptideFileColumnOrderingCode.ProteinName_PeptideSequence;
+            PeptideFileFormatCode = PeptideFileColumnOrderingCode.UseHeaderNames;
 
             IgnoreILDifferences = false;
             OutputProteinSequence = true;
