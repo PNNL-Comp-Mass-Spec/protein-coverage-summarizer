@@ -176,7 +176,7 @@ namespace PeptideToProteinMapEngine
 
         public PeptideInputFileFormatConstants DetermineResultsFileFormat(string filePath)
         {
-            // Examine the filePath to determine the file format
+            // Examine the file name to determine the file format
 
             if (Path.GetFileName(filePath).EndsWith(FILENAME_SUFFIX_INSPECT_RESULTS_FILE, StringComparison.OrdinalIgnoreCase))
             {
@@ -209,6 +209,14 @@ namespace PeptideToProteinMapEngine
             if (resultType != clsPHRPReader.ePeptideHitResultType.Unknown)
             {
                 return PeptideInputFileFormatConstants.PHRPFile;
+            }
+
+            // Could not determine the type from the filename; look for "Peptide" or "Sequence" in the header line
+            IsHeaderLinePresent(filePath, PeptideInputFileFormatConstants.Unknown, out var hasPeptideOrSequenceColumn);
+            if (hasPeptideOrSequenceColumn)
+            {
+                PeptideInputFileFormat = PeptideInputFileFormatConstants.TabDelimitedText;
+                return PeptideInputFileFormat;
             }
 
             ShowMessage("Unable to determine the format of the input file based on the filename suffix; will assume the first column contains peptide sequence");
@@ -319,14 +327,19 @@ namespace PeptideToProteinMapEngine
         /// Open the file and read the first line
         /// Examine it to determine if it looks like a header line
         /// </summary>
-        private bool IsHeaderLinePresent(string filePath, PeptideInputFileFormatConstants inputFileFormat)
+        /// <param name="filePath">File path</param>
+        /// <param name="inputFileFormat">Input file format</param>
+        /// <param name="hasPeptideOrSequenceColumn">
+        /// Output: true if the file has a column named Peptide or Sequence
+        /// Will be set to True if inputFileFormat is ProteinAndPeptideFile or PeptideListFile</param>
+        /// <returns>True if the file has a header line</returns>
+        private bool IsHeaderLinePresent(string filePath, PeptideInputFileFormatConstants inputFileFormat, out bool hasPeptideOrSequenceColumn)
         {
             var sepChars = new[] { '\t' };
+            hasPeptideOrSequenceColumn = false;
 
             try
             {
-                var headerFound = false;
-
                 // Read the contents of filePath
                 using (var reader = new StreamReader(new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.Read)))
                 {
@@ -342,25 +355,32 @@ namespace PeptideToProteinMapEngine
 
                     if (inputFileFormat == PeptideInputFileFormatConstants.ProteinAndPeptideFile)
                     {
-                        if (columnNames.Length > 1 && columnNames[1].StartsWith("peptide", StringComparison.OrdinalIgnoreCase))
+                        hasPeptideOrSequenceColumn = true;
+                        if (columnNames.Length > 1 && (
+                            columnNames[1].StartsWith("peptide", StringComparison.OrdinalIgnoreCase) ||
+                            columnNames[1].StartsWith("sequence", StringComparison.OrdinalIgnoreCase)))
                         {
-                            headerFound = true;
+                            return true;
                         }
                     }
                     else if (inputFileFormat == PeptideInputFileFormatConstants.PeptideListFile)
                     {
-                        if (columnNames[0].StartsWith("peptide", StringComparison.OrdinalIgnoreCase))
+                        hasPeptideOrSequenceColumn = true;
+                        if (columnNames[0].StartsWith("peptide", StringComparison.OrdinalIgnoreCase) ||
+                            columnNames[0].StartsWith("sequence", StringComparison.OrdinalIgnoreCase))
                         {
-                            headerFound = true;
+                            return true;
                         }
                     }
-                    else if (columnNames.Any(dataColumn => dataColumn.StartsWith("peptide", StringComparison.OrdinalIgnoreCase)))
+                    else if (columnNames.Any(dataColumn => dataColumn.StartsWith("peptide", StringComparison.OrdinalIgnoreCase)) ||
+                             columnNames.Any(dataColumn => dataColumn.StartsWith("sequence", StringComparison.OrdinalIgnoreCase)))
                     {
-                        headerFound = true;
+                        hasPeptideOrSequenceColumn = true;
+                        return true;
                     }
                 }
 
-                return headerFound;
+                return false;
             }
             catch (Exception ex)
             {
@@ -816,6 +836,11 @@ namespace PeptideToProteinMapEngine
                                 var columnNames = dataLine.Split(sepChars);
 
                                 peptideSequenceColIndex = clsProteinCoverageSummarizer.FindColumnIndex(columnNames, "peptide");
+                                if (peptideSequenceColIndex < 0)
+                                {
+                                    peptideSequenceColIndex = clsProteinCoverageSummarizer.FindColumnIndex(columnNames, "sequence");
+                                }
+
                                 scanColIndex = clsProteinCoverageSummarizer.FindColumnIndex(columnNames, "scan");
 
                                 if (peptideSequenceColIndex < 0)
@@ -958,6 +983,7 @@ namespace PeptideToProteinMapEngine
             try
             {
                 // Now write out the unique list of peptides to peptideListFilePath
+                // Example output filename: QC_19_01_a_12Oct20_msgfplus_peptides.txt
                 var peptideListFileName = Path.GetFileNameWithoutExtension(inputFilePath) + FILENAME_SUFFIX_PSM_UNIQUE_PEPTIDES + ".txt";
                 string peptideListFilePath;
 
@@ -1124,7 +1150,7 @@ namespace PeptideToProteinMapEngine
                                 mProteinCoverageSummarizer.Options.PeptideFileFormatCode = ProteinCoverageSummarizerOptions.PeptideFileColumnOrderingCode.SequenceOnly;
                             }
 
-                            if (IsHeaderLinePresent(inputFilePath, inputFileFormat))
+                            if (IsHeaderLinePresent(inputFilePath, inputFileFormat, out _))
                             {
                                 mProteinCoverageSummarizer.Options.PeptideFileSkipFirstLine = true;
                             }

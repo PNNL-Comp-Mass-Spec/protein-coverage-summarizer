@@ -1047,10 +1047,11 @@ namespace ProteinCoverageSummarizer
                             var columnNames = dataLine.Split(sepChars);
 
                             var peptideColumnIndex = FindColumnIndex(columnNames, "peptide");
+                            var sequenceColumnIndex = FindColumnIndex(columnNames, "sequence");
                             proteinColumnIndex = FindColumnIndex(columnNames, "protein");
                             scanColumnIndex = FindColumnIndex(columnNames, "scan");
 
-                            return peptideColumnIndex;
+                            return peptideColumnIndex >= 0 ? peptideColumnIndex : sequenceColumnIndex;
                         }
                     }
                     return -1;
@@ -1329,10 +1330,20 @@ namespace ProteinCoverageSummarizer
                     switch (Options.PeptideFileFormatCode)
                     {
                         case ProteinCoverageSummarizerOptions.PeptideFileColumnOrderingCode.UseHeaderNames:
-                            columnNumWithPeptideSequence = FindColumnIndex(peptideInputFilePath, "peptide") + 1;
-                            if (columnNumWithPeptideSequence <= 0)
+                            var peptideColumnIndex = FindColumnIndex(peptideInputFilePath, "peptide");
+                            var sequenceColumnIndex = FindColumnIndex(peptideInputFilePath, "sequence");
+
+                            if (peptideColumnIndex >= 0)
                             {
-                                SetErrorMessage("Input file does not have a column named 'Peptide': " + peptideInputFilePath);
+                                columnNumWithPeptideSequence = peptideColumnIndex + 1;
+                            }
+                            else if (sequenceColumnIndex >= 0)
+                            {
+                                columnNumWithPeptideSequence = sequenceColumnIndex + 1;
+                            }
+                            else
+                            {
+                                SetErrorMessage("Input file does not have a column named 'Peptide' or 'Sequence': " + peptideInputFilePath);
                                 return false;
                             }
                             break;
