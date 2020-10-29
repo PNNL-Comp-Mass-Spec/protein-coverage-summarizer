@@ -918,7 +918,7 @@ namespace ProteinCoverageSummarizer
         /// </returns>
         private bool GetColumnValueIfNotEmpty(IReadOnlyList<string> lineParts, int columnIndex, out string columnValue)
         {
-            if (lineParts.Count > columnIndex && !string.IsNullOrWhiteSpace(lineParts[columnIndex]))
+            if (columnIndex >= 0 && lineParts.Count > columnIndex && !string.IsNullOrWhiteSpace(lineParts[columnIndex]))
             {
                 columnValue = lineParts[columnIndex];
                 return true;
