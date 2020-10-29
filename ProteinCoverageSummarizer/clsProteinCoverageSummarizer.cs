@@ -2413,31 +2413,38 @@ namespace ProteinCoverageSummarizer
             }
 
             var proteinsWritten = new SortedSet<string>(StringComparer.OrdinalIgnoreCase);
-            var unmatchedLines = new List<string>();
+
+            // In this list, keys are the text of each line and values are the protein name for that line
+            var unmatchedLines = new List<KeyValuePair<string, string>>();
 
             foreach (var item in peptideLines)
             {
                 var lineText = item.Key;
                 var lineProtein = item.Value;
 
-                if (mappedProteins.Contains(lineProtein))
+                if (!string.IsNullOrWhiteSpace(lineProtein) && mappedProteins.Contains(lineProtein))
                 {
                     dataPlusProteinsWriter.WriteLine(lineText + "\t" + lineProtein);
                     proteinsWritten.Add(lineProtein);
                 }
                 else
                 {
-                    unmatchedLines.Add(lineText);
+                    unmatchedLines.Add(item);
                 }
             }
 
             foreach (var protein in mappedProteins.Where(protein => !proteinsWritten.Contains(protein)))
             {
                 dataPlusProteinsWriter.WriteLine(peptideLines.First().Key + "\t" + protein);
+                proteinsWritten.Add(protein);
             }
 
             foreach (var item in unmatchedLines)
             {
+                var lineProtein = item.Value;
+                if (string.IsNullOrWhiteSpace(lineProtein) && proteinsWritten.Count > 0)
+                    continue;
+
                 dataPlusProteinsWriter.WriteLine(item + "\t");
             }
         }
