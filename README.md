@@ -118,9 +118,8 @@ Use `/H` to suppress (hide) the protein sequence in the _coverage.txt file
 
 Use `/K` to skip the protein coverage computation steps (enabling faster processing)
 
-Use `/A` to create a copy of the source file, but with a new column listing the
-mapped protein for each peptide. If a peptide maps to multiple proteins, then
-multiple lines will be listed
+Use `/A` to create the _AllProteins.txt file, listing each of the peptides in the input file,
+plus one line per mapped protein for that peptide
 
 Use `/L` to create a log file, optionally specifying the file name
 

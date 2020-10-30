@@ -162,7 +162,7 @@ namespace ProteinCoverageSummarizerGUI
             // Returns True if no problems; otherwise, returns false
             // /I:PeptideInputFilePath /R: ProteinInputFilePath /O:OutputDirectoryPath /P:ParameterFilePath
 
-            var validParameters = new List<string>() { "I", "O", "R", "P", "G", "H", "M", "K", "D", "Debug", "KeepDB" };
+            var validParameters = new List<string> { "I", "O", "R", "P", "G", "H", "M", "K", "D", "Debug", "KeepDB" };
             try
             {
                 // Make sure no invalid parameters are present
@@ -268,7 +268,7 @@ namespace ProteinCoverageSummarizerGUI
                 Console.WriteLine();
                 Console.WriteLine("Program syntax:" + Environment.NewLine + Path.GetFileName(ProcessFilesOrDirectoriesBase.GetAppPath()));
                 Console.WriteLine("  /I:PeptideInputFilePath /R:ProteinInputFilePath [/O:OutputDirectoryName]");
-                Console.WriteLine("  [/P:ParameterFilePath] [/G] [/H] [/M] [/K] [/Debug] [/KeepDB]");
+                Console.WriteLine("  [/P:ParameterFilePath] [/G] [/H] [/M] [/K] [/D] [/Debug] [/KeepDB]");
                 Console.WriteLine();
                 Console.WriteLine(ConsoleMsgUtils.WrapParagraph(
                     "The input file path can contain the wildcard character *. If a wildcard is present, the same protein input file path " +
@@ -286,7 +286,10 @@ namespace ProteinCoverageSummarizerGUI
                 Console.WriteLine("Use /H to suppress (hide) the protein sequence in the _coverage.txt file.");
                 Console.WriteLine("Use /M to enable the creation of a protein to peptide mapping file.");
                 Console.WriteLine("Use /K to skip protein coverage computation steps");
-                Console.WriteLine("Use /D to duplicate the input file, creating a new file with one line per peptide/protein combo");
+                Console.WriteLine(ConsoleMsgUtils.WrapParagraph(
+                    "Use /D to duplicate the input file, but add a new column listing the mapped protein for each peptide. " +
+                    "If a peptide maps to multiple proteins, multiple lines will be listed"));
+
                 Console.WriteLine();
                 Console.WriteLine("Use /Debug to keep the console open to see additional debug messages");
                 Console.WriteLine("Use /KeepDB to keep the SQLite database after processing (by default it is deleted)");
