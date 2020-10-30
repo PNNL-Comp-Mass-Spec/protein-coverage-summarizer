@@ -343,13 +343,13 @@ namespace PeptideToProteinMapper
                 Console.WriteLine();
 
                 Console.WriteLine("Use /F to specify the peptide input file format code.  Options are:");
-                Console.WriteLine("   " + clsPeptideToProteinMapEngine.PeptideInputFileFormatConstants.AutoDetermine + "=Auto Determine: Treated as /F:1 unless name ends in _inspect.txt, then /F:3");
-                Console.WriteLine("   " + clsPeptideToProteinMapEngine.PeptideInputFileFormatConstants.PeptideListFile + "=Peptide sequence in the 1st column (subsequent columns are ignored)");
-                Console.WriteLine("   " + clsPeptideToProteinMapEngine.PeptideInputFileFormatConstants.ProteinAndPeptideFile + "=Protein name in 1st column and peptide sequence 2nd column");
-                Console.WriteLine("   " + clsPeptideToProteinMapEngine.PeptideInputFileFormatConstants.InspectResultsFile + "=Inspect search results file (peptide sequence in the 3rd column)");
-                Console.WriteLine("   " + clsPeptideToProteinMapEngine.PeptideInputFileFormatConstants.MSGFPlusResultsFile + "=MS-GF+ search results file (peptide sequence in the column titled 'Peptide'; optionally scan number in the column titled 'Scan')");
-                Console.WriteLine("   " + clsPeptideToProteinMapEngine.PeptideInputFileFormatConstants.PHRPFile + "=Peptide Hit Results Processor (PHRP) file (for MS-GF+, X!Tandem, SEQUEST, or Inspect results)");
-                Console.WriteLine("   " + clsPeptideToProteinMapEngine.PeptideInputFileFormatConstants.TabDelimitedText + "=Generic tab-delimited text file; will look for column names that start with Peptide, Protein, and Scan");
+                Console.WriteLine("   " + (int)clsPeptideToProteinMapEngine.PeptideInputFileFormatConstants.AutoDetermine + "=Auto Determine: Treated as /F:1 unless name ends in _inspect.txt, then /F:3");
+                Console.WriteLine("   " + (int)clsPeptideToProteinMapEngine.PeptideInputFileFormatConstants.PeptideListFile + "=Peptide sequence in the 1st column (subsequent columns are ignored)");
+                Console.WriteLine("   " + (int)clsPeptideToProteinMapEngine.PeptideInputFileFormatConstants.ProteinAndPeptideFile + "=Protein name in 1st column and peptide sequence 2nd column");
+                Console.WriteLine("   " + (int)clsPeptideToProteinMapEngine.PeptideInputFileFormatConstants.InspectResultsFile + "=Inspect search results file (peptide sequence in the 3rd column)");
+                Console.WriteLine("   " + (int)clsPeptideToProteinMapEngine.PeptideInputFileFormatConstants.MSGFPlusResultsFile + "=MS-GF+ search results file (peptide sequence in the column titled 'Peptide'; optionally scan number in the column titled 'Scan')");
+                Console.WriteLine("   " + (int)clsPeptideToProteinMapEngine.PeptideInputFileFormatConstants.PHRPFile + "=Peptide Hit Results Processor (PHRP) file (for MS-GF+, X!Tandem, SEQUEST, or Inspect results)");
+                Console.WriteLine("   " + (int)clsPeptideToProteinMapEngine.PeptideInputFileFormatConstants.TabDelimitedText + "=Generic tab-delimited text file; will look for column names that start with Peptide, Protein, and Scan");
                 Console.WriteLine();
 
                 Console.WriteLine(ConsoleMsgUtils.WrapParagraph(
