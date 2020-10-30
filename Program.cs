@@ -97,48 +97,53 @@ namespace ProteinCoverageSummarizerGUI
                     ShowProgramHelp();
                     return -1;
                 }
-                else
+
+                if (string.IsNullOrWhiteSpace(mParameterFilePath) &&
+                    !options.SaveProteinToPeptideMappingFile &&
+                    options.SearchAllProteinsSkipCoverageComputationSteps)
                 {
-                    if (string.IsNullOrWhiteSpace(mParameterFilePath) &&
-                        !options.SaveProteinToPeptideMappingFile &&
-                        options.SearchAllProteinsSkipCoverageComputationSteps)
+                    ConsoleMsgUtils.ShowWarning(ConsoleMsgUtils.WrapParagraph(
+                        "You used /K to skip protein coverage computation but didn't specify /M " +
+                        "to create a protein to peptide mapping file; no results will be saved"));
+                    Console.WriteLine();
+                    ConsoleMsgUtils.ShowWarning("It is advised that you use only /M (and don't use /K)");
+                }
+
+                try
+                {
+                    var proteinCoverageSummarizer = new clsProteinCoverageSummarizerRunner(options)
                     {
-                        ConsoleMsgUtils.ShowWarning(ConsoleMsgUtils.WrapParagraph(
-                            "You used /K to skip protein coverage computation but didn't specify /M " +
-                            "to create a protein to peptide mapping file; no results will be saved"));
-                        Console.WriteLine();
-                        ConsoleMsgUtils.ShowWarning("It is advised that you use only /M (and don't use /K)");
+                        CallingAppHandlesEvents = false
+                    };
+
+                    proteinCoverageSummarizer.StatusEvent += ProteinCoverageSummarizer_StatusEvent;
+                    proteinCoverageSummarizer.ErrorEvent += ProteinCoverageSummarizer_ErrorEvent;
+                    proteinCoverageSummarizer.WarningEvent += ProteinCoverageSummarizer_WarningEvent;
+
+                    proteinCoverageSummarizer.ProgressUpdate += ProteinCoverageSummarizer_ProgressChanged;
+                    proteinCoverageSummarizer.ProgressReset += ProteinCoverageSummarizer_ProgressReset;
+
+                    var success = proteinCoverageSummarizer.ProcessFilesWildcard(options.PeptideInputFilePath, options.OutputDirectoryPath, mParameterFilePath);
+
+                    if (success)
+                    {
+                        return 0;
                     }
 
-                    try
-                    {
-                        var proteinCoverageSummarizer = new clsProteinCoverageSummarizerRunner(options)
-                        {
-                            CallingAppHandlesEvents = false
-                        };
-
-                        proteinCoverageSummarizer.StatusEvent += ProteinCoverageSummarizer_StatusEvent;
-                        proteinCoverageSummarizer.ErrorEvent += ProteinCoverageSummarizer_ErrorEvent;
-                        proteinCoverageSummarizer.WarningEvent += ProteinCoverageSummarizer_WarningEvent;
-
-                        proteinCoverageSummarizer.ProgressUpdate += ProteinCoverageSummarizer_ProgressChanged;
-                        proteinCoverageSummarizer.ProgressReset += ProteinCoverageSummarizer_ProgressReset;
-
-                        proteinCoverageSummarizer.ProcessFilesWildcard(options.PeptideInputFilePath, options.OutputDirectoryPath, mParameterFilePath);
-                    }
-                    catch (Exception ex)
-                    {
-                        ShowErrorMessage("Error initializing Protein File Parser General Options " + ex.Message);
-                    }
+                    ConsoleMsgUtils.ShowWarning("Processing failed");
+                    return -1;
+                }
+                catch (Exception ex)
+                {
+                    ShowErrorMessage("Error running the protein coverage summarizer: " + ex.Message);
+                    return -1;
                 }
             }
             catch (Exception ex)
             {
                 ShowErrorMessage("Error occurred in modMain->Main: " + Environment.NewLine + ex.Message);
-                returnCode = -1;
+                return -1;
             }
-
-            return returnCode;
         }
 
         private static void DisplayProgressPercent(int percentComplete, bool addCarriageReturn)
