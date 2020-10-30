@@ -38,7 +38,10 @@ namespace ProteinCoverageSummarizerGUI
     {
         // Ignore Spelling: Nikša
 
-        public const string PROGRAM_DATE = "October 25, 2020";
+        /// <summary>
+        /// Program date
+        /// </summary>
+        public const string PROGRAM_DATE = "October 29, 2020";
 
         private static string mParameterFilePath;
 
@@ -54,6 +57,10 @@ namespace ProteinCoverageSummarizerGUI
         private const int SW_HIDE = 0;
         private const int SW_SHOW = 5;
 
+        /// <summary>
+        /// Main entry method
+        /// </summary>
+        /// <returns>0 if no error, error code if an issue</returns>
         // Enable single thread apartment (STA) mode
         [STAThread]
         public static int Main()

@@ -24,9 +24,27 @@ using ProteinFileReader;
 
 namespace ProteinCoverageSummarizer
 {
+    /// <summary>
+    /// Protein caching start event handler delegate
+    /// </summary>
     public delegate void ProteinCachingStartEventHandler();
+
+    /// <summary>
+    /// Protein caching event handler delegate
+    /// </summary>
+    /// <param name="proteinsCached"></param>
     public delegate void ProteinCachedEventHandler(int proteinsCached);
+
+    /// <summary>
+    /// Protein caching progress event handler delegate
+    /// </summary>
+    /// <param name="proteinsCached"></param>
+    /// <param name="percentFileProcessed"></param>
     public delegate void ProteinCachedWithProgressEventHandler(int proteinsCached, float percentFileProcessed);
+
+    /// <summary>
+    /// Protein caching completed event handler delegate
+    /// </summary>
     public delegate void ProteinCachingCompleteEventHandler();
 
     /// <summary>
@@ -46,10 +64,24 @@ namespace ProteinCoverageSummarizer
 
         #region "Structures"
 
+        /// <summary>
+        /// Protein info structure
+        /// </summary>
         public struct udtProteinInfoType
         {
+            /// <summary>
+            /// Protein name
+            /// </summary>
             public string Name;
+
+            /// <summary>
+            /// Protein description
+            /// </summary>
             public string Description;
+
+            /// <summary>
+            /// Protein sequence
+            /// </summary>
             public string Sequence;
 
             /// <summary>
@@ -65,6 +97,15 @@ namespace ProteinCoverageSummarizer
             /// </summary>
             /// <remarks>Value between 0 and 1</remarks>
             public double PercentCoverage;
+
+            /// <summary>
+            /// Show the protein name
+            /// </summary>
+            /// <returns></returns>
+            public override string ToString()
+            {
+                return string.Format("{0}, ID {1}", Name, UniqueSequenceID);
+            }
         }
 
         #endregion
@@ -74,23 +115,50 @@ namespace ProteinCoverageSummarizer
         private int mProteinCount;
         private bool mParsedFileIsFastaFile;
 
-        // SQLite Connection String and file path
+        /// <summary>
+        /// SQLite Connection String and file path
+        /// </summary>
         private string mSQLiteDBConnectionString = string.Empty;
+
+        /// <summary>
+        /// SQLite file path
+        /// </summary>
         private string mSQLiteDBFilePath = SQL_LITE_PROTEIN_CACHE_FILENAME;
 
         private SQLiteConnection mSQLitePersistentConnection;
 
+        /// <summary>
+        /// Protein caching start event handler
+        /// </summary>
         public event ProteinCachingStartEventHandler ProteinCachingStart;
+
+        /// <summary>
+        /// Protein caching event handler
+        /// </summary>
         public event ProteinCachedEventHandler ProteinCached;
+
+        /// <summary>
+        /// Protein caching progress event handler
+        /// </summary>
         public event ProteinCachedWithProgressEventHandler ProteinCachedWithProgress;
+
+        /// <summary>
+        /// Protein caching completed event handler
+        /// </summary>
         public event ProteinCachingCompleteEventHandler ProteinCachingComplete;
 
         #endregion
 
         #region "Processing Options Interface Functions"
 
+        /// <summary>
+        /// Protein data cache options
+        /// </summary>
         public ProteinDataCacheOptions Options { get; }
 
+        /// <summary>
+        /// Status message
+        /// </summary>
         public string StatusMessage { get; private set; }
 
         #endregion
@@ -98,6 +166,7 @@ namespace ProteinCoverageSummarizer
         /// <summary>
         /// Constructor
         /// </summary>
+        // ReSharper disable once UnusedMember.Global
         public clsProteinFileDataCache()
         {
             Options = new ProteinDataCacheOptions();
@@ -113,6 +182,11 @@ namespace ProteinCoverageSummarizer
             InitializeLocalVariables();
         }
 
+        /// <summary>
+        /// Connect to a SQLite database
+        /// </summary>
+        /// <param name="disableJournaling"></param>
+        /// <returns>the SQLite connection object</returns>
         public SQLiteConnection ConnectToSQLiteDB(bool disableJournaling)
         {
             if (string.IsNullOrWhiteSpace(mSQLiteDBConnectionString))
@@ -306,11 +380,21 @@ namespace ProteinCoverageSummarizer
             }
         }
 
+        /// <summary>
+        /// Get the total number of cached proteins
+        /// </summary>
+        /// <returns></returns>
         public int GetProteinCountCached()
         {
             return mProteinCount;
         }
 
+        /// <summary>
+        /// Get the list of cached proteins
+        /// </summary>
+        /// <param name="startIndex"></param>
+        /// <param name="endIndex"></param>
+        /// <returns></returns>
         public IEnumerable<udtProteinInfoType> GetCachedProteins(int startIndex = -1, int endIndex = -1)
         {
             if (mSQLitePersistentConnection == null ||
@@ -426,10 +510,13 @@ namespace ProteinCoverageSummarizer
             return proteinFileExtension == ".fasta" || proteinFileExtension == ".fsa" || proteinFileExtension == ".faa";
         }
 
+        /// <summary>
+        /// Parse a protein file to cache proteins
+        /// </summary>
+        /// <param name="proteinInputFilePath"></param>
+        /// <returns></returns>
         public bool ParseProteinFile(string proteinInputFilePath)
         {
-            // If outputFileNameBaseOverride is defined, then uses that name for the protein output filename rather than auto-defining the name
-
             // Create the SQLite DB
             var sqlConnection = ConnectToSQLiteDB(true);
 
@@ -667,9 +754,14 @@ namespace ProteinCoverageSummarizer
             StatusMessage = errorMessage;
         }
 
-        // Options class
+        /// <summary>
+        /// FASTA File options class
+        /// </summary>
         public class FastaFileOptionsClass
         {
+            /// <summary>
+            /// Constructor
+            /// </summary>
             public FastaFileOptionsClass()
             {
                 mProteinLineStartChar = '>';
@@ -685,6 +777,9 @@ namespace ProteinCoverageSummarizer
 
             #region "Processing Options Interface Functions"
 
+            /// <summary>
+            /// Protein line start character
+            /// </summary>
             public char ProteinLineStartChar
             {
                 get => mProteinLineStartChar;
@@ -697,6 +792,9 @@ namespace ProteinCoverageSummarizer
                 }
             }
 
+            /// <summary>
+            /// Character following the protein name
+            /// </summary>
             public char ProteinLineAccessionEndChar
             {
                 get => mProteinLineAccessionEndChar;

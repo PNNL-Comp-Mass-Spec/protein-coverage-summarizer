@@ -33,19 +33,49 @@ namespace PeptideToProteinMapEngine
 
         #region "Constants and Enums"
 
+        /// <summary>
+        /// Inspect results filename suffix
+        /// </summary>
         public const string FILENAME_SUFFIX_INSPECT_RESULTS_FILE = "_inspect.txt";
+
+        /// <summary>
+        /// MS-GF DB  results filename suffix
+        /// </summary>
         public const string FILENAME_SUFFIX_MSGFDB_RESULTS_FILE = "_msgfdb.txt";
+
+        /// <summary>
+        /// MS-GF+ results filename suffix
+        /// </summary>
         public const string FILENAME_SUFFIX_MSGFPLUS_RESULTS_FILE = "_msgfplus.txt";
 
+        /// <summary>
+        /// PHRP peptide to protein map file suffix
+        /// </summary>
         public const string FILENAME_SUFFIX_PEP_TO_PROTEIN_MAPPING = "_PepToProtMap.txt";
 
+        /// <summary>
+        /// Unique peptides filename suffix
+        /// </summary>
         private const string FILENAME_SUFFIX_PSM_UNIQUE_PEPTIDES = "_peptides";
 
-        // The following are the initial % complete value displayed during each of these stages
+        /// <summary>
+        /// Initial % complete value displayed at the start of pre-processing
+        /// </summary>
         private const float PERCENT_COMPLETE_PREPROCESSING = 0;
+
+        /// <summary>
+        /// Initial % complete value displayed when the coverage computation starts
+        /// </summary>
         private const float PERCENT_COMPLETE_RUNNING_PROTEIN_COVERAGE_SUMMARIZER = 5;
+
+        /// <summary>
+        /// Initial % complete value displayed at the start of post-processing
+        /// </summary>
         private const float PERCENT_COMPLETE_POSTPROCESSING = 95;
 
+        /// <summary>
+        /// Peptide input file formats
+        /// </summary>
         public enum PeptideInputFileFormatConstants
         {
             /// <summary>
@@ -142,18 +172,33 @@ namespace PeptideToProteinMapEngine
 
         #region "Properties"
 
+        /// <summary>
+        /// When true, delete temp files
+        /// </summary>
         public bool DeleteTempFiles { get; set; }
 
+        /// <summary>
+        /// Inspect parameter file path
+        /// </summary>
         public string InspectParameterFilePath
         {
             get => mInspectParameterFilePath;
             set => mInspectParameterFilePath = value ?? string.Empty;
         }
 
+        /// <summary>
+        /// Peptide to protein map engine options
+        /// </summary>
         public ProteinCoverageSummarizerOptions Options { get; }
 
+        /// <summary>
+        /// Peptide input file format
+        /// </summary>
         public PeptideInputFileFormatConstants PeptideInputFileFormat { get; set; }
 
+        /// <summary>
+        /// Status message
+        /// </summary>
         public string StatusMessage { get; private set; }
 
         #endregion
@@ -168,12 +213,20 @@ namespace PeptideToProteinMapEngine
             InitializeVariables();
         }
 
+        /// <summary>
+        /// Abort processing now
+        /// </summary>
         public override void AbortProcessingNow()
         {
             base.AbortProcessingNow();
             mProteinCoverageSummarizer?.AbortProcessingNow();
         }
 
+        /// <summary>
+        /// Auto-determine the file format
+        /// </summary>
+        /// <param name="filePath"></param>
+        /// <returns></returns>
         public PeptideInputFileFormatConstants DetermineResultsFileFormat(string filePath)
         {
             // Examine the file name to determine the file format
@@ -223,6 +276,12 @@ namespace PeptideToProteinMapEngine
             return PeptideInputFileFormatConstants.PeptideListFile;
         }
 
+        /// <summary>
+        /// Parse an Inspect parameter file to determine the modification names
+        /// </summary>
+        /// <param name="inspectParamFilePath"></param>
+        /// <param name="inspectModNames"></param>
+        /// <returns></returns>
         public bool ExtractModInfoFromInspectParamFile(string inspectParamFilePath, ref List<string> inspectModNames)
         {
             try
@@ -298,6 +357,10 @@ namespace PeptideToProteinMapEngine
             return false;
         }
 
+        /// <summary>
+        /// Get the error message
+        /// </summary>
+        /// <returns></returns>
         public override string GetErrorMessage()
         {
             return GetBaseClassErrorMessage();
@@ -390,12 +453,23 @@ namespace PeptideToProteinMapEngine
             }
         }
 
+        /// <summary>
+        /// Load settings from an XML-based parameter file
+        /// </summary>
+        /// <param name="parameterFilePath"></param>
         // ReSharper disable once UnusedMember.Global
         public bool LoadParameterFileSettings(string parameterFilePath)
         {
             return mProteinCoverageSummarizer.LoadParameterFileSettings(parameterFilePath);
         }
 
+        /// <summary>
+        /// Post-process a PSM results file
+        /// </summary>
+        /// <param name="peptideListFilePath"></param>
+        /// <param name="proteinToPepMapFilePath"></param>
+        /// <param name="deleteWorkingFiles"></param>
+        /// <returns></returns>
         private bool PostProcessPSMResultsFile(string peptideListFilePath,
                                                string proteinToPepMapFilePath,
                                                bool deleteWorkingFiles)
@@ -1039,6 +1113,14 @@ namespace PeptideToProteinMapEngine
             }
         }
 
+        /// <summary>
+        /// Process the input file to map peptides to proteins in the FASTA file
+        /// </summary>
+        /// <param name="inputFilePath"></param>
+        /// <param name="outputDirectoryPath"></param>
+        /// <param name="parameterFilePath"></param>
+        /// <param name="resetErrorCode"></param>
+        /// <returns>True if success, false if an error</returns>
         public override bool ProcessFile(string inputFilePath, string outputDirectoryPath, string parameterFilePath, bool resetErrorCode)
         {
             if (resetErrorCode)

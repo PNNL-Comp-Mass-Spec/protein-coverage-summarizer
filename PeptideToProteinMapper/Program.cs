@@ -43,7 +43,10 @@ namespace PeptideToProteinMapper
     {
         // Ignore Spelling: yyyy-MM-dd, hh:mm:ss tt
 
-        public const string PROGRAM_DATE = "October 24, 2020";
+        /// <summary>
+        /// Program date
+        /// </summary>
+        public const string PROGRAM_DATE = "October 29, 2020";
 
         private static string mParameterFilePath;
         private static string mInspectParameterFilePath;

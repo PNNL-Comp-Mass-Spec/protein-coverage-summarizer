@@ -36,7 +36,10 @@ namespace ProteinCoverageSummarizerGUI
     {
         // Ignore Spelling: CrLf, chk, ini, Nikša
 
-        public GUI() : base()
+        /// <summary>
+        /// Graphical user interface
+        /// </summary>
+        public GUI()
         {
             base.Closing += GUI_Closing;
 
@@ -96,6 +99,9 @@ namespace ProteinCoverageSummarizerGUI
 
         #region "Properties"
 
+        /// <summary>
+        /// When true, do not delete the .SQLite database
+        /// </summary>
         public bool KeepDB { get; set; }
 
         #endregion

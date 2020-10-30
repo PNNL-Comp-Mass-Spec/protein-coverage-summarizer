@@ -33,14 +33,30 @@ namespace ProteinCoverageSummarizerGUI
 
         #region "Properties"
 
+        /// <summary>
+        /// Set this to true if the calling app will handle events
+        /// </summary>
         public bool CallingAppHandlesEvents { get; set; }
 
+        /// <summary>
+        /// Protein coverage summarizer options
+        /// </summary>
         public ProteinCoverageSummarizerOptions Options { get; }
 
+        /// <summary>
+        /// Protein to peptide map file path
+        /// </summary>
+        // ReSharper disable once UnusedMember.Global
         public string ProteinToPeptideMappingFilePath => mProteinCoverageSummarizer.ProteinToPeptideMappingFilePath;
 
+        /// <summary>
+        /// Results file path
+        /// </summary>
         public string ResultsFilePath => mProteinCoverageSummarizer.ResultsFilePath;
 
+        /// <summary>
+        /// Status message
+        /// </summary>
         public string StatusMessage => mStatusMessage;
 
         #endregion
@@ -64,12 +80,19 @@ namespace ProteinCoverageSummarizerGUI
             InitializeVariables();
         }
 
+        /// <summary>
+        /// Abort processing now
+        /// </summary>
         public override void AbortProcessingNow()
         {
             base.AbortProcessingNow();
             mProteinCoverageSummarizer?.AbortProcessingNow();
         }
 
+        /// <summary>
+        /// Get the error message
+        /// </summary>
+        /// <returns></returns>
         public override string GetErrorMessage()
         {
             return GetBaseClassErrorMessage();
@@ -90,11 +113,24 @@ namespace ProteinCoverageSummarizerGUI
             this.mProteinCoverageSummarizer.ProgressReset += this.ProteinCoverageSummarizer_ProgressReset;
         }
 
+        /// <summary>
+        /// Load settings from an XML-based parameter file
+        /// </summary>
+        /// <param name="parameterFilePath"></param>
+        /// <returns></returns>
         public bool LoadParameterFileSettings(string parameterFilePath)
         {
             return mProteinCoverageSummarizer.LoadParameterFileSettings(parameterFilePath);
         }
 
+        /// <summary>
+        /// Process the file to compute protein sequence coverage
+        /// </summary>
+        /// <param name="inputFilePath"></param>
+        /// <param name="outputFolderPath"></param>
+        /// <param name="parameterFilePath"></param>
+        /// <param name="resetErrorCode"></param>
+        /// <returns>True if success, false if an error</returns>
         public override bool ProcessFile(string inputFilePath, string outputFolderPath, string parameterFilePath, bool resetErrorCode)
         {
             mStatusMessage = string.Empty;

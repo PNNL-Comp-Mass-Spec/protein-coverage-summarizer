@@ -19,6 +19,9 @@ using System.Text.RegularExpressions;
 
 namespace ProteinCoverageSummarizer
 {
+    /// <summary>
+    /// Progress complete event handler delegate
+    /// </summary>
     public delegate void ProgressCompleteEventHandler();
 
     /// <summary>
@@ -29,6 +32,9 @@ namespace ProteinCoverageSummarizer
     {
         // Ignore Spelling: structs, leucines, A-Za-z
 
+        /// <summary>
+        /// Constructor
+        /// </summary>
         public clsLeaderSequenceCache()
         {
             InitializeVariables();
@@ -36,16 +42,30 @@ namespace ProteinCoverageSummarizer
 
         #region "Constants and Enums"
 
+        /// <summary>
+        /// Default leader sequence length
+        /// </summary>
         public const int DEFAULT_LEADER_SEQUENCE_LENGTH = 5;
+
+        /// <summary>
+        /// Minimum allowed leader sequence length
+        /// </summary>
         public const int MINIMUM_LEADER_SEQUENCE_LENGTH = 5;
 
         private const int INITIAL_LEADER_SEQUENCE_COUNT_TO_RESERVE = 10000;
+
+        /// <summary>
+        /// Maximum leader sequence count
+        /// </summary>
         public const int MAX_LEADER_SEQUENCE_COUNT = 500000;
 
         #endregion
 
         #region "Structures"
 
+        /// <summary>
+        /// Peptide sequence info structure
+        /// </summary>
         public struct udtPeptideSequenceInfoType
         {
             /// <summary>
@@ -104,9 +124,19 @@ namespace ProteinCoverageSummarizer
 
         #region "Class wide Variables"
 
+        /// <summary>
+        /// Keys in this dictionary are peptides, values are the corresponding index in mCachedPeptideToHashIndexPointer
+        /// </summary>
         private Dictionary<string, int> mLeaderSequences;
 
+        /// <summary>
+        /// Count of cached peptides
+        /// </summary>
         public int mCachedPeptideCount;
+
+        /// <summary>
+        /// Cached peptide info
+        /// </summary>
         public udtPeptideSequenceInfoType[] mCachedPeptideSeqInfo = new udtPeptideSequenceInfoType[0];
 
         /// <summary>
@@ -124,10 +154,11 @@ namespace ProteinCoverageSummarizer
         /// <summary>
         /// Progress changed event
         /// </summary>
-        /// <param name="taskDescription"></param>
-        /// <param name="percentComplete">Value between 0 and 100, but can contain decimal percentage values</param>
         public event ProgressChangedEventHandler ProgressChanged;
 
+        /// <summary>
+        /// Progress complete event handler
+        /// </summary>
         public event ProgressCompleteEventHandler ProgressComplete;
 
         private string mProgressStepDescription;
@@ -144,13 +175,29 @@ namespace ProteinCoverageSummarizer
 
         #region "Properties"
 
+        /// <summary>
+        /// Number of cached peptides
+        /// </summary>
         public int CachedPeptideCount => mCachedPeptideCount;
 
         public string ErrorMessage => mErrorMessage;
+        /// <summary>
+        /// Error message
+        /// </summary>
 
+        /// <summary>
+        /// When true, treat I and L residues equally
+        /// </summary>
         public bool IgnoreILDifferences { get; set; }
+
+        /// <summary>
+        /// Minimum leader sequence length
+        /// </summary>
         public int LeaderSequenceMinimumLength { get; set; }
 
+        /// <summary>
+        /// Progress step description
+        /// </summary>
         public string ProgressStepDescription => mProgressStepDescription;
 
         /// <summary>
@@ -163,6 +210,9 @@ namespace ProteinCoverageSummarizer
 
         #endregion
 
+        /// <summary>
+        /// Abort processing now
+        /// </summary>
         public void AbortProcessingNow()
         {
             mAbortProcessing = true;
@@ -256,16 +306,21 @@ namespace ProteinCoverageSummarizer
             }
         }
 
+        /// <summary>
+        /// Parse the input file, examining column number columnNumWithPeptideSequence to determine the minimum peptide sequence length present
+        /// Updates mLeaderSequenceMinimumLength if successful, though the minimum length is not allowed to be less than MINIMUM_LEADER_SEQUENCE_LENGTH
+        /// </summary>
+        /// <param name="inputFilePath"></param>
+        /// <param name="terminatorSize"></param>
+        /// <param name="peptideFileSkipFirstLine"></param>
+        /// <param name="peptideInputFileDelimiter"></param>
+        /// <param name="columnNumWithPeptideSequence">Should be 1 if the peptide sequence is in the first column, 2 if in the second, etc.</param>
+        /// <returns>True if success, false if an error</returns>
         public bool DetermineShortestPeptideLengthInFile(
             string inputFilePath, int terminatorSize,
             bool peptideFileSkipFirstLine, char peptideInputFileDelimiter,
             int columnNumWithPeptideSequence)
         {
-            // Parses inputFilePath examining column number columnNumWithPeptideSequence to determine the minimum peptide sequence length present
-            // Updates mLeaderSequenceMinimumLength if successful, though the minimum length is not allowed to be less than MINIMUM_LEADER_SEQUENCE_LENGTH
-
-            // columnNumWithPeptideSequence should be 1 if the peptide sequence is in the first column, 2 if in the second, etc.
-
             // Define a RegEx to replace all of the non-letter characters
             var reReplaceSymbols = new Regex("[^A-Za-z]", RegexOptions.Compiled);
 
@@ -386,12 +441,14 @@ namespace ProteinCoverageSummarizer
             }
         }
 
+        /// <summary>
+        /// Looks up the first index value in mCachedPeptideSeqInfo that matches leaderSequenceToFind
+        /// </summary>
+        /// <param name="leaderSequenceToFind"></param>
+        /// <returns>The index value if found, or -1 if not found</returns>
+        /// <remarks>Calls SortIndices if mIndicesSorted = False</remarks>
         public int GetFirstPeptideIndexForLeaderSequence(string leaderSequenceToFind)
         {
-            // Looks up the first index value in mCachedPeptideSeqInfo that matches strLeaderSequenceToFind
-            // Returns the index value if found, or -1 if not found
-            // Calls SortIndices if mIndicesSorted = False
-
             if (!mLeaderSequences.TryGetValue(leaderSequenceToFind, out var targetHashIndex))
             {
                 return -1;
@@ -413,7 +470,12 @@ namespace ProteinCoverageSummarizer
             return cachedPeptideMatchIndex;
         }
 
-        public int GetNextPeptideWithLeaderSequence(int intCachedPeptideMatchIndexCurrent)
+        /// <summary>
+        /// Get the next peptide with the given leader sequence
+        /// </summary>
+        /// <param name="cachedPeptideMatchIndexCurrent"></param>
+        /// <returns></returns>
+        public int GetNextPeptideWithLeaderSequence(int cachedPeptideMatchIndexCurrent)
         {
             if (intCachedPeptideMatchIndexCurrent < mCachedPeptideCount - 1)
             {
@@ -428,6 +490,9 @@ namespace ProteinCoverageSummarizer
             return -1;
         }
 
+        /// <summary>
+        /// Initialize the cached peptides
+        /// </summary>
         public void InitializeCachedPeptides()
         {
             mCachedPeptideCount = 0;
@@ -446,6 +511,11 @@ namespace ProteinCoverageSummarizer
             }
         }
 
+        /// <summary>
+        /// Reset local variables to defaults
+        /// </summary>
+        ///
+        /// <remarks>Calls InitializeCachedPeptides</remarks>
         public void InitializeVariables()
         {
             LeaderSequenceMinimumLength = DEFAULT_LEADER_SEQUENCE_LENGTH;

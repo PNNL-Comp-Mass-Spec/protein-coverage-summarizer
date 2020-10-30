@@ -2,9 +2,16 @@
 
 namespace ProteinCoverageSummarizer
 {
+    /// <summary>
+    /// Protein data cache options
+    /// </summary>
     public class ProteinDataCacheOptions
     {
-        private char mDelimitedInputFileDelimiter;                              // Only used for delimited protein input files, not for fasta files
+        /// <summary>
+        ///  Delimiter character for delimited protein files
+        /// </summary>
+        /// <remarks>Only used for delimited protein input files, not for fasta files</remarks>
+        private char mDelimitedInputFileDelimiter;
 
         /// <summary>
         /// When True, assume the input file is a tab-delimited text file
@@ -17,10 +24,19 @@ namespace ProteinCoverageSummarizer
         /// </summary>
         public bool AssumeFastaFile { get; set; }
 
+        /// <summary>
+        /// When true, change protein sequences to lowercase
+        /// </summary>
         public bool ChangeProteinSequencesToLowercase { get; set; }
 
+        /// <summary>
+        /// When true, change protein sequences to uppercase
+        /// </summary>
         public bool ChangeProteinSequencesToUppercase { get; set; }
 
+        /// <summary>
+        /// Delimiter character for delimited protein files
+        /// </summary>
         public char DelimitedInputFileDelimiter
         {
             get => mDelimitedInputFileDelimiter;
@@ -33,10 +49,19 @@ namespace ProteinCoverageSummarizer
             }
         }
 
+        /// <summary>
+        /// FASTA file options
+        /// </summary>
         public clsProteinFileDataCache.FastaFileOptionsClass FastaFileOptions;
 
+        /// <summary>
+        /// Delimited file format
+        /// </summary>
         public DelimitedProteinFileReader.ProteinFileFormatCode DelimitedFileFormatCode { get; set; }
 
+        /// <summary>
+        /// When true, skip the first line of a delimited protein file
+        /// </summary>
         public bool DelimitedFileSkipFirstLine { get; set; }
 
         /// <summary>
@@ -44,8 +69,14 @@ namespace ProteinCoverageSummarizer
         /// </summary>
         public bool KeepDB { get; set; }
 
+        /// <summary>
+        /// When true, remove symbol characters from proteins
+        /// </summary>
         public bool RemoveSymbolCharacters { get; set; }
 
+        /// <summary>
+        /// When true, treat I and L residues equally
+        /// </summary>
         public bool IgnoreILDifferences { get; set; }
 
         /// <summary>

@@ -23,6 +23,9 @@ using ProteinFileReader;
 
 namespace ProteinCoverageSummarizer
 {
+    /// <summary>
+    /// Progress reset event handler delegate
+    /// </summary>
     public delegate void ProgressResetEventHandler();
 
     /// <summary>
@@ -43,36 +46,104 @@ namespace ProteinCoverageSummarizer
 
         #region "Constants and Enums"
 
+        /// <summary>
+        /// ProcessingOptions section of the XML file
+        /// </summary>
         public const string XML_SECTION_PROCESSING_OPTIONS = "ProcessingOptions";
 
+        /// <summary>
+        /// Protein description column number in the output file
+        /// </summary>
         public const int OUTPUT_FILE_PROTEIN_DESCRIPTION_COLUMN_NUMBER = 3;
+
+        /// <summary>
+        /// Protein sequence column number in the output file
+        /// </summary>
         public const int OUTPUT_FILE_PROTEIN_SEQUENCE_COLUMN_NUMBER = 7;
 
+        /// <summary>
+        /// ProteinToPeptideMapping filename suffix
+        /// </summary>
         public const string FILENAME_SUFFIX_PROTEIN_TO_PEPTIDE_MAPPING = "_ProteinToPeptideMapping.txt";
+
+        /// <summary>
+        /// AllProteins filename suffix
+        /// </summary>
         public const string FILENAME_SUFFIX_SOURCE_PLUS_ALL_PROTEINS = "_AllProteins.txt";
 
         private const int PROTEIN_CHUNK_COUNT = 50000;
 
+        /// <summary>
+        /// Protein coverage error codes
+        /// </summary>
         public enum ProteinCoverageErrorCodes
         {
+            /// <summary>
+            /// No error
+            /// </summary>
             NoError = 0,
+            /// <summary>
+            /// Invalid input file path
+            /// </summary>
             InvalidInputFilePath = 1,
+            /// <summary>
+            /// Error reading the parameter file
+            /// </summary>
             ErrorReadingParameterFile = 2,
+            /// <summary>
+            /// File path error
+            /// </summary>
             FilePathError = 16,
+            /// <summary>
+            /// Unspecified error
+            /// </summary>
             UnspecifiedError = -1
         }
 
-        // Note: if you add/remove any steps, update PERCENT_COMPLETE_LEVEL_COUNT and update the population of mPercentCompleteStartLevels()
+        /// <summary>
+        /// Protein coverage processing steps
+        /// </summary>
+        /// <remarks>
+        /// If you add/remove any steps, update PERCENT_COMPLETE_LEVEL_COUNT
+        /// and update the population of mPercentCompleteStartLevels()
+        /// </remarks>
         public enum ProteinCoverageProcessingSteps
         {
+            /// <summary>
+            /// Starting
+            /// </summary>
             Starting = 0,
+            /// <summary>
+            /// Caching proteins
+            /// </summary>
             CacheProteins = 1,
+            /// <summary>
+            /// Determining the shortest peptide length
+            /// </summary>
             DetermineShortestPeptideLength = 2,
+            /// <summary>
+            /// Caching peptides
+            /// </summary>
             CachePeptides = 3,
+            /// <summary>
+            /// Searching proteins using leader sequences
+            /// </summary>
             SearchProteinsUsingLeaderSequences = 4,
+            /// <summary>
+            /// Searching proteins against short peptides
+            /// </summary>
             SearchProteinsAgainstShortPeptides = 5,
+            /// <summary>
+            /// Computing percent coverage
+            /// </summary>
             ComputePercentCoverage = 6,
+            /// <summary>
+            /// Writing the protein coverage file
+            /// </summary>
             WriteProteinCoverageFile = 7,
+            /// <summary>
+            /// Saving the all proteins version of the input file
+            /// </summary>
             SaveAllProteinsVersionOfInputFile = 8
         }
 
@@ -97,7 +168,9 @@ namespace ProteinCoverageSummarizer
         // The value for each entry is the number of times the peptide is present in the given protein
         // This dictionary is only populated if mTrackPeptideCounts is true
         private Dictionary<string, int> mProteinPeptideStats;
+
         private StreamWriter mProteinToPeptideMappingOutputFile;
+
         private bool mAbortProcessing;
 
         private int mCachedProteinInfoStartIndex = -1;
@@ -120,15 +193,17 @@ namespace ProteinCoverageSummarizer
 
         #region "Progress Events and Variables"
 
+        /// <summary>
+        /// Progress reset event
+        /// </summary>
         public event ProgressResetEventHandler ProgressReset;
 
         /// <summary>
         /// Progress changed event
         /// </summary>
-        /// <param name="taskDescription"></param>
-        /// <param name="percentComplete">Value between 0 and 100, but can contain decimal percentage values</param>
         public event ProgressChangedEventHandler ProgressChanged;
 
+        // ReSharper disable once NotAccessedField.Local
         private ProteinCoverageProcessingSteps mCurrentProcessingStep = ProteinCoverageProcessingSteps.Starting;
 
         private string mProgressStepDescription = string.Empty;
@@ -210,6 +285,9 @@ namespace ProteinCoverageSummarizer
             InitializeVariables();
         }
 
+        /// <summary>
+        /// Abort processing now
+        /// </summary>
         public void AbortProcessingNow()
         {
             mLeaderSequenceCache?.AbortProcessingNow();
@@ -476,6 +554,7 @@ namespace ProteinCoverageSummarizer
                 writer.WriteLine(dataLine);
 
                 // Contains pointers to entries in udtPeptideStats()
+                // Keys are protein IDs, values are the index in udtPeptideStats
                 var proteinIDLookup = new Dictionary<int, int>();
 
                 // Populate udtPeptideStats() using dictionary mProteinPeptideStats
@@ -863,6 +942,9 @@ namespace ProteinCoverageSummarizer
             }
         }
 
+        /// <summary>
+        /// Get the application directory path
+        /// </summary>
         public static string GetAppDirectoryPath()
         {
             // Could use Application.StartupPath, but .GetExecutingAssembly is better
