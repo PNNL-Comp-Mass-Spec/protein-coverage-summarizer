@@ -484,7 +484,7 @@ namespace ProteinCoverageSummarizer
 
             if (Convert.ToInt32(prefixResidue) == 0 && Convert.ToInt32(suffixResidue) == 0)
             {
-                peptideSequenceForKey = string.Copy(peptideSequence);
+                peptideSequenceForKey = peptideSequence;
             }
             else
             {
@@ -848,7 +848,7 @@ namespace ProteinCoverageSummarizer
                         }
                         else
                         {
-                            peptideSequenceForKeySource = string.Copy(peptideSequenceClean);
+                            peptideSequenceForKeySource = peptideSequenceClean;
                         }
 
                         if (Options.IgnoreILDifferences)
@@ -864,9 +864,7 @@ namespace ProteinCoverageSummarizer
                         }
                         else
                         {
-                            peptideSequenceToSearchOn = string.Copy(peptideSequenceClean);
-
-                            // I'm purposely not using String.Copy() here in order to obtain increased speed
+                            peptideSequenceToSearchOn = peptideSequenceClean;
                             peptideSequenceForKey = peptideSequenceForKeySource;
                         }
 
@@ -1280,7 +1278,7 @@ namespace ProteinCoverageSummarizer
                         return false;
                     }
 
-                    parameterFilePath = string.Copy(alternateFilePath);
+                    parameterFilePath = alternateFilePath;
                 }
 
                 var settingsFileReader = new XmlSettingsFileAccessor();
@@ -1377,7 +1375,7 @@ namespace ProteinCoverageSummarizer
                     progressMessageBase += " and computing coverage";
                 }
 
-                mProgressStepDescription = string.Copy(progressMessageBase);
+                mProgressStepDescription = progressMessageBase;
                 Console.WriteLine();
                 OnStatusEvent("Parsing " + Path.GetFileName(peptideInputFilePath));
 
@@ -1475,7 +1473,7 @@ namespace ProteinCoverageSummarizer
 
                     if (Options.SaveProteinToPeptideMappingFile)
                     {
-                        proteinToPepMapFilePath = string.Copy(ProteinToPeptideMappingFilePath);
+                        proteinToPepMapFilePath = ProteinToPeptideMappingFilePath;
 
                         UpdateProgress("Creating the protein to peptide mapping file: " + Path.GetFileName(ProteinToPeptideMappingFilePath));
 
@@ -2112,7 +2110,6 @@ namespace ProteinCoverageSummarizer
                                             }
                                             else
                                             {
-                                                // I'm purposely not using String.Copy() here in order to obtain increased speed
                                                 peptideSequenceForKeySource = mLeaderSequenceCache.mCachedPeptideSeqInfo[cachedPeptideMatchIndex].PeptideSequence;
                                             }
 
@@ -2123,7 +2120,6 @@ namespace ProteinCoverageSummarizer
                                             }
                                             else
                                             {
-                                                // I'm purposely not using String.Copy() here in order to obtain increased speed
                                                 peptideSequenceForKey = peptideSequenceForKeySource;
                                             }
 
@@ -2548,7 +2544,7 @@ namespace ProteinCoverageSummarizer
 
         private void ResetProgress(string stepDescription)
         {
-            mProgressStepDescription = string.Copy(stepDescription);
+            mProgressStepDescription = stepDescription;
             mProgressPercentComplete = 0;
             ProgressReset?.Invoke();
         }
@@ -2578,7 +2574,7 @@ namespace ProteinCoverageSummarizer
 
         private void UpdateProgress(string stepDescription)
         {
-            mProgressStepDescription = string.Copy(stepDescription);
+            mProgressStepDescription = stepDescription;
             ProgressChanged?.Invoke(ProgressStepDescription, ProgressPercentComplete);
         }
 
@@ -2589,7 +2585,7 @@ namespace ProteinCoverageSummarizer
 
         private void UpdateProgress(string stepDescription, float percentComplete, ProteinCoverageProcessingSteps currentProcessingStep)
         {
-            mProgressStepDescription = string.Copy(stepDescription);
+            mProgressStepDescription = stepDescription;
             mCurrentProcessingStep = currentProcessingStep;
 
             if (percentComplete < 0)
