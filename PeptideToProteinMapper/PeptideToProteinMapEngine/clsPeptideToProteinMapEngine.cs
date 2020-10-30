@@ -1151,152 +1151,168 @@ namespace PeptideToProteinMapEngine
                     return false;
                 }
 
-                var success = false;
-
                 // Note that CleanupFilePaths() will update mOutputDirectoryPath, which is used by LogMessage()
                 if (!CleanupFilePaths(ref inputFilePath, ref outputDirectoryPath))
                 {
                     SetBaseClassErrorCode(ProcessFilesErrorCodes.FilePathError);
+                    return false;
+                }
+                {
+                    {
+                    }
+
+                    {
+                    }
+
+
+                    {
+
+
+                LogMessage("Processing " + Path.GetFileName(inputFilePath));
+                PeptideInputFileFormatConstants inputFileFormat;
+                if (PeptideInputFileFormat == PeptideInputFileFormatConstants.AutoDetermine)
+                {
+                    inputFileFormat = DetermineResultsFileFormat(inputFilePath);
+                    Console.WriteLine();
                 }
                 else
                 {
-                    LogMessage("Processing " + Path.GetFileName(inputFilePath));
-                    PeptideInputFileFormatConstants inputFileFormat;
-                    if (PeptideInputFileFormat == PeptideInputFileFormatConstants.AutoDetermine)
-                    {
-                        inputFileFormat = DetermineResultsFileFormat(inputFilePath);
-                    }
-                    else
-                    {
-                        inputFileFormat = PeptideInputFileFormat;
-                    }
+                    inputFileFormat = PeptideInputFileFormat;
+                }
 
-                    if (inputFileFormat == PeptideInputFileFormatConstants.Unknown)
-                    {
-                        ShowMessage("Input file type not recognized");
-                        return false;
-                    }
+                if (inputFileFormat == PeptideInputFileFormatConstants.Unknown)
+                {
+                    ShowMessage("Input file type not recognized");
+                    return false;
+                }
 
-                    UpdateProgress("Preprocessing input file", PERCENT_COMPLETE_PREPROCESSING);
-                    mInspectModNameList.Clear();
+                UpdateProgress("Preprocessing input file", PERCENT_COMPLETE_PREPROCESSING);
+                mInspectModNameList.Clear();
 
-                    string inputFilePathWork;
-                    string outputFileBaseName;
+                string inputFilePathWork;
+                string outputFileBaseName;
+
+                switch (inputFileFormat)
+                {
+                    case PeptideInputFileFormatConstants.InspectResultsFile:
+                        // Inspect search results file; need to pre-process it
+                        inputFilePathWork = PreProcessInspectResultsFile(inputFilePath, outputDirectoryPath, mInspectParameterFilePath);
+                        outputFileBaseName = Path.GetFileNameWithoutExtension(inputFilePath);
+
+                        mProteinCoverageSummarizer.Options.PeptideFileFormatCode = ProteinCoverageSummarizerOptions.PeptideFileColumnOrderingCode.SequenceOnly;
+                        mProteinCoverageSummarizer.Options.PeptideFileSkipFirstLine = true;
+                        mProteinCoverageSummarizer.Options.MatchPeptidePrefixAndSuffixToProtein = false;
+                        break;
+
+                    case PeptideInputFileFormatConstants.MSGFPlusResultsFile:
+                        // MS-GF+ search results file; need to pre-process it
+                        // Make sure RemoveSymbolCharacters is true
+                        Options.RemoveSymbolCharacters = true;
+
+                        inputFilePathWork = PreProcessPSMResultsFile(inputFilePath, outputDirectoryPath, inputFileFormat);
+                        outputFileBaseName = Path.GetFileNameWithoutExtension(inputFilePath);
+
+                        mProteinCoverageSummarizer.Options.PeptideFileFormatCode = ProteinCoverageSummarizerOptions.PeptideFileColumnOrderingCode.SequenceOnly;
+                        mProteinCoverageSummarizer.Options.PeptideFileSkipFirstLine = true;
+                        mProteinCoverageSummarizer.Options.MatchPeptidePrefixAndSuffixToProtein = false;
+                        break;
+
+                    case PeptideInputFileFormatConstants.PHRPFile:
+                        // SEQUEST, X!Tandem, Inspect, or MS-GF+ PHRP data file; need to pre-process it
+                        // Make sure RemoveSymbolCharacters is true
+                        Options.RemoveSymbolCharacters = true;
+
+                        // Open the PHRP data files and construct a unique list of peptides in the file (including any modification symbols)
+                        // Write the unique peptide list to _syn_peptides.txt
+                        inputFilePathWork = PreProcessPHRPDataFile(inputFilePath, outputDirectoryPath);
+                        outputFileBaseName = Path.GetFileNameWithoutExtension(inputFilePath);
+
+                        mProteinCoverageSummarizer.Options.PeptideFileFormatCode = ProteinCoverageSummarizerOptions.PeptideFileColumnOrderingCode.SequenceOnly;
+                        mProteinCoverageSummarizer.Options.PeptideFileSkipFirstLine = true;
+                        mProteinCoverageSummarizer.Options.MatchPeptidePrefixAndSuffixToProtein = true;
+                        break;
+
+                    case PeptideInputFileFormatConstants.TabDelimitedText:
+                        Options.RemoveSymbolCharacters = true;
+                        mProteinCoverageSummarizer.Options.PeptideFileFormatCode = ProteinCoverageSummarizerOptions.PeptideFileColumnOrderingCode.UseHeaderNames;
+                        mProteinCoverageSummarizer.Options.PeptideFileSkipFirstLine = true;
+
+                        inputFilePathWork = string.Copy(inputFilePath);
+                        outputFileBaseName = string.Empty;
+                        break;
+
+                    default:
+                        // Pre-process the file to check for a header line
+                        inputFilePathWork = string.Copy(inputFilePath);
+                        outputFileBaseName = string.Empty;
+
+                        if (inputFileFormat == PeptideInputFileFormatConstants.ProteinAndPeptideFile)
+                        {
+                            mProteinCoverageSummarizer.Options.PeptideFileFormatCode = ProteinCoverageSummarizerOptions.PeptideFileColumnOrderingCode.ProteinName_PeptideSequence;
+                        }
+                        else
+                        {
+                            mProteinCoverageSummarizer.Options.PeptideFileFormatCode = ProteinCoverageSummarizerOptions.PeptideFileColumnOrderingCode.SequenceOnly;
+                        }
+
+                        if (IsHeaderLinePresent(inputFilePath, inputFileFormat, out _))
+                        {
+                            mProteinCoverageSummarizer.Options.PeptideFileSkipFirstLine = true;
+                        }
+
+                        break;
+                }
+
+                if (string.IsNullOrWhiteSpace(inputFilePathWork))
+                {
+                    return false;
+                }
+
+                UpdateProgress("Running protein coverage summarizer", PERCENT_COMPLETE_RUNNING_PROTEIN_COVERAGE_SUMMARIZER);
+
+                // Call mProteinCoverageSummarizer.ProcessFile to perform the work
+                var coverageSuccess = mProteinCoverageSummarizer.ProcessFile(
+                    inputFilePathWork, outputDirectoryPath, parameterFilePath, true, out var proteinToPepMapFilePath, outputFileBaseName);
+
+                if (!coverageSuccess)
+                {
+                    StatusMessage = "Error running ProteinCoverageSummarizer: " + mProteinCoverageSummarizer.ErrorMessage;
+                    return false;
+                }
+
+                bool success;
+
+                if (proteinToPepMapFilePath.Length > 0)
+                {
+                    UpdateProgress("Post-processing", PERCENT_COMPLETE_POSTPROCESSING);
 
                     switch (inputFileFormat)
                     {
-                        case PeptideInputFileFormatConstants.InspectResultsFile:
-                            // Inspect search results file; need to pre-process it
-                            inputFilePathWork = PreProcessInspectResultsFile(inputFilePath, outputDirectoryPath, mInspectParameterFilePath);
-                            outputFileBaseName = Path.GetFileNameWithoutExtension(inputFilePath);
-
-                            mProteinCoverageSummarizer.Options.PeptideFileFormatCode = ProteinCoverageSummarizerOptions.PeptideFileColumnOrderingCode.SequenceOnly;
-                            mProteinCoverageSummarizer.Options.PeptideFileSkipFirstLine = true;
-                            mProteinCoverageSummarizer.Options.MatchPeptidePrefixAndSuffixToProtein = false;
-                            break;
-
-                        case PeptideInputFileFormatConstants.MSGFPlusResultsFile:
-                            // MS-GF+ search results file; need to pre-process it
-                            // Make sure RemoveSymbolCharacters is true
-                            Options.RemoveSymbolCharacters = true;
-
-                            inputFilePathWork = PreProcessPSMResultsFile(inputFilePath, outputDirectoryPath, inputFileFormat);
-                            outputFileBaseName = Path.GetFileNameWithoutExtension(inputFilePath);
-
-                            mProteinCoverageSummarizer.Options.PeptideFileFormatCode = ProteinCoverageSummarizerOptions.PeptideFileColumnOrderingCode.SequenceOnly;
-                            mProteinCoverageSummarizer.Options.PeptideFileSkipFirstLine = true;
-                            mProteinCoverageSummarizer.Options.MatchPeptidePrefixAndSuffixToProtein = false;
-                            break;
-
-                        case PeptideInputFileFormatConstants.PHRPFile:
-                            // SEQUEST, X!Tandem, Inspect, or MS-GF+ PHRP data file; need to pre-process it
-                            // Make sure RemoveSymbolCharacters is true
-                            Options.RemoveSymbolCharacters = true;
-
-                            // Open the PHRP data files and construct a unique list of peptides in the file (including any modification symbols)
-                            // Write the unique peptide list to _syn_peptides.txt
-                            inputFilePathWork = PreProcessPHRPDataFile(inputFilePath, outputDirectoryPath);
-                            outputFileBaseName = Path.GetFileNameWithoutExtension(inputFilePath);
-
-                            mProteinCoverageSummarizer.Options.PeptideFileFormatCode = ProteinCoverageSummarizerOptions.PeptideFileColumnOrderingCode.SequenceOnly;
-                            mProteinCoverageSummarizer.Options.PeptideFileSkipFirstLine = true;
-                            mProteinCoverageSummarizer.Options.MatchPeptidePrefixAndSuffixToProtein = true;
-                            break;
-
-                        case PeptideInputFileFormatConstants.TabDelimitedText:
-                            Options.RemoveSymbolCharacters = true;
-                            mProteinCoverageSummarizer.Options.PeptideFileFormatCode = ProteinCoverageSummarizerOptions.PeptideFileColumnOrderingCode.UseHeaderNames;
-                            mProteinCoverageSummarizer.Options.PeptideFileSkipFirstLine = true;
-
-                            inputFilePathWork = string.Copy(inputFilePath);
-                            outputFileBaseName = string.Empty;
+                        case PeptideInputFileFormatConstants.PeptideListFile:
+                        case PeptideInputFileFormatConstants.ProteinAndPeptideFile:
+                            // No post-processing is required
+                            success = true;
                             break;
 
                         default:
-                            // Pre-process the file to check for a header line
-                            inputFilePathWork = string.Copy(inputFilePath);
-                            outputFileBaseName = string.Empty;
-
-                            if (inputFileFormat == PeptideInputFileFormatConstants.ProteinAndPeptideFile)
-                            {
-                                mProteinCoverageSummarizer.Options.PeptideFileFormatCode = ProteinCoverageSummarizerOptions.PeptideFileColumnOrderingCode.ProteinName_PeptideSequence;
-                            }
-                            else
-                            {
-                                mProteinCoverageSummarizer.Options.PeptideFileFormatCode = ProteinCoverageSummarizerOptions.PeptideFileColumnOrderingCode.SequenceOnly;
-                            }
-
-                            if (IsHeaderLinePresent(inputFilePath, inputFileFormat, out _))
-                            {
-                                mProteinCoverageSummarizer.Options.PeptideFileSkipFirstLine = true;
-                            }
-
+                            // SEQUEST, X!Tandem, Inspect, or MS-GF+ PHRP data file; need to post-process the results file
+                            success = PostProcessPSMResultsFile(inputFilePathWork, proteinToPepMapFilePath, DeleteTempFiles);
                             break;
                     }
+                }
+                else
+                {
+                    success = true;
+                }
 
-                    if (string.IsNullOrWhiteSpace(inputFilePathWork))
-                    {
-                        return false;
-                    }
-
-                    UpdateProgress("Running protein coverage summarizer", PERCENT_COMPLETE_RUNNING_PROTEIN_COVERAGE_SUMMARIZER);
-
-                    // Call mProteinCoverageSummarizer.ProcessFile to perform the work
-                    success = mProteinCoverageSummarizer.ProcessFile(inputFilePathWork, outputDirectoryPath,
-                                                                     parameterFilePath, true,
-                                                                     out var proteinToPepMapFilePath, outputFileBaseName);
-                    if (!success)
-                    {
-                        StatusMessage = "Error running ProteinCoverageSummarizer: " + mProteinCoverageSummarizer.ErrorMessage;
-                    }
-
-                    if (success && proteinToPepMapFilePath.Length > 0)
-                    {
-                        UpdateProgress("Post-processing", PERCENT_COMPLETE_POSTPROCESSING);
-
-                        switch (inputFileFormat)
-                        {
-                            case PeptideInputFileFormatConstants.PeptideListFile:
-                            case PeptideInputFileFormatConstants.ProteinAndPeptideFile:
-                                // No post-processing is required
-                                break;
-
-                            default:
-                                // SEQUEST, X!Tandem, Inspect, or MS-GF+ PHRP data file; need to post-process the results file
-                                success = PostProcessPSMResultsFile(inputFilePathWork, proteinToPepMapFilePath, DeleteTempFiles);
-                                break;
-                        }
-                    }
-
-                    if (success)
-                    {
-                        LogMessage("Processing successful");
-                        OperationComplete();
-                    }
-                    else
-                    {
-                        LogMessage("Processing not successful");
-                    }
+                if (success)
+                {
+                    LogMessage("Processing successful");
+                    OperationComplete();
+                }
+                else
+                {
+                    LogMessage("Processing not successful");
                 }
 
                 return success;
