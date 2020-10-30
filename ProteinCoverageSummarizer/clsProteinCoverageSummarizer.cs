@@ -1472,8 +1472,8 @@ namespace ProteinCoverageSummarizer
                 using (var reader = new StreamReader(new FileStream(peptideInputFilePath, FileMode.Open, FileAccess.Read, FileShare.Read)))
                 {
                     // Create the protein to peptide match details file
-                    ProteinToPeptideMappingFilePath = ConstructOutputFilePath(peptideInputFilePath, FILENAME_SUFFIX_PROTEIN_TO_PEPTIDE_MAPPING,
-                                                                               outputDirectoryPath, outputFileBaseName);
+                    ProteinToPeptideMappingFilePath = ConstructOutputFilePath(
+                        peptideInputFilePath, FILENAME_SUFFIX_PROTEIN_TO_PEPTIDE_MAPPING, outputDirectoryPath, outputFileBaseName);
 
                     if (Options.SaveProteinToPeptideMappingFile)
                     {
@@ -1481,7 +1481,11 @@ namespace ProteinCoverageSummarizer
 
                         UpdateProgress("Creating the protein to peptide mapping file: " + Path.GetFileName(ProteinToPeptideMappingFilePath));
 
-                        mProteinToPeptideMappingOutputFile = new StreamWriter(new FileStream(ProteinToPeptideMappingFilePath, FileMode.Create, FileAccess.Write, FileShare.Read)) { AutoFlush = true };
+                        mProteinToPeptideMappingOutputFile = new StreamWriter(
+                            new FileStream(ProteinToPeptideMappingFilePath, FileMode.Create, FileAccess.Write, FileShare.Read))
+                        {
+                            AutoFlush = true
+                        };
 
                         mProteinToPeptideMappingOutputFile.WriteLine("Protein Name" + "\t" + "Peptide Sequence" + "\t" + "Residue Start" + "\t" + "Residue End");
                     }
@@ -1518,7 +1522,9 @@ namespace ProteinCoverageSummarizer
                                 ProteinCoverageProcessingSteps.CachePeptides);
                         }
 
-                        if (linesRead == 1 && (Options.PeptideFileSkipFirstLine || Options.PeptideFileFormatCode == ProteinCoverageSummarizerOptions.PeptideFileColumnOrderingCode.UseHeaderNames))
+                        if (linesRead == 1 &&
+                            (Options.PeptideFileSkipFirstLine ||
+                             Options.PeptideFileFormatCode == ProteinCoverageSummarizerOptions.PeptideFileColumnOrderingCode.UseHeaderNames))
                         {
                             // Header line; skip it
                             continue;
@@ -1950,7 +1956,9 @@ namespace ProteinCoverageSummarizer
                                 UpdateProgress("Creating the data plus all-proteins output file", Convert.ToSingle(bytesRead / (double)reader.BaseStream.Length * 100), ProteinCoverageProcessingSteps.SaveAllProteinsVersionOfInputFile);
                             }
 
-                            if (linesRead == 1 && (Options.PeptideFileSkipFirstLine || Options.PeptideFileFormatCode == ProteinCoverageSummarizerOptions.PeptideFileColumnOrderingCode.UseHeaderNames))
+                            if (linesRead == 1 &&
+                                (Options.PeptideFileSkipFirstLine ||
+                                 Options.PeptideFileFormatCode == ProteinCoverageSummarizerOptions.PeptideFileColumnOrderingCode.UseHeaderNames))
                             {
                                 // Print out the first line, but append a new column name
                                 dataPlusProteinsWriter.WriteLine(dataLine + "\t" + "Protein_Name");
