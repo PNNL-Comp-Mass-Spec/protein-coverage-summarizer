@@ -572,33 +572,40 @@ namespace ProteinCoverageSummarizer
                         // Look for the first colon
                         var colonIndex = proteinPeptideKey.IndexOf(':');
 
-                        if (colonIndex > 0)
+                        if (colonIndex <= 0)
                         {
-                            var proteinID = Convert.ToInt32(proteinPeptideKey.Substring(0, colonIndex));
-
-                            if (!proteinIDLookup.TryGetValue(proteinID, out var targetIndex))
-                            {
-                                // ID not found; so add it
-
-                                targetIndex = peptideStatsCount;
-                                peptideStatsCount++;
-
-                                proteinIDLookup.Add(proteinID, targetIndex);
-
-                                if (targetIndex >= udtPeptideStats.Length)
-                                {
-                                    // Reserve more space in the arrays
-                                    var oldUdtPeptideStats = udtPeptideStats;
-                                    udtPeptideStats = new udtPeptideCountStatsType[udtPeptideStats.Length * 2];
-                                    Array.Copy(oldUdtPeptideStats, udtPeptideStats, Math.Min(udtPeptideStats.Length * 2, oldUdtPeptideStats.Length));
-                                }
-                            }
-
-                            // Update the protein counts at targetIndex
-                            // NOTE: The following is valid only because udtPeptideStats is an array, and not a generic collection
-                            udtPeptideStats[targetIndex].UniquePeptideCount++;
-                            udtPeptideStats[targetIndex].NonUniquePeptideCount += item.Value;
+                            // The key is not in the correct format
+                            continue;
                         }
+
+                        var proteinID = Convert.ToInt32(proteinPeptideKey.Substring(0, colonIndex));
+                        if (mCachedProteinInfo[proteinID].Name.Equals("GDIA_MOUSE"))
+                        {
+                            Console.WriteLine("Check this code");
+                        }
+
+                        if (!proteinIDLookup.TryGetValue(proteinID, out var targetIndex))
+                        {
+                            // ID not found; so add it
+
+                            targetIndex = peptideStatsCount;
+                            peptideStatsCount++;
+
+                            proteinIDLookup.Add(proteinID, targetIndex);
+
+                            if (targetIndex >= udtPeptideStats.Length)
+                            {
+                                // Reserve more space in the arrays
+                                var oldUdtPeptideStats = udtPeptideStats;
+                                udtPeptideStats = new udtPeptideCountStatsType[udtPeptideStats.Length * 2];
+                                Array.Copy(oldUdtPeptideStats, udtPeptideStats, Math.Min(udtPeptideStats.Length * 2, oldUdtPeptideStats.Length));
+                            }
+                        }
+
+                        // Update the protein counts at targetIndex
+                        // NOTE: The following is valid only because udtPeptideStats is an array, and not a generic collection
+                        udtPeptideStats[targetIndex].UniquePeptideCount++;
+                        udtPeptideStats[targetIndex].NonUniquePeptideCount += item.Value;
                     }
 
                     // Shrink udtPeptideStats
