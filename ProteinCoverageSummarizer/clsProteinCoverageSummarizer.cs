@@ -1209,14 +1209,23 @@ namespace ProteinCoverageSummarizer
         /// Increment the observation count for the given key in the given dictionary
         /// If the key is not defined, add it
         /// </summary>
-        /// <param name="dictionaryToUpdate"></param>
+        /// <param name="dictionaryToUpdate">Dictionary where values are the item count for each key</param>
         /// <param name="keyName"></param>
-        /// <returns>True if the protein is new and was added tomProteinPeptideStats </returns>
-        private bool IncrementCountByKey(IDictionary<string, int> dictionaryToUpdate, string keyName)
+        /// <param name="isNewPSM">Set this to false if this is a duplicate entry for a given scan number (e.g. different protein, or not the top scoring peptide)</param>
+        /// <returns>True if the protein is new and was added to mProteinPeptideStats </returns>
+        private bool IncrementCountByKey(IDictionary<string, int> dictionaryToUpdate, string keyName, bool isNewPSM = true)
         {
+            if (keyName.Contains("GRDWNVDLIPK") || keyName.Contains("GDIA_MOUSE"))
+            {
+                Console.WriteLine("Check this code");
+            }
+
             if (dictionaryToUpdate.TryGetValue(keyName, out var value))
             {
-                dictionaryToUpdate[keyName] = value + 1;
+                if (isNewPSM)
+                {
+                    dictionaryToUpdate[keyName] = value + 1;
+                }
                 return false;
             }
 
@@ -1480,7 +1489,7 @@ namespace ProteinCoverageSummarizer
                         mProteinToPeptideMappingOutputFile.WriteLine("Protein Name" + "\t" + "Peptide Sequence" + "\t" + "Residue Start" + "\t" + "Residue End");
                     }
 
-                    var peptideColumnIndex = GetPeptideColumnIndex(Options.PeptideFileFormatCode, peptideInputFilePath, sepChars, out var proteinColumnIndex, out _);
+                    var peptideColumnIndex = GetPeptideColumnIndex(Options.PeptideFileFormatCode, peptideInputFilePath, sepChars, out var proteinColumnIndex, out var scanColumnIndex);
                     if (peptideColumnIndex < 0)
                     {
                         SetErrorMessage("Input file does not have a column named 'Peptide': " + peptideInputFilePath);
@@ -1489,6 +1498,8 @@ namespace ProteinCoverageSummarizer
 
                     var linesRead = 0;
                     long bytesRead = 0;
+                    var lastPeptideCleanSequence = string.Empty;
+                    var lastScanNumber = string.Empty;
 
                     while (!reader.EndOfStream)
                     {
@@ -1522,6 +1533,7 @@ namespace ProteinCoverageSummarizer
                         var validLine = false;
                         var proteinName = string.Empty;
                         var peptideSequence = string.Empty;
+                        var scanNumber = string.Empty;
 
                         try
                         {
@@ -1529,8 +1541,9 @@ namespace ProteinCoverageSummarizer
                             var lineParts = dataLine.Split(sepChars);
 
                             proteinName = proteinColumnIndex >= 0 ? lineParts[proteinColumnIndex] : string.Empty;
+                            scanNumber = scanColumnIndex >= 0 ? lineParts[scanColumnIndex] : string.Empty;
 
-                            if (lineParts.Length > 1 && !string.IsNullOrWhiteSpace(lineParts[peptideColumnIndex]))
+                            if (!string.IsNullOrWhiteSpace(lineParts[peptideColumnIndex]))
                             {
                                 peptideSequence = lineParts[peptideColumnIndex];
                                 validLine = true;
@@ -1546,10 +1559,28 @@ namespace ProteinCoverageSummarizer
                             // Check for and remove prefix and suffix letters
                             // Also possibly remove symbol characters
 
-                            peptideSequence = GetCleanPeptideSequence(peptideSequence, out var prefixResidue, out var suffixResidue, Options.RemoveSymbolCharacters);
+                            var cleanPeptideSequence = GetCleanPeptideSequence(peptideSequence, out var prefixResidue, out var suffixResidue, Options.RemoveSymbolCharacters);
+
+                            bool isNewPSM;
+                            if (cleanPeptideSequence.Equals(lastPeptideCleanSequence) && scanNumber.Equals(lastScanNumber))
+                            {
+                                // Duplicate PSM (the only difference is the protein)
+                                isNewPSM = false;
+                            }
+                            else
+                            {
+                                isNewPSM = true;
+                                lastPeptideCleanSequence = cleanPeptideSequence;
+                                lastScanNumber = scanNumber;
+                            }
+
+                            if (cleanPeptideSequence.Contains("GRDWNVDLIPK"))
+                            {
+                                Console.WriteLine("Check this code");
+                            }
 
                             if (Options.UseLeaderSequenceHashTable &&
-                                peptideSequence.Length >= mLeaderSequenceCache.LeaderSequenceMinimumLength)
+                                cleanPeptideSequence.Length >= mLeaderSequenceCache.LeaderSequenceMinimumLength)
                             {
                                 if (mLeaderSequenceCache.CachedPeptideCount >= clsLeaderSequenceCache.MAX_LEADER_SEQUENCE_COUNT)
                                 {
@@ -1558,7 +1589,7 @@ namespace ProteinCoverageSummarizer
                                     mLeaderSequenceCache.InitializeCachedPeptides();
                                 }
 
-                                mLeaderSequenceCache.CachePeptide(peptideSequence, proteinName, prefixResidue, suffixResidue);
+                                mLeaderSequenceCache.CachePeptide(cleanPeptideSequence, proteinName, prefixResidue, suffixResidue, isNewPSM);
                             }
                             else
                             {
@@ -1573,9 +1604,9 @@ namespace ProteinCoverageSummarizer
                                     shortPeptideCache.Clear();
                                 }
 
-                                var peptideSequenceToCache = prefixResidue + "." + peptideSequence + "." + suffixResidue;
+                                var peptideSequenceToCache = prefixResidue + "." + cleanPeptideSequence + "." + suffixResidue;
 
-                                IncrementCountByKey(shortPeptideCache, peptideSequenceToCache);
+                                IncrementCountByKey(shortPeptideCache, peptideSequenceToCache, isNewPSM);
                             }
                         }
                         else

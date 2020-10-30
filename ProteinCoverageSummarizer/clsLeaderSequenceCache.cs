@@ -222,7 +222,8 @@ namespace ProteinCoverageSummarizer
         /// <param name="proteinName">Protein name</param>
         /// <param name="prefixResidue">Prefix residue</param>
         /// <param name="suffixResidue">Suffix residue</param>
-        public bool CachePeptide(string peptideSequence, string proteinName, char prefixResidue, char suffixResidue)
+        /// <param name="isNewPSM">Set this to false if this is a duplicate entry for a given scan number (e.g. different protein, or not the top scoring peptide)</param>
+        public bool CachePeptide(string peptideSequence, string proteinName, char prefixResidue, char suffixResidue, bool isNewPSM)
         {
             try
             {
@@ -274,6 +275,11 @@ namespace ProteinCoverageSummarizer
                     var oldMCachedPeptideToHashIndexPointer = mCachedPeptideToHashIndexPointer;
                     mCachedPeptideToHashIndexPointer = new int[mCachedPeptideSeqInfo.Length];
                     Array.Copy(oldMCachedPeptideToHashIndexPointer, mCachedPeptideToHashIndexPointer, Math.Min(mCachedPeptideSeqInfo.Length, oldMCachedPeptideToHashIndexPointer.Length));
+                }
+
+                if (!isNewPSM)
+                {
+                    return true;
                 }
 
                 // Add peptideSequence to mCachedPeptideSeqInfo
