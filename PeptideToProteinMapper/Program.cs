@@ -198,7 +198,7 @@ namespace PeptideToProteinMapper
             return PRISM.FileProcessor.ProcessFilesOrDirectoriesBase.GetAppVersion(PROGRAM_DATE);
         }
 
-        private static bool SetOptionsUsingCommandLineParameters(clsParseCommandLine CommandLineParser, ProteinCoverageSummarizerOptions options)
+        private static bool SetOptionsUsingCommandLineParameters(clsParseCommandLine commandLineParser, ProteinCoverageSummarizerOptions options)
         {
             // Returns True if no problems; otherwise, returns false
             // /I:PeptideInputFilePath /R: ProteinInputFilePath /O:OutputDirectoryPath /P:ParameterFilePath
@@ -208,33 +208,33 @@ namespace PeptideToProteinMapper
             try
             {
                 // Make sure no invalid parameters are present
-                if (CommandLineParser.InvalidParametersPresent(validParameters))
+                if (commandLineParser.InvalidParametersPresent(validParameters))
                 {
                     ShowErrorMessage("Invalid command line parameters",
-                        (from item in CommandLineParser.InvalidParameters(validParameters) select ("/" + item)).ToList());
+                        (from item in commandLineParser.InvalidParameters(validParameters) select ("/" + item)).ToList());
                     return false;
                 }
 
                 // Query commandLineParser to see if various parameters are present
-                if (CommandLineParser.RetrieveValueForParameter("I", out var inputFilePath))
+                if (commandLineParser.RetrieveValueForParameter("I", out var inputFilePath))
                 {
                     options.PeptideInputFilePath = inputFilePath;
                 }
-                else if (CommandLineParser.NonSwitchParameterCount > 0)
+                else if (commandLineParser.NonSwitchParameterCount > 0)
                 {
-                    options.PeptideInputFilePath = CommandLineParser.RetrieveNonSwitchParameter(0);
+                    options.PeptideInputFilePath = commandLineParser.RetrieveNonSwitchParameter(0);
                 }
 
-                if (CommandLineParser.RetrieveValueForParameter("O", out var outputDirectoryPath))
+                if (commandLineParser.RetrieveValueForParameter("O", out var outputDirectoryPath))
                     options.OutputDirectoryPath = outputDirectoryPath;
 
-                if (CommandLineParser.RetrieveValueForParameter("R", out var proteinInputFilePath))
+                if (commandLineParser.RetrieveValueForParameter("R", out var proteinInputFilePath))
                     options.ProteinInputFilePath = proteinInputFilePath;
 
-                if (CommandLineParser.RetrieveValueForParameter("P", out var parameterFilePath))
+                if (commandLineParser.RetrieveValueForParameter("P", out var parameterFilePath))
                     mParameterFilePath = parameterFilePath;
 
-                if (CommandLineParser.RetrieveValueForParameter("F", out var inputFileFormatCode))
+                if (commandLineParser.RetrieveValueForParameter("F", out var inputFileFormatCode))
                 {
                     if (int.TryParse(inputFileFormatCode, out var inputFileFormatCodeValue))
                     {
@@ -249,22 +249,22 @@ namespace PeptideToProteinMapper
                     }
                 }
 
-                if (CommandLineParser.RetrieveValueForParameter("N", out var inspectParameterFilePath))
+                if (commandLineParser.RetrieveValueForParameter("N", out var inspectParameterFilePath))
                     mInspectParameterFilePath = inspectParameterFilePath;
 
-                if (CommandLineParser.RetrieveValueForParameter("G", out _))
+                if (commandLineParser.RetrieveValueForParameter("G", out _))
                     options.IgnoreILDifferences = true;
 
-                if (CommandLineParser.RetrieveValueForParameter("H", out _))
+                if (commandLineParser.RetrieveValueForParameter("H", out _))
                     options.OutputProteinSequence = false;
 
-                if (CommandLineParser.RetrieveValueForParameter("K", out _))
+                if (commandLineParser.RetrieveValueForParameter("K", out _))
                     options.SearchAllProteinsSkipCoverageComputationSteps = true;
 
-                if (CommandLineParser.RetrieveValueForParameter("A", out _))
+                if (commandLineParser.RetrieveValueForParameter("A", out _))
                     options.SaveSourceDataPlusProteinsFile = true;
 
-                if (CommandLineParser.RetrieveValueForParameter("L", out var logFilePath))
+                if (commandLineParser.RetrieveValueForParameter("L", out var logFilePath))
                 {
                     mLogMessagesToFile = true;
                     if (!string.IsNullOrEmpty(logFilePath))
@@ -273,7 +273,7 @@ namespace PeptideToProteinMapper
                     }
                 }
 
-                if (CommandLineParser.RetrieveValueForParameter("LogDir", out var logDirectoryPath))
+                if (commandLineParser.RetrieveValueForParameter("LogDir", out var logDirectoryPath))
                 {
                     mLogMessagesToFile = true;
                     if (!string.IsNullOrEmpty(logDirectoryPath))
@@ -282,7 +282,7 @@ namespace PeptideToProteinMapper
                     }
                 }
 
-                if (CommandLineParser.RetrieveValueForParameter("LogFolder", out var logFolderPath))
+                if (commandLineParser.RetrieveValueForParameter("LogFolder", out var logFolderPath))
                 {
                     mLogMessagesToFile = true;
                     if (!string.IsNullOrEmpty(logFolderPath))
@@ -291,7 +291,7 @@ namespace PeptideToProteinMapper
                     }
                 }
 
-                if (CommandLineParser.RetrieveValueForParameter("VerboseLog", out _))
+                if (commandLineParser.RetrieveValueForParameter("VerboseLog", out _))
                     mVerboseLogging = true;
 
                 return true;
@@ -326,7 +326,7 @@ namespace PeptideToProteinMapper
                 Console.WriteLine();
                 Console.WriteLine("Program syntax:" + Environment.NewLine + Path.GetFileName(Assembly.GetExecutingAssembly().Location));
                 Console.WriteLine(" /I:PeptideInputFilePath /R:ProteinInputFilePath");
-                Console.WriteLine(" [/O:OutputDirectoryName] [/P:ParameterFilePath] [/F:FileFormatCode] ");
+                Console.WriteLine(" [/O:OutputDirectoryName] [/P:ParameterFilePath] [/F:FileFormatCode]");
                 Console.WriteLine(" [/N:InspectParameterFilePath] [/G] [/H] [/K] [/A]");
                 Console.WriteLine(" [/L[:LogFilePath]] [/LogDir:LogDirectoryPath] [/VerboseLog] [/Q]");
                 Console.WriteLine();

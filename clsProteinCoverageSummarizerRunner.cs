@@ -129,11 +129,11 @@ namespace ProteinCoverageSummarizerGUI
         /// Process the file to compute protein sequence coverage
         /// </summary>
         /// <param name="inputFilePath"></param>
-        /// <param name="outputFolderPath"></param>
+        /// <param name="outputDirectoryPath"></param>
         /// <param name="parameterFilePath"></param>
         /// <param name="resetErrorCode"></param>
         /// <returns>True if success, false if an error</returns>
-        public override bool ProcessFile(string inputFilePath, string outputFolderPath, string parameterFilePath, bool resetErrorCode)
+        public override bool ProcessFile(string inputFilePath, string outputDirectoryPath, string parameterFilePath, bool resetErrorCode)
         {
             mStatusMessage = string.Empty;
 
@@ -152,7 +152,7 @@ namespace ProteinCoverageSummarizerGUI
 
                 // Call mProteinCoverageSummarizer.ProcessFile to perform the work
                 mProteinCoverageSummarizer.Options.KeepDB = Options.KeepDB;
-                var success = mProteinCoverageSummarizer.ProcessFile(inputFilePath, outputFolderPath, parameterFilePath, true);
+                var success = mProteinCoverageSummarizer.ProcessFile(inputFilePath, outputDirectoryPath, parameterFilePath, true);
 
                 if (!success)
                 {
