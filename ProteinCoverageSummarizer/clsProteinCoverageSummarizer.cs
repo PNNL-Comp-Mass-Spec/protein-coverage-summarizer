@@ -16,7 +16,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Reflection;
 using System.Text.RegularExpressions;
 using PRISM;
 using ProteinFileReader;
@@ -952,8 +951,7 @@ namespace ProteinCoverageSummarizer
         /// </summary>
         public static string GetAppDirectoryPath()
         {
-            // Could use Application.StartupPath, but .GetExecutingAssembly is better
-            return Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            return PRISM.FileProcessor.ProcessFilesOrDirectoriesBase.GetAppDirectoryPath();
         }
 
         private static readonly Regex reReplaceSymbols = new Regex("[^A-Za-z]", RegexOptions.Compiled);
