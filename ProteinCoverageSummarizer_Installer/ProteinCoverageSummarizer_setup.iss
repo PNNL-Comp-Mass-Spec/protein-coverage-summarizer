@@ -42,15 +42,15 @@ Source: ..\PeptideToProteinMapper\bin\Release\PeptideToProteinMapper.exe    ; De
 Source: ..\PeptideToProteinMapper\bin\Release\PeptideToProteinMapEngine.dll ; DestDir: {app}
 Source: ..\PeptideToProteinMapper\bin\Release\PHRPReader.dll                ; DestDir: {app}
 
-Source: ..\bin\BSA_P171_QID1638_TestProteins.fasta                        ; DestDir: {app}
-Source: ..\bin\BSA_P171_QID1638_TestPeptides.txt                          ; DestDir: {app}
-Source: ..\bin\BSA_P171_QID1638_TestPeptides_coverage.txt                 ; DestDir: {app}
-Source: ..\bin\BSA_P171_QID1638_TestPeptides_ProteinToPeptideMapping.txt  ; DestDir: {app}
-Source: ..\bin\BSA_P171_QID1638_TestPeptides_SequenceOnly.txt                         ; DestDir: {app}
-Source: ..\bin\BSA_P171_QID1638_TestPeptides_SequenceOnly_coverage.txt                ; DestDir: {app}
-Source: ..\bin\BSA_P171_QID1638_TestPeptides_SequenceOnly_ProteinToPeptideMapping.txt ; DestDir: {app}
+Source: ..\Docs\BSA\BSA_P171_QID1638_TestProteins.fasta                        ; DestDir: {app}
+Source: ..\Docs\BSA\BSA_P171_QID1638_TestPeptides.txt                          ; DestDir: {app}
+Source: ..\Docs\BSA\BSA_P171_QID1638_TestPeptides_coverage.txt                 ; DestDir: {app}
+Source: ..\Docs\BSA\BSA_P171_QID1638_TestPeptides_ProteinToPeptideMapping.txt  ; DestDir: {app}
+Source: ..\Docs\BSA\BSA_P171_QID1638_TestPeptides_SequenceOnly.txt                         ; DestDir: {app}
+Source: ..\Docs\BSA\BSA_P171_QID1638_TestPeptides_SequenceOnly_coverage.txt                ; DestDir: {app}
+Source: ..\Docs\BSA\BSA_P171_QID1638_TestPeptides_SequenceOnly_ProteinToPeptideMapping.txt ; DestDir: {app}
 
-Source: ..\bin\BSA_P171_QID1638_TestProteins.txt                          ; DestDir: {app}
+Source: ..\Docs\BSA\BSA_P171_QID1638_TestProteins.txt                          ; DestDir: {app}
 
 Source: Images\delete_16x.ico                ; DestDir: {app}
 Source: ..\License.txt                       ; DestDir: {app}
