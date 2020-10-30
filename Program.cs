@@ -68,8 +68,6 @@ namespace ProteinCoverageSummarizerGUI
             // Returns 0 if no error, error code if an error
             var commandLineParser = new clsParseCommandLine();
 
-            var returnCode = 0;
-
             mParameterFilePath = string.Empty;
 
             try
@@ -79,18 +77,25 @@ namespace ProteinCoverageSummarizerGUI
                 var proceed = false;
                 if (commandLineParser.ParseCommandLine())
                 {
-                    if (SetOptionsUsingCommandLineParameters(commandLineParser, options))
+                    if (SetOptionsUsingCommandLineParameters(commandLineParser, options, out var invalidParameters))
+                    {
                         proceed = true;
+                    }
+
+                    if (invalidParameters)
+                        return -1;
                 }
 
                 if (!commandLineParser.NeedToShowHelp && string.IsNullOrEmpty(options.ProteinInputFilePath))
                 {
                     ShowGUI(options);
+                    return 0;
                 }
-                else if (!proceed || commandLineParser.NeedToShowHelp || commandLineParser.ParameterCount == 0 || options.PeptideInputFilePath.Length == 0)
+
+                if (!proceed || commandLineParser.NeedToShowHelp || commandLineParser.ParameterCount == 0 || options.PeptideInputFilePath.Length == 0)
                 {
                     ShowProgramHelp();
-                    returnCode = -1;
+                    return -1;
                 }
                 else
                 {
@@ -157,10 +162,17 @@ namespace ProteinCoverageSummarizerGUI
             return ProcessFilesOrDirectoriesBase.GetAppVersion(PROGRAM_DATE);
         }
 
-        private static bool SetOptionsUsingCommandLineParameters(clsParseCommandLine commandLineParser, ProteinCoverageSummarizerOptions options)
+        /// <summary>
+        /// Set options using the command line
+        /// </summary>
+        /// <param name="commandLineParser"></param>
+        /// <param name="options"></param>
+        /// <param name="invalidParameters">True if an unrecognized parameter is found</param>
+        /// <returns>True if no problems; false if an issue</returns>
+        private static bool SetOptionsUsingCommandLineParameters(
+            clsParseCommandLine commandLineParser, ProteinCoverageSummarizerOptions options, out bool invalidParameters)
         {
-            // Returns True if no problems; otherwise, returns false
-            // /I:PeptideInputFilePath /R: ProteinInputFilePath /O:OutputDirectoryPath /P:ParameterFilePath
+            invalidParameters = false;
 
             var validParameters = new List<string> { "I", "O", "R", "P", "G", "H", "M", "K", "D", "Debug", "KeepDB" };
             try
@@ -170,6 +182,7 @@ namespace ProteinCoverageSummarizerGUI
                 {
                     ShowErrorMessage("Invalid command line parameters",
                         (from item in commandLineParser.InvalidParameters(validParameters) select ("/" + item)).ToList());
+                    invalidParameters = true;
                     return false;
                 }
 
