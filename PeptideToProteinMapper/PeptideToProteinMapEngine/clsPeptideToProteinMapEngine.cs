@@ -1080,6 +1080,8 @@ namespace PeptideToProteinMapEngine
                 // Open the output file
                 using (var writer = new StreamWriter(new FileStream(peptideListFilePath, FileMode.Create, FileAccess.Write, FileShare.Read)))
                 {
+                    writer.WriteLine("Peptide\tScan");
+
                     // Write out the peptides, removing any mod symbols that might be present
                     foreach (var peptideEntry in mUniquePeptideList)
                     {
@@ -1180,7 +1182,7 @@ namespace PeptideToProteinMapEngine
                             outputFileBaseName = Path.GetFileNameWithoutExtension(inputFilePath);
 
                             mProteinCoverageSummarizer.Options.PeptideFileFormatCode = ProteinCoverageSummarizerOptions.PeptideFileColumnOrderingCode.SequenceOnly;
-                            mProteinCoverageSummarizer.Options.PeptideFileSkipFirstLine = false;
+                            mProteinCoverageSummarizer.Options.PeptideFileSkipFirstLine = true;
                             mProteinCoverageSummarizer.Options.MatchPeptidePrefixAndSuffixToProtein = false;
                             break;
 
@@ -1193,7 +1195,7 @@ namespace PeptideToProteinMapEngine
                             outputFileBaseName = Path.GetFileNameWithoutExtension(inputFilePath);
 
                             mProteinCoverageSummarizer.Options.PeptideFileFormatCode = ProteinCoverageSummarizerOptions.PeptideFileColumnOrderingCode.SequenceOnly;
-                            mProteinCoverageSummarizer.Options.PeptideFileSkipFirstLine = false;
+                            mProteinCoverageSummarizer.Options.PeptideFileSkipFirstLine = true;
                             mProteinCoverageSummarizer.Options.MatchPeptidePrefixAndSuffixToProtein = false;
                             break;
 
@@ -1208,8 +1210,8 @@ namespace PeptideToProteinMapEngine
                             outputFileBaseName = Path.GetFileNameWithoutExtension(inputFilePath);
 
                             mProteinCoverageSummarizer.Options.PeptideFileFormatCode = ProteinCoverageSummarizerOptions.PeptideFileColumnOrderingCode.SequenceOnly;
-                            mProteinCoverageSummarizer.Options.PeptideFileSkipFirstLine = false;
-                            mProteinCoverageSummarizer.Options.MatchPeptidePrefixAndSuffixToProtein = false;
+                            mProteinCoverageSummarizer.Options.PeptideFileSkipFirstLine = true;
+                            mProteinCoverageSummarizer.Options.MatchPeptidePrefixAndSuffixToProtein = true;
                             break;
 
                         case PeptideInputFileFormatConstants.TabDelimitedText:
