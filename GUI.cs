@@ -160,7 +160,7 @@ namespace ProteinCoverageSummarizerGUI
             }
             catch (Exception ex)
             {
-                ShowErrorMessage("Error confirming that the input files exist: " + ex.Message, "Error");
+                ShowErrorMessage("Error confirming that the input files exist: " + ex.Message);
                 txtPeptideInputFilePath.Focus();
                 return false;
             }
@@ -318,7 +318,7 @@ namespace ProteinCoverageSummarizerGUI
             }
             catch (Exception ex)
             {
-                ShowErrorMessage("Error defining default output folder path: " + ex.Message, "Error");
+                ShowErrorMessage("Error defining default output folder path: " + ex.Message);
             }
         }
 
@@ -599,7 +599,7 @@ namespace ProteinCoverageSummarizerGUI
             }
             catch (Exception)
             {
-                ShowErrorMessage("Error storing parameter in settings file: " + Path.GetFileName(settingsFilePath), "Error");
+                ShowErrorMessage("Error storing parameter in settings file: " + Path.GetFileName(settingsFilePath));
             }
         }
 
@@ -985,12 +985,7 @@ namespace ProteinCoverageSummarizerGUI
             }
         }
 
-        private void ShowErrorMessage(string message)
-        {
-            ShowErrorMessage(message, "Error");
-        }
-
-        private void ShowErrorMessage(string message, string caption)
+        private void ShowErrorMessage(string message, string caption = "Error")
         {
             MessageBox.Show(message, caption, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
         }

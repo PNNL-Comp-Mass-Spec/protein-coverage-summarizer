@@ -137,7 +137,7 @@ namespace ProteinCoverageSummarizerGUI
 
             if (resetErrorCode)
             {
-                base.SetBaseClassErrorCode(ProcessFilesErrorCodes.NoError);
+                SetBaseClassErrorCode(ProcessFilesErrorCodes.NoError);
             }
 
             try

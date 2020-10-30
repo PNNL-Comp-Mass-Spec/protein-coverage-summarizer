@@ -259,7 +259,7 @@ namespace ProteinCoverageSummarizer
                 // Look for leaderSequence in mLeaderSequences
                 if (!mLeaderSequences.TryGetValue(leaderSequence, out var hashIndexPointer))
                 {
-                    // leaderSequence was not found; add it and initialize intHashIndexPointer
+                    // leaderSequence was not found; add it and initialize hashIndexPointer
                     hashIndexPointer = mLeaderSequences.Count;
                     mLeaderSequences.Add(leaderSequence, hashIndexPointer);
                 }
@@ -268,7 +268,7 @@ namespace ProteinCoverageSummarizer
                 if (mCachedPeptideCount >= mCachedPeptideSeqInfo.Length && mCachedPeptideCount < MAX_LEADER_SEQUENCE_COUNT)
                 {
                     var oldMCachedPeptideSeqInfo = mCachedPeptideSeqInfo;
-                    mCachedPeptideSeqInfo = new udtPeptideSequenceInfoType[(mCachedPeptideSeqInfo.Length * 2)];
+                    mCachedPeptideSeqInfo = new udtPeptideSequenceInfoType[mCachedPeptideSeqInfo.Length * 2];
                     Array.Copy(oldMCachedPeptideSeqInfo, mCachedPeptideSeqInfo, Math.Min(mCachedPeptideSeqInfo.Length * 2, oldMCachedPeptideSeqInfo.Length));
 
                     var oldMCachedPeptideToHashIndexPointer = mCachedPeptideToHashIndexPointer;
@@ -284,11 +284,13 @@ namespace ProteinCoverageSummarizer
                 pepSeq.Suffix = suffixResidue;
                 pepSeq.PrefixLtoI = prefixResidueLtoI;
                 pepSeq.SuffixLtoI = suffixResidueLtoI;
+
                 if (IgnoreILDifferences)
                 {
                     pepSeq.PeptideSequenceLtoI = peptideSequence.Replace('L', 'I');
                 }
-                // C# list of structs: copy value back to make sure it's stored.
+
+                // C# array of structs: copy value back to make sure it's stored.
                 mCachedPeptideSeqInfo[mCachedPeptideCount] = pepSeq;
 
                 // Update the peptide to Hash Index pointer array
@@ -369,7 +371,7 @@ namespace ProteinCoverageSummarizer
                         {
                             var dataCols = dataLine.Split(peptideInputFileDelimiter);
 
-                            if (columnNumWithPeptideSequence >= 1 & columnNumWithPeptideSequence < dataCols.Length - 1)
+                            if (columnNumWithPeptideSequence >= 1 && columnNumWithPeptideSequence < dataCols.Length - 1)
                             {
                                 peptideSequence = dataCols[columnNumWithPeptideSequence - 1];
                             }
@@ -475,11 +477,11 @@ namespace ProteinCoverageSummarizer
         /// <returns></returns>
         public int GetNextPeptideWithLeaderSequence(int cachedPeptideMatchIndexCurrent)
         {
-            if (intCachedPeptideMatchIndexCurrent < mCachedPeptideCount - 1)
+            if (cachedPeptideMatchIndexCurrent < mCachedPeptideCount - 1)
             {
-                if (mCachedPeptideToHashIndexPointer[intCachedPeptideMatchIndexCurrent + 1] == mCachedPeptideToHashIndexPointer[intCachedPeptideMatchIndexCurrent])
+                if (mCachedPeptideToHashIndexPointer[cachedPeptideMatchIndexCurrent + 1] == mCachedPeptideToHashIndexPointer[cachedPeptideMatchIndexCurrent])
                 {
-                    return intCachedPeptideMatchIndexCurrent + 1;
+                    return cachedPeptideMatchIndexCurrent + 1;
                 }
 
                 return -1;
@@ -551,20 +553,19 @@ namespace ProteinCoverageSummarizer
         {
             UpdateProgress(ProgressStepDescription, sngPercentComplete);
         }
-
-        private void UpdateProgress(string strProgressStepDescription, float sngPercentComplete)
+        private void UpdateProgress(string progressStepDescription, float percentComplete)
         {
-            mProgressStepDescription = string.Copy(strProgressStepDescription);
-            if (sngPercentComplete < 0)
+            mProgressStepDescription = string.Copy(progressStepDescription);
+            if (percentComplete < 0)
             {
-                sngPercentComplete = 0;
+                percentComplete = 0;
             }
-            else if (sngPercentComplete > 100)
+            else if (percentComplete > 100)
             {
-                sngPercentComplete = 100;
+                percentComplete = 100;
             }
 
-            mProgressPercentComplete = sngPercentComplete;
+            mProgressPercentComplete = percentComplete;
 
             ProgressChanged?.Invoke(ProgressStepDescription, ProgressPercentComplete);
         }

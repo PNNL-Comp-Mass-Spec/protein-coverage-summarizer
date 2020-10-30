@@ -710,8 +710,6 @@ namespace ProteinCoverageSummarizer
                     {
                         ProteinCachedWithProgress?.Invoke(mProteinCount, proteinFileReader.PercentFileProcessed());
                     }
-
-                    success = true;
                 }
 
                 // Finalize the SQL Transaction
@@ -730,22 +728,14 @@ namespace ProteinCoverageSummarizer
 
                 ProteinCachingComplete?.Invoke();
 
-                if (success)
-                {
-                    OnStatusEvent("Done: Processed " + proteinsProcessed.ToString("###,##0") + " proteins (" + inputFileLinesRead.ToString("###,###,##0") + " lines)");
-                }
-                else
-                {
-                    OnErrorEvent(StatusMessage);
-                }
+                OnStatusEvent("Done: Processed " + proteinsProcessed.ToString("###,##0") + " proteins (" + inputFileLinesRead.ToString("###,###,##0") + " lines)");
+                return true;
             }
             catch (Exception ex)
             {
                 ReportError("Error reading protein input file (" + proteinInputFilePath + "): " + ex.Message, ex);
-                success = false;
+                return false;
             }
-
-            return success;
         }
 
         private void ReportError(string errorMessage, Exception ex = null)
