@@ -228,20 +228,25 @@ namespace PeptideToProteinMapEngine
         /// <param name="filePath"></param>
         public PeptideInputFileFormatConstants DetermineResultsFileFormat(string filePath)
         {
-            // Examine the file name to determine the file format
+            Console.WriteLine();
+
+            // First examine the file name to determine the file format
 
             if (Path.GetFileName(filePath).EndsWith(FILENAME_SUFFIX_INSPECT_RESULTS_FILE, StringComparison.OrdinalIgnoreCase))
             {
+                OnStatusEvent(string.Format("Input file type: Inspect results file (matched suffix {0})", FILENAME_SUFFIX_INSPECT_RESULTS_FILE));
                 return PeptideInputFileFormatConstants.InspectResultsFile;
             }
 
             if (Path.GetFileName(filePath).EndsWith(FILENAME_SUFFIX_MSGFDB_RESULTS_FILE, StringComparison.OrdinalIgnoreCase))
             {
+                OnStatusEvent(string.Format("Input file type: MS-GF+ results file (matched suffix {0})", FILENAME_SUFFIX_MSGFDB_RESULTS_FILE));
                 return PeptideInputFileFormatConstants.MSGFPlusResultsFile;
             }
 
             if (Path.GetFileName(filePath).EndsWith(FILENAME_SUFFIX_MSGFPLUS_RESULTS_FILE, StringComparison.OrdinalIgnoreCase))
             {
+                OnStatusEvent(string.Format("Input file type: MS-GF+ results file (matched suffix {0})", FILENAME_SUFFIX_MSGFPLUS_RESULTS_FILE));
                 return PeptideInputFileFormatConstants.MSGFPlusResultsFile;
             }
 
@@ -251,15 +256,22 @@ namespace PeptideToProteinMapEngine
             }
 
             var baseNameLCase = Path.GetFileNameWithoutExtension(filePath);
-            if (baseNameLCase.EndsWith("_MSGFDB", StringComparison.OrdinalIgnoreCase) ||
-                baseNameLCase.EndsWith("_MSGFPlus", StringComparison.OrdinalIgnoreCase))
+            if (baseNameLCase.EndsWith("_MSGFDB", StringComparison.OrdinalIgnoreCase))
             {
+                OnStatusEvent("Input file type: MS-GF+ results file (matched suffix _MSGFDB)");
+                return PeptideInputFileFormatConstants.MSGFPlusResultsFile;
+            }
+
+            if (baseNameLCase.EndsWith("_MSGFPlus", StringComparison.OrdinalIgnoreCase))
+            {
+                OnStatusEvent("Input file type: MS-GF+ results file (matched suffix _MSGFPlus)");
                 return PeptideInputFileFormatConstants.MSGFPlusResultsFile;
             }
 
             var resultType = clsPHRPReader.AutoDetermineResultType(filePath);
             if (resultType != clsPHRPReader.ePeptideHitResultType.Unknown)
             {
+                OnStatusEvent("Input file type: PHRPFile (based on column names)");
                 return PeptideInputFileFormatConstants.PHRPFile;
             }
 
@@ -267,11 +279,12 @@ namespace PeptideToProteinMapEngine
             IsHeaderLinePresent(filePath, PeptideInputFileFormatConstants.Unknown, out var hasPeptideOrSequenceColumn);
             if (hasPeptideOrSequenceColumn)
             {
+                OnStatusEvent("Input file type: Tab-delimited text (has column Peptide or Sequence))");
                 PeptideInputFileFormat = PeptideInputFileFormatConstants.TabDelimitedText;
                 return PeptideInputFileFormat;
             }
 
-            ShowMessage("Unable to determine the format of the input file based on the filename suffix; will assume the first column contains peptide sequence");
+            ShowMessage("Unable to determine the format of the input file based on the filename suffix or column names; will assume the first column contains peptide sequence");
             return PeptideInputFileFormatConstants.PeptideListFile;
         }
 
@@ -860,7 +873,7 @@ namespace PeptideToProteinMapEngine
                 if (!File.Exists(inputFilePath))
                 {
                     SetBaseClassErrorCode(ProcessFilesErrorCodes.InvalidInputFilePath);
-                    StatusMessage = "File not found: " + inputFilePath;
+                    StatusMessage = "File not found (PreProcessPSMResultsFile): " + inputFilePath;
 
                     ShowErrorMessage(StatusMessage);
                     return string.Empty;
@@ -978,7 +991,7 @@ namespace PeptideToProteinMapEngine
                 if (!File.Exists(inputFilePath))
                 {
                     SetBaseClassErrorCode(ProcessFilesErrorCodes.InvalidInputFilePath);
-                    StatusMessage = "File not found: " + inputFilePath;
+                    StatusMessage = "File not found (PreProcessPHRPDataFile): " + inputFilePath;
 
                     ShowErrorMessage(StatusMessage);
                     return string.Empty;

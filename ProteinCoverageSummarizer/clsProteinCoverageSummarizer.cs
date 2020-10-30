@@ -1359,7 +1359,7 @@ namespace ProteinCoverageSummarizer
 
                 if (!File.Exists(peptideInputFilePath))
                 {
-                    SetErrorMessage("File not found: " + peptideInputFilePath);
+                    SetErrorMessage("File not found (ParsePeptideInputFile): " + peptideInputFilePath);
                     return false;
                 }
 
@@ -1421,10 +1421,14 @@ namespace ProteinCoverageSummarizer
                             if (peptideColumnIndex >= 0)
                             {
                                 columnNumWithPeptideSequence = peptideColumnIndex + 1;
+                                OnStatusEvent(string.Format(
+                                    "Reading peptides from the 'Peptide' column in the input file (column {0})", columnNumWithPeptideSequence));
                             }
                             else if (sequenceColumnIndex >= 0)
                             {
                                 columnNumWithPeptideSequence = sequenceColumnIndex + 1;
+                                OnStatusEvent(string.Format(
+                                    "Reading peptides from the 'Sequence' column in the input file (column {0})", columnNumWithPeptideSequence));
                             }
                             else
                             {
@@ -1434,11 +1438,13 @@ namespace ProteinCoverageSummarizer
                             break;
 
                         case ProteinCoverageSummarizerOptions.PeptideFileColumnOrderingCode.ProteinName_PeptideSequence:
+                            OnStatusEvent("Reading peptides the second column in the input file");
                             columnNumWithPeptideSequence = 2;
                             break;
 
                         default:
                             // Includes PeptideFileColumnOrderingCode.SequenceOnly
+                            OnStatusEvent("Reading peptides the first column in the input file");
                             columnNumWithPeptideSequence = 1;
                             break;
                     }
