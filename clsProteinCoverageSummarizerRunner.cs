@@ -27,6 +27,8 @@ namespace ProteinCoverageSummarizerGUI
 
         #region "Class wide variables"
 
+        private bool mOptionsShown;
+
         private clsProteinCoverageSummarizer mProteinCoverageSummarizer;
 
         private string mStatusMessage;
@@ -142,6 +144,37 @@ namespace ProteinCoverageSummarizerGUI
 
             try
             {
+                if (!mOptionsShown)
+                {
+                    mOptionsShown = true;
+                    Console.WriteLine("Processing Options");
+                    Console.WriteLine();
+                    Console.WriteLine("{0,-35} {1}", "Input File:", PRISM.PathUtils.CompactPathString(inputFilePath, 80));
+                    Console.WriteLine("{0,-35} {1}", "Output Directory:", PRISM.PathUtils.CompactPathString(outputDirectoryPath, 80));
+                    Console.WriteLine("{0,-35} {1}", "Proteins File:", PRISM.PathUtils.CompactPathString(Options.ProteinInputFilePath, 80));
+
+                    if (!string.IsNullOrWhiteSpace(parameterFilePath))
+                    {
+                        Console.WriteLine("{0,-35} {1}", "Parameter File:", parameterFilePath);
+                    }
+
+                    Console.WriteLine("{0,-35} {1} (type {2})", "Input File Format:", Options.PeptideFileFormatCode, (int)Options.PeptideFileFormatCode);
+
+                    Console.WriteLine("{0,-35} {1}", "Skip first line (headers):", Options.PeptideFileSkipFirstLine || Options.PeptideFileFormatCode == ProteinCoverageSummarizerOptions.PeptideFileColumnOrderingCode.UseHeaderNames);
+                    Console.WriteLine("{0,-35} {1}", "Ignore I/L Differences:", Options.IgnoreILDifferences);
+                    Console.WriteLine("{0,-35} {1}", "Match Prefix and Suffix Residues:", Options.MatchPeptidePrefixAndSuffixToProtein);
+                    Console.WriteLine("{0,-35} {1}", "Remove symbol characters:", Options.RemoveSymbolCharacters);
+                    Console.WriteLine("{0,-35} {1}", "Search all proteins:", Options.SearchAllProteinsForPeptideSequence);
+                    Console.WriteLine("{0,-35} {1}", "Skip Coverage Computation:", Options.SearchAllProteinsSkipCoverageComputationSteps);
+                    Console.WriteLine("{0,-35} {1}", "Track peptide counts:", Options.TrackPeptideCounts);
+                    Console.WriteLine();
+                    Console.WriteLine("{0,-35} {1}", "Create _AllProteins.txt:", Options.SaveSourceDataPlusProteinsFile);
+                    Console.WriteLine("{0,-35} {1}", "Create protein to peptide map file:", Options.SaveProteinToPeptideMappingFile);
+                    Console.WriteLine("{0,-35} {1}", "Output Protein Sequence:", Options.OutputProteinSequence);
+
+                    Console.WriteLine();
+                }
+
                 // Show the progress form
                 if (!CallingAppHandlesEvents)
                 {

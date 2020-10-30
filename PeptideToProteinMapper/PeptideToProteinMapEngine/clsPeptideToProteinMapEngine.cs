@@ -151,6 +151,8 @@ namespace PeptideToProteinMapEngine
 
         #region "Class wide variables"
 
+        private bool mOptionsShown;
+
         private clsProteinCoverageSummarizer mProteinCoverageSummarizer;
 
         // When processing an inspect search result file, if you provide the inspect parameter file name,
@@ -1157,16 +1159,41 @@ namespace PeptideToProteinMapEngine
                     SetBaseClassErrorCode(ProcessFilesErrorCodes.FilePathError);
                     return false;
                 }
+
+                if (!mOptionsShown)
                 {
+                    mOptionsShown = true;
+                    Console.WriteLine("Processing Options");
+                    Console.WriteLine();
+                    Console.WriteLine("{0,-26} {1}", "Input File:", PRISM.PathUtils.CompactPathString(inputFilePath, 80));
+                    Console.WriteLine("{0,-26} {1}", "Output Directory:", PRISM.PathUtils.CompactPathString(outputDirectoryPath, 80));
+                    Console.WriteLine("{0,-26} {1}", "Proteins File:", PRISM.PathUtils.CompactPathString(Options.ProteinInputFilePath, 80));
+
+                    if (!string.IsNullOrWhiteSpace(parameterFilePath))
                     {
+                        Console.WriteLine("{0,-26} {1}", "Parameter File:", parameterFilePath);
                     }
 
+                    Console.WriteLine("{0,-26} {1} (type {2})", "Input File Format:", PeptideInputFileFormat, (int)PeptideInputFileFormat);
+
+                    if (!string.IsNullOrWhiteSpace(mInspectParameterFilePath))
                     {
+                        Console.WriteLine("{0,-26} {1}", "Inspect Param File:", mInspectParameterFilePath);
                     }
 
+                    Console.WriteLine("{0,-26} {1}", "Ignore I/L Differences:", Options.IgnoreILDifferences);
+                    Console.WriteLine("{0,-26} {1}", "Match Prefix and Suffix Residues:", Options.MatchPeptidePrefixAndSuffixToProtein);
+                    Console.WriteLine("{0,-26} {1}", "Output Protein Sequence:", Options.OutputProteinSequence);
+                    Console.WriteLine("{0,-26} {1}", "Skip Coverage Computation:", Options.SearchAllProteinsSkipCoverageComputationSteps);
+                    Console.WriteLine("{0,-26} {1}", "Create _AllProteins.txt:", Options.SaveSourceDataPlusProteinsFile);
 
+                    if (Options.KeepDB)
                     {
+                        Console.WriteLine("{0,-26} {1}", "Delete SQLite database:", "False");
+                    }
 
+                    Console.WriteLine();
+                }
 
                 LogMessage("Processing " + Path.GetFileName(inputFilePath));
                 PeptideInputFileFormatConstants inputFileFormat;
