@@ -491,7 +491,9 @@ namespace PeptideToProteinMapEngine
                     return false;
                 }
 
-                PostProcessPSMResultsFileReadMapFile(proteinToPepMapFilePath, out var proteins, out var proteinIDPointerArray, out var proteinMapInfo);
+                var success = PostProcessPSMResultsFileReadMapFile(proteinToPepMapFilePath, out var proteins, out var proteinIDPointerArray, out var proteinMapInfo);
+                if (!success)
+                    return false;
 
                 // Sort proteinMapInfo on peptide, then on protein
                 Array.Sort(proteinMapInfo, new ProteinIDMapInfoComparer());
@@ -671,10 +673,11 @@ namespace PeptideToProteinMapEngine
             return false;
         }
 
-        private bool PostProcessPSMResultsFileReadMapFile(string proteinToPepMapFilePath,
-                                                          out string[] proteins,
-                                                          out int[] proteinIDPointerArray,
-                                                          out udtProteinIDMapInfoType[] proteinMapInfo)
+        private bool PostProcessPSMResultsFileReadMapFile(
+            string proteinToPepMapFilePath,
+            out string[] proteins,
+            out int[] proteinIDPointerArray,
+            out udtProteinIDMapInfoType[] proteinMapInfo)
         {
             const int terminatorSize = 2;
 
