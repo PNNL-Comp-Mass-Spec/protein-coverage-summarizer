@@ -95,11 +95,13 @@
         /// <summary>
         /// Save the protein to peptide map file
         /// </summary>
+        /// <remarks>The filename is auto-defined as the input file name, but with suffix _ProteinToPeptideMapping.txt</remarks>
         public bool SaveProteinToPeptideMappingFile { get; set; }
 
         /// <summary>
         /// Create a new file that matches the input file, but has protein name appended
         /// </summary>
+        /// <remarks>The filename is auto-defined as the input file name, but with suffix _AllProteins.txt</remarks>
         public bool SaveSourceDataPlusProteinsFile { get; set; }
 
         /// <summary>

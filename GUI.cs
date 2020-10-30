@@ -619,6 +619,8 @@ namespace ProteinCoverageSummarizerGUI
 
             ResetToDefaults();
 
+            SetToolTips();
+
             try
             {
                 // Try loading from the default xml file
@@ -919,6 +921,17 @@ namespace ProteinCoverageSummarizerGUI
             }
 
             return true;
+        }
+
+        private void SetToolTips()
+        {
+            var toolTipControl = new ToolTip();
+
+            toolTipControl.SetToolTip(chkSaveProteinToPeptideMappingFile,
+                "The filename is auto-defined as the input file name, but with suffix _ProteinToPeptideMapping.txt");
+
+            toolTipControl.SetToolTip(chkSaveSourceDataPlusProteinsFile,
+                "The filename is auto-defined as the input file name, but with suffix _AllProteins.txt");
         }
 
         private void ShowAboutBox()
