@@ -1483,7 +1483,7 @@ namespace ProteinCoverageSummarizer
                     var peptideColumnIndex = GetPeptideColumnIndex(Options.PeptideFileFormatCode, peptideInputFilePath, sepChars, out var proteinColumnIndex, out var scanColumnIndex);
                     if (peptideColumnIndex < 0)
                     {
-                        SetErrorMessage("Input file does not have a column named 'Peptide': " + peptideInputFilePath);
+                        SetErrorMessage("Input file does not have a column named 'Peptide' or 'Sequence': " + peptideInputFilePath);
                         return false;
                     }
 
