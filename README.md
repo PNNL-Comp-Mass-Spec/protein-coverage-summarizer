@@ -21,15 +21,15 @@ The release page also includes a .zip file with PeptideToProteinMapper.exe
 ### Example files:
 
 Input files:
-* [BSA_P171_QID1638_TestPeptides.txt](https://github.com/PNNL-Comp-Mass-Spec/protein-coverage-summarizer/blob/master/bin/BSA_P171_QID1638_TestPeptides.txt)
-* [BSA_P171_QID1638_TestPeptides_SequenceOnly.txt](https://github.com/PNNL-Comp-Mass-Spec/protein-coverage-summarizer/blob/master/bin/BSA_P171_QID1638_TestPeptides_SequenceOnly.txt)
-* [BSA_P171_QID1638_TestProteins.fasta](https://github.com/PNNL-Comp-Mass-Spec/protein-coverage-summarizer/blob/master/bin/BSA_P171_QID1638_TestProteins.fasta)
+* [BSA_P171_QID1638_TestPeptides.txt](https://github.com/PNNL-Comp-Mass-Spec/protein-coverage-summarizer/blob/master/Docs/BSA/BSA_P171_QID1638_TestPeptides.txt)
+* [BSA_P171_QID1638_TestPeptides_SequenceOnly.txt](https://github.com/PNNL-Comp-Mass-Spec/protein-coverage-summarizer/blob/master/Docs/BSA/BSA_P171_QID1638_TestPeptides_SequenceOnly.txt)
+* [BSA_P171_QID1638_TestProteins.fasta](https://github.com/PNNL-Comp-Mass-Spec/protein-coverage-summarizer/blob/master/Docs/BSA/BSA_P171_QID1638_TestProteins.fasta)
 
 Output files:
-* [BSA_P171_QID1638_TestPeptides_coverage.txt](https://github.com/PNNL-Comp-Mass-Spec/protein-coverage-summarizer/blob/master/bin/BSA_P171_QID1638_TestPeptides_coverage.txt)
-* [BSA_P171_QID1638_TestPeptides_ProteinToPeptideMapping.txt](https://github.com/PNNL-Comp-Mass-Spec/protein-coverage-summarizer/blob/master/bin/BSA_P171_QID1638_TestPeptides_ProteinToPeptideMapping.txt)
-* [BSA_P171_QID1638_TestPeptides_SequenceOnly_coverage.txt](https://github.com/PNNL-Comp-Mass-Spec/protein-coverage-summarizer/blob/master/bin/BSA_P171_QID1638_TestPeptides_SequenceOnly_coverage.txt)
-* [BSA_P171_QID1638_TestPeptides_SequenceOnly_ProteinToPeptideMapping.txt](https://github.com/PNNL-Comp-Mass-Spec/protein-coverage-summarizer/blob/master/bin/BSA_P171_QID1638_TestPeptides_SequenceOnly_ProteinToPeptideMapping.txt)
+* [BSA_P171_QID1638_TestPeptides_coverage.txt](https://github.com/PNNL-Comp-Mass-Spec/protein-coverage-summarizer/blob/master/Docs/BSA/BSA_P171_QID1638_TestPeptides_coverage.txt)
+* [BSA_P171_QID1638_TestPeptides_ProteinToPeptideMapping.txt](https://github.com/PNNL-Comp-Mass-Spec/protein-coverage-summarizer/blob/master/Docs/BSA/BSA_P171_QID1638_TestPeptides_ProteinToPeptideMapping.txt)
+* [BSA_P171_QID1638_TestPeptides_SequenceOnly_coverage.txt](https://github.com/PNNL-Comp-Mass-Spec/protein-coverage-summarizer/blob/master/Docs/BSA/BSA_P171_QID1638_TestPeptides_SequenceOnly_coverage.txt)
+* [BSA_P171_QID1638_TestPeptides_SequenceOnly_ProteinToPeptideMapping.txt](https://github.com/PNNL-Comp-Mass-Spec/protein-coverage-summarizer/blob/master/Docs/BSA/BSA_P171_QID1638_TestPeptides_SequenceOnly_ProteinToPeptideMapping.txt)
 
 ## Console Version Syntax
 
@@ -42,7 +42,8 @@ There are two options for computing protein coverage and peptide to protein mapp
 ```
 ProteinCoverageSummarizerGUI.exe
   /I:PeptideInputFilePath /R:ProteinInputFilePath [/O:OutputDirectoryName]
-  [/P:ParameterFilePath] [/G] [/H] [/M] [/K] [/D] [/Debug] [/KeepDB]
+  [/P:ParameterFilePath] [/F:FileFormatCode] [/SkipHeader]
+  [/G] [/H] [/M] [/K] [/D] [/Debug] [/KeepDB]
 ```
 
 The input file path can contain the wildcard character *. If a wildcard is
@@ -56,6 +57,15 @@ the name OutputDirectoryName.
 
 The parameter file path is optional. If included, it should point to a valid XML
 parameter file.
+
+Use `/F` to specify the peptide input file format code.  Options are:
+| Format Code | Type                                                       | Comment                                                         |
+|-------------|------------------------------------------------------------|-----------------------------------------------------------------|
+| 0           | Peptide sequence in the 1st column                         | Subsequent columns are ignored                                  |
+| 1           | Protein name in 1st column and peptide sequence 2nd column |                                                                 |
+| 2           | Generic tab-delimited text file                            | Will look for a column titled 'Peptide'; also looks for Protein and Scan, though these are not required |
+
+Use `/SkipHeader` to skip the first line when the file format is Sequence Only or Protein Name and Sequence
 
 Use `/G` to ignore I/L differences when finding peptides in proteins or computing coverage.
 
@@ -98,15 +108,15 @@ The parameter file path is optional. If included, it should point to a valid XML
 parameter file.
 
 Use `/F` to specify the peptide input file format code.  Options are:
-| Format Code | Type           | Comment                                                         |
-|-------------|----------------|-----------------------------------------------------------------|
-| 0           | Auto Determine | Treated as `/F:1` unless name ends in _inspect.txt, then `/F:3` |
-| 1           | Peptide sequence in the 1st column | Subsequent columns are ignored              |
-| 2           | Protein name in 1st column and peptide sequence 2nd column |                     |
-| 3           | Inspect search results file               | Peptide sequence in the 3rd column   |
-| 4           | MS-GF+ search results file                | Peptide sequence in the column titled 'Peptide'; optionally scan number in the column titled 'Scan'     |
-| 5           | Peptide Hit Results Processor (PHRP) file | PHRP creates tab-delimited text files for MS-GF+, X!Tandem, SEQUEST, or Inspect results                 |
-| 6           | Generic tab-delimited text file           | Will look for a column titled 'Peptide'; also looks for Protein and Scan, though these are not required |
+| Format Code | Type                                                       | Comment                                                         |
+|-------------|------------------------------------------------------------|-----------------------------------------------------------------|
+| 0           | Auto Determine                                             | Treated as `/F:1` unless name ends in _inspect.txt, then `/F:3` |
+| 1           | Peptide sequence in the 1st column                         | Subsequent columns are ignored                                  |
+| 2           | Protein name in 1st column and peptide sequence 2nd column |                                                                 |
+| 3           | Inspect search results file                                | Peptide sequence in the 3rd column                              |
+| 4           | MS-GF+ search results file                                 | Peptide sequence in the column titled 'Peptide'; optionally scan number in the column titled 'Scan'     |
+| 5           | Peptide Hit Results Processor (PHRP) file                  | PHRP creates tab-delimited text files for MS-GF+, X!Tandem, SEQUEST, or Inspect results                 |
+| 6           | Generic tab-delimited text file                            | Will look for a column titled 'Peptide'; also looks for Protein and Scan, though these are not required |
 
 When processing an Inspect search results file, use `/N` to specify the Inspect
 parameter file used (required for determining the mod names embedded in the

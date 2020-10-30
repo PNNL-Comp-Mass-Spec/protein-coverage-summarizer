@@ -32,12 +32,15 @@ The parameter file path is optional. If included, it should point to a valid XML
 parameter file.
 
 Use `/F` to specify the peptide input file format code.  Options are:
-* 0=Auto Determine: Treated as `/F:1` unless name ends in _inspect.txt, then `/F:3`
-* 1=Peptide sequence in the 1st column (subsequent columns are ignored)
-* 2=Protein name in 1st column and peptide sequence 2nd column
-* 3=Inspect search results file (peptide sequence in the 3rd column)
-* 4=MS-GF+ search results file (peptide sequence in the column titled 'Peptide'; optionally scan number in the column titled 'Scan')
-* 5=SEQUEST, X!Tandem, Inspect, or MS-GF+ PHRP data file
+| Format Code | Type           | Comment                                                         |
+|-------------|----------------|-----------------------------------------------------------------|
+| 0           | Auto Determine | Treated as `/F:1` unless name ends in _inspect.txt, then `/F:3` |
+| 1           | Peptide sequence in the 1st column | Subsequent columns are ignored              |
+| 2           | Protein name in 1st column and peptide sequence 2nd column |                     |
+| 3           | Inspect search results file               | Peptide sequence in the 3rd column   |
+| 4           | MS-GF+ search results file                | Peptide sequence in the column titled 'Peptide'; optionally scan number in the column titled 'Scan'     |
+| 5           | Peptide Hit Results Processor (PHRP) file | PHRP creates tab-delimited text files for MS-GF+, X!Tandem, SEQUEST, or Inspect results                 |
+| 6           | Generic tab-delimited text file           | Will look for a column titled 'Peptide'; also looks for Protein and Scan, though these are not required |
 
 When processing an Inspect search results file, use `/N` to specify the Inspect
 parameter file used (required for determining the mod names embedded in the
@@ -49,9 +52,8 @@ Use `/H` to suppress (hide) the protein sequence in the _coverage.txt file
 
 Use `/K` to skip the protein coverage computation steps (enabling faster processing)
 
-Use `/A` to create a copy of the source file, but with a new column listing the
-mapped protein for each peptide. If a peptide maps to multiple proteins, then
-multiple lines will be listed
+Use `/A` to create the _AllProteins.txt file, listing each of the peptides in the input file,
+plus one line per mapped protein for that peptide
 
 Use `/L` to create a log file, optionally specifying the file name
 
@@ -67,7 +69,7 @@ Website: https://omics.pnl.gov or https://panomics.pnl.gov/
 
 ## License
 
-The Protein Coverage Summarizer is licensed under the 2-Clause BSD License; 
+The Peptide to Protein Mapper is licensed under the 2-Clause BSD License; 
 you may not use this file except in compliance with the License.  You may obtain 
 a copy of the License at https://opensource.org/licenses/BSD-2-Clause
 
