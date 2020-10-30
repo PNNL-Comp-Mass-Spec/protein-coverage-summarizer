@@ -578,10 +578,6 @@ namespace ProteinCoverageSummarizer
                         }
 
                         var proteinID = Convert.ToInt32(proteinPeptideKey.Substring(0, colonIndex));
-                        if (mCachedProteinInfo[proteinID].Name.Equals("GDIA_MOUSE"))
-                        {
-                            Console.WriteLine("Check this code");
-                        }
 
                         if (!proteinIDLookup.TryGetValue(proteinID, out var targetIndex))
                         {
@@ -1215,11 +1211,6 @@ namespace ProteinCoverageSummarizer
         /// <returns>True if the protein is new and was added to mProteinPeptideStats </returns>
         private bool IncrementCountByKey(IDictionary<string, int> dictionaryToUpdate, string keyName, bool isNewPSM = true)
         {
-            if (keyName.Contains("GRDWNVDLIPK") || keyName.Contains("GDIA_MOUSE"))
-            {
-                Console.WriteLine("Check this code");
-            }
-
             if (dictionaryToUpdate.TryGetValue(keyName, out var value))
             {
                 if (isNewPSM)
@@ -1572,11 +1563,6 @@ namespace ProteinCoverageSummarizer
                                 isNewPSM = true;
                                 lastPeptideCleanSequence = cleanPeptideSequence;
                                 lastScanNumber = scanNumber;
-                            }
-
-                            if (cleanPeptideSequence.Contains("GRDWNVDLIPK"))
-                            {
-                                Console.WriteLine("Check this code");
                             }
 
                             if (Options.UseLeaderSequenceHashTable &&
