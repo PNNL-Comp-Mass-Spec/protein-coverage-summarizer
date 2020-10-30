@@ -101,7 +101,6 @@ namespace ProteinCoverageSummarizer
             /// <summary>
             /// Show the protein name
             /// </summary>
-            /// <returns></returns>
             public override string ToString()
             {
                 return string.Format("{0}, ID {1}", Name, UniqueSequenceID);
@@ -383,7 +382,6 @@ namespace ProteinCoverageSummarizer
         /// <summary>
         /// Get the total number of cached proteins
         /// </summary>
-        /// <returns></returns>
         public int GetProteinCountCached()
         {
             return mProteinCount;
@@ -394,7 +392,6 @@ namespace ProteinCoverageSummarizer
         /// </summary>
         /// <param name="startIndex"></param>
         /// <param name="endIndex"></param>
-        /// <returns></returns>
         public IEnumerable<udtProteinInfoType> GetCachedProteins(int startIndex = -1, int endIndex = -1)
         {
             if (mSQLitePersistentConnection == null ||
@@ -514,7 +511,6 @@ namespace ProteinCoverageSummarizer
         /// Parse a protein file to cache proteins
         /// </summary>
         /// <param name="proteinInputFilePath"></param>
-        /// <returns></returns>
         public bool ParseProteinFile(string proteinInputFilePath)
         {
             // Create the SQLite DB

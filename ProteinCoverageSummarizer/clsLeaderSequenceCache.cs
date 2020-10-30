@@ -480,7 +480,6 @@ namespace ProteinCoverageSummarizer
         /// Get the next peptide with the given leader sequence
         /// </summary>
         /// <param name="cachedPeptideMatchIndexCurrent"></param>
-        /// <returns></returns>
         public int GetNextPeptideWithLeaderSequence(int cachedPeptideMatchIndexCurrent)
         {
             if (cachedPeptideMatchIndexCurrent < mCachedPeptideCount - 1)

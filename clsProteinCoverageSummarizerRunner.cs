@@ -94,7 +94,6 @@ namespace ProteinCoverageSummarizerGUI
         /// <summary>
         /// Get the error message
         /// </summary>
-        /// <returns></returns>
         public override string GetErrorMessage()
         {
             return GetBaseClassErrorMessage();
@@ -119,7 +118,6 @@ namespace ProteinCoverageSummarizerGUI
         /// Load settings from an XML-based parameter file
         /// </summary>
         /// <param name="parameterFilePath"></param>
-        /// <returns></returns>
         public bool LoadParameterFileSettings(string parameterFilePath)
         {
             return mProteinCoverageSummarizer.LoadParameterFileSettings(parameterFilePath);

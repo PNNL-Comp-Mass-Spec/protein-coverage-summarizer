@@ -226,7 +226,6 @@ namespace PeptideToProteinMapEngine
         /// Auto-determine the file format
         /// </summary>
         /// <param name="filePath"></param>
-        /// <returns></returns>
         public PeptideInputFileFormatConstants DetermineResultsFileFormat(string filePath)
         {
             // Examine the file name to determine the file format
@@ -281,7 +280,6 @@ namespace PeptideToProteinMapEngine
         /// </summary>
         /// <param name="inspectParamFilePath"></param>
         /// <param name="inspectModNames"></param>
-        /// <returns></returns>
         public bool ExtractModInfoFromInspectParamFile(string inspectParamFilePath, ref List<string> inspectModNames)
         {
             try
@@ -360,7 +358,6 @@ namespace PeptideToProteinMapEngine
         /// <summary>
         /// Get the error message
         /// </summary>
-        /// <returns></returns>
         public override string GetErrorMessage()
         {
             return GetBaseClassErrorMessage();
@@ -469,7 +466,6 @@ namespace PeptideToProteinMapEngine
         /// <param name="peptideListFilePath"></param>
         /// <param name="proteinToPepMapFilePath"></param>
         /// <param name="deleteWorkingFiles"></param>
-        /// <returns></returns>
         private bool PostProcessPSMResultsFile(string peptideListFilePath,
                                                string proteinToPepMapFilePath,
                                                bool deleteWorkingFiles)
