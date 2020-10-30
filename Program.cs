@@ -177,9 +177,11 @@ namespace ProteinCoverageSummarizerGUI
         private static bool SetOptionsUsingCommandLineParameters(
             clsParseCommandLine commandLineParser, ProteinCoverageSummarizerOptions options, out bool invalidParameters)
         {
+            var validParameters = new List<string> {
+                "I", "O", "R", "P", "F", "SkipHeader", "SkipHeaders", "G", "H", "M", "K", "D", "Debug", "KeepDB"
+            };
             invalidParameters = false;
 
-            var validParameters = new List<string> { "I", "O", "R", "P", "G", "H", "M", "K", "D", "Debug", "KeepDB" };
             try
             {
                 // Make sure no invalid parameters are present
@@ -209,6 +211,28 @@ namespace ProteinCoverageSummarizerGUI
 
                 if (commandLineParser.RetrieveValueForParameter("P", out var parameterFile))
                     mParameterFilePath = parameterFile;
+
+                if (commandLineParser.RetrieveValueForParameter("F", out var inputFileFormatCode))
+                {
+                    if (int.TryParse(inputFileFormatCode, out var inputFileFormatCodeValue))
+                    {
+                        try
+                        {
+                            options.PeptideFileFormatCode = (ProteinCoverageSummarizerOptions.PeptideFileColumnOrderingCode)inputFileFormatCodeValue;
+                        }
+                        catch (Exception)
+                        {
+                            // Conversion failed; leave options.PeptideFileFormatCode unchanged
+                        }
+                    }
+                }
+
+                if (commandLineParser.RetrieveValueForParameter("SkipHeader", out _) ||
+                    commandLineParser.RetrieveValueForParameter("SkipHeaders", out _))
+                {
+                    options.PeptideFileSkipFirstLine = true;
+                    options.ProteinDataOptions.DelimitedFileSkipFirstLine = true;
+                }
 
                 if (commandLineParser.RetrieveValueForParameter("H", out _))
                     options.OutputProteinSequence = false;
@@ -286,7 +310,8 @@ namespace ProteinCoverageSummarizerGUI
                 Console.WriteLine();
                 Console.WriteLine("Program syntax:" + Environment.NewLine + Path.GetFileName(ProcessFilesOrDirectoriesBase.GetAppPath()));
                 Console.WriteLine("  /I:PeptideInputFilePath /R:ProteinInputFilePath [/O:OutputDirectoryName]");
-                Console.WriteLine("  [/P:ParameterFilePath] [/G] [/H] [/M] [/K] [/D] [/Debug] [/KeepDB]");
+                Console.WriteLine("  [/P:ParameterFilePath] [/F:FileFormatCode] [/SkipHeader]");
+                Console.WriteLine("  [/G] [/H] [/M] [/K] [/D] [/Debug] [/KeepDB]");
                 Console.WriteLine();
                 Console.WriteLine(ConsoleMsgUtils.WrapParagraph(
                     "The input file path can contain the wildcard character *. If a wildcard is present, the same protein input file path " +
@@ -296,13 +321,23 @@ namespace ProteinCoverageSummarizerGUI
                     "The output directory name is optional. If omitted, the output files will be created in the same directory as the input file. " +
                     "If included, a subdirectory is created with the name OutputDirectoryName."));
                 Console.WriteLine();
+
                 Console.WriteLine(ConsoleMsgUtils.WrapParagraph(
                     "The parameter file path is optional. If included, it should point to a valid XML parameter file."));
                 Console.WriteLine();
+
+                Console.WriteLine("Use /F to specify the peptide input file format code.  Options are:");
+                Console.WriteLine("   " + (int)ProteinCoverageSummarizerOptions.PeptideFileColumnOrderingCode.SequenceOnly + "=Peptide sequence in the 1st column (subsequent columns are ignored)");
+                Console.WriteLine("   " + (int)ProteinCoverageSummarizerOptions.PeptideFileColumnOrderingCode.ProteinName_PeptideSequence + "=Protein name in 1st column and peptide sequence 2nd column");
+                Console.WriteLine("   " + (int)ProteinCoverageSummarizerOptions.PeptideFileColumnOrderingCode.UseHeaderNames + "=Generic tab-delimited text file; will look for column names that start with Peptide, Protein, and Scan");
+                Console.WriteLine();
+
+                Console.WriteLine("Use /SkipHeader to skip the first line when the file format is Sequence Only or Protein Name and Sequence");
+
                 Console.WriteLine(ConsoleMsgUtils.WrapParagraph(
                     "Use /G to ignore I/L differences when finding peptides in proteins or computing coverage."));
                 Console.WriteLine("Use /H to suppress (hide) the protein sequence in the _coverage.txt file.");
-                Console.WriteLine("Use /M to enable the creation of a protein to peptide mapping file.");
+                Console.WriteLine("Use /M to enable the creation of a protein to peptide mapping file");
                 Console.WriteLine("Use /K to skip protein coverage computation steps");
                 Console.WriteLine(ConsoleMsgUtils.WrapParagraph(
                     "Use /D to duplicate the input file, but add a new column listing the mapped protein for each peptide. " +
