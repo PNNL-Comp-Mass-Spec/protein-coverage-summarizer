@@ -23,6 +23,8 @@ namespace ProteinCoverageSummarizerGUI
     /// </summary>
     public class clsProteinCoverageSummarizerRunner : PRISM.FileProcessor.ProcessFilesBase
     {
+        // Ignore Spelling: Nikša
+
         #region "Class wide variables"
 
         private clsProteinCoverageSummarizer mProteinCoverageSummarizer;
