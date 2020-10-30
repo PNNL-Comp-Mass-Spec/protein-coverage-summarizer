@@ -533,26 +533,6 @@ namespace ProteinCoverageSummarizer
             mIndicesSorted = true;
         }
 
-        private void ResetProgress()
-        {
-            ProgressReset?.Invoke();
-        }
-
-        private void ResetProgress(string strProgressStepDescription)
-        {
-            UpdateProgress(strProgressStepDescription, 0);
-            ProgressReset?.Invoke();
-        }
-
-        private void UpdateProgress(string strProgressStepDescription)
-        {
-            UpdateProgress(strProgressStepDescription, mProgressPercentComplete);
-        }
-
-        private void UpdateProgress(float sngPercentComplete)
-        {
-            UpdateProgress(ProgressStepDescription, sngPercentComplete);
-        }
         private void UpdateProgress(string progressStepDescription, float percentComplete)
         {
             mProgressStepDescription = string.Copy(progressStepDescription);
