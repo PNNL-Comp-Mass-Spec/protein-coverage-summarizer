@@ -146,10 +146,7 @@ namespace ProteinCoverageSummarizer
 
         private bool mIndicesSorted;
 
-        private string mErrorMessage;
         private bool mAbortProcessing;
-
-        public event ProgressResetEventHandler ProgressReset;
 
         /// <summary>
         /// Progress changed event
@@ -180,10 +177,10 @@ namespace ProteinCoverageSummarizer
         /// </summary>
         public int CachedPeptideCount => mCachedPeptideCount;
 
-        public string ErrorMessage => mErrorMessage;
         /// <summary>
         /// Error message
         /// </summary>
+        public string ErrorMessage { get; private set; }
 
         /// <summary>
         /// When true, treat I and L residues equally
@@ -232,11 +229,11 @@ namespace ProteinCoverageSummarizer
                 if (peptideSequence == null || peptideSequence.Length < LeaderSequenceMinimumLength)
                 {
                     // Peptide is too short; cannot process it
-                    mErrorMessage = "Peptide length is shorter than " + LeaderSequenceMinimumLength.ToString() + "; unable to cache the peptide";
+                    ErrorMessage = "Peptide length is shorter than " + LeaderSequenceMinimumLength.ToString() + "; unable to cache the peptide";
                     return false;
                 }
 
-                mErrorMessage = string.Empty;
+                ErrorMessage = string.Empty;
 
                 // Make sure the residues are capitalized
                 peptideSequence = peptideSequence.ToUpper();
@@ -244,6 +241,7 @@ namespace ProteinCoverageSummarizer
                     prefixResidue = char.ToUpper(prefixResidue);
                 if (char.IsLetter(suffixResidue))
                     suffixResidue = char.ToUpper(suffixResidue);
+
                 var leaderSequence = peptideSequence.Substring(0, LeaderSequenceMinimumLength);
                 var prefixResidueLtoI = prefixResidue;
                 var suffixResidueLtoI = suffixResidue;
@@ -519,7 +517,7 @@ namespace ProteinCoverageSummarizer
         public void InitializeVariables()
         {
             LeaderSequenceMinimumLength = DEFAULT_LEADER_SEQUENCE_LENGTH;
-            mErrorMessage = string.Empty;
+            ErrorMessage = string.Empty;
             mAbortProcessing = false;
 
             IgnoreILDifferences = false;
