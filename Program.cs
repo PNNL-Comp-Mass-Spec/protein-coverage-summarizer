@@ -41,7 +41,7 @@ namespace ProteinCoverageSummarizerGUI
         /// <summary>
         /// Program date
         /// </summary>
-        public const string PROGRAM_DATE = "October 30, 2020";
+        public const string PROGRAM_DATE = "January 22, 2021";
 
         private static string mParameterFilePath;
 
@@ -141,7 +141,7 @@ namespace ProteinCoverageSummarizerGUI
             }
             catch (Exception ex)
             {
-                ShowErrorMessage("Error occurred in modMain->Main: " + Environment.NewLine + ex.Message);
+                ShowErrorMessage("Error occurred in Program->Main: " + Environment.NewLine + ex.Message);
                 return -1;
             }
         }

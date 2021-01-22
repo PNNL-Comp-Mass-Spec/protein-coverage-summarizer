@@ -46,7 +46,7 @@ namespace PeptideToProteinMapper
         /// <summary>
         /// Program date
         /// </summary>
-        public const string PROGRAM_DATE = "October 30, 2020";
+        public const string PROGRAM_DATE = "January 22, 2021";
 
         private static string mParameterFilePath;
         private static string mInspectParameterFilePath;
@@ -167,7 +167,7 @@ namespace PeptideToProteinMapper
             }
             catch (Exception ex)
             {
-                ShowErrorMessage("Error occurred in modMain->Main: " + Environment.NewLine + ex.Message);
+                ShowErrorMessage("Error occurred in Program->Main: " + Environment.NewLine + ex.Message);
                 returnCode = -1;
             }
 
