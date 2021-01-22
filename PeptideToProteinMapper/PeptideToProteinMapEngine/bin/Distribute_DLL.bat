@@ -20,12 +20,14 @@ echo.
 
 copy PeptideToProteinMapEngine.dll "F:\Documents\projects\dataMining\PeptideHitResultsProcessor\PeptideHitResultsProcessor\bin\" /Y
 copy PeptideToProteinMapEngine.dll "F:\Documents\projects\dataMining\PeptideHitResultsProcessor\PeptideHitResultsProcessor\Lib\" /Y
-copy PeptideToProteinMapEngine.dll "F:\Documents\projects\dataMining\Protein_Coverage_Summarizer\PeptideToProteinMapper\bin\x86\" /Y
+copy PeptideToProteinMapEngine.dll "F:\Documents\projects\dataMining\Protein_Coverage_Summarizer\PeptideToProteinMapper\bin\Debug\" /Y
+copy PeptideToProteinMapEngine.dll "F:\Documents\projects\dataMining\Protein_Coverage_Summarizer\PeptideToProteinMapper\bin\Release\" /Y
 
 copy PeptideToProteinMapEngine.pdb "F:\Documents\projects\dataMining\PeptideHitResultsProcessor\bin\" /Y
 copy PeptideToProteinMapEngine.pdb "F:\Documents\projects\dataMining\PeptideHitResultsProcessor\PeptideHitResultsProcessor\bin\" /Y
 copy PeptideToProteinMapEngine.pdb "F:\Documents\projects\dataMining\PeptideHitResultsProcessor\PeptideHitResultsProcessor\Lib\" /Y
-copy PeptideToProteinMapEngine.pdb "F:\Documents\projects\dataMining\Protein_Coverage_Summarizer\PeptideToProteinMapper\bin\x86\" /Y
+copy PeptideToProteinMapEngine.pdb "F:\Documents\projects\dataMining\Protein_Coverage_Summarizer\PeptideToProteinMapper\bin\Debug\" /Y
+copy PeptideToProteinMapEngine.pdb "F:\Documents\projects\dataMining\Protein_Coverage_Summarizer\PeptideToProteinMapper\bin\Release\" /Y
 
 copy PeptideToProteinMapEngine.dll "F:\Documents\Projects\JoshAldrich\AScore\AScore_DLL\lib\" /Y
 copy PeptideToProteinMapEngine.dll "F:\Documents\Projects\JoshAldrich\AScore\AScore_DLL\bin\AnyCPU\Debug\" /Y
@@ -47,3 +49,5 @@ pause
 call ..\..\..\ProteinCoverageSummarizer\bin\Distribute_DLL.bat NoCall
 
 :Done
+
+pause

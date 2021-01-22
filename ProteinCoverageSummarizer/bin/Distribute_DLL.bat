@@ -20,19 +20,22 @@ echo.
 echo.
 @echo on
 
-copy ProteinCoverageSummarizer.dll        "F:\Documents\Projects\DataMining\Protein_Coverage_Summarizer\PeptideToProteinMapper\bin\x86\" /Y
-copy ..\x64\ProteinCoverageSummarizer.dll "F:\Documents\Projects\DataMining\Protein_Coverage_Summarizer\PeptideToProteinMapper\bin\x64\" /Y
+copy ProteinCoverageSummarizer.dll        "F:\Documents\Projects\DataMining\Protein_Coverage_Summarizer\PeptideToProteinMapper\bin\Debug\" /Y
+copy ..\x64\ProteinCoverageSummarizer.dll "F:\Documents\Projects\DataMining\Protein_Coverage_Summarizer\PeptideToProteinMapper\bin\Release\" /Y
 
-copy ProteinCoverageSummarizer.dll        "F:\Documents\Projects\DataMining\Protein_Coverage_Summarizer\PeptideToProteinMapper\PeptideToProteinMapEngine\bin\x86\" /Y
-copy ..\x64\ProteinCoverageSummarizer.dll "F:\Documents\Projects\DataMining\Protein_Coverage_Summarizer\PeptideToProteinMapper\PeptideToProteinMapEngine\bin\x64\" /Y
+copy ProteinCoverageSummarizer.dll        "F:\Documents\Projects\DataMining\Protein_Coverage_Summarizer\PeptideToProteinMapper\PeptideToProteinMapEngine\bin\Debug\" /Y
+copy ..\x64\ProteinCoverageSummarizer.dll "F:\Documents\Projects\DataMining\Protein_Coverage_Summarizer\PeptideToProteinMapper\PeptideToProteinMapEngine\bin\Release\" /Y
 
-copy ProteinCoverageSummarizer.pdb        "F:\Documents\Projects\DataMining\Protein_Coverage_Summarizer\bin\x86\" /Y
+copy ProteinCoverageSummarizer.pdb        "F:\Documents\Projects\DataMining\Protein_Coverage_Summarizer\bin\Debug\" /Y
+copy ProteinCoverageSummarizer.pdb        "F:\Documents\Projects\DataMining\Protein_Coverage_Summarizer\bin\Release\" /Y
 copy ProteinCoverageSummarizer.pdb        "F:\Documents\Projects\DataMining\PeptideHitResultsProcessor\PeptideHitResultsProcessor\Lib\" /Y
 copy ProteinCoverageSummarizer.pdb        "F:\Documents\Projects\DataMining\PeptideHitResultsProcessor\PeptideHitResultsProcessor\bin\" /Y
 copy ProteinCoverageSummarizer.pdb        "F:\Documents\Projects\DataMining\PeptideHitResultsProcessor\bin\" /Y
 copy ProteinCoverageSummarizer.pdb        "F:\Documents\Projects\DataMining\DMS_Managers\Analysis_Manager\AM_Common\" /Y
-copy ProteinCoverageSummarizer.pdb        "F:\Documents\Projects\DataMining\Protein_Coverage_Summarizer\PeptideToProteinMapper\PeptideToProteinMapEngine\bin\x86\" /Y
-copy ProteinCoverageSummarizer.pdb        "F:\Documents\Projects\DataMining\Protein_Coverage_Summarizer\PeptideToProteinMapper\bin\x86\" /Y
+copy ProteinCoverageSummarizer.pdb        "F:\Documents\Projects\DataMining\Protein_Coverage_Summarizer\PeptideToProteinMapper\PeptideToProteinMapEngine\bin\Debug\" /Y
+copy ProteinCoverageSummarizer.pdb        "F:\Documents\Projects\DataMining\Protein_Coverage_Summarizer\PeptideToProteinMapper\PeptideToProteinMapEngine\bin\Release\" /Y
+copy ProteinCoverageSummarizer.pdb        "F:\Documents\Projects\DataMining\Protein_Coverage_Summarizer\PeptideToProteinMapper\bin\Debug\" /Y
+copy ProteinCoverageSummarizer.pdb        "F:\Documents\Projects\DataMining\Protein_Coverage_Summarizer\PeptideToProteinMapper\bin\Release\" /Y
 
 copy ProteinCoverageSummarizer.dll        "F:\Documents\Projects\JoshAldrich\AScore\AScore_DLL\lib\" /Y
 copy ProteinCoverageSummarizer.dll        "F:\Documents\Projects\JoshAldrich\AScore\AScore_DLL\bin\AnyCPU\Debug\" /Y
