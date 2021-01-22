@@ -1263,7 +1263,7 @@ namespace PeptideToProteinMapEngine
 
                         mProteinCoverageSummarizer.Options.PeptideFileFormatCode = ProteinCoverageSummarizerOptions.PeptideFileColumnOrderingCode.SequenceOnly;
                         mProteinCoverageSummarizer.Options.PeptideFileSkipFirstLine = true;
-                        mProteinCoverageSummarizer.Options.MatchPeptidePrefixAndSuffixToProtein = true;
+                        mProteinCoverageSummarizer.Options.MatchPeptidePrefixAndSuffixToProtein = false;
                         break;
 
                     case PeptideInputFileFormatConstants.TabDelimitedText:
