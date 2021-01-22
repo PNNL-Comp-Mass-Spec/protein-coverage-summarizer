@@ -18,6 +18,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using PHRPReader;
+using PRISM;
 using ProteinCoverageSummarizer;
 
 namespace PeptideToProteinMapEngine
@@ -1347,6 +1348,7 @@ namespace PeptideToProteinMapEngine
             catch (Exception ex)
             {
                 HandleException("Error in ProcessFile", ex);
+                OnDebugEvent(StackTraceFormatter.GetExceptionStackTraceMultiLine(ex));
                 return false;
             }
         }

@@ -1843,6 +1843,7 @@ namespace ProteinCoverageSummarizer
             catch (Exception ex)
             {
                 SetErrorMessage("Error in ProcessFile:" + Environment.NewLine + ex.Message, ex);
+                OnDebugEvent(StackTraceFormatter.GetExceptionStackTraceMultiLine(ex));
                 success = false;
             }
 
