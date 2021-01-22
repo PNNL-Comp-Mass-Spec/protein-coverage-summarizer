@@ -767,10 +767,16 @@ namespace PeptideToProteinMapEngine
                             }
                         }
 
+                        var cleanSequence = clsProteinCoverageSummarizer.GetCleanPeptideSequence(
+                            splitLine[1],
+                            out _,
+                            out _,
+                            mProteinCoverageSummarizer.Options.RemoveSymbolCharacters);
+
                         var proteinInfo = new udtProteinIDMapInfoType
                         {
                             ProteinID = currentProteinID,
-                            Peptide = splitLine[1],
+                            Peptide = cleanSequence,
                             ResidueStart = int.Parse(splitLine[2]),
                             ResidueEnd = int.Parse(splitLine[3])
                         };
