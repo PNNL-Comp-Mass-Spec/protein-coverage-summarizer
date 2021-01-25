@@ -44,7 +44,7 @@
     <StartupObject>PeptideToProteinMapper.Program</StartupObject>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="PHRPReader, Version=1.1.6858.27509, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="PHRPReader">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>PeptideToProteinMapEngine\Lib\PHRPReader.dll</HintPath>
     </Reference>
