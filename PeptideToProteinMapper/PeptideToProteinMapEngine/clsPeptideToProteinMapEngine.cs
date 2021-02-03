@@ -577,11 +577,9 @@ namespace PeptideToProteinMapEngine
                         {
                             // Match not found; this is unexpected
                             // However, this code will be reached if the peptide is not present in any of the proteins in the protein data file
-                            writer.WriteLine(
-                                peptideEntry.Key + "\t" +
-                                UNKNOWN_PROTEIN_NAME + "\t" +
-                                0.ToString() + "\t" +
-                                0.ToString());
+                            // This code will also be reached for TopPIC results with ambiguous residues, e.g. -.M(NKSE)[16.0017]LIEKIASGADISK
+                            writer.WriteLine("{0}\t{1}\t{2}\t{3}",
+                                peptideEntry.Key, UNKNOWN_PROTEIN_NAME, 0, 0);
                         }
                         else
                         {
@@ -642,10 +640,8 @@ namespace PeptideToProteinMapEngine
 
                             foreach (var data in cachedData)
                             {
-                                writer.WriteLine(data.Peptide + "\t" +
-                                                 data.Protein + "\t" +
-                                                 data.ResidueStart + "\t" +
-                                                 data.ResidueEnd);
+                                writer.WriteLine("{0}\t{1}\t{2}\t{3}",
+                                    data.Peptide, data.Protein, data.ResidueStart, data.ResidueEnd);
                             }
                         }
                     }
