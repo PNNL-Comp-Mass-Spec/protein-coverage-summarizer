@@ -950,15 +950,25 @@ namespace ProteinCoverageSummarizer
             return PRISM.FileProcessor.ProcessFilesOrDirectoriesBase.GetAppDirectoryPath();
         }
 
-        private static readonly Regex reReplaceSymbols = new Regex("[^A-Za-z]", RegexOptions.Compiled);
+        /// <summary>
+        /// RegEx to match any character that is not a letter
+        /// </summary>
+        private static readonly Regex mSymbolMatcher = new Regex("[^A-Za-z]", RegexOptions.Compiled);
+
+        /// <summary>
+        /// RegEx to match modifications of the form [15.9998] or [Acetyl]
+        /// </summary>
+        private static readonly Regex mBracketModsMatcher = new Regex(@"\[[^[]+\]", RegexOptions.Compiled);
 
         /// <summary>
         /// Get the peptide sequence without the prefix and suffix, and optionally without modification symbols
         /// </summary>
-        /// <param name="peptideSequence"></param>
-        /// <param name="prefixResidue"></param>
-        /// <param name="suffixResidue"></param>
-        /// <param name="removeSymbolCharacters"></param>
+        /// <param name="peptideSequence">Peptide sequence, optionally with prefix and suffix residues</param>
+        /// <param name="prefixResidue">Prefix residue, if present before a period in the second character</param>
+        /// <param name="suffixResidue">Suffix residue, if present after a period in the second to the last character</param>
+        /// <param name="removeSymbolCharacters">
+        /// When true, look for and remove both bracket-based modifications (like [15.9998] or [Acetyl]) and symbols (like @, #, and $)
+        /// </param>
         /// <returns>Clean peptide sequence</returns>
         public static string GetCleanPeptideSequence(
             string peptideSequence,
@@ -968,23 +978,28 @@ namespace ProteinCoverageSummarizer
         {
             prefixResidue = default;
             suffixResidue = default;
+            string primarySequence;
 
-            if (peptideSequence.Length >= 4)
+            if (peptideSequence.Length >= 4 &&
+                peptideSequence[1] == '.' &&
+                peptideSequence[peptideSequence.Length - 2] == '.')
             {
-                if (peptideSequence[1] == '.' && peptideSequence[peptideSequence.Length - 2] == '.')
-                {
-                    prefixResidue = peptideSequence[0];
-                    suffixResidue = peptideSequence[peptideSequence.Length - 1];
-                    peptideSequence = peptideSequence.Substring(2, peptideSequence.Length - 4);
-                }
+                prefixResidue = peptideSequence[0];
+                suffixResidue = peptideSequence[peptideSequence.Length - 1];
+                primarySequence = peptideSequence.Substring(2, peptideSequence.Length - 4);
+            }
+            else
+            {
+                primarySequence = peptideSequence;
             }
 
-            if (removeSymbolCharacters)
-            {
-                peptideSequence = reReplaceSymbols.Replace(peptideSequence, string.Empty);
-            }
+            if (!removeSymbolCharacters)
+                return primarySequence;
 
-            return peptideSequence;
+            var sequenceNoBrackets = mBracketModsMatcher.Replace(primarySequence, string.Empty);
+            var cleanSequence = mSymbolMatcher.Replace(sequenceNoBrackets, string.Empty);
+
+            return cleanSequence;
         }
 
         /// <summary>
