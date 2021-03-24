@@ -271,8 +271,8 @@ namespace PeptideToProteinMapEngine
                 return PeptideInputFileFormatConstants.MSGFPlusResultsFile;
             }
 
-            var resultType = clsPHRPReader.AutoDetermineResultType(filePath);
-            if (resultType != clsPHRPReader.PeptideHitResultTypes.Unknown)
+            var resultType = ReaderFactory.AutoDetermineResultType(filePath);
+            if (resultType != Enums.PeptideHitResultTypes.Unknown)
             {
                 OnStatusEvent("Input file type: PHRPFile (based on column names)");
                 return PeptideInputFileFormatConstants.PHRPFile;
@@ -1016,7 +1016,7 @@ namespace PeptideToProteinMapEngine
                 }
 
                 // Initialize the PHRP startup options
-                var startupOptions = new clsPHRPStartupOptions()
+                var startupOptions = new StartupOptions()
                 {
                     LoadModsAndSeqInfo = false,
                     LoadMSGFResults = false,
@@ -1028,7 +1028,7 @@ namespace PeptideToProteinMapEngine
                 // MSPathFinder synopsis files do not have mod symbols in the peptides.
                 // This is OK since the peptides in mUniquePeptideList will have mod symbols removed in PreProcessDataWriteOutPeptides
                 // when finding proteins that contain the peptides.
-                using (var reader = new clsPHRPReader(inputFilePath, clsPHRPReader.PeptideHitResultTypes.Unknown, startupOptions))
+                using (var reader = new ReaderFactory(inputFilePath, Enums.PeptideHitResultTypes.Unknown, startupOptions))
                 {
                     reader.EchoMessagesToConsole = true;
                     reader.SkipDuplicatePSMs = false;
