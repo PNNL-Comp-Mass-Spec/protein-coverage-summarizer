@@ -6,7 +6,7 @@ copy PeptideToProteinMapEngine.dll "F:\Documents\projects\dataMining\DMS_Manager
 copy PeptideToProteinMapEngine.dll "F:\Documents\projects\dataMining\DMS_Managers\Analysis_Manager\Plugins\AM_InspectResultsAssembly_PlugIn\bin\" /Y
 copy PeptideToProteinMapEngine.dll "F:\Documents\projects\dataMining\DMS_Managers\Analysis_Manager\Plugins\AM_MSGFDB_PlugIn\bin\" /Y
 
-copy PeptideToProteinMapEngine.dll "F:\Documents\projects\dataMining\PeptideHitResultsProcessor\bin\" /Y
+copy PeptideToProteinMapEngine.dll "F:\Documents\projects\dataMining\PeptideHitResultsProcessor\bin\Debug\" /Y
 copy PeptideToProteinMapEngine.dll "F:\Documents\Projects\DataMining\PeptideHitResultsProcessor\bin\Release\" /Y
 
 copy PeptideToProteinMapEngine.dll "C:\DMS_Programs\PHRP\" /Y

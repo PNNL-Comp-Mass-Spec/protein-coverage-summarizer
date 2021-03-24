@@ -7,7 +7,7 @@ copy ProteinCoverageSummarizer.dll        "F:\Documents\Projects\DataMining\DMS_
 copy ProteinCoverageSummarizer.dll        "F:\Documents\Projects\DataMining\DMS_Managers\Analysis_Manager\Plugins\AM_InSpecT_PlugIn\bin\" /Y
 copy ProteinCoverageSummarizer.dll        "F:\Documents\Projects\DataMining\DMS_Managers\Analysis_Manager\Plugins\AM_MSGFDB_PlugIn\bin\" /Y
 
-copy ProteinCoverageSummarizer.dll        "F:\Documents\Projects\DataMining\PeptideHitResultsProcessor\bin\" /Y
+copy ProteinCoverageSummarizer.dll        "F:\Documents\Projects\DataMining\PeptideHitResultsProcessor\bin\Debug\" /Y
 
 copy ProteinCoverageSummarizer.dll        "F:\Documents\Projects\DataMining\PeptideHitResultsProcessor\PeptideHitResultsProcessor\bin\" /Y
 
@@ -30,7 +30,7 @@ copy ProteinCoverageSummarizer.pdb        "F:\Documents\Projects\DataMining\Prot
 copy ProteinCoverageSummarizer.pdb        "F:\Documents\Projects\DataMining\Protein_Coverage_Summarizer\bin\Release\" /Y
 copy ProteinCoverageSummarizer.pdb        "F:\Documents\Projects\DataMining\PeptideHitResultsProcessor\PeptideHitResultsProcessor\Lib\" /Y
 copy ProteinCoverageSummarizer.pdb        "F:\Documents\Projects\DataMining\PeptideHitResultsProcessor\PeptideHitResultsProcessor\bin\" /Y
-copy ProteinCoverageSummarizer.pdb        "F:\Documents\Projects\DataMining\PeptideHitResultsProcessor\bin\" /Y
+copy ProteinCoverageSummarizer.pdb        "F:\Documents\Projects\DataMining\PeptideHitResultsProcessor\bin\Debug\" /Y
 copy ProteinCoverageSummarizer.pdb        "F:\Documents\Projects\DataMining\DMS_Managers\Analysis_Manager\AM_Common\" /Y
 copy ProteinCoverageSummarizer.pdb        "F:\Documents\Projects\DataMining\Protein_Coverage_Summarizer\PeptideToProteinMapper\PeptideToProteinMapEngine\bin\Debug\" /Y
 copy ProteinCoverageSummarizer.pdb        "F:\Documents\Projects\DataMining\Protein_Coverage_Summarizer\PeptideToProteinMapper\PeptideToProteinMapEngine\bin\Release\" /Y
