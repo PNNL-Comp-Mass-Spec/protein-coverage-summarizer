@@ -67,7 +67,7 @@ namespace ProteinCoverageSummarizer
         /// <summary>
         /// Protein info structure
         /// </summary>
-        public struct udtProteinInfoType
+        public struct ProteinInfo
         {
             /// <summary>
             /// Protein name
@@ -392,7 +392,7 @@ namespace ProteinCoverageSummarizer
         /// </summary>
         /// <param name="startIndex"></param>
         /// <param name="endIndex"></param>
-        public IEnumerable<udtProteinInfoType> GetCachedProteins(int startIndex = -1, int endIndex = -1)
+        public IEnumerable<ProteinInfo> GetCachedProteins(int startIndex = -1, int endIndex = -1)
         {
             if (mSQLitePersistentConnection == null ||
                 mSQLitePersistentConnection.State == ConnectionState.Closed ||
@@ -432,7 +432,7 @@ namespace ProteinCoverageSummarizer
                 // NonUniquePeptideCount INTEGER,
                 // UniquePeptideCount INTEGER
 
-                var udtProteinInfo = new udtProteinInfoType
+                var proteinInfo = new ProteinInfo
                 {
                     UniqueSequenceID = Convert.ToInt32(reader["UniqueSequenceID"]),
                     Name = Convert.ToString(reader["Name"]),
@@ -441,7 +441,7 @@ namespace ProteinCoverageSummarizer
                     Sequence = Convert.ToString(reader["Sequence"])
                 };
 
-                yield return udtProteinInfo;
+                yield return proteinInfo;
             }
 
             // Close the SQL Reader

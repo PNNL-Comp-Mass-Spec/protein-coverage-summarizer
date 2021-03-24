@@ -66,7 +66,7 @@ namespace ProteinCoverageSummarizer
         /// <summary>
         /// Peptide sequence info structure
         /// </summary>
-        public struct udtPeptideSequenceInfoType
+        public struct PeptideSequenceInfo
         {
             /// <summary>
             /// Protein name (optional)
@@ -137,7 +137,7 @@ namespace ProteinCoverageSummarizer
         /// <summary>
         /// Cached peptide info
         /// </summary>
-        public udtPeptideSequenceInfoType[] mCachedPeptideSeqInfo = new udtPeptideSequenceInfoType[0];
+        public PeptideSequenceInfo[] mCachedPeptideSeqInfo = new PeptideSequenceInfo[0];
 
         /// <summary>
         /// Parallel to mCachedPeptideSeqInfo
@@ -269,7 +269,7 @@ namespace ProteinCoverageSummarizer
                 if (mCachedPeptideCount >= mCachedPeptideSeqInfo.Length && mCachedPeptideCount < MAX_LEADER_SEQUENCE_COUNT)
                 {
                     var oldMCachedPeptideSeqInfo = mCachedPeptideSeqInfo;
-                    mCachedPeptideSeqInfo = new udtPeptideSequenceInfoType[mCachedPeptideSeqInfo.Length * 2];
+                    mCachedPeptideSeqInfo = new PeptideSequenceInfo[mCachedPeptideSeqInfo.Length * 2];
                     Array.Copy(oldMCachedPeptideSeqInfo, mCachedPeptideSeqInfo, Math.Min(mCachedPeptideSeqInfo.Length * 2, oldMCachedPeptideSeqInfo.Length));
 
                     var oldMCachedPeptideToHashIndexPointer = mCachedPeptideToHashIndexPointer;
@@ -501,7 +501,7 @@ namespace ProteinCoverageSummarizer
         public void InitializeCachedPeptides()
         {
             mCachedPeptideCount = 0;
-            mCachedPeptideSeqInfo = new udtPeptideSequenceInfoType[INITIAL_LEADER_SEQUENCE_COUNT_TO_RESERVE];
+            mCachedPeptideSeqInfo = new PeptideSequenceInfo[INITIAL_LEADER_SEQUENCE_COUNT_TO_RESERVE];
             mCachedPeptideToHashIndexPointer = new int[mCachedPeptideSeqInfo.Length];
 
             mIndicesSorted = false;

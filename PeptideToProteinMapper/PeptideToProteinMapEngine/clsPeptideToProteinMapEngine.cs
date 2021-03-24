@@ -117,7 +117,7 @@ namespace PeptideToProteinMapEngine
 
         #region "Structures"
 
-        private struct udtProteinIDMapInfoType
+        private struct ProteinIDMapInfo
         {
             public int ProteinID;
             public string Peptide;
@@ -133,7 +133,7 @@ namespace PeptideToProteinMapEngine
             }
         }
 
-        private struct udtPepToProteinMappingType
+        private struct PepToProteinMapping
         {
             public string Peptide;
             public string Protein;
@@ -553,7 +553,7 @@ namespace PeptideToProteinMapEngine
                     Array.Sort(proteinIDPointerArray, proteins);
 
                     // Initialize cachedData
-                    var cachedData = new List<udtPepToProteinMappingType>();
+                    var cachedData = new List<PepToProteinMapping>();
 
                     // Initialize cachedDataComparer
                     var cachedDataComparer = new PepToProteinMappingComparer();
@@ -620,7 +620,7 @@ namespace PeptideToProteinMapEngine
                                     // Ignore errors occur
                                 }
 
-                                var cachedDataEntry = new udtPepToProteinMappingType()
+                                var cachedDataEntry = new PepToProteinMapping()
                                 {
                                     Peptide = string.Copy(peptideEntry.Key),
                                     Protein = string.Copy(protein ?? string.Empty),
@@ -685,7 +685,7 @@ namespace PeptideToProteinMapEngine
             string proteinToPepMapFilePath,
             out string[] proteins,
             out int[] proteinIDPointerArray,
-            out udtProteinIDMapInfoType[] proteinMapInfo)
+            out ProteinIDMapInfo[] proteinMapInfo)
         {
             const int terminatorSize = 2;
 
@@ -693,7 +693,7 @@ namespace PeptideToProteinMapEngine
 
             var proteinNames = new List<string>();
             var proteinIDPointers = new List<int>();
-            var proteinMapping = new List<udtProteinIDMapInfoType>();
+            var proteinMapping = new List<ProteinIDMapInfo>();
 
             try
             {
@@ -769,7 +769,7 @@ namespace PeptideToProteinMapEngine
                             out _,
                             mProteinCoverageSummarizer.Options.RemoveSymbolCharacters);
 
-                        var proteinInfo = new udtProteinIDMapInfoType
+                        var proteinInfo = new ProteinIDMapInfo
                         {
                             ProteinID = currentProteinID,
                             Peptide = cleanSequence,
@@ -1425,8 +1425,8 @@ namespace PeptideToProteinMapEngine
                 if (x == null || y == null)
                     return 0;
 
-                var xData = (udtProteinIDMapInfoType)x;
-                var yData = (udtProteinIDMapInfoType)y;
+                var xData = (ProteinIDMapInfo)x;
+                var yData = (ProteinIDMapInfo)y;
 
                 var pepCompare = string.CompareOrdinal(xData.Peptide, yData.Peptide);
                 if (pepCompare != 0)
@@ -1445,16 +1445,16 @@ namespace PeptideToProteinMapEngine
                 if (x == null || y == null)
                     return 0;
 
-                var xData = (udtProteinIDMapInfoType)x;
+                var xData = (ProteinIDMapInfo)x;
                 var peptide = Convert.ToString(y);
 
                 return String.CompareOrdinal(xData.Peptide, peptide);
             }
         }
 
-        private class PepToProteinMappingComparer : IComparer<udtPepToProteinMappingType>
+        private class PepToProteinMappingComparer : IComparer<PepToProteinMapping>
         {
-            public int Compare(udtPepToProteinMappingType x, udtPepToProteinMappingType y)
+            public int Compare(PepToProteinMapping x, PepToProteinMapping y)
             {
                 var pepCompare = String.CompareOrdinal(x.Peptide, y.Peptide);
                 if (pepCompare != 0)

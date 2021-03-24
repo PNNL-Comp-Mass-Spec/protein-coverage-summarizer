@@ -150,7 +150,7 @@ namespace ProteinCoverageSummarizer
 
         #region "Structures"
 
-        private struct udtPeptideCountStatsType
+        private struct PeptideCountStats
         {
             public int UniquePeptideCount;
             public int NonUniquePeptideCount;
@@ -175,7 +175,7 @@ namespace ProteinCoverageSummarizer
         private int mCachedProteinInfoStartIndex = -1;
         private int mCachedProteinInfoCount;
 
-        private clsProteinFileDataCache.udtProteinInfoType[] mCachedProteinInfo;
+        private clsProteinFileDataCache.ProteinInfo[] mCachedProteinInfo;
 
         private Dictionary<string, SortedSet<string>> mPeptideToProteinMapResults;
 
@@ -557,11 +557,11 @@ namespace ProteinCoverageSummarizer
                 var proteinIDLookup = new Dictionary<int, int>();
 
                 // Populate udtPeptideStats() using dictionary mProteinPeptideStats
-                udtPeptideCountStatsType[] udtPeptideStats;
+                PeptideCountStats[] udtPeptideStats;
                 if (Options.TrackPeptideCounts)
                 {
                     // Initially reserve space for INITIAL_PROTEIN_COUNT_RESERVE proteins
-                    udtPeptideStats = new udtPeptideCountStatsType[INITIAL_PROTEIN_COUNT_RESERVE];
+                    udtPeptideStats = new PeptideCountStats[INITIAL_PROTEIN_COUNT_RESERVE];
 
                     foreach (var item in mProteinPeptideStats)
                     {
@@ -592,7 +592,7 @@ namespace ProteinCoverageSummarizer
                             {
                                 // Reserve more space in the arrays
                                 var oldUdtPeptideStats = udtPeptideStats;
-                                udtPeptideStats = new udtPeptideCountStatsType[udtPeptideStats.Length * 2];
+                                udtPeptideStats = new PeptideCountStats[udtPeptideStats.Length * 2];
                                 Array.Copy(oldUdtPeptideStats, udtPeptideStats, Math.Min(udtPeptideStats.Length * 2, oldUdtPeptideStats.Length));
                             }
                         }
@@ -607,13 +607,13 @@ namespace ProteinCoverageSummarizer
                     if (peptideStatsCount < udtPeptideStats.Length)
                     {
                         var oldUdtPeptideStats = udtPeptideStats;
-                        udtPeptideStats = new udtPeptideCountStatsType[peptideStatsCount];
+                        udtPeptideStats = new PeptideCountStats[peptideStatsCount];
                         Array.Copy(oldUdtPeptideStats, udtPeptideStats, Math.Min(peptideStatsCount, oldUdtPeptideStats.Length));
                     }
                 }
                 else
                 {
-                    udtPeptideStats = new udtPeptideCountStatsType[0];
+                    udtPeptideStats = new PeptideCountStats[0];
                 }
 
                 // Query the SQLite DB to extract the protein information
@@ -1896,7 +1896,7 @@ namespace ProteinCoverageSummarizer
             mCachedProteinInfoCount = 0;
             if (mCachedProteinInfo == null)
             {
-                mCachedProteinInfo = new clsProteinFileDataCache.udtProteinInfoType[PROTEIN_CHUNK_COUNT];
+                mCachedProteinInfo = new clsProteinFileDataCache.ProteinInfo[PROTEIN_CHUNK_COUNT];
             }
 
             foreach (var udtProtein in ProteinDataCache.GetCachedProteins(startIndex, endIndex))
