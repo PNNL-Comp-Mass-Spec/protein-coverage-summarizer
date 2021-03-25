@@ -317,45 +317,44 @@ namespace PeptideToProteinMapEngine
                 ShowMessage("Looking for mod definitions in the Inspect param file: " + Path.GetFileName(inspectParamFilePath));
 
                 // Read the contents of inspectParamFilePath
-                using (var reader = new StreamReader(new FileStream(inspectParamFilePath, FileMode.Open, FileAccess.Read, FileShare.Read)))
+                using var reader = new StreamReader(new FileStream(inspectParamFilePath, FileMode.Open, FileAccess.Read, FileShare.Read));
+
+                while (!reader.EndOfStream)
                 {
-                    while (!reader.EndOfStream)
+                    var lineIn = reader.ReadLine();
+
+                    if (string.IsNullOrWhiteSpace(lineIn))
+                        continue;
+
+                    var dataLine = lineIn.Trim();
+
+                    if (dataLine[0] == '#')
                     {
-                        var lineIn = reader.ReadLine();
-
-                        if (string.IsNullOrWhiteSpace(lineIn))
-                            continue;
-
-                        var dataLine = lineIn.Trim();
-
-                        if (dataLine[0] == '#')
-                        {
-                            // Comment line; skip it
-                            continue;
-                        }
-
-                        if (!dataLine.StartsWith("mod", StringComparison.OrdinalIgnoreCase))
-                            continue;
-
-                        // Modification definition line
-
-                        // Split the line on commas
-                        var splitLine = dataLine.Split(',');
-
-                        if (splitLine.Length < 5 || splitLine[0].ToLower().Trim() != "mod")
-                            continue;
-
-                        var modName = splitLine[4].ToLower();
-
-                        if (modName.Length > 4)
-                        {
-                            // Only keep the first 4 characters of the modification name
-                            modName = modName.Substring(0, 4);
-                        }
-
-                        inspectModNames.Add(modName);
-                        ShowMessage("Found modification: " + dataLine + "   -->   Mod Symbol \"" + modName + "\"");
+                        // Comment line; skip it
+                        continue;
                     }
+
+                    if (!dataLine.StartsWith("mod", StringComparison.OrdinalIgnoreCase))
+                        continue;
+
+                    // Modification definition line
+
+                    // Split the line on commas
+                    var splitLine = dataLine.Split(',');
+
+                    if (splitLine.Length < 5 || splitLine[0].ToLower().Trim() != "mod")
+                        continue;
+
+                    var modName = splitLine[4].ToLower();
+
+                    if (modName.Length > 4)
+                    {
+                        // Only keep the first 4 characters of the modification name
+                        modName = modName.Substring(0, 4);
+                    }
+
+                    inspectModNames.Add(modName);
+                    ShowMessage("Found modification: " + dataLine + "   -->   Mod Symbol \"" + modName + "\"");
                 }
 
                 Console.WriteLine();
@@ -417,43 +416,42 @@ namespace PeptideToProteinMapEngine
             try
             {
                 // Read the contents of filePath
-                using (var reader = new StreamReader(new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.Read)))
+                using var reader = new StreamReader(new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.Read));
+
+                if (reader.EndOfStream)
+                    return false;
+
+                var dataLine = reader.ReadLine();
+
+                if (string.IsNullOrWhiteSpace(dataLine))
+                    return false;
+
+                var columnNames = dataLine.Split(sepChars);
+
+                if (inputFileFormat == PeptideInputFileFormatConstants.ProteinAndPeptideFile)
                 {
-                    if (reader.EndOfStream)
-                        return false;
-
-                    var dataLine = reader.ReadLine();
-
-                    if (string.IsNullOrWhiteSpace(dataLine))
-                        return false;
-
-                    var columnNames = dataLine.Split(sepChars);
-
-                    if (inputFileFormat == PeptideInputFileFormatConstants.ProteinAndPeptideFile)
+                    hasPeptideOrSequenceColumn = true;
+                    if (columnNames.Length > 1 && (
+                                                      columnNames[1].StartsWith("peptide", StringComparison.OrdinalIgnoreCase) ||
+                                                      columnNames[1].StartsWith("sequence", StringComparison.OrdinalIgnoreCase)))
                     {
-                        hasPeptideOrSequenceColumn = true;
-                        if (columnNames.Length > 1 && (
-                            columnNames[1].StartsWith("peptide", StringComparison.OrdinalIgnoreCase) ||
-                            columnNames[1].StartsWith("sequence", StringComparison.OrdinalIgnoreCase)))
-                        {
-                            return true;
-                        }
-                    }
-                    else if (inputFileFormat == PeptideInputFileFormatConstants.PeptideListFile)
-                    {
-                        hasPeptideOrSequenceColumn = true;
-                        if (columnNames[0].StartsWith("peptide", StringComparison.OrdinalIgnoreCase) ||
-                            columnNames[0].StartsWith("sequence", StringComparison.OrdinalIgnoreCase))
-                        {
-                            return true;
-                        }
-                    }
-                    else if (columnNames.Any(dataColumn => dataColumn.StartsWith("peptide", StringComparison.OrdinalIgnoreCase)) ||
-                             columnNames.Any(dataColumn => dataColumn.StartsWith("sequence", StringComparison.OrdinalIgnoreCase)))
-                    {
-                        hasPeptideOrSequenceColumn = true;
                         return true;
                     }
+                }
+                else if (inputFileFormat == PeptideInputFileFormatConstants.PeptideListFile)
+                {
+                    hasPeptideOrSequenceColumn = true;
+                    if (columnNames[0].StartsWith("peptide", StringComparison.OrdinalIgnoreCase) ||
+                        columnNames[0].StartsWith("sequence", StringComparison.OrdinalIgnoreCase))
+                    {
+                        return true;
+                    }
+                }
+                else if (columnNames.Any(dataColumn => dataColumn.StartsWith("peptide", StringComparison.OrdinalIgnoreCase)) ||
+                         columnNames.Any(dataColumn => dataColumn.StartsWith("sequence", StringComparison.OrdinalIgnoreCase)))
+                {
+                    hasPeptideOrSequenceColumn = true;
+                    return true;
                 }
 
                 return false;
@@ -1057,8 +1055,7 @@ namespace PeptideToProteinMapEngine
                     }
                 }
 
-                var peptideListFilePath = PreProcessDataWriteOutPeptides(inputFilePath, outputDirectoryPath);
-                return peptideListFilePath;
+                return PreProcessDataWriteOutPeptides(inputFilePath, outputDirectoryPath);
             }
             catch (Exception ex)
             {
@@ -1092,33 +1089,32 @@ namespace PeptideToProteinMapEngine
                 LogMessage("Creating " + Path.GetFileName(peptideListFileName));
 
                 // Open the output file
-                using (var writer = new StreamWriter(new FileStream(peptideListFilePath, FileMode.Create, FileAccess.Write, FileShare.Read)))
+                using var writer = new StreamWriter(new FileStream(peptideListFilePath, FileMode.Create, FileAccess.Write, FileShare.Read));
+
+                writer.WriteLine("Peptide\tScan");
+
+                // Write out the peptides, removing any mod symbols that might be present
+                foreach (var peptideEntry in mUniquePeptideList)
                 {
-                    writer.WriteLine("Peptide\tScan");
+                    string peptide;
 
-                    // Write out the peptides, removing any mod symbols that might be present
-                    foreach (var peptideEntry in mUniquePeptideList)
+                    if (mInspectModNameList.Count > 0)
                     {
-                        string peptide;
+                        peptide = RemoveInspectMods(peptideEntry.Key, ref mInspectModNameList);
+                    }
+                    else
+                    {
+                        peptide = peptideEntry.Key;
+                    }
 
-                        if (mInspectModNameList.Count > 0)
-                        {
-                            peptide = RemoveInspectMods(peptideEntry.Key, ref mInspectModNameList);
-                        }
-                        else
-                        {
-                            peptide = peptideEntry.Key;
-                        }
-
-                        if (peptideEntry.Value.Count == 0)
-                        {
-                            writer.WriteLine(peptide + "\t" + "0");
-                        }
-                        else
-                        {
-                            foreach (var scanNumber in peptideEntry.Value)
-                                writer.WriteLine(peptide + "\t" + scanNumber);
-                        }
+                    if (peptideEntry.Value.Count == 0)
+                    {
+                        writer.WriteLine(peptide + "\t" + "0");
+                    }
+                    else
+                    {
+                        foreach (var scanNumber in peptideEntry.Value)
+                            writer.WriteLine(peptide + "\t" + scanNumber);
                     }
                 }
 

@@ -535,127 +535,126 @@ namespace ProteinCoverageSummarizer
             UpdateProgress("Creating the protein coverage file: " + Path.GetFileName(ResultsFilePath), 0,
                 ProteinCoverageProcessingSteps.WriteProteinCoverageFile);
 
-            using (var writer = new StreamWriter(new FileStream(ResultsFilePath, FileMode.Create, FileAccess.Write, FileShare.Read)))
+            using var writer = new StreamWriter(new FileStream(ResultsFilePath, FileMode.Create, FileAccess.Write, FileShare.Read));
+
+            // Note: If the column ordering is changed, be sure to update OUTPUT_FILE_PROTEIN_DESCRIPTION_COLUMN_NUMBER and OUTPUT_FILE_PROTEIN_SEQUENCE_COLUMN_NUMBER
+            var dataLine = "Protein Name" + "\t" +
+                           "Percent Coverage" + "\t" +
+                           "Protein Description" + "\t" +
+                           "Non Unique Peptide Count" + "\t" +
+                           "Unique Peptide Count" + "\t" +
+                           "Protein Residue Count";
+
+            if (Options.OutputProteinSequence)
             {
-                // Note: If the column ordering is changed, be sure to update OUTPUT_FILE_PROTEIN_DESCRIPTION_COLUMN_NUMBER and OUTPUT_FILE_PROTEIN_SEQUENCE_COLUMN_NUMBER
-                var dataLine = "Protein Name" + "\t" +
-                               "Percent Coverage" + "\t" +
-                               "Protein Description" + "\t" +
-                               "Non Unique Peptide Count" + "\t" +
-                               "Unique Peptide Count" + "\t" +
-                               "Protein Residue Count";
+                dataLine += "\tProtein Sequence";
+            }
+
+            writer.WriteLine(dataLine);
+
+            // Contains pointers to entries in udtPeptideStats()
+            // Keys are protein IDs, values are the index in udtPeptideStats
+            var proteinIDLookup = new Dictionary<int, int>();
+
+            // Populate udtPeptideStats() using dictionary mProteinPeptideStats
+            PeptideCountStats[] udtPeptideStats;
+            if (Options.TrackPeptideCounts)
+            {
+                // Initially reserve space for INITIAL_PROTEIN_COUNT_RESERVE proteins
+                udtPeptideStats = new PeptideCountStats[INITIAL_PROTEIN_COUNT_RESERVE];
+
+                foreach (var item in mProteinPeptideStats)
+                {
+                    var proteinPeptideKey = item.Key;
+
+                    // proteinPeptideKey will be of the form 1234::K.ABCDEFR.A
+                    // Look for the first colon
+                    var colonIndex = proteinPeptideKey.IndexOf(':');
+
+                    if (colonIndex <= 0)
+                    {
+                        // The key is not in the correct format
+                        continue;
+                    }
+
+                    var proteinID = Convert.ToInt32(proteinPeptideKey.Substring(0, colonIndex));
+
+                    if (!proteinIDLookup.TryGetValue(proteinID, out var targetIndex))
+                    {
+                        // ID not found; so add it
+
+                        targetIndex = peptideStatsCount;
+                        peptideStatsCount++;
+
+                        proteinIDLookup.Add(proteinID, targetIndex);
+
+                        if (targetIndex >= udtPeptideStats.Length)
+                        {
+                            // Reserve more space in the arrays
+                            var oldUdtPeptideStats = udtPeptideStats;
+                            udtPeptideStats = new PeptideCountStats[udtPeptideStats.Length * 2];
+                            Array.Copy(oldUdtPeptideStats, udtPeptideStats, Math.Min(udtPeptideStats.Length * 2, oldUdtPeptideStats.Length));
+                        }
+                    }
+
+                    // Update the protein counts at targetIndex
+                    // NOTE: The following is valid only because udtPeptideStats is an array, and not a generic collection
+                    udtPeptideStats[targetIndex].UniquePeptideCount++;
+                    udtPeptideStats[targetIndex].NonUniquePeptideCount += item.Value;
+                }
+
+                // Shrink udtPeptideStats
+                if (peptideStatsCount < udtPeptideStats.Length)
+                {
+                    var oldUdtPeptideStats = udtPeptideStats;
+                    udtPeptideStats = new PeptideCountStats[peptideStatsCount];
+                    Array.Copy(oldUdtPeptideStats, udtPeptideStats, Math.Min(peptideStatsCount, oldUdtPeptideStats.Length));
+                }
+            }
+            else
+            {
+                udtPeptideStats = new PeptideCountStats[0];
+            }
+
+            // Query the SQLite DB to extract the protein information
+            var proteinsProcessed = 0;
+            foreach (var udtProtein in ProteinDataCache.GetCachedProteins())
+            {
+                var uniquePeptideCount = 0;
+                var nonUniquePeptideCount = 0;
+
+                if (Options.TrackPeptideCounts)
+                {
+                    if (proteinIDLookup.TryGetValue(udtProtein.UniqueSequenceID, out var targetIndex))
+                    {
+                        uniquePeptideCount = udtPeptideStats[targetIndex].UniquePeptideCount;
+                        nonUniquePeptideCount = udtPeptideStats[targetIndex].NonUniquePeptideCount;
+                    }
+                }
+
+                dataLine = udtProtein.Name + "\t" +
+                           Math.Round(udtProtein.PercentCoverage * 100, 3) + "\t" +
+                           udtProtein.Description + "\t" +
+                           nonUniquePeptideCount + "\t" +
+                           uniquePeptideCount + "\t" +
+                           udtProtein.Sequence.Length;
 
                 if (Options.OutputProteinSequence)
                 {
-                    dataLine += "\tProtein Sequence";
+                    dataLine += "\t" + udtProtein.Sequence;
                 }
 
                 writer.WriteLine(dataLine);
 
-                // Contains pointers to entries in udtPeptideStats()
-                // Keys are protein IDs, values are the index in udtPeptideStats
-                var proteinIDLookup = new Dictionary<int, int>();
-
-                // Populate udtPeptideStats() using dictionary mProteinPeptideStats
-                PeptideCountStats[] udtPeptideStats;
-                if (Options.TrackPeptideCounts)
+                if (proteinsProcessed % 25 == 0)
                 {
-                    // Initially reserve space for INITIAL_PROTEIN_COUNT_RESERVE proteins
-                    udtPeptideStats = new PeptideCountStats[INITIAL_PROTEIN_COUNT_RESERVE];
-
-                    foreach (var item in mProteinPeptideStats)
-                    {
-                        var proteinPeptideKey = item.Key;
-
-                        // proteinPeptideKey will be of the form 1234::K.ABCDEFR.A
-                        // Look for the first colon
-                        var colonIndex = proteinPeptideKey.IndexOf(':');
-
-                        if (colonIndex <= 0)
-                        {
-                            // The key is not in the correct format
-                            continue;
-                        }
-
-                        var proteinID = Convert.ToInt32(proteinPeptideKey.Substring(0, colonIndex));
-
-                        if (!proteinIDLookup.TryGetValue(proteinID, out var targetIndex))
-                        {
-                            // ID not found; so add it
-
-                            targetIndex = peptideStatsCount;
-                            peptideStatsCount++;
-
-                            proteinIDLookup.Add(proteinID, targetIndex);
-
-                            if (targetIndex >= udtPeptideStats.Length)
-                            {
-                                // Reserve more space in the arrays
-                                var oldUdtPeptideStats = udtPeptideStats;
-                                udtPeptideStats = new PeptideCountStats[udtPeptideStats.Length * 2];
-                                Array.Copy(oldUdtPeptideStats, udtPeptideStats, Math.Min(udtPeptideStats.Length * 2, oldUdtPeptideStats.Length));
-                            }
-                        }
-
-                        // Update the protein counts at targetIndex
-                        // NOTE: The following is valid only because udtPeptideStats is an array, and not a generic collection
-                        udtPeptideStats[targetIndex].UniquePeptideCount++;
-                        udtPeptideStats[targetIndex].NonUniquePeptideCount += item.Value;
-                    }
-
-                    // Shrink udtPeptideStats
-                    if (peptideStatsCount < udtPeptideStats.Length)
-                    {
-                        var oldUdtPeptideStats = udtPeptideStats;
-                        udtPeptideStats = new PeptideCountStats[peptideStatsCount];
-                        Array.Copy(oldUdtPeptideStats, udtPeptideStats, Math.Min(peptideStatsCount, oldUdtPeptideStats.Length));
-                    }
-                }
-                else
-                {
-                    udtPeptideStats = new PeptideCountStats[0];
+                    UpdateProgress(proteinsProcessed / Convert.ToSingle(ProteinDataCache.GetProteinCountCached()) * 100,
+                        ProteinCoverageProcessingSteps.WriteProteinCoverageFile);
                 }
 
-                // Query the SQLite DB to extract the protein information
-                var proteinsProcessed = 0;
-                foreach (var udtProtein in ProteinDataCache.GetCachedProteins())
-                {
-                    var uniquePeptideCount = 0;
-                    var nonUniquePeptideCount = 0;
-
-                    if (Options.TrackPeptideCounts)
-                    {
-                        if (proteinIDLookup.TryGetValue(udtProtein.UniqueSequenceID, out var targetIndex))
-                        {
-                            uniquePeptideCount = udtPeptideStats[targetIndex].UniquePeptideCount;
-                            nonUniquePeptideCount = udtPeptideStats[targetIndex].NonUniquePeptideCount;
-                        }
-                    }
-
-                    dataLine = udtProtein.Name + "\t" +
-                               Math.Round(udtProtein.PercentCoverage * 100, 3) + "\t" +
-                               udtProtein.Description + "\t" +
-                               nonUniquePeptideCount + "\t" +
-                               uniquePeptideCount + "\t" +
-                               udtProtein.Sequence.Length;
-
-                    if (Options.OutputProteinSequence)
-                    {
-                        dataLine += "\t" + udtProtein.Sequence;
-                    }
-
-                    writer.WriteLine(dataLine);
-
-                    if (proteinsProcessed % 25 == 0)
-                    {
-                        UpdateProgress(proteinsProcessed / Convert.ToSingle(ProteinDataCache.GetProteinCountCached()) * 100,
-                            ProteinCoverageProcessingSteps.WriteProteinCoverageFile);
-                    }
-
-                    if (mAbortProcessing)
-                        break;
-                    proteinsProcessed++;
-                }
+                if (mAbortProcessing)
+                    break;
+                proteinsProcessed++;
             }
         }
 
@@ -666,61 +665,60 @@ namespace ProteinCoverageSummarizer
             try
             {
                 // Open the input file and look for the first carriage return or line feed
-                using (var fsInFile = new FileStream(inputFilePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+                using var reader = new FileStream(inputFilePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+
+                while (reader.Position < reader.Length && reader.Position < 100000)
                 {
-                    while (fsInFile.Position < fsInFile.Length && fsInFile.Position < 100000)
+                    var intByte = reader.ReadByte();
+
+                    if (intByte == 10)
                     {
-                        var intByte = fsInFile.ReadByte();
-
-                        if (intByte == 10)
+                        // Found linefeed
+                        if (reader.Position < reader.Length)
                         {
-                            // Found linefeed
-                            if (fsInFile.Position < fsInFile.Length)
+                            intByte = reader.ReadByte();
+                            if (intByte == 13)
                             {
-                                intByte = fsInFile.ReadByte();
-                                if (intByte == 13)
-                                {
-                                    // LfCr
-                                    terminatorSize = 2;
-                                }
-                                else
-                                {
-                                    // Lf only
-                                    terminatorSize = 1;
-                                }
+                                // LfCr
+                                terminatorSize = 2;
                             }
                             else
                             {
+                                // Lf only
                                 terminatorSize = 1;
                             }
-
-                            break;
+                        }
+                        else
+                        {
+                            terminatorSize = 1;
                         }
 
-                        if (intByte == 13)
+                        break;
+                    }
+
+                    if (intByte == 13)
+                    {
+                        // Found carriage return
+                        if (reader.Position < reader.Length)
                         {
-                            // Found carriage return
-                            if (fsInFile.Position < fsInFile.Length)
+                            intByte = reader.ReadByte();
+                            if (intByte == 10)
                             {
-                                intByte = fsInFile.ReadByte();
-                                if (intByte == 10)
-                                {
-                                    // CrLf
-                                    terminatorSize = 2;
-                                }
-                                else
-                                {
-                                    // Cr only
-                                    terminatorSize = 1;
-                                }
+                                // CrLf
+                                terminatorSize = 2;
                             }
                             else
                             {
+                                // Cr only
                                 terminatorSize = 1;
                             }
-
-                            break;
                         }
+                        else
+                        {
+                            terminatorSize = 1;
+                        }
+
+                        break;
                     }
                 }
             }
@@ -741,18 +739,17 @@ namespace ProteinCoverageSummarizer
         /// <returns>Zero-base column index, or -1 if not found</returns>
         private int FindColumnIndex(string peptideInputFilePath, string columnToFind, bool matchStartIfNotFound = true)
         {
-            using (var reader = new StreamReader(new FileStream(peptideInputFilePath, FileMode.Open, FileAccess.Read, FileShare.Read)))
+            using var reader = new StreamReader(new FileStream(peptideInputFilePath, FileMode.Open, FileAccess.Read, FileShare.Read));
+
+            while (!reader.EndOfStream)
             {
-                while (!reader.EndOfStream)
-                {
-                    var dataLine = reader.ReadLine();
-                    if (string.IsNullOrWhiteSpace(dataLine))
-                        continue;
+                var dataLine = reader.ReadLine();
+                if (string.IsNullOrWhiteSpace(dataLine))
+                    continue;
 
-                    var columnNames = dataLine.Split(Options.PeptideInputFileDelimiter);
+                var columnNames = dataLine.Split(Options.PeptideInputFileDelimiter);
 
-                    return FindColumnIndex(columnNames, columnToFind, matchStartIfNotFound);
-                }
+                return FindColumnIndex(columnNames, columnToFind, matchStartIfNotFound);
             }
 
             return -1;
@@ -1944,82 +1941,80 @@ namespace ProteinCoverageSummarizer
                     return;
                 }
 
-                using (var dataPlusProteinsWriter = new StreamWriter(new FileStream(dataPlusAllProteinsFile, FileMode.Create, FileAccess.Write, FileShare.Read)))
+                using var dataPlusProteinsWriter = new StreamWriter(new FileStream(dataPlusAllProteinsFile, FileMode.Create, FileAccess.Write, FileShare.Read));
+
+                var linesRead = 0;
+                long bytesRead = 0;
+
+                var lastScanNumber = string.Empty;
+                var lastPeptide = string.Empty;
+
+                // In this list, keys are the text of each read line and values are the protein name for that line
+                var peptideLines = new List<KeyValuePair<string, string>>();
+
+                using var reader = new StreamReader(new FileStream(peptideInputFilePath, FileMode.Open, FileAccess.Read, FileShare.Read));
+
+                while (!reader.EndOfStream)
                 {
-                    var linesRead = 0;
-                    long bytesRead = 0;
+                    var lineIn = reader.ReadLine();
+                    if (string.IsNullOrEmpty(lineIn))
+                        continue;
 
-                    var lastScanNumber = string.Empty;
-                    var lastPeptide = string.Empty;
+                    bytesRead += lineIn.Length + terminatorSize;
+                    var dataLine = lineIn.TrimEnd();
 
-                    // In this list, keys are the text of each read line and values are the protein name for that line
-                    var peptideLines = new List<KeyValuePair<string, string>>();
-
-                    using (var reader = new StreamReader(new FileStream(peptideInputFilePath, FileMode.Open, FileAccess.Read, FileShare.Read)))
+                    linesRead++;
+                    if (linesRead % 500 == 1)
                     {
-                        while (!reader.EndOfStream)
-                        {
-                            var lineIn = reader.ReadLine();
-                            if (string.IsNullOrEmpty(lineIn))
-                                continue;
+                        UpdateProgress("Creating the data plus all-proteins output file", Convert.ToSingle(bytesRead / (double)reader.BaseStream.Length * 100), ProteinCoverageProcessingSteps.SaveAllProteinsVersionOfInputFile);
+                    }
 
-                            bytesRead += lineIn.Length + terminatorSize;
-                            var dataLine = lineIn.TrimEnd();
+                    if (linesRead == 1 &&
+                        (Options.PeptideFileSkipFirstLine ||
+                         Options.PeptideFileFormatCode == ProteinCoverageSummarizerOptions.PeptideFileColumnOrderingCode.UseHeaderNames))
+                    {
+                        // Print out the first line, but append a new column name
+                        dataPlusProteinsWriter.WriteLine(dataLine + "\t" + "Protein_Name");
+                        continue;
+                    }
 
-                            linesRead++;
-                            if (linesRead % 500 == 1)
-                            {
-                                UpdateProgress("Creating the data plus all-proteins output file", Convert.ToSingle(bytesRead / (double)reader.BaseStream.Length * 100), ProteinCoverageProcessingSteps.SaveAllProteinsVersionOfInputFile);
-                            }
+                    if (dataLine.Length == 0)
+                    {
+                        dataPlusProteinsWriter.WriteLine();
+                        continue;
+                    }
 
-                            if (linesRead == 1 &&
-                                (Options.PeptideFileSkipFirstLine ||
-                                 Options.PeptideFileFormatCode == ProteinCoverageSummarizerOptions.PeptideFileColumnOrderingCode.UseHeaderNames))
-                            {
-                                // Print out the first line, but append a new column name
-                                dataPlusProteinsWriter.WriteLine(dataLine + "\t" + "Protein_Name");
-                                continue;
-                            }
+                    // Split the line
+                    var lineParts = dataLine.Split(sepChars);
 
-                            if (dataLine.Length == 0)
-                            {
-                                dataPlusProteinsWriter.WriteLine();
-                                continue;
-                            }
+                    if (!GetColumnValueIfNotEmpty(lineParts, peptideColumnIndex, out var peptideSequence))
+                    {
+                        // Either this line does not have enough columns, or the peptide column is empty
+                        dataPlusProteinsWriter.WriteLine(dataLine + "\t" + "?");
+                        continue;
+                    }
 
-                            // Split the line
-                            var lineParts = dataLine.Split(sepChars);
+                    GetColumnValueIfNotEmpty(lineParts, proteinColumnIndex, out var proteinName);
+                    GetColumnValueIfNotEmpty(lineParts, scanColumnIndex, out var scanNumber);
 
-                            if (!GetColumnValueIfNotEmpty(lineParts, peptideColumnIndex, out var peptideSequence))
-                            {
-                                // Either this line does not have enough columns, or the peptide column is empty
-                                dataPlusProteinsWriter.WriteLine(dataLine + "\t" + "?");
-                                continue;
-                            }
+                    if (scanNumber.Equals(lastScanNumber) && peptideSequence.Equals(lastPeptide))
+                    {
+                        peptideLines.Add(new KeyValuePair<string, string>(dataLine, proteinName));
+                    }
+                    else
+                    {
+                        // Write out the cached lines
+                        WriteCachedLinesToAllProteinsFile(lastPeptide, peptideLines, dataPlusProteinsWriter, linesRead);
 
-                            GetColumnValueIfNotEmpty(lineParts, proteinColumnIndex, out var proteinName);
-                            GetColumnValueIfNotEmpty(lineParts, scanColumnIndex, out var scanNumber);
-
-                            if (scanNumber.Equals(lastScanNumber) && peptideSequence.Equals(lastPeptide))
-                            {
-                                peptideLines.Add(new KeyValuePair<string, string>(dataLine, proteinName));
-                            }
-                            else
-                            {
-                                // Write out the cached lines
-                                WriteCachedLinesToAllProteinsFile(lastPeptide, peptideLines, dataPlusProteinsWriter, linesRead);
-
-                                lastPeptide = peptideSequence;
-                                lastScanNumber = scanNumber;
-                                peptideLines.Clear();
-                                peptideLines.Add(new KeyValuePair<string, string>(dataLine, proteinName));
-                            }
-                        }
-
-                        // Write the final cached lines
-                        WriteCachedLinesToAllProteinsFile(lastPeptide, peptideLines, dataPlusProteinsWriter, 2);
+                        lastPeptide = peptideSequence;
+                        lastScanNumber = scanNumber;
+                        peptideLines.Clear();
+                        peptideLines.Add(new KeyValuePair<string, string>(dataLine, proteinName));
                     }
                 }
+
+                // Write the final cached lines
+                WriteCachedLinesToAllProteinsFile(lastPeptide, peptideLines, dataPlusProteinsWriter, 2);
             }
             catch (Exception ex)
             {
@@ -2418,44 +2413,43 @@ namespace ProteinCoverageSummarizer
             char columnDelimiter)
         {
             // Open the file and read in the lines
-            using (var reader = new StreamReader(new FileStream(peptideInputFilePath, FileMode.Open, FileAccess.Read, FileShare.Read)))
+            using var reader = new StreamReader(new FileStream(peptideInputFilePath, FileMode.Open, FileAccess.Read, FileShare.Read));
+
+            var linesRead = 0;
+            while (!reader.EndOfStream && linesRead < 3)
             {
-                var linesRead = 0;
-                while (!reader.EndOfStream && linesRead < 3)
+                var lineIn = reader.ReadLine();
+                if (string.IsNullOrWhiteSpace(lineIn))
+                    continue;
+
+                var dataLine = lineIn.TrimEnd();
+
+                linesRead++;
+                if (linesRead == 1 && skipFirstLine)
                 {
-                    var lineIn = reader.ReadLine();
-                    if (string.IsNullOrWhiteSpace(lineIn))
-                        continue;
+                    // Do nothing, skip the first line
+                    continue;
+                }
 
-                    var dataLine = lineIn.TrimEnd();
+                if (dataLine.Length == 0)
+                    continue;
 
-                    linesRead++;
-                    if (linesRead == 1 && skipFirstLine)
+                try
+                {
+                    var lineParts = dataLine.Split(columnDelimiter);
+                    if (!skipFirstLine && linesRead == 1 ||
+                        skipFirstLine && linesRead == 2)
                     {
-                        // Do nothing, skip the first line
-                        continue;
-                    }
-
-                    if (dataLine.Length == 0)
-                        continue;
-
-                    try
-                    {
-                        var lineParts = dataLine.Split(columnDelimiter);
-                        if (!skipFirstLine && linesRead == 1 ||
-                            skipFirstLine && linesRead == 2)
+                        if (lineParts.Length == 1 && peptideFileFormatCode == ProteinCoverageSummarizerOptions.PeptideFileColumnOrderingCode.ProteinName_PeptideSequence)
                         {
-                            if (lineParts.Length == 1 && peptideFileFormatCode == ProteinCoverageSummarizerOptions.PeptideFileColumnOrderingCode.ProteinName_PeptideSequence)
-                            {
-                                // Auto switch to PeptideFileColumnOrderingCode.SequenceOnly
-                                peptideFileFormatCode = ProteinCoverageSummarizerOptions.PeptideFileColumnOrderingCode.SequenceOnly;
-                            }
+                            // Auto switch to PeptideFileColumnOrderingCode.SequenceOnly
+                            peptideFileFormatCode = ProteinCoverageSummarizerOptions.PeptideFileColumnOrderingCode.SequenceOnly;
                         }
                     }
-                    catch (Exception)
-                    {
-                        // Ignore the error
-                    }
+                }
+                catch (Exception)
+                {
+                    // Ignore the error
                 }
             }
 

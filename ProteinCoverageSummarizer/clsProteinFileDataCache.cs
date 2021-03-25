@@ -203,13 +203,12 @@ namespace ProteinCoverageSummarizer
             {
                 OnDebugEvent("Disabling Journaling and setting Synchronous mode to 0 (improves update speed)");
 
-                using (var cmd = sqlConnection.CreateCommand())
-                {
-                    cmd.CommandText = "PRAGMA journal_mode = OFF";
-                    cmd.ExecuteNonQuery();
-                    cmd.CommandText = "PRAGMA synchronous = 0";
-                    cmd.ExecuteNonQuery();
-                }
+                using var cmd = sqlConnection.CreateCommand();
+
+                cmd.CommandText = "PRAGMA journal_mode = OFF";
+                cmd.ExecuteNonQuery();
+                cmd.CommandText = "PRAGMA synchronous = 0";
+                cmd.ExecuteNonQuery();
             }
 
             return sqlConnection;
