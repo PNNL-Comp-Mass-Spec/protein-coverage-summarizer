@@ -1312,6 +1312,7 @@ namespace PeptideToProteinMapEngine
                 {
                     UpdateProgress("Post-processing", PERCENT_COMPLETE_POSTPROCESSING);
 
+                    // ReSharper disable once SwitchStatementHandlesSomeKnownEnumValuesWithDefault
                     switch (inputFileFormat)
                     {
                         case PeptideInputFileFormatConstants.PeptideListFile:

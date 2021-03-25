@@ -226,6 +226,7 @@ namespace ProteinCoverageSummarizerGUI
 
                             try
                             {
+                                // ReSharper disable once SwitchStatementHandlesSomeKnownEnumValuesWithDefault
                                 switch (Type.GetTypeCode(newRow[index].GetType()))
                                 {
                                     case TypeCode.String:
