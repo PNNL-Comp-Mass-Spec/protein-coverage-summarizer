@@ -950,12 +950,12 @@ namespace ProteinCoverageSummarizer
         /// <summary>
         /// RegEx to match any character that is not a letter
         /// </summary>
-        private static readonly Regex mSymbolMatcher = new Regex("[^A-Za-z]", RegexOptions.Compiled);
+        private static readonly Regex mSymbolMatcher = new("[^A-Za-z]", RegexOptions.Compiled);
 
         /// <summary>
         /// RegEx to match modifications of the form [15.9998] or [Acetyl]
         /// </summary>
-        private static readonly Regex mBracketModsMatcher = new Regex(@"\[[^[]+\]", RegexOptions.Compiled);
+        private static readonly Regex mBracketModsMatcher = new(@"\[[^[]+\]", RegexOptions.Compiled);
 
         /// <summary>
         /// Get the peptide sequence without the prefix and suffix, and optionally without modification symbols
