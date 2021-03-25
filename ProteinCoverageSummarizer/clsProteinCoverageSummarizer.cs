@@ -1027,45 +1027,15 @@ namespace ProteinCoverageSummarizer
         /// <returns>Error message, or an empty string</returns>
         public string GetErrorMessage()
         {
-            string message;
-
-            switch (ErrorCode)
+            var message = ErrorCode switch
             {
-                case ProteinCoverageErrorCodes.NoError:
-                    message = string.Empty;
-                    break;
-                case ProteinCoverageErrorCodes.InvalidInputFilePath:
-                    message = "Invalid input file path";
-                    break;
-
-                // case ProteinCoverageErrorCodes.InvalidOutputDirectoryPath:
-                //     message = "Invalid output directory path";
-                //     break;
-                // case ProteinCoverageErrorCodes.ParameterFileNotFound:
-                //     message = "Parameter file not found";
-                //     break;
-
-                // case ProteinCoverageErrorCodes.ErrorReadingInputFile:
-                //     message = "Error reading input file";
-                //     break;
-                // case ProteinCoverageErrorCodes.ErrorCreatingOutputFiles:
-                //     message = "Error creating output files";
-                //     break;
-
-                case ProteinCoverageErrorCodes.ErrorReadingParameterFile:
-                    message = "Invalid parameter file";
-                    break;
-                case ProteinCoverageErrorCodes.FilePathError:
-                    message = "General file path error";
-                    break;
-                case ProteinCoverageErrorCodes.UnspecifiedError:
-                    message = "Unspecified error";
-                    break;
-                default:
-                    // This shouldn't happen
-                    message = "Unknown error state";
-                    break;
-            }
+                ProteinCoverageErrorCodes.NoError => string.Empty,
+                ProteinCoverageErrorCodes.InvalidInputFilePath => "Invalid input file path",
+                ProteinCoverageErrorCodes.ErrorReadingParameterFile => "Invalid parameter file",
+                ProteinCoverageErrorCodes.FilePathError => "General file path error",
+                ProteinCoverageErrorCodes.UnspecifiedError => "Unspecified error",
+                _ => "Unknown error state"
+            };
 
             if (StatusMessage.Length > 0)
             {

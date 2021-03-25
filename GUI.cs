@@ -715,25 +715,13 @@ namespace ProteinCoverageSummarizerGUI
 
         private char LookupColumnDelimiterChar(int delimiterIndex, string customDelimiter, char defaultDelimiter)
         {
-            string delimiter;
-
-            switch (delimiterIndex)
+            var delimiter = delimiterIndex switch
             {
-                case (int)DelimiterCharConstants.Space:
-                    delimiter = " ";
-                    break;
-                case (int)DelimiterCharConstants.Tab:
-                    delimiter = Convert.ToString('\t');
-                    break;
-                case (int)DelimiterCharConstants.Comma:
-                    delimiter = ",";
-                    break;
-                default:
-                    // Includes DelimiterCharConstants.Other
-                    delimiter = string.Copy(customDelimiter);
-                    break;
-            }
-
+                (int)DelimiterCharConstants.Space => " ",
+                (int)DelimiterCharConstants.Tab => Convert.ToString('\t'),
+                (int)DelimiterCharConstants.Comma => ",",
+                _ => string.Copy(customDelimiter)       // Includes DelimiterCharConstants.Other
+            };
             if (string.IsNullOrEmpty(delimiter))
             {
                 delimiter = string.Copy(Convert.ToString(defaultDelimiter));
@@ -958,21 +946,12 @@ namespace ProteinCoverageSummarizerGUI
 
         private void ShowRichTextStart(SequenceDisplayConstants sequenceDisplayMode = SequenceDisplayConstants.UsePrevious)
         {
-            bool useDataGrid;
-
-            switch (sequenceDisplayMode)
+            var useDataGrid = sequenceDisplayMode switch
             {
-                case SequenceDisplayConstants.UseDataGrid:
-                    useDataGrid = true;
-                    break;
-                case SequenceDisplayConstants.UseCustom:
-                    useDataGrid = false;
-                    break;
-                default:
-                    // Includes Use Previous
-                    useDataGrid = lastSequenceWasDataGrid;
-                    break;
-            }
+                SequenceDisplayConstants.UseDataGrid => true,
+                SequenceDisplayConstants.UseCustom => false,
+                _ => lastSequenceWasDataGrid             // Includes Use Previous
+            };
 
             lastSequenceWasDataGrid = useDataGrid;
             if (useDataGrid)
@@ -1011,23 +990,14 @@ namespace ProteinCoverageSummarizerGUI
             try
             {
                 // Lookup the number of characters per line
-                var switchExpr = cboCharactersPerLine.SelectedIndex;
-                int modValue;
-                switch (switchExpr)
+
+                var modValue = cboCharactersPerLine.SelectedIndex switch
                 {
-                    case 0:
-                        modValue = 40;
-                        break;
-                    case 1:
-                        modValue = 50;
-                        break;
-                    case 2:
-                        modValue = 60;
-                        break;
-                    default:
-                        modValue = 40;
-                        break;
-                }
+                    0 => 40,
+                    1 => 50,
+                    2 => 60,
+                    _ => 40
+                };
 
                 // Remove any spaces, tabs, CR, or LF characters in sequenceToShow
                 sequenceToShow = reReplaceSymbols.Replace(sequenceToShow, string.Empty);
