@@ -559,11 +559,7 @@ namespace ProteinCoverageSummarizer
 
                     if (mParsedFileIsFastaFile)
                     {
-                        proteinFileReader = new FastaFileReader
-                        {
-                            ProteinLineStartChar = Options.FastaFileOptions.ProteinLineStartChar,
-                            ProteinLineAccessionEndChar = Options.FastaFileOptions.ProteinLineAccessionEndChar
-                        };
+                        proteinFileReader = new FastaFileReader();
                     }
                     else
                     {
@@ -737,62 +733,6 @@ namespace ProteinCoverageSummarizer
         {
             OnErrorEvent(errorMessage, ex);
             StatusMessage = errorMessage;
-        }
-
-        /// <summary>
-        /// FASTA File options class
-        /// </summary>
-        public class FastaFileOptionsClass
-        {
-            /// <summary>
-            /// Constructor
-            /// </summary>
-            public FastaFileOptionsClass()
-            {
-                mProteinLineStartChar = '>';
-                mProteinLineAccessionEndChar = ' ';
-            }
-
-            #region "Class wide Variables"
-
-            private char mProteinLineStartChar;
-            private char mProteinLineAccessionEndChar;
-
-            #endregion
-
-            #region "Processing Options Interface Functions"
-
-            /// <summary>
-            /// Protein line start character
-            /// </summary>
-            public char ProteinLineStartChar
-            {
-                get => mProteinLineStartChar;
-                set
-                {
-                    if (value != default)
-                    {
-                        mProteinLineStartChar = value;
-                    }
-                }
-            }
-
-            /// <summary>
-            /// Character following the protein name
-            /// </summary>
-            public char ProteinLineAccessionEndChar
-            {
-                get => mProteinLineAccessionEndChar;
-                set
-                {
-                    if (value != default)
-                    {
-                        mProteinLineAccessionEndChar = value;
-                    }
-                }
-            }
-
-            #endregion
         }
     }
 }
