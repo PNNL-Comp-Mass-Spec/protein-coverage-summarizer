@@ -526,6 +526,279 @@
             Constructor
             </summary>
         </member>
+        <member name="T:PHRPReader.Data.ExtendedScanStatsFileColumns">
+            <summary>
+            These columns correspond to the tab-delimited _ScanStatsEx.txt file created by MASIC or MSFileInfoScanner
+            </summary>
+        </member>
+        <member name="T:PHRPReader.Data.InspectSynFileColumns">
+            <summary>
+            These columns correspond to the Synopsis file created by InSpecTResultsProcessor
+            </summary>
+        </member>
+        <member name="T:PHRPReader.Data.MaxQuantSynFileColumns">
+            <summary>
+            These columns correspond to the Synopsis file created by MaxQuantResultsProcessor
+            </summary>
+        </member>
+        <member name="F:PHRPReader.Data.MaxQuantSynFileColumns.ResultID">
+            <summary>
+            Result ID
+            </summary>
+        </member>
+        <member name="F:PHRPReader.Data.MaxQuantSynFileColumns.Dataset">
+            <summary>
+            Dataset name (typically the .raw file name, without the extension)
+            </summary>
+        </member>
+        <member name="F:PHRPReader.Data.MaxQuantSynFileColumns.DatasetID">
+            <summary>
+            Dataset ID
+            </summary>
+        </member>
+        <member name="F:PHRPReader.Data.MaxQuantSynFileColumns.Scan">
+            <summary>
+            MS/MS scan number in the dataset
+            </summary>
+        </member>
+        <member name="F:PHRPReader.Data.MaxQuantSynFileColumns.FragMethod">
+            <summary>
+            Type of fragmentation used to create the MS/MS spectrum
+            </summary>
+            <remarks>
+            Types:
+              CID - Collision Induced Dissociation
+              HCD - High energy Collision induced Dissociation
+              ETD - Electron Transfer Dissociation
+            </remarks>
+        </member>
+        <member name="F:PHRPReader.Data.MaxQuantSynFileColumns.SpecIndex">
+            <summary>
+            Index of the spectrum in the dataset (1-based, consecutive integer)
+            </summary>
+        </member>
+        <member name="F:PHRPReader.Data.MaxQuantSynFileColumns.Charge">
+            <summary>
+            Charge state of the precursor ion
+            </summary>
+        </member>
+        <member name="F:PHRPReader.Data.MaxQuantSynFileColumns.PrecursorMZ">
+            <summary>
+            Precursor ion m/z (theoretical value, not observed value)
+            </summary>
+            <remarks>
+            This is the theoretical m/z of the first isotope of the isotopic distribution of the parent ion
+            </remarks>
+        </member>
+        <member name="F:PHRPReader.Data.MaxQuantSynFileColumns.DelM">
+            <summary>
+            Mass error of the precursor ion equivalent monoisotopic mass value
+            vs. the predicted monoisotopic mass of the identified peptide sequence
+            </summary>
+        </member>
+        <member name="F:PHRPReader.Data.MaxQuantSynFileColumns.DelM_PPM">
+            <summary>
+            Mass Error, in ppm
+            </summary>
+        </member>
+        <member name="F:PHRPReader.Data.MaxQuantSynFileColumns.DelM_MaxQuant">
+            <summary>
+            Mass error of the precursor ion equivalent monoisotopic mass value
+            vs. the predicted monoisotopic mass of the identified peptide sequence,
+            as computed by MaxQuant
+            </summary>
+        </member>
+        <member name="F:PHRPReader.Data.MaxQuantSynFileColumns.DelM_PPM_MaxQuant">
+            <summary>
+            Mass Error, in ppm, as computed by MaxQuant
+            </summary>
+        </member>
+        <member name="F:PHRPReader.Data.MaxQuantSynFileColumns.MH">
+            <summary>
+            Monoisotopic (M+H)+ value, computed from PrecursorMZ and Charge
+            </summary>
+        </member>
+        <member name="F:PHRPReader.Data.MaxQuantSynFileColumns.Mass">
+            <summary>
+            Theoretical monoisotopic mass of the identified sequence (uncharged, including mods), as computed by MaxQuant
+            </summary>
+        </member>
+        <member name="F:PHRPReader.Data.MaxQuantSynFileColumns.Peptide">
+            <summary>
+            Peptide sequence, including modification symbols
+            </summary>
+        </member>
+        <member name="F:PHRPReader.Data.MaxQuantSynFileColumns.Proteins">
+            <summary>
+            Proteins
+            </summary>
+            <remarks>
+            Semicolon separated list
+            </remarks>
+        </member>
+        <member name="F:PHRPReader.Data.MaxQuantSynFileColumns.LeadingRazorProtein">
+            <summary>
+            Name of the best scoring protein this peptide is associated with
+            </summary>
+            <remarks>
+            Typically there is only one protein name here
+            However, in cases of a tied score, will be a semicolon separated list
+            </remarks>
+        </member>
+        <member name="F:PHRPReader.Data.MaxQuantSynFileColumns.NTT">
+            <summary>
+            Number of tryptic terminii
+            </summary>
+        </member>
+        <member name="F:PHRPReader.Data.MaxQuantSynFileColumns.PEP">
+            <summary>
+            Posterior error probability
+            </summary>
+            <remarks>
+            Similar to p-value
+            Smaller values (closer to zero) are higher confidence
+            </remarks>
+        </member>
+        <member name="F:PHRPReader.Data.MaxQuantSynFileColumns.Score">
+            <summary>
+             Andromeda score for the best MS/MS spectrum with this peptide
+            </summary>
+            <remarks>
+            Higher scores are better
+            </remarks>
+        </member>
+        <member name="F:PHRPReader.Data.MaxQuantSynFileColumns.DeltaScore">
+            <summary>
+            Score difference to the second best identified peptide with a different amino acid sequence
+            </summary>
+        </member>
+        <member name="F:PHRPReader.Data.MaxQuantSynFileColumns.Intensity">
+            <summary>
+            Summed up extracted ion current (XIC) of all isotopic clusters associated with this peptide
+            </summary>
+        </member>
+        <member name="F:PHRPReader.Data.MaxQuantSynFileColumns.MassAnalyzer">
+            <summary>
+            Mass Analyzer of the instrument
+            </summary>
+        </member>
+        <member name="F:PHRPReader.Data.MaxQuantSynFileColumns.PrecursorType">
+            <summary>
+            Type of precursor ion as identified by MaxQuant
+            </summary>
+        </member>
+        <member name="F:PHRPReader.Data.MaxQuantSynFileColumns.RetentionTime">
+            <summary>
+            Elution time of the MS/MS spectrum
+            </summary>
+        </member>
+        <member name="F:PHRPReader.Data.MaxQuantSynFileColumns.PrecursorScan">
+            <summary>
+            Scan number where the precursor ion was observed
+            </summary>
+        </member>
+        <member name="F:PHRPReader.Data.MaxQuantSynFileColumns.PrecursorIntensity">
+            <summary>
+            Intensity of the precursor ion in the scan that it was observed
+            </summary>
+        </member>
+        <member name="F:PHRPReader.Data.MaxQuantSynFileColumns.NumberOfMatches">
+            <summary>
+            Number of peaks (MS/MS ions) matching to the predicted fragmentation spectrum
+            </summary>
+        </member>
+        <member name="F:PHRPReader.Data.MaxQuantSynFileColumns.IntensityCoverage">
+            <summary>
+            Fraction of intensity in the MS/MS spectrum that is annotated
+            </summary>
+        </member>
+        <member name="F:PHRPReader.Data.MaxQuantSynFileColumns.MissedCleavages">
+            <summary>
+            Number of missed enzymatic cleavages
+            </summary>
+        </member>
+        <member name="F:PHRPReader.Data.MaxQuantSynFileColumns.MsMsID">
+            <summary>
+            Unique (consecutive) identifier for each row in msms.txt
+            </summary>
+        </member>
+        <member name="F:PHRPReader.Data.MaxQuantSynFileColumns.ProteinGroupIDs">
+            <summary>
+            Identifier of the protein-group this redundant peptide sequence is associated with
+            </summary>
+            <remarks>
+            <para>
+            Typically a single number, but could be a semicolon separated list
+            if a peptide is associated with multiple protein groups
+            </para>
+            <para>
+            Can be used to look up the extended protein information in the proteinGroups.txt file
+            </para>
+            </remarks>
+        </member>
+        <member name="F:PHRPReader.Data.MaxQuantSynFileColumns.PeptideID">
+            <summary>
+            The identifier of the non-redundant peptide sequence
+            </summary>
+            <remarks>
+            Corresponds to the id column in the peptides.txt file
+            </remarks>
+        </member>
+        <member name="F:PHRPReader.Data.MaxQuantSynFileColumns.ModPeptideID">
+            <summary>
+            Identifier referencing a row in the modificationSpecificPeptides.txt file
+            </summary>
+        </member>
+        <member name="F:PHRPReader.Data.MaxQuantSynFileColumns.EvidenceID">
+            <summary>
+            Identifier referencing a row in the evidence.txt file
+            </summary>
+        </member>
+        <member name="T:PHRPReader.Data.MODPlusSynFileColumns">
+            <summary>
+            These columns correspond to the Synopsis file created by MODPlusResultsProcessor
+            </summary>
+        </member>
+        <member name="T:PHRPReader.Data.MSAlignSynFileColumns">
+            <summary>
+            These columns correspond to the Synopsis file created by MSAlignResultsProcessor
+            </summary>
+        </member>
+        <member name="T:PHRPReader.Data.MSGFFileColumns">
+            <summary>
+            These columns correspond to the tab-delimited _MSGF.txt file created by the analysis manager
+            </summary>
+        </member>
+        <member name="T:PHRPReader.Data.MSGFDBSynFileColumns">
+            <summary>
+            These columns correspond Synopsis files created for legacy tool MSGFDB
+            </summary>
+        </member>
+        <member name="F:PHRPReader.Data.MSGFDBSynFileColumns.SpecProb">
+            <summary>
+            SpecProb
+            </summary>
+        </member>
+        <member name="F:PHRPReader.Data.MSGFDBSynFileColumns.RankSpecProb">
+            <summary>
+            RankSpecProb
+            </summary>
+        </member>
+        <member name="F:PHRPReader.Data.MSGFDBSynFileColumns.PValue">
+            <summary>
+            PValue
+            </summary>
+        </member>
+        <member name="F:PHRPReader.Data.MSGFDBSynFileColumns.FDR">
+            <summary>
+            FDR
+            </summary>
+        </member>
+        <member name="F:PHRPReader.Data.MSGFDBSynFileColumns.PepFDR">
+            <summary>
+            PepFDR
+            </summary>
+        </member>
         <member name="T:PHRPReader.Data.MSGFPlusSynFileColumns">
             <summary>
             These columns correspond to the Synopsis file created by MSGFPlusResultsProcessor
@@ -605,33 +878,61 @@
             MSGF Score
             </summary>
         </member>
+        <member name="F:PHRPReader.Data.MSGFPlusSynFileColumns.SpecEValue">
+            <summary>
+            Spec E-Value
+            </summary>
+        </member>
         <member name="F:PHRPReader.Data.MSGFPlusSynFileColumns.SpecProb_EValue">
             <summary>
-            SpecProb E-Value
+            Obsolete name for Spec E-Value (MS-GF+) or SpecProb (MSGFDB)
+            </summary>
+        </member>
+        <member name="F:PHRPReader.Data.MSGFPlusSynFileColumns.RankSpecEValue">
+            <summary>
+            Rank SpecEValue
             </summary>
         </member>
         <member name="F:PHRPReader.Data.MSGFPlusSynFileColumns.RankSpecProb">
             <summary>
-            Rank SpecProb
+            Obsolete name for Rank Spec E-Value (MS-GF+) or Rank SpecProb (MSGFDB)
             </summary>
-            <remarks>Rank 1 means lowest SpecEValue, 2 means next higher score, etc. (ties get the same rank)</remarks>
+        </member>
+        <member name="F:PHRPReader.Data.MSGFPlusSynFileColumns.EValue">
+            <summary>
+            E-Value
+            </summary>
         </member>
         <member name="F:PHRPReader.Data.MSGFPlusSynFileColumns.PValue_EValue">
             <summary>
-            P-Value or E-Value
+            Obsolete name for E-Value (MS-GF+) or P-Value (MSGFDB)
             </summary>
+        </member>
+        <member name="F:PHRPReader.Data.MSGFPlusSynFileColumns.QValue">
+            <summary>
+            Q-Value
+            </summary>
+            <remarks>
+            Only present if searched using -tda 1
+            </remarks>
         </member>
         <member name="F:PHRPReader.Data.MSGFPlusSynFileColumns.FDR_QValue">
             <summary>
-            FDR or Q-Value
+            Obsolete name for Q-Value (MS-GF+) or FDR (MSGFDB)
             </summary>
-            <remarks>Only present if searched using -tda 1</remarks>
+        </member>
+        <member name="F:PHRPReader.Data.MSGFPlusSynFileColumns.PepQValue">
+            <summary>
+            Peptide QValue
+            </summary>
+            <remarks>
+            Only present if searched using -tda 1
+            </remarks>
         </member>
         <member name="F:PHRPReader.Data.MSGFPlusSynFileColumns.PepFDR_PepQValue">
             <summary>
-            Peptide FDR or Peptide QValue
+            Obsolete name for PepQValue (MS-GF+) or PepFDR (MSGFDB)
             </summary>
-            <remarks>Only present if searched using -tda 1</remarks>
         </member>
         <member name="F:PHRPReader.Data.MSGFPlusSynFileColumns.EFDR">
             <summary>
@@ -656,103 +957,175 @@
             IsotopeError
             </summary>
         </member>
-        <member name="T:PHRPReader.Data.MSPathFinderSynFile">
+        <member name="T:PHRPReader.Data.MSPathFinderSynFileColumns">
             <summary>
             These columns correspond to the Synopsis file created by MSPathFinderResultsProcessor
             </summary>
         </member>
-        <member name="F:PHRPReader.Data.MSPathFinderSynFile.ResultID">
+        <member name="F:PHRPReader.Data.MSPathFinderSynFileColumns.ResultID">
             <summary>
             Result ID
             </summary>
         </member>
-        <member name="F:PHRPReader.Data.MSPathFinderSynFile.Scan">
+        <member name="F:PHRPReader.Data.MSPathFinderSynFileColumns.Scan">
             <summary>
             Scan
             </summary>
         </member>
-        <member name="F:PHRPReader.Data.MSPathFinderSynFile.Charge">
+        <member name="F:PHRPReader.Data.MSPathFinderSynFileColumns.Charge">
             <summary>
             Charge
             </summary>
         </member>
-        <member name="F:PHRPReader.Data.MSPathFinderSynFile.MostAbundantIsotopeMz">
+        <member name="F:PHRPReader.Data.MSPathFinderSynFileColumns.MostAbundantIsotopeMz">
             <summary>
             Most abundant isotope m/z
             </summary>
         </member>
-        <member name="F:PHRPReader.Data.MSPathFinderSynFile.Mass">
+        <member name="F:PHRPReader.Data.MSPathFinderSynFileColumns.Mass">
             <summary>
             Mass
             </summary>
         </member>
-        <member name="F:PHRPReader.Data.MSPathFinderSynFile.Sequence">
+        <member name="F:PHRPReader.Data.MSPathFinderSynFileColumns.Sequence">
             <summary>
             Sequence
             </summary>
             <remarks>PrefixLetter.Sequence.SuffixLetter</remarks>
         </member>
-        <member name="F:PHRPReader.Data.MSPathFinderSynFile.Modifications">
+        <member name="F:PHRPReader.Data.MSPathFinderSynFileColumns.Modifications">
             <summary>
             Modifications
             </summary>
         </member>
-        <member name="F:PHRPReader.Data.MSPathFinderSynFile.Composition">
+        <member name="F:PHRPReader.Data.MSPathFinderSynFileColumns.Composition">
             <summary>
             Composition
             </summary>
         </member>
-        <member name="F:PHRPReader.Data.MSPathFinderSynFile.Protein">
+        <member name="F:PHRPReader.Data.MSPathFinderSynFileColumns.Protein">
             <summary>
             Protein
             </summary>
         </member>
-        <member name="F:PHRPReader.Data.MSPathFinderSynFile.ProteinDesc">
+        <member name="F:PHRPReader.Data.MSPathFinderSynFileColumns.ProteinDesc">
             <summary>
             Protein description
             </summary>
         </member>
-        <member name="F:PHRPReader.Data.MSPathFinderSynFile.ProteinLength">
+        <member name="F:PHRPReader.Data.MSPathFinderSynFileColumns.ProteinLength">
             <summary>
             Protein length
             </summary>
         </member>
-        <member name="F:PHRPReader.Data.MSPathFinderSynFile.ResidueStart">
+        <member name="F:PHRPReader.Data.MSPathFinderSynFileColumns.ResidueStart">
             <summary>
             Protein residue number where the sequence starts
             </summary>
         </member>
-        <member name="F:PHRPReader.Data.MSPathFinderSynFile.ResidueEnd">
+        <member name="F:PHRPReader.Data.MSPathFinderSynFileColumns.ResidueEnd">
             <summary>
             Protein residue number where the sequence ends
             </summary>
         </member>
-        <member name="F:PHRPReader.Data.MSPathFinderSynFile.MatchedFragments">
+        <member name="F:PHRPReader.Data.MSPathFinderSynFileColumns.MatchedFragments">
             <summary>
             Count of matched fragments
             </summary>
         </member>
-        <member name="F:PHRPReader.Data.MSPathFinderSynFile.SpecEValue">
+        <member name="F:PHRPReader.Data.MSPathFinderSynFileColumns.SpecEValue">
             <summary>
             Spec E-Value
             </summary>
             <remarks>Column added 2015-08-25</remarks>
         </member>
-        <member name="F:PHRPReader.Data.MSPathFinderSynFile.EValue">
+        <member name="F:PHRPReader.Data.MSPathFinderSynFileColumns.EValue">
             <summary>
             E-Value
             </summary>
             <remarks>Column added 2015-08-25</remarks>
         </member>
-        <member name="F:PHRPReader.Data.MSPathFinderSynFile.QValue">
+        <member name="F:PHRPReader.Data.MSPathFinderSynFileColumns.QValue">
             <summary>
             Q-Value
             </summary>
         </member>
-        <member name="F:PHRPReader.Data.MSPathFinderSynFile.PepQValue">
+        <member name="F:PHRPReader.Data.MSPathFinderSynFileColumns.PepQValue">
             <summary>
             Peptide Q-Value
             </summary>
+        </member>
+        <member name="T:PHRPReader.Data.MODaSynFileColumns">
+            <summary>
+            These columns correspond to the Synopsis file created by MODaResultsProcessor
+            </summary>
+        </member>
+        <member name="T:PHRPReader.Data.PrecursorInfoFileColumns">
+            <summary>
+            These columns correspond to the tab-delimited _PrecursorInfo.txt file created by the Analysis Manager
+            </summary>
+        </member>
+        <member name="T:PHRPReader.Data.ScanStatsFileColumns">
+            <summary>
+            These columns correspond to the tab-delimited _ScanStats.txt file created by MASIC or MSFileInfoScanner
+            </summary>
+        </member>
+        <member name="T:PHRPReader.Data.SequestSynopsisFileColumns">
+            <summary>
+            These columns correspond to the tab-delimited file created from SEQUEST .out files
+            </summary>
+        </member>
+        <member name="T:PHRPReader.Data.TopPICSynFileColumns">
+            <summary>
+            These columns correspond to the Synopsis file created by TopPICResultsProcessor
+            </summary>
+        </member>
+        <member name="T:PHRPReader.Data.XTandemSynFileColumns">
+            <summary>
+            These columns correspond to the Synopsis file created by XTandemResultsProcessor
+            </summary>
+        </member>
+        <member name="P:PHRPReader.Data.PrecursorInfo.ScanNumber">
+            <summary>
+            Scan number
+            </summary>
+        </member>
+        <member name="P:PHRPReader.Data.PrecursorInfo.ScanTimeMinutes">
+            <summary>
+            Scan time, in minutes
+            </summary>
+        </member>
+        <member name="P:PHRPReader.Data.PrecursorInfo.ScanType">
+            <summary>
+            Scan type (aka scan level)
+            </summary>
+            <remarks>1 for MS1, 2 for MS2</remarks>
+        </member>
+        <member name="P:PHRPReader.Data.PrecursorInfo.ScanTypeName">
+            <summary>
+            Scan type name
+            </summary>
+        </member>
+        <member name="P:PHRPReader.Data.PrecursorInfo.PrecursorMz">
+            <summary>
+            Precursor m/z
+            </summary>
+            <remarks>
+            For MS3 spectra, this is the m/z of the preceding MS2 scan
+            </remarks>
+        </member>
+        <member name="P:PHRPReader.Data.PrecursorInfo.ScanFilterText">
+            <summary>
+            Scan filter
+            </summary>
+        </member>
+        <member name="M:PHRPReader.Data.PrecursorInfo.#ctor(System.Int32,System.Single,System.Int32)">
+            <summary>
+            Constructor
+            </summary>
+            <param name="scanNumber"></param>
+            <param name="scanTimeMinutes"></param>
+            <param name="scanType"></param>
         </member>
         <member name="T:PHRPReader.Data.AminoAcidModInfo">
             <summary>
@@ -1861,7 +2234,7 @@
             <summary>
             Add the details for a modified residue
             </summary>
-            <param name="modInfo">Modification info class</param>
+            <param name="modDef">Modification info class</param>
         </member>
         <member name="M:PHRPReader.Data.PSM.AddModifiedResidue(System.Char,System.Int32,PHRPReader.Data.AminoAcidModInfo.ResidueTerminusState,PHRPReader.Data.ModificationDefinition)">
             <summary>
@@ -2023,8 +2396,9 @@
         </member>
         <member name="P:PHRPReader.Data.ScanStatsExInfo.ElapsedScanTime">
             <summary>
-            Elapsed scan time
+            Elapsed scan time (in seconds)
             </summary>
+            <remarks>This is the time required to acquire the mass spectrum</remarks>
         </member>
         <member name="P:PHRPReader.Data.ScanStatsExInfo.ChargeState">
             <summary>
@@ -2208,7 +2582,7 @@
             </summary>
             <remarks>For trypsin, this is NTT or Number of Tryptic Termini</remarks>
         </member>
-        <member name="P:PHRPReader.Data.SearchEngineParameters.ModInfo">
+        <member name="P:PHRPReader.Data.SearchEngineParameters.ModList">
             <summary>
             Dynamic and static mods to search for
             </summary>
@@ -2265,21 +2639,21 @@
             Constructor
             </summary>
             <param name="searchEngineName"></param>
-            <param name="modInfo"></param>
+            <param name="modList"></param>
         </member>
         <member name="M:PHRPReader.Data.SearchEngineParameters.#ctor(System.String,System.Collections.Generic.List{PHRPReader.Data.ModificationDefinition},System.Collections.Generic.Dictionary{System.String,System.String})">
             <summary>
             Constructor
             </summary>
             <param name="searchEngineName"></param>
-            <param name="modInfo"></param>
+            <param name="modList"></param>
             <param name="parameters"></param>
         </member>
         <member name="M:PHRPReader.Data.SearchEngineParameters.AddModification(PHRPReader.Data.ModificationDefinition)">
             <summary>
             Add a new dynamic or static modification
             </summary>
-            <param name="modInfo"></param>
+            <param name="modDef"></param>
         </member>
         <member name="M:PHRPReader.Data.SearchEngineParameters.AddUpdateParameter(System.Collections.Generic.KeyValuePair{System.String,System.String})">
             <summary>
@@ -2473,6 +2847,11 @@
             TopPIC
             </summary>
         </member>
+        <member name="F:PHRPReader.PeptideHitResultTypes.MaxQuant">
+            <summary>
+            MaxQuant
+            </summary>
+        </member>
         <member name="T:PHRPReader.MSGFPlusParamFileModExtractor">
             <summary>
             This class reads a DMS-based parameter file for MS-GF+ or MSPathFinder to extract the dynamic and static modification information
@@ -2629,7 +3008,7 @@
             </summary>
             <param name="paramFilePath"></param>
             <param name="modSpecFormat"></param>
-            <param name="modInfo"></param>
+            <param name="modList"></param>
             <returns>True if success; false if a problem</returns>
         </member>
         <member name="M:PHRPReader.MSGFPlusParamFileModExtractor.ParseModSpecMSGFPlus(System.String,System.Collections.Generic.IReadOnlyList{System.String},System.Int32@,PHRPReader.MSGFPlusParamFileModExtractor.ModInfo@)">
@@ -2657,7 +3036,7 @@
             <summary>
             Resolve MS-GF+, MSPathFinder, or TopPIC mods with mod definitions
             </summary>
-            <param name="modInfo"></param>
+            <param name="modList"></param>
             <param name="peptideMods"></param>
         </member>
         <member name="T:PHRPReader.PeptideCleavageStateCalculator">
@@ -2915,7 +3294,7 @@
             must consist of only capital letters, though if RemovePrefixAndSuffixIfPresent = True,
             characters up to the first . and after the last . in the sequence will be removed.
             Residue modification information can be supplied by passing an array of modifications
-            using the structure udtPeptideSequenceModInfoType
+            using the structure PeptideSequenceModInfo
             </summary>
         </member>
         <member name="F:PHRPReader.PeptideMassCalculator.NO_AFFECTED_ATOM_SYMBOL">
@@ -2941,7 +3320,7 @@
         </member>
         <member name="F:PHRPReader.PeptideMassCalculator.MASS_ELECTRON">
             <summary>
-            Monoisotopic mass of hydrogen
+            Monoisotopic mass of an electron
             </summary>
         </member>
         <member name="F:PHRPReader.PeptideMassCalculator.DEFAULT_N_TERMINUS_MASS_CHANGE">
@@ -3067,11 +3446,11 @@
         </member>
         <member name="M:PHRPReader.PeptideMassCalculator.ComputeSequenceMass(System.String,System.Int32,PHRPReader.PeptideMassCalculator.PeptideSequenceModInfo[]@)">
             <summary>
-            Compute the mass of the peptide sequence; uses the information in udtResidueModificationInfo() to determine modification masses
+            Compute the mass of the peptide sequence; uses the information in residueModificationInfo() to determine modification masses
             </summary>
             <param name="sequence"></param>
             <param name="modCount"></param>
-            <param name="udtResidueModificationInfo">Array of modified residues; index 0 to modCount-1</param>
+            <param name="residueModificationInfo">Array of modified residues; index 0 to modCount-1</param>
             <returns>The computed mass, or -1 if an error</returns>
             <remarks>Looks for and removes prefix and suffix letters if .RemovePrefixAndSuffixIfPresent = True</remarks>
         </member>
@@ -3192,10 +3571,10 @@
         </member>
         <member name="M:PHRPReader.PeptideMassCalculator.PPMToMass(System.Double,System.Double)">
             <summary>
-            Converts from a ppm value to a mass value, using the specified m/z as a reference point
+            Converts from a ppm value to a mass value, using the specified mass value as a reference point
             </summary>
             <param name="ppmToConvert"></param>
-            <param name="currentMZ"></param>
+            <param name="currentMass"></param>
         </member>
         <member name="M:PHRPReader.PeptideMassCalculator.ResetAminoAcidMasses">
             <summary>
@@ -3388,7 +3767,7 @@
         </member>
         <member name="P:PHRPReader.ReaderFactory.PeptideHitResultType">
             <summary>
-            Peptide hit result type; Sequest, XTandem, Inspect, MSGFPlus, etc.
+            Peptide hit result type; SEQUEST, XTandem, Inspect, MSGFPlus, etc.
             </summary>
         </member>
         <member name="P:PHRPReader.ReaderFactory.PercentComplete">
@@ -3891,52 +4270,287 @@
             This code added by Visual Studio to correctly implement the disposable pattern.
             </summary>
         </member>
-        <member name="T:PHRPReader.StartupOptions">
+        <member name="T:PHRPReader.Reader.MaxQuantSynFileReader">
             <summary>
-            PHRP Startup options
-            </summary>
-            <remarks>Use these options to define load behavior to be used when instantiating PHRP reader</remarks>
-        </member>
-        <member name="P:PHRPReader.StartupOptions.LoadModsAndSeqInfo">
-            <summary>
-            If true, load the modification and SeqInfo data
+            PHRP SynFileReader for MaxQuant
             </summary>
         </member>
-        <member name="P:PHRPReader.StartupOptions.LoadMSGFResults">
+        <member name="F:PHRPReader.Reader.MaxQuantSynFileReader.FILENAME_SUFFIX_SYN">
             <summary>
-            If true, load MSGF results (not MS-GF+)
+            MaxQuant synopsis file suffix
             </summary>
         </member>
-        <member name="P:PHRPReader.StartupOptions.LoadScanStatsData">
+        <member name="F:PHRPReader.Reader.MaxQuantSynFileReader.FILENAME_SUFFIX_FHT">
             <summary>
-            If true, load ScanStats data
+            MaxQuant first hits file suffix
             </summary>
         </member>
-        <member name="P:PHRPReader.StartupOptions.MaxProteinsPerPSM">
+        <member name="F:PHRPReader.Reader.MaxQuantSynFileReader.MAXQUANT_SEARCH_ENGINE_NAME">
             <summary>
-            Maximum number of proteins to associate with each PSM
-            </summary>
-            <remarks>Set to 0 to load all proteins</remarks>
-        </member>
-        <member name="P:PHRPReader.StartupOptions.PeptideMassCalculator">
-            <summary>
-            Use this to override the default peptide mass calculator class;
-            this is useful if custom amino acids are in use
+            Search engine name
             </summary>
         </member>
-        <member name="M:PHRPReader.StartupOptions.#ctor">
+        <member name="F:PHRPReader.Reader.MaxQuantSynFileReader.mSynopsisFileColumn">
+            <summary>
+            Mapping from enum to synopsis file column name for MaxQuant
+            </summary>
+        </member>
+        <member name="P:PHRPReader.Reader.MaxQuantSynFileReader.PHRPFirstHitsFileName">
+            <summary>
+            First hits file
+            </summary>
+        </member>
+        <member name="P:PHRPReader.Reader.MaxQuantSynFileReader.PHRPModSummaryFileName">
+            <summary>
+            Mod summary file
+            </summary>
+        </member>
+        <member name="P:PHRPReader.Reader.MaxQuantSynFileReader.PHRPPepToProteinMapFileName">
+            <summary>
+            Peptide to protein map file
+            </summary>
+        </member>
+        <member name="P:PHRPReader.Reader.MaxQuantSynFileReader.PHRPProteinModsFileName">
+            <summary>
+            Protein mods file
+            </summary>
+        </member>
+        <member name="P:PHRPReader.Reader.MaxQuantSynFileReader.PHRPSynopsisFileName">
+            <summary>
+            Synopsis file
+            </summary>
+        </member>
+        <member name="P:PHRPReader.Reader.MaxQuantSynFileReader.PHRPResultToSeqMapFileName">
+            <summary>
+            Result to sequence map file
+            </summary>
+        </member>
+        <member name="P:PHRPReader.Reader.MaxQuantSynFileReader.PHRPSeqInfoFileName">
+            <summary>
+            Sequence info file
+            </summary>
+        </member>
+        <member name="P:PHRPReader.Reader.MaxQuantSynFileReader.PHRPSeqToProteinMapFileName">
+            <summary>
+            Sequence to protein map file
+            </summary>
+        </member>
+        <member name="P:PHRPReader.Reader.MaxQuantSynFileReader.SearchEngineName">
+            <summary>
+            Search engine name
+            </summary>
+        </member>
+        <member name="M:PHRPReader.Reader.MaxQuantSynFileReader.#ctor(System.String,System.String)">
+            <summary>
+            Constructor; assumes loadModsAndSeqInfo=True
+            </summary>
+            <param name="datasetName">Dataset name</param>
+            <param name="inputFilePath">Input file path</param>
+        </member>
+        <member name="M:PHRPReader.Reader.MaxQuantSynFileReader.#ctor(System.String,System.String,System.Boolean)">
             <summary>
             Constructor
             </summary>
+            <param name="datasetName">Dataset name</param>
+            <param name="inputFilePath">Input file path</param>
+            <param name="loadModsAndSeqInfo">If True, load the ModSummary file and SeqInfo files</param>
+        </member>
+        <member name="M:PHRPReader.Reader.MaxQuantSynFileReader.#ctor(System.String,System.String,PHRPReader.StartupOptions)">
+            <summary>
+            Constructor
+            </summary>
+            <param name="datasetName">Dataset name</param>
+            <param name="inputFilePath">Input file path</param>
+            <param name="startupOptions">Startup Options, in particular LoadModsAndSeqInfo and MaxProteinsPerPSM</param>
+        </member>
+        <member name="M:PHRPReader.Reader.MaxQuantSynFileReader.GetColumnHeaderNames">
+            <summary>
+            Get the header names in the PHRP synopsis or first hits file for this tool
+            </summary>
+            <returns>List of header names</returns>
+        </member>
+        <member name="M:PHRPReader.Reader.MaxQuantSynFileReader.GetColumnHeaderNamesAndIDs">
+            <summary>
+            Header names and enums for the PHRP synopsis file for this tool
+            </summary>
+            <returns>Dictionary of header names and enum values</returns>
+        </member>
+        <member name="M:PHRPReader.Reader.MaxQuantSynFileReader.GetColumnMapFromHeaderLine(System.Collections.Generic.List{System.String})">
+            <summary>
+            Compares the names in headerNames to the standard header names tracked by the dictionary returned by GetColumnHeaderNamesAndIDs
+            Populates a dictionary mapping enum MaxQuantSynFileColumns to the 0-based index in columnNames
+            </summary>
+            <param name="headerNames"></param>
+            <returns>Dictionary mapping the enum value to the column index in headerNames (0-based column index)</returns>
+        </member>
+        <member name="M:PHRPReader.Reader.MaxQuantSynFileReader.GetColumnNameByID(PHRPReader.Data.MaxQuantSynFileColumns)">
+            <summary>
+            Get the synopsis file column name associated with the given enum
+            </summary>
+            <param name="column"></param>
+            <returns>Column name</returns>
+        </member>
+        <member name="M:PHRPReader.Reader.MaxQuantSynFileReader.GetPHRPFirstHitsFileName(System.String)">
+            <summary>
+            Default first hits file for the given dataset
+            </summary>
+            <param name="datasetName"></param>
+            <returns>Filename</returns>
+        </member>
+        <member name="M:PHRPReader.Reader.MaxQuantSynFileReader.GetPHRPModSummaryFileName(System.String)">
+            <summary>
+            Default ModSummary file name for the given dataset
+            </summary>
+            <param name="datasetName"></param>
+            <returns>Filename</returns>
+        </member>
+        <member name="M:PHRPReader.Reader.MaxQuantSynFileReader.GetPHRPPepToProteinMapFileName(System.String)">
+            <summary>
+            Default PepToProtMap file name for the given dataset
+            </summary>
+            <param name="datasetName"></param>
+            <returns>Filename</returns>
+        </member>
+        <member name="M:PHRPReader.Reader.MaxQuantSynFileReader.GetPHRPProteinModsFileName(System.String)">
+            <summary>
+            Default ProteinMods file name for the given dataset
+            </summary>
+            <param name="datasetName"></param>
+            <returns>Filename</returns>
+        </member>
+        <member name="M:PHRPReader.Reader.MaxQuantSynFileReader.GetPHRPSynopsisFileName(System.String)">
+            <summary>
+            Default Synopsis file name for the given dataset
+            </summary>
+            <param name="datasetName"></param>
+            <returns>Filename</returns>
+        </member>
+        <member name="M:PHRPReader.Reader.MaxQuantSynFileReader.GetPHRPResultToSeqMapFileName(System.String)">
+            <summary>
+            Default ResultToSeq map file name for the given dataset
+            </summary>
+            <param name="datasetName"></param>
+            <returns>Filename</returns>
+        </member>
+        <member name="M:PHRPReader.Reader.MaxQuantSynFileReader.GetPHRPSeqInfoFileName(System.String)">
+            <summary>
+            Default SeqInfo map file name for the given dataset
+            </summary>
+            <param name="datasetName"></param>
+            <returns>Filename</returns>
+        </member>
+        <member name="M:PHRPReader.Reader.MaxQuantSynFileReader.GetPHRPSeqToProteinMapFileName(System.String)">
+            <summary>
+            Default SeqToProtein map file name for the given dataset
+            </summary>
+            <param name="datasetName"></param>
+            <returns>Filename</returns>
+        </member>
+        <member name="M:PHRPReader.Reader.MaxQuantSynFileReader.GetSearchEngineName">
+            <summary>
+            Search engine name
+            </summary>
+        </member>
+        <member name="M:PHRPReader.Reader.MaxQuantSynFileReader.LoadSearchEngineParameters(System.String,PHRPReader.Data.SearchEngineParameters@)">
+            <summary>
+            Parses the specified MaxQuant parameter file
+            </summary>
+            <param name="searchEngineParamFileName"></param>
+            <param name="searchEngineParams"></param>
+            <returns>True if successful, false if an error</returns>
+        </member>
+        <member name="M:PHRPReader.Reader.MaxQuantSynFileReader.ParsePHRPDataLine(System.String,System.Int32,PHRPReader.Data.PSM@,System.Boolean)">
+            <summary>
+            Parse the data line read from a PHRP results file
+            </summary>
+            <param name="line">Data line</param>
+            <param name="linesRead">Number of lines read so far (used for error reporting)</param>
+            <param name="psm">Output: PSM details</param>
+            <param name="fastReadMode">When set to true, reads the next data line, but doesn't perform text parsing required to determine cleavage state</param>
+            <returns>True if successful, false if an error</returns>
+            <remarks>When fastReadMode is True, you should call FinalizePSM to populate the remaining fields</remarks>
+        </member>
+        <member name="T:PHRPReader.Reader.PrecursorInfoFileReader">
+            <summary>
+            This class reads a tab-delimited _PrecursorInfo.txt file (created by the Analysis Manager)
+            </summary>
+        </member>
+        <member name="F:PHRPReader.Reader.PrecursorInfoFileReader.mColumnHeaders">
+            <summary>
+            Column headers
+            </summary>
+        </member>
+        <member name="F:PHRPReader.Reader.PrecursorInfoFileReader.mPrecursorInfoFileColumn">
+            <summary>
+            Mapping from enum to Precursor Info file column name
+            </summary>
+        </member>
+        <member name="P:PHRPReader.Reader.PrecursorInfoFileReader.ErrorMessage">
+            <summary>
+            Error message
+            </summary>
+        </member>
+        <member name="M:PHRPReader.Reader.PrecursorInfoFileReader.#ctor">
+            <summary>
+            Constructor
+            </summary>
+        </member>
+        <member name="M:PHRPReader.Reader.PrecursorInfoFileReader.DefineColumnHeaders">
+            <summary>
+            Define header names
+            </summary>
+        </member>
+        <member name="M:PHRPReader.Reader.PrecursorInfoFileReader.GetColumnHeaderNamesAndIDs">
+            <summary>
+            Header names and enums for the _PrecursorInfo.txt file
+            </summary>
+            <returns>Dictionary of header names and enum values</returns>
+        </member>
+        <member name="M:PHRPReader.Reader.PrecursorInfoFileReader.GetColumnMapFromHeaderLine(System.Collections.Generic.List{System.String})">
+            <summary>
+            Compares the names in headerNames to the standard header names tracked by the dictionary returned by GetColumnHeaderNamesAndIDs
+            Populates a dictionary mapping enum PrecursorInfoFileColumns to the 0-based index in columnNames
+            </summary>
+            <param name="headerNames"></param>
+            <returns>Dictionary mapping the enum value to the column index in headerNames (0-based column index)</returns>
+        </member>
+        <member name="M:PHRPReader.Reader.PrecursorInfoFileReader.GetColumnNameByID(PHRPReader.Data.PrecursorInfoFileColumns)">
+            <summary>
+            Get the column name associated with the given enum
+            </summary>
+            <param name="column"></param>
+            <returns>Column name</returns>
+        </member>
+        <member name="M:PHRPReader.Reader.PrecursorInfoFileReader.ReadPrecursorInfoFile(System.String)">
+            <summary>
+            Open a tab-delimited _PrecursorInfo.txt file and read the data
+            </summary>
+            <param name="inputFilePath">Input file path</param>
+            <returns>A Dictionary where keys are ScanNumber and values are instances of the PrecursorInfo class</returns>
         </member>
         <member name="T:PHRPReader.Reader.InspectSynFileReader">
             <summary>
             PHRP SynFileReader for Inspect
             </summary>
         </member>
-        <member name="T:PHRPReader.Reader.InspectSynFileReader.InspectSynFileColumns">
+        <member name="F:PHRPReader.Reader.InspectSynFileReader.FILENAME_SUFFIX_SYN">
             <summary>
-            These columns correspond to the Synopsis file created by InSpecTResultsProcessor
+            Inspect synopsis file suffix
+            </summary>
+        </member>
+        <member name="F:PHRPReader.Reader.InspectSynFileReader.FILENAME_SUFFIX_FHT">
+            <summary>
+            Inspect first hits file suffix
+            </summary>
+        </member>
+        <member name="F:PHRPReader.Reader.InspectSynFileReader.INS_SEARCH_ENGINE_NAME">
+            <summary>
+            Search engine name
+            </summary>
+        </member>
+        <member name="F:PHRPReader.Reader.InspectSynFileReader.mSynopsisFileColumn">
+            <summary>
+            Mapping from enum to synopsis file column name for Inspect
             </summary>
         </member>
         <member name="P:PHRPReader.Reader.InspectSynFileReader.PHRPFirstHitsFileName">
@@ -4035,6 +4649,13 @@
             <param name="headerNames"></param>
             <returns>Dictionary mapping the enum value to the column index in headerNames (0-based column index)</returns>
         </member>
+        <member name="M:PHRPReader.Reader.InspectSynFileReader.GetColumnNameByID(PHRPReader.Data.InspectSynFileColumns)">
+            <summary>
+            Get the synopsis file column name associated with the given enum
+            </summary>
+            <param name="column"></param>
+            <returns>Column name</returns>
+        </member>
         <member name="M:PHRPReader.Reader.InspectSynFileReader.GetPHRPFirstHitsFileName(System.String)">
             <summary>
             Default first hits file for the given dataset
@@ -4120,9 +4741,24 @@
             PHRP SynFileReader for MODa
             </summary>
         </member>
-        <member name="T:PHRPReader.Reader.MODaSynFileReader.MODaSynFileColumns">
+        <member name="F:PHRPReader.Reader.MODaSynFileReader.FILENAME_SUFFIX_SYN">
             <summary>
-            These columns correspond to the Synopsis file created by MODaResultsProcessor
+            MODa synopsis file suffix
+            </summary>
+        </member>
+        <member name="F:PHRPReader.Reader.MODaSynFileReader.FILENAME_SUFFIX_FHT">
+            <summary>
+            MODa first hits file suffix
+            </summary>
+        </member>
+        <member name="F:PHRPReader.Reader.MODaSynFileReader.MODa_SEARCH_ENGINE_NAME">
+            <summary>
+            Search engine name
+            </summary>
+        </member>
+        <member name="F:PHRPReader.Reader.MODaSynFileReader.mSynopsisFileColumn">
+            <summary>
+            Mapping from enum to synopsis file column name for MODa
             </summary>
         </member>
         <member name="P:PHRPReader.Reader.MODaSynFileReader.PHRPFirstHitsFileName">
@@ -4221,6 +4857,13 @@
             <param name="headerNames"></param>
             <returns>Dictionary mapping the enum value to the column index in headerNames (0-based column index)</returns>
         </member>
+        <member name="M:PHRPReader.Reader.MODaSynFileReader.GetColumnNameByID(PHRPReader.Data.MODaSynFileColumns)">
+            <summary>
+            Get the synopsis file column name associated with the given enum
+            </summary>
+            <param name="column"></param>
+            <returns>Column name</returns>
+        </member>
         <member name="M:PHRPReader.Reader.MODaSynFileReader.GetPHRPFirstHitsFileName(System.String)">
             <summary>
             Default first hits file for the given dataset
@@ -4306,9 +4949,24 @@
             PHRP SynFileReader for MOD+
             </summary>
         </member>
-        <member name="T:PHRPReader.Reader.MODPlusSynFileReader.MODPlusSynFileColumns">
+        <member name="F:PHRPReader.Reader.MODPlusSynFileReader.FILENAME_SUFFIX_SYN">
             <summary>
-            These columns correspond to the Synopsis file created by MODPlusResultsProcessor
+            MODPlus synopsis file suffix
+            </summary>
+        </member>
+        <member name="F:PHRPReader.Reader.MODPlusSynFileReader.FILENAME_SUFFIX_FHT">
+            <summary>
+            MODPlus first hits file suffix
+            </summary>
+        </member>
+        <member name="F:PHRPReader.Reader.MODPlusSynFileReader.MODPlus_SEARCH_ENGINE_NAME">
+            <summary>
+            Search engine name
+            </summary>
+        </member>
+        <member name="F:PHRPReader.Reader.MODPlusSynFileReader.mSynopsisFileColumn">
+            <summary>
+            Mapping from enum to synopsis file column name for MODPlus
             </summary>
         </member>
         <member name="P:PHRPReader.Reader.MODPlusSynFileReader.PHRPFirstHitsFileName">
@@ -4399,6 +5057,13 @@
             <param name="headerNames"></param>
             <returns>Dictionary mapping the enum value to the column index in headerNames (0-based column index)</returns>
         </member>
+        <member name="M:PHRPReader.Reader.MODPlusSynFileReader.GetColumnNameByID(PHRPReader.Data.MODPlusSynFileColumns)">
+            <summary>
+            Get the synopsis file column name associated with the given enum
+            </summary>
+            <param name="column"></param>
+            <returns>Column name</returns>
+        </member>
         <member name="M:PHRPReader.Reader.MODPlusSynFileReader.GetPHRPFirstHitsFileName(System.String)">
             <summary>
             Default first hits file for the given dataset
@@ -4484,9 +5149,24 @@
             PHRP SynFileReader for MSAlign
             </summary>
         </member>
-        <member name="T:PHRPReader.Reader.MSAlignSynFileReader.MSAlignSynFileColumns">
+        <member name="F:PHRPReader.Reader.MSAlignSynFileReader.FILENAME_SUFFIX_SYN">
             <summary>
-            These columns correspond to the Synopsis file created by MSAlignResultsProcessor
+            MSAlign synopsis file suffix
+            </summary>
+        </member>
+        <member name="F:PHRPReader.Reader.MSAlignSynFileReader.FILENAME_SUFFIX_FHT">
+            <summary>
+            MSAlign first hits file suffix
+            </summary>
+        </member>
+        <member name="F:PHRPReader.Reader.MSAlignSynFileReader.MSAlign_SEARCH_ENGINE_NAME">
+            <summary>
+            Search engine name
+            </summary>
+        </member>
+        <member name="F:PHRPReader.Reader.MSAlignSynFileReader.mSynopsisFileColumn">
+            <summary>
+            Mapping from enum to synopsis file column name for MSAlign
             </summary>
         </member>
         <member name="P:PHRPReader.Reader.MSAlignSynFileReader.PHRPFirstHitsFileName">
@@ -4584,6 +5264,13 @@
             </summary>
             <param name="headerNames"></param>
             <returns>Dictionary mapping the enum value to the column index in headerNames (0-based column index)</returns>
+        </member>
+        <member name="M:PHRPReader.Reader.MSAlignSynFileReader.GetColumnNameByID(PHRPReader.Data.MSAlignSynFileColumns)">
+            <summary>
+            Get the synopsis file column name associated with the given enum
+            </summary>
+            <param name="column"></param>
+            <returns>Column name</returns>
         </member>
         <member name="M:PHRPReader.Reader.MSAlignSynFileReader.GetPHRPFirstHitsFileName(System.String)">
             <summary>
@@ -4698,6 +5385,83 @@
             PHRP SynFileReader for MS-GF+
             </summary>
         </member>
+        <member name="F:PHRPReader.Reader.MSGFPlusSynFileReader.MSGFDB_SpecProb">
+            <summary>
+            Legacy SpecProb column name for tool MSGFDB
+            </summary>
+        </member>
+        <member name="F:PHRPReader.Reader.MSGFPlusSynFileReader.MSGFDB_RankSpecProb">
+            <summary>
+            Legacy Rank SpecProb column name for tool MSGFDB
+            </summary>
+        </member>
+        <member name="F:PHRPReader.Reader.MSGFPlusSynFileReader.MSGFDB_PValue">
+            <summary>
+            Legacy PValue column name for tool MSGFDB
+            </summary>
+        </member>
+        <member name="F:PHRPReader.Reader.MSGFPlusSynFileReader.MSGFDB_FDR">
+            <summary>
+            Legacy FDR column name for tool MSGFDB
+            </summary>
+            <remarks>
+            Only present if a Target/Decoy (TDA) search was used
+            </remarks>
+        </member>
+        <member name="F:PHRPReader.Reader.MSGFPlusSynFileReader.MSGFDB_PepFDR">
+            <summary>
+            Legacy PepFDR column name for tool MSGFDB
+            </summary>
+            <remarks>
+            Only valid if a Target/Decoy (TDA) search was used; if EFDR is present, will contain 1 for every row
+            </remarks>
+        </member>
+        <member name="F:PHRPReader.Reader.MSGFPlusSynFileReader.FILENAME_SUFFIX_SYN">
+            <summary>
+            MS-GF+ synopsis file suffix
+            </summary>
+            <remarks>
+            Changed from _msgfdb_syn.txt to _msgfplus_syn.txt in November 2016
+            </remarks>
+        </member>
+        <member name="F:PHRPReader.Reader.MSGFPlusSynFileReader.FILENAME_SUFFIX_FHT">
+            <summary>
+            MS-GF+ first hits file suffix
+            </summary>
+            <remarks>
+            Changed from _msgfdb_fht.txt to _msgfplus_fht.txt in November 2016
+            </remarks>
+        </member>
+        <member name="F:PHRPReader.Reader.MSGFPlusSynFileReader.MSGFPLUS_SEARCH_ENGINE_NAME">
+            <summary>
+            Search engine name
+            </summary>
+        </member>
+        <member name="F:PHRPReader.Reader.MSGFPlusSynFileReader.PRECURSOR_TOLERANCE_PARAM_NAME">
+            <summary>
+            Precursor mass tolerance parameter name
+            </summary>
+        </member>
+        <member name="F:PHRPReader.Reader.MSGFPlusSynFileReader.PRECURSOR_TOLERANCE_PARAM_NAME_SYNONYM">
+            <summary>
+            Precursor mass tolerance parameter name synonym
+            </summary>
+        </member>
+        <member name="F:PHRPReader.Reader.MSGFPlusSynFileReader.CHARGE_CARRIER_MASS_PARAM_NAME">
+            <summary>
+            Charge carrier mass parameter name
+            </summary>
+        </member>
+        <member name="F:PHRPReader.Reader.MSGFPlusSynFileReader.mMSGFDBColumns">
+            <summary>
+            Mapping from enum to synopsis file column name for legacy tool MSGFDB
+            </summary>
+        </member>
+        <member name="F:PHRPReader.Reader.MSGFPlusSynFileReader.mSynopsisFileColumn">
+            <summary>
+            Mapping from enum to synopsis file column name for MS-GF+
+            </summary>
+        </member>
         <member name="P:PHRPReader.Reader.MSGFPlusSynFileReader.PHRPFirstHitsFileName">
             <summary>
             First hits file
@@ -4788,14 +5552,16 @@
         </member>
         <member name="M:PHRPReader.Reader.MSGFPlusSynFileReader.GetColumnHeaderNames">
             <summary>
-            Get the header names in the PHRP synopsis or first hits file for this tool
+            Get the headerAddHeaderColumn names in the PHRP synopsis or first hits file for this tool
             </summary>
-            <returns>List of header names</returns>
+            <returns>List of header names, including legacy columns</returns>
         </member>
-        <member name="M:PHRPReader.Reader.MSGFPlusSynFileReader.GetColumnHeaderNamesAndIDs">
+        <member name="M:PHRPReader.Reader.MSGFPlusSynFileReader.GetColumnHeaderNamesAndIDs(System.Boolean,System.Boolean)">
             <summary>
             Header names and enums for the PHRP synopsis file for this tool
             </summary>
+            <param name="includeLegacyNames"></param>
+            <param name="includeExtraColumns"></param>
             <returns>Dictionary of header names and enum values</returns>
             <remarks>This includes headers for synopsis files from both MSGFDB and MS-GF+</remarks>
         </member>
@@ -4806,6 +5572,20 @@
             </summary>
             <param name="headerNames"></param>
             <returns>Dictionary mapping the enum value to the column index in headerNames (0-based column index)</returns>
+        </member>
+        <member name="M:PHRPReader.Reader.MSGFPlusSynFileReader.GetColumnNameByID(PHRPReader.Data.MSGFPlusSynFileColumns)">
+            <summary>
+            Get the synopsis file column name associated with the given enum
+            </summary>
+            <param name="column"></param>
+            <returns>Column name</returns>
+        </member>
+        <member name="M:PHRPReader.Reader.MSGFPlusSynFileReader.GetMSGFDBColumnNameByID(PHRPReader.Data.MSGFDBSynFileColumns)">
+            <summary>
+            Get the MSGFDB column name associated with the given column
+            </summary>
+            <param name="column"></param>
+            <returns>Column name</returns>
         </member>
         <member name="M:PHRPReader.Reader.MSGFPlusSynFileReader.GetPHRPFirstHitsFileName(System.String)">
             <summary>
@@ -4908,6 +5688,11 @@
             Column headers
             </summary>
         </member>
+        <member name="F:PHRPReader.Reader.MSGFResultsReader.mMSGFFileColumn">
+            <summary>
+            Mapping from enum to MSGF file column name
+            </summary>
+        </member>
         <member name="P:PHRPReader.Reader.MSGFResultsReader.ErrorMessage">
             <summary>
             Error message
@@ -4920,8 +5705,29 @@
         </member>
         <member name="M:PHRPReader.Reader.MSGFResultsReader.DefineColumnHeaders">
             <summary>
-            Define header names for MSGF result files
+            Define header names
             </summary>
+        </member>
+        <member name="M:PHRPReader.Reader.MSGFResultsReader.GetColumnHeaderNamesAndIDs">
+            <summary>
+            Header names and enums for the _MSGF.txt file
+            </summary>
+            <returns>Dictionary of header names and enum values</returns>
+        </member>
+        <member name="M:PHRPReader.Reader.MSGFResultsReader.GetColumnMapFromHeaderLine(System.Collections.Generic.List{System.String})">
+            <summary>
+            Compares the names in headerNames to the standard header names tracked by the dictionary returned by GetColumnHeaderNamesAndIDs
+            Populates a dictionary mapping enum MSGFFileColumns to the 0-based index in columnNames
+            </summary>
+            <param name="headerNames"></param>
+            <returns>Dictionary mapping the enum value to the column index in headerNames (0-based column index)</returns>
+        </member>
+        <member name="M:PHRPReader.Reader.MSGFResultsReader.GetColumnNameByID(PHRPReader.Data.MSGFFileColumns)">
+            <summary>
+            Get the column name associated with the given enum
+            </summary>
+            <param name="column"></param>
+            <returns>Column name</returns>
         </member>
         <member name="M:PHRPReader.Reader.MSGFResultsReader.ReadMSGFData(System.String)">
             <summary>
@@ -4933,6 +5739,26 @@
         <member name="T:PHRPReader.Reader.MSPathFinderSynFileReader">
             <summary>
             PHRP SynFileReader for MSPathfinder
+            </summary>
+        </member>
+        <member name="F:PHRPReader.Reader.MSPathFinderSynFileReader.FILENAME_SUFFIX_SYN">
+            <summary>
+            MSPathFinder synopsis file suffix
+            </summary>
+        </member>
+        <member name="F:PHRPReader.Reader.MSPathFinderSynFileReader.FILENAME_SUFFIX_FHT">
+            <summary>
+            MSPathFinder first hits file suffix
+            </summary>
+        </member>
+        <member name="F:PHRPReader.Reader.MSPathFinderSynFileReader.MSPathFinder_SEARCH_ENGINE_NAME">
+            <summary>
+            Search engine name
+            </summary>
+        </member>
+        <member name="F:PHRPReader.Reader.MSPathFinderSynFileReader.mSynopsisFileColumn">
+            <summary>
+            Mapping from enum to synopsis file column name for MSPathFinder
             </summary>
         </member>
         <member name="P:PHRPReader.Reader.MSPathFinderSynFileReader.PHRPFirstHitsFileName">
@@ -5022,6 +5848,13 @@
             </summary>
             <param name="headerNames"></param>
             <returns>Dictionary mapping the enum value to the column index in headerNames (0-based column index)</returns>
+        </member>
+        <member name="M:PHRPReader.Reader.MSPathFinderSynFileReader.GetColumnNameByID(PHRPReader.Data.MSPathFinderSynFileColumns)">
+            <summary>
+            Get the synopsis file column name associated with the given enum
+            </summary>
+            <param name="column"></param>
+            <returns>Column name</returns>
         </member>
         <member name="M:PHRPReader.Reader.MSPathFinderSynFileReader.GetPHRPFirstHitsFileName(System.String)">
             <summary>
@@ -5417,6 +6250,17 @@
             That value will be updated by ParseColumnHeaders
             </remarks>
         </member>
+        <member name="M:PHRPReader.Reader.SynFileReaderBaseClass.AddHeaderColumn(System.Collections.Generic.IDictionary{System.String,System.Int32},System.String)">
+            <summary>
+            Add column to mColumnHeaders
+            </summary>
+            <param name="columnName"></param>
+            <param name="columnHeaders"></param>
+            <remarks>
+            The column index will be set to mColumnHeaders.Count
+            That value will later be updated by ParseColumnHeaders
+            </remarks>
+        </member>
         <member name="M:PHRPReader.Reader.SynFileReaderBaseClass.AddScore(PHRPReader.Data.PSM,System.String[],System.String)">
             <summary>
             Add a score to a PSM
@@ -5433,6 +6277,11 @@
         <member name="M:PHRPReader.Reader.SynFileReaderBaseClass.ClearWarnings">
             <summary>
             Clear any cached warning messages
+            </summary>
+        </member>
+        <member name="M:PHRPReader.Reader.SynFileReaderBaseClass.DefineColumnHeaders(System.Collections.Generic.SortedDictionary{System.String,System.Int32},System.Collections.Generic.List{System.String})">
+            <summary>
+            Define the default column mapping
             </summary>
         </member>
         <member name="M:PHRPReader.Reader.SynFileReaderBaseClass.ExtractAmbiguousMods(System.String)">
@@ -5707,6 +6556,11 @@
             Column headers
             </summary>
         </member>
+        <member name="F:PHRPReader.Reader.ExtendedScanStatsReader.mExtendedScanStatsFileColumn">
+            <summary>
+            Mapping from enum to Extended Scan Stats file column name
+            </summary>
+        </member>
         <member name="P:PHRPReader.Reader.ExtendedScanStatsReader.ErrorMessage">
             <summary>
             Error message
@@ -5716,6 +6570,32 @@
             <summary>
             Constructor
             </summary>
+        </member>
+        <member name="M:PHRPReader.Reader.ExtendedScanStatsReader.DefineColumnHeaders">
+            <summary>
+            Define header names
+            </summary>
+        </member>
+        <member name="M:PHRPReader.Reader.ExtendedScanStatsReader.GetColumnHeaderNamesAndIDs">
+            <summary>
+            Header names and enums for the _ScanStats.txt file
+            </summary>
+            <returns>Dictionary of header names and enum values</returns>
+        </member>
+        <member name="M:PHRPReader.Reader.ExtendedScanStatsReader.GetColumnMapFromHeaderLine(System.Collections.Generic.List{System.String})">
+            <summary>
+            Compares the names in headerNames to the standard header names tracked by the dictionary returned by GetColumnHeaderNamesAndIDs
+            Populates a dictionary mapping enum ExtendedScanStatsFileColumns to the 0-based index in columnNames
+            </summary>
+            <param name="headerNames"></param>
+            <returns>Dictionary mapping the enum value to the column index in headerNames (0-based column index)</returns>
+        </member>
+        <member name="M:PHRPReader.Reader.ExtendedScanStatsReader.GetColumnNameByID(PHRPReader.Data.ExtendedScanStatsFileColumns)">
+            <summary>
+            Get the column name associated with the given enum
+            </summary>
+            <param name="column"></param>
+            <returns>Column name</returns>
         </member>
         <member name="M:PHRPReader.Reader.ExtendedScanStatsReader.ReadExtendedScanStatsData(System.String)">
             <summary>
@@ -5729,6 +6609,11 @@
             This class reads MASIC ScanStats data from a tab-delimited _ScanStats.txt file
             </summary>
         </member>
+        <member name="F:PHRPReader.Reader.ScanStatsReader.mScanStatsFileColumn">
+            <summary>
+            Mapping from enum to Scan Stats file column name
+            </summary>
+        </member>
         <member name="P:PHRPReader.Reader.ScanStatsReader.ErrorMessage">
             <summary>
             Error message
@@ -5738,6 +6623,32 @@
             <summary>
             Constructor
             </summary>
+        </member>
+        <member name="M:PHRPReader.Reader.ScanStatsReader.DefineColumnHeaders">
+            <summary>
+            Define header names
+            </summary>
+        </member>
+        <member name="M:PHRPReader.Reader.ScanStatsReader.GetColumnHeaderNamesAndIDs">
+            <summary>
+            Header names and enums for the _ScanStats.txt file
+            </summary>
+            <returns>Dictionary of header names and enum values</returns>
+        </member>
+        <member name="M:PHRPReader.Reader.ScanStatsReader.GetColumnMapFromHeaderLine(System.Collections.Generic.List{System.String})">
+            <summary>
+            Compares the names in headerNames to the standard header names tracked by the dictionary returned by GetColumnHeaderNamesAndIDs
+            Populates a dictionary mapping enum ScanStatsFileColumns to the 0-based index in columnNames
+            </summary>
+            <param name="headerNames"></param>
+            <returns>Dictionary mapping the enum value to the column index in headerNames (0-based column index)</returns>
+        </member>
+        <member name="M:PHRPReader.Reader.ScanStatsReader.GetColumnNameByID(PHRPReader.Data.ScanStatsFileColumns)">
+            <summary>
+            Get the column name associated with the given enum
+            </summary>
+            <param name="column"></param>
+            <returns>Column name</returns>
         </member>
         <member name="M:PHRPReader.Reader.ScanStatsReader.ReadScanStatsData(System.String)">
             <summary>
@@ -5751,9 +6662,24 @@
             PHRP SynFileReader for SEQUEST
             </summary>
         </member>
-        <member name="T:PHRPReader.Reader.SequestSynFileReader.SequestSynopsisFileColumns">
+        <member name="F:PHRPReader.Reader.SequestSynFileReader.FILENAME_SUFFIX_SYN">
             <summary>
-            These columns correspond to the tab-delimited file created directly by SEQUEST
+            SEQUEST synopsis file suffix
+            </summary>
+        </member>
+        <member name="F:PHRPReader.Reader.SequestSynFileReader.FILENAME_SUFFIX_FHT">
+            <summary>
+            SEQUEST first hits file suffix
+            </summary>
+        </member>
+        <member name="F:PHRPReader.Reader.SequestSynFileReader.SEQ_SEARCH_ENGINE_NAME">
+            <summary>
+            Search engine name
+            </summary>
+        </member>
+        <member name="F:PHRPReader.Reader.SequestSynFileReader.mSynopsisFileColumn">
+            <summary>
+            Mapping from enum to synopsis file column name for SEQUEST
             </summary>
         </member>
         <member name="P:PHRPReader.Reader.SequestSynFileReader.PHRPFirstHitsFileName">
@@ -5857,6 +6783,13 @@
             <param name="headerNames"></param>
             <returns>Dictionary mapping the enum value to the column index in headerNames (0-based column index)</returns>
         </member>
+        <member name="M:PHRPReader.Reader.SequestSynFileReader.GetColumnNameByID(PHRPReader.Data.SequestSynopsisFileColumns)">
+            <summary>
+            Get the synopsis file column name associated with the given enum
+            </summary>
+            <param name="column"></param>
+            <returns>Column name</returns>
+        </member>
         <member name="M:PHRPReader.Reader.SequestSynFileReader.GetPHRPFirstHitsFileName(System.String)">
             <summary>
             Default first hits file for the given dataset
@@ -5920,7 +6853,7 @@
         </member>
         <member name="M:PHRPReader.Reader.SequestSynFileReader.LoadSearchEngineParameters(System.String,PHRPReader.Data.SearchEngineParameters@)">
             <summary>
-            Parses the specified Sequest parameter file
+            Parses the specified SEQUEST parameter file
             </summary>
             <param name="searchEngineParamFileName"></param>
             <param name="searchEngineParams"></param>
@@ -5942,9 +6875,24 @@
             PHRP SynFileReader for TopPIC
             </summary>
         </member>
-        <member name="T:PHRPReader.Reader.TopPICSynFileReader.TopPICSynFileColumns">
+        <member name="F:PHRPReader.Reader.TopPICSynFileReader.FILENAME_SUFFIX_SYN">
             <summary>
-            These columns correspond to the Synopsis file created by TopPICResultsProcessor
+            TopPIC synopsis file suffix
+            </summary>
+        </member>
+        <member name="F:PHRPReader.Reader.TopPICSynFileReader.FILENAME_SUFFIX_FHT">
+            <summary>
+            TopPIC first hits file suffix
+            </summary>
+        </member>
+        <member name="F:PHRPReader.Reader.TopPICSynFileReader.TopPIC_SEARCH_ENGINE_NAME">
+            <summary>
+            Search engine name
+            </summary>
+        </member>
+        <member name="F:PHRPReader.Reader.TopPICSynFileReader.mSynopsisFileColumn">
+            <summary>
+            Mapping from enum to synopsis file column name for TopPIC
             </summary>
         </member>
         <member name="P:PHRPReader.Reader.TopPICSynFileReader.PHRPFirstHitsFileName">
@@ -6035,6 +6983,13 @@
             <param name="headerNames"></param>
             <returns>Dictionary mapping the enum value to the column index in headerNames (0-based column index)</returns>
         </member>
+        <member name="M:PHRPReader.Reader.TopPICSynFileReader.GetColumnNameByID(PHRPReader.Data.TopPICSynFileColumns)">
+            <summary>
+            Get the synopsis file column name associated with the given enum
+            </summary>
+            <param name="column"></param>
+            <returns>Column name</returns>
+        </member>
         <member name="M:PHRPReader.Reader.TopPICSynFileReader.GetPHRPFirstHitsFileName(System.String)">
             <summary>
             Default first hits file for the given dataset
@@ -6120,9 +7075,24 @@
             PHRP SynFileReader for X!Tandem
             </summary>
         </member>
-        <member name="T:PHRPReader.Reader.XTandemSynFileReader.XTandemSynFileColumns">
+        <member name="F:PHRPReader.Reader.XTandemSynFileReader.FILENAME_SUFFIX_SYN">
             <summary>
-            These columns correspond to the Synopsis file created by XTandemResultsProcessor
+            X!Tandem synopsis file suffix
+            </summary>
+        </member>
+        <member name="F:PHRPReader.Reader.XTandemSynFileReader.FILENAME_SUFFIX_FHT">
+            <summary>
+            X!Tandem first hits file suffix
+            </summary>
+        </member>
+        <member name="F:PHRPReader.Reader.XTandemSynFileReader.XT_SEARCH_ENGINE_NAME">
+            <summary>
+            Search engine name
+            </summary>
+        </member>
+        <member name="F:PHRPReader.Reader.XTandemSynFileReader.mSynopsisFileColumn">
+            <summary>
+            Mapping from enum to synopsis file column name for X!Tandem
             </summary>
         </member>
         <member name="P:PHRPReader.Reader.XTandemSynFileReader.PHRPFirstHitsFileName">
@@ -6221,6 +7191,13 @@
             <param name="headerNames"></param>
             <returns>Dictionary mapping the enum value to the column index in headerNames (0-based column index)</returns>
         </member>
+        <member name="M:PHRPReader.Reader.XTandemSynFileReader.GetColumnNameByID(PHRPReader.Data.XTandemSynFileColumns)">
+            <summary>
+            Get the synopsis file column name associated with the given enum
+            </summary>
+            <param name="column"></param>
+            <returns>Column name</returns>
+        </member>
         <member name="M:PHRPReader.Reader.XTandemSynFileReader.GetPHRPFirstHitsFileName(System.String)">
             <summary>
             Default first hits file for the given dataset
@@ -6317,6 +7294,44 @@
             <param name="fastReadMode">When set to true, reads the next data line, but doesn't perform text parsing required to determine cleavage state</param>
             <returns>True if successful, false if an error</returns>
             <remarks>When fastReadMode is True, you should call FinalizePSM to populate the remaining fields</remarks>
+        </member>
+        <member name="T:PHRPReader.StartupOptions">
+            <summary>
+            PHRP Startup options
+            </summary>
+            <remarks>Use these options to define load behavior to be used when instantiating PHRP reader</remarks>
+        </member>
+        <member name="P:PHRPReader.StartupOptions.LoadModsAndSeqInfo">
+            <summary>
+            If true, load the modification and SeqInfo data
+            </summary>
+        </member>
+        <member name="P:PHRPReader.StartupOptions.LoadMSGFResults">
+            <summary>
+            If true, load MSGF results (not MS-GF+)
+            </summary>
+        </member>
+        <member name="P:PHRPReader.StartupOptions.LoadScanStatsData">
+            <summary>
+            If true, load ScanStats data
+            </summary>
+        </member>
+        <member name="P:PHRPReader.StartupOptions.MaxProteinsPerPSM">
+            <summary>
+            Maximum number of proteins to associate with each PSM
+            </summary>
+            <remarks>Set to 0 to load all proteins</remarks>
+        </member>
+        <member name="P:PHRPReader.StartupOptions.PeptideMassCalculator">
+            <summary>
+            Use this to override the default peptide mass calculator class;
+            this is useful if custom amino acids are in use
+            </summary>
+        </member>
+        <member name="M:PHRPReader.StartupOptions.#ctor">
+            <summary>
+            Constructor
+            </summary>
         </member>
     </members>
 </doc>
