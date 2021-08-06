@@ -43,11 +43,11 @@ copy ProteinCoverageSummarizer.dll        "F:\Documents\Projects\JoshAldrich\ASc
 
 popd
 
+@echo off
 rem PeptideToProteinMapEngine\bin\Distribute_DLL.bat passes "NoCall" to this batch file
 rem to indicate that this batch file should not call ..\..\PeptideToProteinMapper\PeptideToProteinMapEngine\bin\Distribute_DLL.bat 
 If "%1"=="NoCall" Goto Done
 
-@echo off
 echo.
 echo.
 echo.
