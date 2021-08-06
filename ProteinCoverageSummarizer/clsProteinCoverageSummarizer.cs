@@ -1657,7 +1657,7 @@ namespace ProteinCoverageSummarizer
                 // Protein file options
                 if (clsProteinFileDataCache.IsFastaFile(Options.ProteinInputFilePath))
                 {
-                    // .fasta or .fsa file
+                    // .fasta, .faa, or .fsa file
                     ProteinDataCache.Options.AssumeFastaFile = true;
                 }
                 else if (string.Equals(Path.GetExtension(Options.ProteinInputFilePath), ".txt", StringComparison.OrdinalIgnoreCase))

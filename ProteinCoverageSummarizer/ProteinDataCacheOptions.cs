@@ -10,7 +10,7 @@ namespace ProteinCoverageSummarizer
         /// <summary>
         ///  Delimiter character for delimited protein files
         /// </summary>
-        /// <remarks>Only used for delimited protein input files, not for fasta files</remarks>
+        /// <remarks>Only used for delimited protein input files, not for FASTA files</remarks>
         private char mDelimitedInputFileDelimiter;
 
         /// <summary>

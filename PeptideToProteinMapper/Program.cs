@@ -320,7 +320,7 @@ namespace PeptideToProteinMapper
             {
                 Console.WriteLine(ConsoleMsgUtils.WrapParagraph(
                     "This program reads in a text file containing peptide sequences. " +
-                    "It then searches the specified .fasta or text file containing protein names and sequences " +
+                    "It then searches the specified FASTA or text file containing protein names and sequences " +
                     "(and optionally descriptions) to find the proteins that contain each peptide. " +
                     "It will also compute the sequence coverage percent for each protein (disable using /K)."));
                 Console.WriteLine();

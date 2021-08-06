@@ -24,18 +24,18 @@ using ProteinCoverageSummarizer;
 namespace PeptideToProteinMapEngine
 {
     /// <summary>
-    /// This class uses ProteinCoverageSummarizer.dll to read in a protein fasta file or delimited protein info file along with
+    /// This class uses ProteinCoverageSummarizer.dll to read in a protein FASTA file or delimited protein info file along with
     /// an accompanying file with peptide sequences to find the proteins that contain each peptide
     /// It will also optionally compute the percent coverage of each of the proteins
     /// </summary>
     public class clsPeptideToProteinMapEngine : PRISM.FileProcessor.ProcessFilesBase
     {
-        // Ignore Spelling: phos, struct
+        // Ignore Spelling: phos, pre, struct
 
         #region "Constants and Enums"
 
         /// <summary>
-        /// Inspect results filename suffix
+        /// InSpecT results filename suffix
         /// </summary>
         public const string FILENAME_SUFFIX_INSPECT_RESULTS_FILE = "_inspect.txt";
 
@@ -96,7 +96,7 @@ namespace PeptideToProteinMapEngine
             /// </summary>
             ProteinAndPeptideFile = 2,
             /// <summary>
-            /// Inspect results file; pre-process the file to determine the peptides present, then determine the proteins that contain the given peptides
+            /// InSpecT results file; pre-process the file to determine the peptides present, then determine the proteins that contain the given peptides
             /// </summary>
             InspectResultsFile = 3,
             /// <summary>
@@ -104,7 +104,7 @@ namespace PeptideToProteinMapEngine
             /// </summary>
             MSGFPlusResultsFile = 4,
             /// <summary>
-            /// SEQUEST, Inspect, X!Tandem, or MS-GF+ synopsis or first-hits file created by Peptide Hit Results Processor (PHRP); pre-processes the file to determine the peptides present, then determine the proteins that contain the given peptides
+            /// SEQUEST, InSpecT, X!Tandem, or MS-GF+ synopsis or first-hits file created by Peptide Hit Results Processor (PHRP); pre-processes the file to determine the peptides present, then determine the proteins that contain the given peptides
             /// </summary>
             PHRPFile = 5,
             /// <summary>
@@ -161,13 +161,13 @@ namespace PeptideToProteinMapEngine
         // names will be extracted and used when "cleaning" the peptides prior to looking for matching proteins
         private string mInspectParameterFilePath;
 
-        // The following is used when the input file is SEQUEST, X!Tandem, Inspect, or MS-GF+ results file
+        // The following is used when the input file is SEQUEST, X!Tandem, InSpecT, or MS-GF+ results file
         // Keys are peptide sequences; values are Lists of scan numbers that each peptide was observed in
         // Keys may have mod symbols in them; those symbols will be removed in PreProcessDataWriteOutPeptides
         private SortedList<string, SortedSet<int>> mUniquePeptideList;
 
         // Mod names must be lower case, and 4 characters in length (or shorter)
-        // Only used with Inspect since mods in MS-GF+ are simply numbers, e.g. R.DNFM+15.995SATQAVEYGLVDAVM+15.995TK.R
+        // Only used with InSpecT since mods in MS-GF+ are simply numbers, e.g. R.DNFM+15.995SATQAVEYGLVDAVM+15.995TK.R
         // while mods in SEQUEST and XTandem are symbols (*, #, @)
         private List<string> mInspectModNameList;
 
@@ -181,7 +181,7 @@ namespace PeptideToProteinMapEngine
         public bool DeleteTempFiles { get; set; }
 
         /// <summary>
-        /// Inspect parameter file path
+        /// InSpecT parameter file path
         /// </summary>
         public string InspectParameterFilePath
         {
@@ -237,7 +237,7 @@ namespace PeptideToProteinMapEngine
 
             if (Path.GetFileName(filePath).EndsWith(FILENAME_SUFFIX_INSPECT_RESULTS_FILE, StringComparison.OrdinalIgnoreCase))
             {
-                OnStatusEvent(string.Format("Input file type: Inspect results file (matched suffix {0})", FILENAME_SUFFIX_INSPECT_RESULTS_FILE));
+                OnStatusEvent(string.Format("Input file type: InSpecT results file (matched suffix {0})", FILENAME_SUFFIX_INSPECT_RESULTS_FILE));
                 return PeptideInputFileFormatConstants.InspectResultsFile;
             }
 
@@ -292,7 +292,7 @@ namespace PeptideToProteinMapEngine
         }
 
         /// <summary>
-        /// Parse an Inspect parameter file to determine the modification names
+        /// Parse an InSpecT parameter file to determine the modification names
         /// </summary>
         /// <param name="inspectParamFilePath"></param>
         /// <param name="inspectModNames"></param>
@@ -314,7 +314,7 @@ namespace PeptideToProteinMapEngine
                     return false;
                 }
 
-                ShowMessage("Looking for mod definitions in the Inspect param file: " + Path.GetFileName(inspectParamFilePath));
+                ShowMessage("Looking for mod definitions in the InSpecT param file: " + Path.GetFileName(inspectParamFilePath));
 
                 // Read the contents of inspectParamFilePath
                 using var reader = new StreamReader(new FileStream(inspectParamFilePath, FileMode.Open, FileAccess.Read, FileShare.Read));
@@ -363,7 +363,7 @@ namespace PeptideToProteinMapEngine
             }
             catch (Exception ex)
             {
-                StatusMessage = "Error reading the Inspect parameter file (" + Path.GetFileName(inspectParamFilePath) + ")";
+                StatusMessage = "Error reading the InSpecT parameter file (" + Path.GetFileName(inspectParamFilePath) + ")";
                 HandleException(StatusMessage, ex);
             }
 
@@ -672,7 +672,7 @@ namespace PeptideToProteinMapEngine
             }
             catch (Exception ex)
             {
-                StatusMessage = "Error writing the Inspect or MS-GF+ peptide to protein map file in PostProcessPSMResultsFile";
+                StatusMessage = "Error writing the InSpecT or MS-GF+ peptide to protein map file in PostProcessPSMResultsFile";
                 HandleException(StatusMessage, ex);
             }
 
@@ -842,10 +842,10 @@ namespace PeptideToProteinMapEngine
                 // Assume inspect results file line terminators are only a single byte (it doesn't matter if the terminators are actually two bytes)
                 terminatorSize = 1;
 
-                // The 3rd column in the Inspect results file should have the peptide sequence
+                // The 3rd column in the InSpecT results file should have the peptide sequence
                 peptideSequenceColIndex = 2;
                 scanColIndex = 1;
-                toolDescription = "Inspect results";
+                toolDescription = "InSpecT results";
             }
             else if (inputFileFormat == PeptideInputFileFormatConstants.MSGFPlusResultsFile)
             {
@@ -1177,7 +1177,7 @@ namespace PeptideToProteinMapEngine
 
                     if (!string.IsNullOrWhiteSpace(mInspectParameterFilePath))
                     {
-                        Console.WriteLine("{0,-26} {1}", "Inspect Param File:", mInspectParameterFilePath);
+                        Console.WriteLine("{0,-26} {1}", "InSpecT Param File:", mInspectParameterFilePath);
                     }
 
                     Console.WriteLine("{0,-26} {1}", "Ignore I/L Differences:", Options.IgnoreILDifferences);
@@ -1221,7 +1221,7 @@ namespace PeptideToProteinMapEngine
                 switch (inputFileFormat)
                 {
                     case PeptideInputFileFormatConstants.InspectResultsFile:
-                        // Inspect search results file; need to pre-process it
+                        // InSpecT search results file; need to pre-process it
                         inputFilePathWork = PreProcessInspectResultsFile(inputFilePath, outputDirectoryPath, mInspectParameterFilePath);
                         outputFileBaseName = Path.GetFileNameWithoutExtension(inputFilePath);
 
@@ -1244,7 +1244,7 @@ namespace PeptideToProteinMapEngine
                         break;
 
                     case PeptideInputFileFormatConstants.PHRPFile:
-                        // SEQUEST, X!Tandem, Inspect, or MS-GF+ PHRP data file; need to pre-process it
+                        // SEQUEST, X!Tandem, InSpecT, or MS-GF+ PHRP data file; need to pre-process it
                         // Make sure RemoveSymbolCharacters is true
                         Options.RemoveSymbolCharacters = true;
 
@@ -1322,7 +1322,7 @@ namespace PeptideToProteinMapEngine
                             break;
 
                         default:
-                            // SEQUEST, X!Tandem, Inspect, or MS-GF+ PHRP data file; need to post-process the results file
+                            // SEQUEST, X!Tandem, InSpecT, or MS-GF+ PHRP data file; need to post-process the results file
                             success = PostProcessPSMResultsFile(inputFilePathWork, proteinToPepMapFilePath, DeleteTempFiles);
                             break;
                     }
