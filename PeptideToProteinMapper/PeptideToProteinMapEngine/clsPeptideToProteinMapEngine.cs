@@ -474,6 +474,21 @@ namespace PeptideToProteinMapEngine
             return mProteinCoverageSummarizer.LoadParameterFileSettings(parameterFilePath);
         }
 
+        private bool ParseResidueNumber(FileSystemInfo inputFile, int linesRead, IReadOnlyList<string> splitLine, int columnIndex, out int residueNumber)
+        {
+            if (int.TryParse(splitLine[columnIndex], out residueNumber))
+                return true;
+
+            StatusMessage = string.Format(
+                "Line {0} in file {1} does not have an integer in column {2}. " +
+                "The FASTA file likely has a tab character between the protein name and description; it should instead be a space",
+                linesRead, inputFile.Name, columnIndex + 1);
+
+            OnErrorEvent(StatusMessage);
+
+            return false;
+        }
+
         /// <summary>
         /// Post-process a PSM results file
         /// </summary>
@@ -701,10 +716,12 @@ namespace PeptideToProteinMapEngine
                 // Initialize the protein to peptide mapping array
                 // We know the length will be at least as long as mUniquePeptideList, and easily twice that length
 
-                LogMessage("Reading " + Path.GetFileName(proteinToPepMapFilePath));
+                var inputFile = new FileInfo(proteinToPepMapFilePath);
+
+                LogMessage("Reading " + inputFile.Name);
 
                 // Read the contents of proteinToPepMapFilePath
-                using (var reader = new StreamReader(new FileStream(proteinToPepMapFilePath, FileMode.Open, FileAccess.Read, FileShare.Read)))
+                using (var reader = new StreamReader(new FileStream(inputFile.FullName, FileMode.Open, FileAccess.Read, FileShare.Read)))
                 {
                     var currentProtein = string.Empty;
 
@@ -767,12 +784,22 @@ namespace PeptideToProteinMapEngine
                             out _,
                             mProteinCoverageSummarizer.Options.RemoveSymbolCharacters);
 
+                        if (!ParseResidueNumber(inputFile, linesRead, splitLine, 2, out var residueStart) ||
+                            !ParseResidueNumber(inputFile, linesRead, splitLine, 3, out var residueEnd))
+                        {
+                            proteins = Array.Empty<string>();
+                            proteinIDPointerArray = Array.Empty<int>();
+                            proteinMapInfo = Array.Empty<ProteinIDMapInfo>();
+
+                            return false;
+                        }
+
                         var proteinInfo = new ProteinIDMapInfo
                         {
                             ProteinID = currentProteinID,
                             Peptide = cleanSequence,
-                            ResidueStart = int.Parse(splitLine[2]),
-                            ResidueEnd = int.Parse(splitLine[3])
+                            ResidueStart = residueStart,
+                            ResidueEnd = residueEnd
                         };
 
                         // Update the values in the array. The other option would be to index the array for each of the assignments above.
