@@ -20,6 +20,7 @@ using System.Reflection;
 using System.Threading;
 using PeptideToProteinMapEngine;
 using PRISM;
+using PRISM.Logging;
 using ProteinCoverageSummarizer;
 
 namespace PeptideToProteinMapper
@@ -143,11 +144,7 @@ namespace PeptideToProteinMapper
                             InspectParameterFilePath = mInspectParameterFilePath
                         };
 
-                        mPeptideToProteinMapEngine.StatusEvent += PeptideToProteinMapEngine_StatusEvent;
-                        mPeptideToProteinMapEngine.ErrorEvent += PeptideToProteinMapEngine_ErrorEvent;
-                        mPeptideToProteinMapEngine.WarningEvent += PeptideToProteinMapEngine_WarningEvent;
-
-                        mPeptideToProteinMapEngine.ProgressUpdate += PeptideToProteinMapEngine_ProgressChanged;
+                        RegisterEvents(mPeptideToProteinMapEngine);
                         mPeptideToProteinMapEngine.ProgressReset += PeptideToProteinMapEngine_ProgressReset;
 
                         mPeptideToProteinMapEngine.ProcessFilesWildcard(options.PeptideInputFilePath, options.OutputDirectoryPath, mParameterFilePath);
@@ -191,6 +188,15 @@ namespace PeptideToProteinMapper
         private static string GetAppVersion()
         {
             return PRISM.FileProcessor.ProcessFilesOrDirectoriesBase.GetAppVersion(PROGRAM_DATE);
+        }
+
+        private static void RegisterEvents(IEventNotifier processingClass)
+        {
+            processingClass.StatusEvent += PeptideToProteinMapEngine_StatusEvent;
+            processingClass.ErrorEvent += PeptideToProteinMapEngine_ErrorEvent;
+            processingClass.WarningEvent += PeptideToProteinMapEngine_WarningEvent;
+
+            processingClass.ProgressUpdate += PeptideToProteinMapEngine_ProgressChanged;
         }
 
         private static bool SetOptionsUsingCommandLineParameters(clsParseCommandLine commandLineParser, ProteinCoverageSummarizerOptions options)
