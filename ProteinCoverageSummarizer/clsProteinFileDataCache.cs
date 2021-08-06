@@ -503,7 +503,7 @@ namespace ProteinCoverageSummarizer
         {
             var proteinFileExtension = Path.GetExtension(filePath).ToLower();
 
-            return proteinFileExtension == ".fasta" || proteinFileExtension == ".fsa" || proteinFileExtension == ".faa";
+            return proteinFileExtension is ".fasta" or ".fsa" or ".faa";
         }
 
         /// <summary>
