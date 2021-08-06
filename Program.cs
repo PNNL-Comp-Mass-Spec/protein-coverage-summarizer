@@ -41,7 +41,7 @@ namespace ProteinCoverageSummarizerGUI
         /// <summary>
         /// Program date
         /// </summary>
-        public const string PROGRAM_DATE = "January 22, 2021";
+        public const string PROGRAM_DATE = "August 6, 2021";
 
         private static string mParameterFilePath;
 
@@ -177,9 +177,11 @@ namespace ProteinCoverageSummarizerGUI
         private static bool SetOptionsUsingCommandLineParameters(
             clsParseCommandLine commandLineParser, ProteinCoverageSummarizerOptions options, out bool invalidParameters)
         {
-            var validParameters = new List<string> {
+            var validParameters = new List<string>
+            {
                 "I", "O", "R", "P", "F", "SkipHeader", "SkipHeaders", "G", "H", "M", "K", "D", "Debug", "KeepDB"
             };
+
             invalidParameters = false;
 
             try
