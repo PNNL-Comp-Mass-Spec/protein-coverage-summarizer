@@ -106,12 +106,7 @@ namespace PeptideToProteinMapper
             {
                 var options = new ProteinCoverageSummarizerOptions();
 
-                var proceed = false;
-                if (commandLineParser.ParseCommandLine())
-                {
-                    if (SetOptionsUsingCommandLineParameters(commandLineParser, options))
-                        proceed = true;
-                }
+                var proceed = commandLineParser.ParseCommandLine() && SetOptionsUsingCommandLineParameters(commandLineParser, options);
 
                 if (!proceed || commandLineParser.NeedToShowHelp || commandLineParser.ParameterCount + commandLineParser.NonSwitchParameterCount == 0)
                 {
