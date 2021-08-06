@@ -75,7 +75,7 @@
         </member>
         <member name="P:PHRPReader.clsPHRPReader.PeptideHitResultType">
             <summary>
-            Peptide hit result type; Sequest, XTandem, Inspect, MSGFPlus, etc.
+            Peptide hit result type; SEQUEST, XTandem, InSpecT, MSGFPlus, etc.
             </summary>
         </member>
         <member name="P:PHRPReader.clsPHRPReader.PercentComplete">
@@ -584,6 +584,11 @@
         </member>
         <member name="F:PHRPReader.Data.MaxQuantSynFileColumns.PrecursorMZ">
             <summary>
+            Precursor ion m/z (observed value, read from a _PrecursorInfo.txt file by PHRP)
+            </summary>
+        </member>
+        <member name="F:PHRPReader.Data.MaxQuantSynFileColumns.PrecursorMZ_MaxQuant">
+            <summary>
             Precursor ion m/z (theoretical value, not observed value)
             </summary>
             <remarks>
@@ -628,12 +633,25 @@
             Peptide sequence, including modification symbols
             </summary>
         </member>
+        <member name="F:PHRPReader.Data.MaxQuantSynFileColumns.DynamicModifications">
+            <summary>
+            Comma separated list of dynamic modifications in the peptide
+            </summary>
+        </member>
         <member name="F:PHRPReader.Data.MaxQuantSynFileColumns.Proteins">
             <summary>
-            Proteins
+            Protein names
             </summary>
             <remarks>
+            <para>
             Semicolon separated list
+            </para>
+            <para>
+            If the peptide is from a reverse-hit protein, the Proteins column will be empty in the _syn.txt file,
+            and the decoy protein name will be in the LeadingRazorProtein column.
+            When the MaxQuantSynFileReader class reads the _syn.txt file, it adds the LeadingRazorProtein name
+            to the list of protein names, if the Proteins column is empty.
+            </para>
             </remarks>
         </member>
         <member name="F:PHRPReader.Data.MaxQuantSynFileColumns.LeadingRazorProtein">
@@ -661,7 +679,7 @@
         </member>
         <member name="F:PHRPReader.Data.MaxQuantSynFileColumns.Score">
             <summary>
-             Andromeda score for the best MS/MS spectrum with this peptide
+            Andromeda score for the best MS/MS spectrum with this peptide
             </summary>
             <remarks>
             Higher scores are better
@@ -672,10 +690,21 @@
             Score difference to the second best identified peptide with a different amino acid sequence
             </summary>
         </member>
-        <member name="F:PHRPReader.Data.MaxQuantSynFileColumns.Intensity">
+        <member name="F:PHRPReader.Data.MaxQuantSynFileColumns.RankScore">
+            <summary>
+            Ranked score
+            </summary>
+            <remarks>
+            Rank 1 means highest Andromeda score, 2 means next lower score, etc. (ties get the same rank)
+            </remarks>
+        </member>
+        <member name="F:PHRPReader.Data.MaxQuantSynFileColumns.TotalPeptideIntensity">
             <summary>
             Summed up extracted ion current (XIC) of all isotopic clusters associated with this peptide
             </summary>
+            <remarks>
+            All peptides with the same sequence will have the same total peptide intensity value for a given dataset
+            </remarks>
         </member>
         <member name="F:PHRPReader.Data.MaxQuantSynFileColumns.MassAnalyzer">
             <summary>
@@ -754,15 +783,96 @@
             Identifier referencing a row in the evidence.txt file
             </summary>
         </member>
+        <member name="F:PHRPReader.Data.MaxQuantSynFileColumns.QValue">
+            <summary>
+            Q-Value (computed by PHRP)
+            </summary>
+        </member>
         <member name="T:PHRPReader.Data.MODPlusSynFileColumns">
             <summary>
             These columns correspond to the Synopsis file created by MODPlusResultsProcessor
+            </summary>
+        </member>
+        <member name="F:PHRPReader.Data.MODPlusSynFileColumns.ResultID">
+            <summary>
+            Result ID
+            </summary>
+        </member>
+        <member name="F:PHRPReader.Data.MODPlusSynFileColumns.Scan">
+            <summary>
+            Scan number
+            </summary>
+        </member>
+        <member name="F:PHRPReader.Data.MODPlusSynFileColumns.DelM">
+            <summary>
+            Precursor error, in Da
+            </summary>
+        </member>
+        <member name="F:PHRPReader.Data.MODPlusSynFileColumns.DelM_PPM">
+            <summary>
+            Precursor error, in ppm; corrected for isotope selection errors
+            </summary>
+        </member>
+        <member name="F:PHRPReader.Data.MODPlusSynFileColumns.MH">
+            <summary>
+            Theoretical monoisotopic peptide MH (computed by PHRP); note that this is (M+H)+
+            </summary>
+        </member>
+        <member name="F:PHRPReader.Data.MODPlusSynFileColumns.Peptide">
+            <summary>
+            This is the sequence with prefix and suffix residues and also with modification mass values, e.g. +42
+            </summary>
+        </member>
+        <member name="F:PHRPReader.Data.MODPlusSynFileColumns.Rank_Score">
+            <summary>
+            Ranked score
+            </summary>
+            <remarks>
+            Rank 1 means highest MODPlus score, 2 means next lower score, etc. (ties get the same rank)
+            </remarks>
+        </member>
+        <member name="F:PHRPReader.Data.MODPlusSynFileColumns.QValue">
+            <summary>
+            Q-Value (FDR)
             </summary>
         </member>
         <member name="T:PHRPReader.Data.MSAlignSynFileColumns">
             <summary>
             These columns correspond to the Synopsis file created by MSAlignResultsProcessor
             </summary>
+        </member>
+        <member name="F:PHRPReader.Data.MSAlignSynFileColumns.DelM">
+            <summary>
+            Precursor error, in Da
+            </summary>
+        </member>
+        <member name="F:PHRPReader.Data.MSAlignSynFileColumns.DelMPPM">
+            <summary>
+            Precursor error, in ppm; corrected for isotope selection errors
+            </summary>
+        </member>
+        <member name="F:PHRPReader.Data.MSAlignSynFileColumns.MH">
+            <summary>
+            Theoretical monoisotopic peptide MH (computed by PHRP); note that this is (M+H)+
+            </summary>
+        </member>
+        <member name="F:PHRPReader.Data.MSAlignSynFileColumns.Peptide">
+            <summary>
+            This is the sequence with prefix and suffix residues and also with modification mass values, e.g. [42.01]
+            </summary>
+        </member>
+        <member name="F:PHRPReader.Data.MSAlignSynFileColumns.Protein">
+            <summary>
+            Protein Name
+            </summary>
+        </member>
+        <member name="F:PHRPReader.Data.MSAlignSynFileColumns.Rank_PValue">
+            <summary>
+            Ranked score
+            </summary>
+            <remarks>
+            Rank 1 means lowest (best) p-value, 2 means next higher p-value, etc. (ties get the same rank)
+            </remarks>
         </member>
         <member name="T:PHRPReader.Data.MSGFFileColumns">
             <summary>
@@ -781,8 +891,11 @@
         </member>
         <member name="F:PHRPReader.Data.MSGFDBSynFileColumns.RankSpecProb">
             <summary>
-            RankSpecProb
+            Ranked score
             </summary>
+            <remarks>
+            Rank 1 means lowest (best) SpecProb, 2 means next higher SpecProb, etc. (ties get the same rank)
+            </remarks>
         </member>
         <member name="F:PHRPReader.Data.MSGFDBSynFileColumns.PValue">
             <summary>
@@ -883,29 +996,17 @@
             Spec E-Value
             </summary>
         </member>
-        <member name="F:PHRPReader.Data.MSGFPlusSynFileColumns.SpecProb_EValue">
-            <summary>
-            Obsolete name for Spec E-Value (MS-GF+) or SpecProb (MSGFDB)
-            </summary>
-        </member>
         <member name="F:PHRPReader.Data.MSGFPlusSynFileColumns.RankSpecEValue">
             <summary>
-            Rank SpecEValue
+            Ranked score
             </summary>
-        </member>
-        <member name="F:PHRPReader.Data.MSGFPlusSynFileColumns.RankSpecProb">
-            <summary>
-            Obsolete name for Rank Spec E-Value (MS-GF+) or Rank SpecProb (MSGFDB)
-            </summary>
+            <remarks>
+            Rank 1 means lowest (best) Spec E-value, 2 means next higher E-value, etc. (ties get the same rank)
+            </remarks>
         </member>
         <member name="F:PHRPReader.Data.MSGFPlusSynFileColumns.EValue">
             <summary>
             E-Value
-            </summary>
-        </member>
-        <member name="F:PHRPReader.Data.MSGFPlusSynFileColumns.PValue_EValue">
-            <summary>
-            Obsolete name for E-Value (MS-GF+) or P-Value (MSGFDB)
             </summary>
         </member>
         <member name="F:PHRPReader.Data.MSGFPlusSynFileColumns.QValue">
@@ -916,23 +1017,13 @@
             Only present if searched using -tda 1
             </remarks>
         </member>
-        <member name="F:PHRPReader.Data.MSGFPlusSynFileColumns.FDR_QValue">
-            <summary>
-            Obsolete name for Q-Value (MS-GF+) or FDR (MSGFDB)
-            </summary>
-        </member>
         <member name="F:PHRPReader.Data.MSGFPlusSynFileColumns.PepQValue">
             <summary>
-            Peptide QValue
+            Peptide Q-Value
             </summary>
             <remarks>
             Only present if searched using -tda 1
             </remarks>
-        </member>
-        <member name="F:PHRPReader.Data.MSGFPlusSynFileColumns.PepFDR_PepQValue">
-            <summary>
-            Obsolete name for PepQValue (MS-GF+) or PepFDR (MSGFDB)
-            </summary>
         </member>
         <member name="F:PHRPReader.Data.MSGFPlusSynFileColumns.EFDR">
             <summary>
@@ -969,7 +1060,7 @@
         </member>
         <member name="F:PHRPReader.Data.MSPathFinderSynFileColumns.Scan">
             <summary>
-            Scan
+            Scan number
             </summary>
         </member>
         <member name="F:PHRPReader.Data.MSPathFinderSynFileColumns.Charge">
@@ -1060,10 +1151,62 @@
             These columns correspond to the Synopsis file created by MODaResultsProcessor
             </summary>
         </member>
+        <member name="F:PHRPReader.Data.MODaSynFileColumns.ResultID">
+            <summary>
+            Result ID
+            </summary>
+        </member>
+        <member name="F:PHRPReader.Data.MODaSynFileColumns.Scan">
+            <summary>
+            Scan number
+            </summary>
+        </member>
+        <member name="F:PHRPReader.Data.MODaSynFileColumns.DelM">
+            <summary>
+            Mass error of the precursor ion equivalent monoisotopic mass value
+            vs. the predicted monoisotopic mass of the identified peptide sequence
+            </summary>
+        </member>
+        <member name="F:PHRPReader.Data.MODaSynFileColumns.DelM_PPM">
+            <summary>
+            Precursor error, in ppm; corrected for isotope selection errors
+            </summary>
+        </member>
+        <member name="F:PHRPReader.Data.MODaSynFileColumns.MH">
+            <summary>
+            Theoretical monoisotopic peptide MH (computed by PHRP); note that this is (M+H)+
+            </summary>
+        </member>
+        <member name="F:PHRPReader.Data.MODaSynFileColumns.Peptide">
+            <summary>
+            This is the sequence with prefix and suffix residues and also with modification mass values, e.g. +42
+            </summary>
+        </member>
+        <member name="F:PHRPReader.Data.MODaSynFileColumns.Protein">
+            <summary>
+            Protein Name
+            </summary>
+        </member>
+        <member name="F:PHRPReader.Data.MODaSynFileColumns.Rank_Probability">
+            <summary>
+            Ranked score
+            </summary>
+            <remarks>
+            Rank 1 means highest probability, 2 means next lower probability, etc. (ties get the same rank)
+            </remarks>
+        </member>
         <member name="T:PHRPReader.Data.PrecursorInfoFileColumns">
             <summary>
             These columns correspond to the tab-delimited _PrecursorInfo.txt file created by the Analysis Manager
             </summary>
+        </member>
+        <member name="T:PHRPReader.Data.ReporterIonsFileColumns">
+            <summary>
+            These columns correspond to the tab-delimited _ReporterIons.txt file (created by MASIC)
+            </summary>
+            <remarks>
+            Note that the reporter ion intensity columns appear between the ReporterIonIntensityMax column and the WeightedAvgPctIntensityCorrection column
+            </remarks>
         </member>
         <member name="T:PHRPReader.Data.ScanStatsFileColumns">
             <summary>
@@ -1075,14 +1218,78 @@
             These columns correspond to the tab-delimited file created from SEQUEST .out files
             </summary>
         </member>
+        <member name="T:PHRPReader.Data.SICStatsFileColumns">
+            <summary>
+            These columns correspond to the tab-delimited SICStats.txt file created by MASIC
+            </summary>
+        </member>
         <member name="T:PHRPReader.Data.TopPICSynFileColumns">
             <summary>
             These columns correspond to the Synopsis file created by TopPICResultsProcessor
             </summary>
         </member>
+        <member name="F:PHRPReader.Data.TopPICSynFileColumns.Rank_PValue">
+            <summary>
+            Ranked score
+            </summary>
+            <remarks>
+            Rank 1 means lowest (best) p-value, 2 means next higher p-value, etc. (ties get the same rank)
+            </remarks>
+        </member>
         <member name="T:PHRPReader.Data.XTandemSynFileColumns">
             <summary>
             These columns correspond to the Synopsis file created by XTandemResultsProcessor
+            </summary>
+        </member>
+        <member name="F:PHRPReader.Data.XTandemSynFileColumns.ResultID">
+            <summary>
+            Result ID
+            </summary>
+        </member>
+        <member name="F:PHRPReader.Data.XTandemSynFileColumns.Scan">
+            <summary>
+            Scan number
+            </summary>
+        </member>
+        <member name="F:PHRPReader.Data.XTandemSynFileColumns.MH">
+            <summary>
+            Monoisotopic (M+H)+ value, computed from PrecursorMZ and Charge
+            </summary>
+        </member>
+        <member name="F:PHRPReader.Data.XTandemSynFileColumns.Hyperscore">
+            <summary>
+            Hyperscore
+            </summary>
+        </member>
+        <member name="F:PHRPReader.Data.XTandemSynFileColumns.EValue">
+            <summary>
+            Peptide_Expectation_Value_LogE
+            </summary>
+        </member>
+        <member name="F:PHRPReader.Data.XTandemSynFileColumns.ProteinCount">
+            <summary>
+            Multiple_Protein_Count
+            </summary>
+        </member>
+        <member name="F:PHRPReader.Data.XTandemSynFileColumns.DelM">
+            <summary>
+            Mass error of the precursor ion equivalent monoisotopic mass value
+            vs. the predicted monoisotopic mass of the identified peptide sequence
+            </summary>
+        </member>
+        <member name="F:PHRPReader.Data.XTandemSynFileColumns.Intensity">
+            <summary>
+            Peptide_Intensity_LogI
+            </summary>
+        </member>
+        <member name="F:PHRPReader.Data.XTandemSynFileColumns.DelMPPM">
+            <summary>
+            Precursor error, in ppm; corrected for isotope selection errors
+            </summary>
+        </member>
+        <member name="T:PHRPReader.Data.PrecursorInfo">
+            <summary>
+            This class tracks data read from a _PrecursorInfo.txt file
             </summary>
         </member>
         <member name="P:PHRPReader.Data.PrecursorInfo.ScanNumber">
@@ -1126,6 +1333,358 @@
             <param name="scanNumber"></param>
             <param name="scanTimeMinutes"></param>
             <param name="scanType"></param>
+        </member>
+        <member name="T:PHRPReader.Data.ReporterIonColumnInfo">
+            <summary>
+            Information about reporter ion related columns in a _ReporterIons.txt file
+            </summary>
+        </member>
+        <member name="P:PHRPReader.Data.ReporterIonColumnInfo.IntensityColumnIndex">
+            <summary>
+            Index of the column with reporter ion intensity values
+            </summary>
+        </member>
+        <member name="P:PHRPReader.Data.ReporterIonColumnInfo.IntensityColumnName">
+            <summary>
+            Name of the column with reporter ion intensity values
+            </summary>
+        </member>
+        <member name="P:PHRPReader.Data.ReporterIonColumnInfo.MZ">
+            <summary>
+            Reporter ion m/z
+            </summary>
+        </member>
+        <member name="P:PHRPReader.Data.ReporterIonColumnInfo.OriginalIntensityColumnIndex">
+            <summary>
+            Index of the column with reporter ion original intensity values
+            </summary>
+            <remarks>
+            These columns will only be present if the MASIC parameter file had ReporterIonSaveUncorrectedIntensities=True
+            </remarks>
+        </member>
+        <member name="P:PHRPReader.Data.ReporterIonColumnInfo.SignalToNoiseColumnIndex">
+            <summary>
+            Index of the column with reporter ion signal/noise values
+            </summary>
+        </member>
+        <member name="P:PHRPReader.Data.ReporterIonColumnInfo.ResolutionColumnIndex">
+            <summary>
+            Index of the column with reporter ion resolution values
+            </summary>
+        </member>
+        <member name="M:PHRPReader.Data.ReporterIonColumnInfo.#ctor(System.Int32,System.String,System.Double)">
+            <summary>
+            Constructor
+            </summary>
+            <param name="intensityColumnIndex"></param>
+            <param name="intensityColumnName"></param>
+            <param name="reporterIonMz"></param>
+        </member>
+        <member name="M:PHRPReader.Data.ReporterIonColumnInfo.ToString">
+            <summary>
+            Show the intensity column name
+            </summary>
+        </member>
+        <member name="T:PHRPReader.Data.ReporterIonInfo">
+            <summary>
+            This class tracks data read from a _ReporterIons.txt file
+            </summary>
+        </member>
+        <member name="P:PHRPReader.Data.ReporterIonInfo.ScanNumber">
+            <summary>
+            Scan number
+            </summary>
+        </member>
+        <member name="P:PHRPReader.Data.ReporterIonInfo.CollisionMode">
+            <summary>
+            Collision mode
+            </summary>
+        </member>
+        <member name="P:PHRPReader.Data.ReporterIonInfo.ParentIonMZ">
+            <summary>
+            Parent ion m/z
+            </summary>
+        </member>
+        <member name="P:PHRPReader.Data.ReporterIonInfo.ParentIonMzText">
+            <summary>
+            Parent ion m/z
+            </summary>
+        </member>
+        <member name="P:PHRPReader.Data.ReporterIonInfo.BasePeakIntensity">
+            <summary>
+            Base peak intensity
+            </summary>
+        </member>
+        <member name="P:PHRPReader.Data.ReporterIonInfo.BasePeakMZ">
+            <summary>
+            Base peak m/z
+            </summary>
+        </member>
+        <member name="P:PHRPReader.Data.ReporterIonInfo.ReporterIonIntensityMax">
+            <summary>
+            Maximum reporter ion intensity
+            </summary>
+        </member>
+        <member name="P:PHRPReader.Data.ReporterIonInfo.WeightedAvgPctIntensityCorrection">
+            <summary>
+            Weighted average intensity correction percentage
+            </summary>
+        </member>
+        <member name="P:PHRPReader.Data.ReporterIonInfo.ReporterIons">
+            <summary>
+            Reporter ion data for this scan
+            </summary>
+        </member>
+        <member name="P:PHRPReader.Data.ReporterIonInfo.ReporterIonColumnData">
+            <summary>
+            Tab-delimited list of data in the reporter-ion related columns, starting with the ReporterIonIntensityMax column
+            </summary>
+            <remarks>
+            The MASICResultsMerger program uses this property
+            </remarks>
+        </member>
+        <member name="M:PHRPReader.Data.ReporterIonInfo.#ctor(System.Int32)">
+            <summary>
+            Constructor
+            </summary>
+            <param name="scanNumber"></param>
+        </member>
+        <member name="M:PHRPReader.Data.ReporterIonInfo.ToString">
+            <summary>
+            Show the scan number
+            </summary>
+        </member>
+        <member name="T:PHRPReader.Data.ReporterIonStats">
+            <summary>
+            Details of an observed reporter ion
+            </summary>
+        </member>
+        <member name="P:PHRPReader.Data.ReporterIonStats.MZ">
+            <summary>
+            Reporter ion m/z
+            </summary>
+        </member>
+        <member name="P:PHRPReader.Data.ReporterIonStats.Intensity">
+            <summary>
+            Reporter ion intensity
+            </summary>
+        </member>
+        <member name="P:PHRPReader.Data.ReporterIonStats.OriginalIntensity">
+            <summary>
+            Reporter ion intensity, before interference correction
+            </summary>
+        </member>
+        <member name="P:PHRPReader.Data.ReporterIonStats.SignalToNoise">
+            <summary>
+            Signal to noise ratio
+            </summary>
+        </member>
+        <member name="P:PHRPReader.Data.ReporterIonStats.Resolution">
+            <summary>
+            Resolution
+            </summary>
+        </member>
+        <member name="M:PHRPReader.Data.ReporterIonStats.#ctor(System.Double)">
+            <summary>
+            Constructor
+            </summary>
+        </member>
+        <member name="T:PHRPReader.Data.SICStatsInfo">
+            <summary>
+            Data loaded from a SICStats file
+            </summary>
+        </member>
+        <member name="P:PHRPReader.Data.SICStatsInfo.Dataset">
+            <summary>
+            Dataset ID
+            </summary>
+        </member>
+        <member name="P:PHRPReader.Data.SICStatsInfo.ParentIonIndex">
+            <summary>
+            Parent Ion Index
+            </summary>
+        </member>
+        <member name="P:PHRPReader.Data.SICStatsInfo.MZ">
+            <summary>
+            Precursor m/z
+            </summary>
+        </member>
+        <member name="P:PHRPReader.Data.SICStatsInfo.MzText">
+            <summary>
+            Precursor m/z
+            </summary>
+        </member>
+        <member name="P:PHRPReader.Data.SICStatsInfo.SurveyScanNumber">
+            <summary>
+            Survey Scan Number
+            </summary>
+        </member>
+        <member name="P:PHRPReader.Data.SICStatsInfo.FragScanNumber">
+            <summary>
+            Fragmentation Scan Number
+            </summary>
+        </member>
+        <member name="P:PHRPReader.Data.SICStatsInfo.OptimalPeakApexScanNumber">
+            <summary>
+            Optimal Peak Apex Scan Number
+            </summary>
+        </member>
+        <member name="P:PHRPReader.Data.SICStatsInfo.PeakApexOverrideParentIonIndex">
+            <summary>
+            Peak Apex Override Parent Ion Index
+            </summary>
+        </member>
+        <member name="P:PHRPReader.Data.SICStatsInfo.CustomSICPeak">
+            <summary>
+            Custom SIC Peak
+            </summary>
+        </member>
+        <member name="P:PHRPReader.Data.SICStatsInfo.PeakScanStart">
+            <summary>
+            Peak Scan Start
+            </summary>
+        </member>
+        <member name="P:PHRPReader.Data.SICStatsInfo.PeakScanEnd">
+            <summary>
+            Peak Scan End
+            </summary>
+        </member>
+        <member name="P:PHRPReader.Data.SICStatsInfo.PeakScanMaxIntensity">
+            <summary>
+            Peak Scan Max Intensity
+            </summary>
+        </member>
+        <member name="P:PHRPReader.Data.SICStatsInfo.PeakMaxIntensity">
+            <summary>
+            Peak Max Intensity
+            </summary>
+        </member>
+        <member name="P:PHRPReader.Data.SICStatsInfo.PeakMaxIntensityText">
+            <summary>
+            Peak Max Intensity
+            </summary>
+        </member>
+        <member name="P:PHRPReader.Data.SICStatsInfo.PeakSignalToNoiseRatio">
+            <summary>
+            Peak Signal To Noise Ratio
+            </summary>
+        </member>
+        <member name="P:PHRPReader.Data.SICStatsInfo.PeakSignalToNoiseRatioText">
+            <summary>
+            Peak Signal To Noise Ratio
+            </summary>
+        </member>
+        <member name="P:PHRPReader.Data.SICStatsInfo.FWHMInScans">
+            <summary>
+            FWHM In Scans
+            </summary>
+        </member>
+        <member name="P:PHRPReader.Data.SICStatsInfo.PeakArea">
+            <summary>
+            Peak Area
+            </summary>
+        </member>
+        <member name="P:PHRPReader.Data.SICStatsInfo.PeakAreaText">
+            <summary>
+            Peak Area
+            </summary>
+        </member>
+        <member name="P:PHRPReader.Data.SICStatsInfo.ParentIonIntensity">
+            <summary>
+            Parent Ion Intensity
+            </summary>
+        </member>
+        <member name="P:PHRPReader.Data.SICStatsInfo.ParentIonIntensityText">
+            <summary>
+            Parent Ion Intensity
+            </summary>
+        </member>
+        <member name="P:PHRPReader.Data.SICStatsInfo.PeakBaselineNoiseLevel">
+            <summary>
+            Peak Baseline Noise Level
+            </summary>
+        </member>
+        <member name="P:PHRPReader.Data.SICStatsInfo.PeakBaselineNoiseLevelText">
+            <summary>
+            Peak Baseline Noise Level
+            </summary>
+        </member>
+        <member name="P:PHRPReader.Data.SICStatsInfo.PeakBaselineNoiseStDev">
+            <summary>
+            Peak Baseline Noise StDev
+            </summary>
+        </member>
+        <member name="P:PHRPReader.Data.SICStatsInfo.PeakBaselineNoiseStDevText">
+            <summary>
+            Peak Baseline Noise StDev
+            </summary>
+        </member>
+        <member name="P:PHRPReader.Data.SICStatsInfo.PeakBaselinePointsUsed">
+            <summary>
+            Peak Baseline Points Used
+            </summary>
+        </member>
+        <member name="P:PHRPReader.Data.SICStatsInfo.StatMomentsArea">
+            <summary>
+            Stat Moments Area
+            </summary>
+        </member>
+        <member name="P:PHRPReader.Data.SICStatsInfo.StatMomentsAreaText">
+            <summary>
+            Stat Moments Area
+            </summary>
+        </member>
+        <member name="P:PHRPReader.Data.SICStatsInfo.CenterOfMassScan">
+            <summary>
+            Center Of Mass Scan
+            </summary>
+        </member>
+        <member name="P:PHRPReader.Data.SICStatsInfo.PeakStDev">
+            <summary>
+            Peak StDev
+            </summary>
+        </member>
+        <member name="P:PHRPReader.Data.SICStatsInfo.PeakStDevText">
+            <summary>
+            Peak StDev
+            </summary>
+        </member>
+        <member name="P:PHRPReader.Data.SICStatsInfo.PeakSkew">
+            <summary>
+            Peak Skew
+            </summary>
+        </member>
+        <member name="P:PHRPReader.Data.SICStatsInfo.PeakSkewText">
+            <summary>
+            Peak Skew
+            </summary>
+        </member>
+        <member name="P:PHRPReader.Data.SICStatsInfo.PeakKSStat">
+            <summary>
+            Peak KSStat
+            </summary>
+        </member>
+        <member name="P:PHRPReader.Data.SICStatsInfo.PeakKSStatText">
+            <summary>
+            Peak KSStat
+            </summary>
+        </member>
+        <member name="P:PHRPReader.Data.SICStatsInfo.StatMomentsDataCountUsed">
+            <summary>
+            Stat Moments Data Count Used
+            </summary>
+        </member>
+        <member name="M:PHRPReader.Data.SICStatsInfo.#ctor(System.Int32,System.Int32)">
+            <summary>
+            Constructor
+            </summary>
+            <param name="parentIonIndex"></param>
+            <param name="fragScanNumber"></param>
+        </member>
+        <member name="M:PHRPReader.Data.SICStatsInfo.ToString">
+            <summary>
+            Show the fragmentation scan number and parent ion m/z
+            </summary>
         </member>
         <member name="T:PHRPReader.Data.AminoAcidModInfo">
             <summary>
@@ -1331,27 +1890,27 @@
         </member>
         <member name="F:PHRPReader.Data.ModificationDefinition.ModificationTypeConstants.DynamicMod">
             <summary>
-            Dynamic mod on a residue or peptide terminus; supported by Sequest and notated via a modification symbol; this mod is explicitly notated by X!Tandem; if a terminus mod, the mod symbol is associated with the first or last residue in the peptide
+            Dynamic mod on a residue or peptide terminus; supported by SEQUEST and notated via a modification symbol; this mod is explicitly notated by X!Tandem; if a terminus mod, the mod symbol is associated with the first or last residue in the peptide
             </summary>
         </member>
         <member name="F:PHRPReader.Data.ModificationDefinition.ModificationTypeConstants.StaticMod">
             <summary>
-            Static mod on a residue or peptide terminus; supported by Sequest but not explicitly notated; this mod is explicitly notated by X!Tandem; if a terminus mod, the mod symbol is associated with the first or last residue in the peptide
+            Static mod on a residue or peptide terminus; supported by SEQUEST but not explicitly notated; this mod is explicitly notated by X!Tandem; if a terminus mod, the mod symbol is associated with the first or last residue in the peptide
             </summary>
         </member>
         <member name="F:PHRPReader.Data.ModificationDefinition.ModificationTypeConstants.TerminalPeptideStaticMod">
             <summary>
-            Peptide terminus static mod (DMS Symbol is T); used by Sequest and MSGFDB; note that terminal mods are always dynamic in X!Tandem
+            Peptide terminus static mod (DMS Symbol is T); used by SEQUEST and MSGFDB; note that terminal mods are always dynamic in X!Tandem
             </summary>
         </member>
         <member name="F:PHRPReader.Data.ModificationDefinition.ModificationTypeConstants.IsotopicMod">
             <summary>
-            Isotopic mod, e.g. N15, or C13; supported by Sequest; most likely not supported by XTandem
+            Isotopic mod, e.g. N15, or C13; supported by SEQUEST; most likely not supported by XTandem
             </summary>
         </member>
         <member name="F:PHRPReader.Data.ModificationDefinition.ModificationTypeConstants.ProteinTerminusStaticMod">
             <summary>
-            Protein terminus static mod; supported by Sequest; this mod is also supported by X!Tandem but modified residues are not explicitly notated; instead, all peptides have their mass implicitly modified by this amount
+            Protein terminus static mod; supported by SEQUEST; this mod is also supported by X!Tandem but modified residues are not explicitly notated; instead, all peptides have their mass implicitly modified by this amount
             </summary>
         </member>
         <member name="T:PHRPReader.Data.ModificationDefinition.ResidueModificationType">
@@ -1366,27 +1925,27 @@
         </member>
         <member name="F:PHRPReader.Data.ModificationDefinition.ResidueModificationType.DynamicMod">
             <summary>
-            Dynamic mod on a residue or peptide terminus; supported by Sequest and notated via a modification symbol; this mod is explicitly notated by X!Tandem; if a terminus mod, the mod symbol is associated with the first or last residue in the peptide
+            Dynamic mod on a residue or peptide terminus; supported by SEQUEST and notated via a modification symbol; this mod is explicitly notated by X!Tandem; if a terminus mod, the mod symbol is associated with the first or last residue in the peptide
             </summary>
         </member>
         <member name="F:PHRPReader.Data.ModificationDefinition.ResidueModificationType.StaticMod">
             <summary>
-            Static mod on a residue or peptide terminus; supported by Sequest but not explicitly notated; this mod is explicitly notated by X!Tandem; if a terminus mod, the mod symbol is associated with the first or last residue in the peptide
+            Static mod on a residue or peptide terminus; supported by SEQUEST but not explicitly notated; this mod is explicitly notated by X!Tandem; if a terminus mod, the mod symbol is associated with the first or last residue in the peptide
             </summary>
         </member>
         <member name="F:PHRPReader.Data.ModificationDefinition.ResidueModificationType.TerminalPeptideStaticMod">
             <summary>
-            Peptide terminus static mod (DMS Symbol is T); used by Sequest and MSGFDB; note that terminal mods are always dynamic in X!Tandem
+            Peptide terminus static mod (DMS Symbol is T); used by SEQUEST and MSGFDB; note that terminal mods are always dynamic in X!Tandem
             </summary>
         </member>
         <member name="F:PHRPReader.Data.ModificationDefinition.ResidueModificationType.IsotopicMod">
             <summary>
-            Isotopic mod, e.g. N15, or C13; supported by Sequest; most likely not supported by XTandem
+            Isotopic mod, e.g. N15, or C13; supported by SEQUEST; most likely not supported by XTandem
             </summary>
         </member>
         <member name="F:PHRPReader.Data.ModificationDefinition.ResidueModificationType.ProteinTerminusStaticMod">
             <summary>
-            Protein terminus static mod; supported by Sequest; this mod is also supported by X!Tandem but modified residues are not explicitly notated; instead, all peptides have their mass implicitly modified by this amount
+            Protein terminus static mod; supported by SEQUEST; this mod is also supported by X!Tandem but modified residues are not explicitly notated; instead, all peptides have their mass implicitly modified by this amount
             </summary>
         </member>
         <member name="F:PHRPReader.Data.ModificationDefinition.mModificationSymbol">
@@ -1640,12 +2199,12 @@
         </member>
         <member name="F:PHRPReader.Data.PeptideModificationContainer.N_TERMINAL_PEPTIDE_MOD_SYMBOL_INSPECT">
             <summary>
-            Symbol used by Inspect for tracking a modification at the peptide N-terminus
+            Symbol used by InSpecT for tracking a modification at the peptide N-terminus
             </summary>
         </member>
         <member name="F:PHRPReader.Data.PeptideModificationContainer.C_TERMINAL_PEPTIDE_MOD_SYMBOL_INSPECT">
             <summary>
-            Symbol used by Inspect for tracking a modification at the peptide C-terminus
+            Symbol used by InSpecT for tracking a modification at the peptide C-terminus
             </summary>
         </member>
         <member name="F:PHRPReader.Data.PeptideModificationContainer.mDefaultModificationSymbols">
@@ -2085,7 +2644,7 @@
         </member>
         <member name="P:PHRPReader.Data.PSM.MassErrorDa">
             <summary>
-            Mass difference, in daltons, between the monoisotopic mass of the precursor ion and the calculated (theoretical) monoisotopic mass of the peptide
+            Mass difference, in Daltons, between the monoisotopic mass of the precursor ion and the calculated (theoretical) monoisotopic mass of the peptide
             </summary>
         </member>
         <member name="P:PHRPReader.Data.PSM.MassErrorPPM">
@@ -2167,7 +2726,7 @@
         </member>
         <member name="P:PHRPReader.Data.PSM.PrecursorNeutralMass">
             <summary>
-            Uncharged monoisotopic mass of the precursor (observed mass based on m/z and charge)
+            Uncharged monoisotopic mass of the precursor (observed mass based on observed m/z and charge)
             </summary>
             <remarks>This mass is based on the mass or m/z value reported by the search engine</remarks>
         </member>
@@ -2386,7 +2945,7 @@
         </member>
         <member name="P:PHRPReader.Data.ScanStatsExInfo.ScanEvent">
             <summary>
-            scan event
+            Scan event
             </summary>
         </member>
         <member name="P:PHRPReader.Data.ScanStatsExInfo.MasterIndex">
@@ -2476,6 +3035,11 @@
             </summary>
             <param name="scanNumber"></param>
         </member>
+        <member name="M:PHRPReader.Data.ScanStatsExInfo.ToString">
+            <summary>
+            Show the scan number and scan filter
+            </summary>
+        </member>
         <member name="T:PHRPReader.Data.ScanStatsInfo">
             <summary>
             Data loaded from a ScanStats file
@@ -2491,6 +3055,11 @@
             Scan time, in minutes
             </summary>
         </member>
+        <member name="P:PHRPReader.Data.ScanStatsInfo.ScanTimeMinutesText">
+            <summary>
+            Scan time, in minutes
+            </summary>
+        </member>
         <member name="P:PHRPReader.Data.ScanStatsInfo.ScanType">
             <summary>
             Scan type (aka scan level)
@@ -2502,7 +3071,17 @@
             Total ion intensity (TIC)
             </summary>
         </member>
+        <member name="P:PHRPReader.Data.ScanStatsInfo.TotalIonIntensityText">
+            <summary>
+            Total ion intensity (TIC)
+            </summary>
+        </member>
         <member name="P:PHRPReader.Data.ScanStatsInfo.BasePeakIntensity">
+            <summary>
+            Base peak intensity (BPI)
+            </summary>
+        </member>
+        <member name="P:PHRPReader.Data.ScanStatsInfo.BasePeakIntensityText">
             <summary>
             Base peak intensity (BPI)
             </summary>
@@ -2512,7 +3091,17 @@
             Base peak m/z
             </summary>
         </member>
+        <member name="P:PHRPReader.Data.ScanStatsInfo.BasePeakMzText">
+            <summary>
+            Base peak m/z
+            </summary>
+        </member>
         <member name="P:PHRPReader.Data.ScanStatsInfo.BasePeakSignalToNoiseRatio">
+            <summary>
+            Base peak signal to noise ratio (S/N)
+            </summary>
+        </member>
+        <member name="P:PHRPReader.Data.ScanStatsInfo.BasePeakSignalToNoiseRatioText">
             <summary>
             Base peak signal to noise ratio (S/N)
             </summary>
@@ -2586,6 +3175,7 @@
             <summary>
             Dynamic and static mods to search for
             </summary>
+            <remarks>This only populated for MSAlign, MODa, and MODPlus</remarks>
         </member>
         <member name="P:PHRPReader.Data.SearchEngineParameters.Parameters">
             <summary>
@@ -2808,7 +3398,7 @@
         </member>
         <member name="F:PHRPReader.PeptideHitResultTypes.Inspect">
             <summary>
-            Inspect
+            InSpecT
             </summary>
         </member>
         <member name="F:PHRPReader.PeptideHitResultTypes.MSGFPlus">
@@ -2850,6 +3440,11 @@
         <member name="F:PHRPReader.PeptideHitResultTypes.MaxQuant">
             <summary>
             MaxQuant
+            </summary>
+        </member>
+        <member name="F:PHRPReader.PeptideHitResultTypes.MSFragger">
+            <summary>
+            MSFragger
             </summary>
         </member>
         <member name="T:PHRPReader.MSGFPlusParamFileModExtractor">
@@ -2953,10 +3548,18 @@
               ModSymbol:  ?   (a question mark; not used)
             </remarks>
         </member>
+        <member name="F:PHRPReader.MSGFPlusParamFileModExtractor.ModInfo.IsobaricMod">
+            <summary>
+            True if this is an isobaric mod (e.g. TMT or iTRAQ)
+            </summary>
+        </member>
         <member name="F:PHRPReader.MSGFPlusParamFileModExtractor.ModInfo.ModName">
             <summary>
-            Mod name (read from the parameter file) isn't used by MS-GF+, but it is used by MSPathFinder
+            Mod name (read from the parameter file)
             </summary>
+            <remarks>
+            The mod name isn't used by MS-GF+, but it is used by MSPathFinder and MaxQuant
+            </remarks>
         </member>
         <member name="F:PHRPReader.MSGFPlusParamFileModExtractor.ModInfo.ModMass">
             <summary>
@@ -2972,16 +3575,41 @@
             <summary>
             Affected residues
             </summary>
+            <remarks>
+            One letter amino acid symbols, or one of the symbols used by DMS
+            to track N-terminal and C-Terminal peptide/protein residues
+            (e.g., constant N_TERMINAL_PEPTIDE_SYMBOL_DMS in the <see cref="T:PHRPReader.Data.AminoAcidModInfo"/> class)
+            </remarks>
         </member>
         <member name="F:PHRPReader.MSGFPlusParamFileModExtractor.ModInfo.ModType">
             <summary>
-            Modification type
+            Modification type, as tracked internally by PHRP
             </summary>
+            <remarks>
+            PHRP does not support static mods at the N or C terminus that only apply to specific residues
+            When these are found, the ModType tracked in-memory is changed to DynamicMod, DynNTermPeptide, DynCTermPeptide, DynNTermProtein, or DynCTermProtein
+            </remarks>
+        </member>
+        <member name="F:PHRPReader.MSGFPlusParamFileModExtractor.ModInfo.ModTypeInParameterFile">
+            <summary>
+            Modification type, as defined in the parameter file
+            </summary>
+            <remarks>
+            As explained in <see cref="F:PHRPReader.MSGFPlusParamFileModExtractor.ModInfo.ModType"/>, this modification type could differ from ModType
+            </remarks>
         </member>
         <member name="F:PHRPReader.MSGFPlusParamFileModExtractor.ModInfo.ModSymbol">
             <summary>
             Modification symbol: *, #, @, ... ; dash if a static mod
             </summary>
+        </member>
+        <member name="F:PHRPReader.MSGFPlusParamFileModExtractor.ModInfo.ShortName">
+            <summary>
+            Modification name, without residues
+            </summary>
+            <remarks>
+            Only used for MaxQuant results; empty string for other tools
+            </remarks>
         </member>
         <member name="M:PHRPReader.MSGFPlusParamFileModExtractor.ModInfo.ToString">
             <summary>
@@ -3767,7 +4395,7 @@
         </member>
         <member name="P:PHRPReader.ReaderFactory.PeptideHitResultType">
             <summary>
-            Peptide hit result type; SEQUEST, XTandem, Inspect, MSGFPlus, etc.
+            Peptide hit result type; SEQUEST, XTandem, InSpecT, MSGFPlus, etc.
             </summary>
         </member>
         <member name="P:PHRPReader.ReaderFactory.PercentComplete">
@@ -4047,6 +4675,14 @@
             <param name="preferredName">Output: preferred PHRP result filename (based on whether a _syn.txt or _fht.txt file is present)</param>
             <returns>Mod summary file path if found; otherwise, an empty string</returns>
         </member>
+        <member name="M:PHRPReader.ReaderFactory.FlattenArray(System.Collections.Generic.IList{System.String},System.Int32)">
+            <summary>
+            Join a series of string values together, separating by a tab
+            </summary>
+            <param name="dataValues"></param>
+            <param name="indexStart">Index of the first item to include</param>
+            <returns>Tab-separated list of values</returns>
+        </member>
         <member name="M:PHRPReader.ReaderFactory.GetCollisionMode(System.String)">
             <summary>
             Determines the collision mode using the Scan Type name
@@ -4155,6 +4791,13 @@
             <param name="resultType"></param>
             <returns>Filename</returns>
         </member>
+        <member name="M:PHRPReader.ReaderFactory.GetToolVersionInfoFilenames(PHRPReader.PeptideHitResultTypes)">
+            <summary>
+            Get the tool version info filename for the given analysis tool
+            </summary>
+            <param name="resultType"></param>
+            <returns>Filename</returns>
+        </member>
         <member name="M:PHRPReader.ReaderFactory.IsLetterAtoZ(System.Char)">
             <summary>
             Returns true if the character is a letter between A and Z or a and z
@@ -4237,7 +4880,7 @@
             <param name="filterText"></param>
             <param name="parentIonMz"></param>
             <returns>True if parsing successful</returns>
-            <remarks>The original version of this code is in ThermoRawFileReader.XRawFileIO.ExtractParentIonMZFromFilterText(string, out double)</remarks>
+            <remarks>The original version of this code is in ThermoRawFileReader.FilterTextUtilities.ExtractParentIonMZFromFilterText(string, out double)</remarks>
         </member>
         <member name="M:PHRPReader.ReaderFactory.FinalizeCurrentPSM">
             <summary>
@@ -4284,6 +4927,14 @@
             <summary>
             MaxQuant first hits file suffix
             </summary>
+            <remarks>
+            <para>
+            This public constant is defined for compatibility with other classes
+            </para>
+            <para>
+            We don't actually create first-hits files for MaxQuant results
+            </para>
+            </remarks>
         </member>
         <member name="F:PHRPReader.Reader.MaxQuantSynFileReader.MAXQUANT_SEARCH_ENGINE_NAME">
             <summary>
@@ -4479,6 +5130,7 @@
             <summary>
             Column headers
             </summary>
+            <remarks>Keys are column name, values are 0-based column index</remarks>
         </member>
         <member name="F:PHRPReader.Reader.PrecursorInfoFileReader.mPrecursorInfoFileColumn">
             <summary>
@@ -4500,7 +5152,7 @@
             Define header names
             </summary>
         </member>
-        <member name="M:PHRPReader.Reader.PrecursorInfoFileReader.GetColumnHeaderNamesAndIDs">
+        <member name="M:PHRPReader.Reader.PrecursorInfoFileReader.GetColumnHeaderNamesAndIDs(System.Boolean)">
             <summary>
             Header names and enums for the _PrecursorInfo.txt file
             </summary>
@@ -4528,19 +5180,158 @@
             <param name="inputFilePath">Input file path</param>
             <returns>A Dictionary where keys are ScanNumber and values are instances of the PrecursorInfo class</returns>
         </member>
+        <member name="T:PHRPReader.Reader.ReporterIonsFileReader">
+            <summary>
+            This class reads a tab-delimited _ReporterIons.txt file (created by MASIC)
+            </summary>
+        </member>
+        <member name="F:PHRPReader.Reader.ReporterIonsFileReader.mColumnHeaders">
+            <summary>
+            Column headers
+            </summary>
+            <remarks>Keys are column name, values are 0-based column index</remarks>
+        </member>
+        <member name="F:PHRPReader.Reader.ReporterIonsFileReader.mReporterIonHeaders">
+            <summary>
+            Reporter ion specific header info read from the input file
+            </summary>
+            <remarks>Keys are 0-based column index, values are column name</remarks>
+        </member>
+        <member name="F:PHRPReader.Reader.ReporterIonsFileReader.mReporterIonsFileColumn">
+            <summary>
+            Mapping from enum to Reporter Ions file column name
+            </summary>
+        </member>
+        <member name="P:PHRPReader.Reader.ReporterIonsFileReader.ErrorMessage">
+            <summary>
+            Error message
+            </summary>
+        </member>
+        <member name="P:PHRPReader.Reader.ReporterIonsFileReader.ReporterIonHeaderNames">
+            <summary>
+            Reporter ion header names, starting with the ReporterIonIntensityMax column
+            </summary>
+            <remarks>
+            The MASICResultsMerger program uses this property
+            </remarks>
+        </member>
+        <member name="M:PHRPReader.Reader.ReporterIonsFileReader.#ctor">
+            <summary>
+            Constructor
+            </summary>
+        </member>
+        <member name="M:PHRPReader.Reader.ReporterIonsFileReader.CacheReporterIonColumnInfo(System.Collections.Generic.IReadOnlyList{System.String},System.Collections.Generic.IDictionary{System.String,System.Int32})">
+            <summary>
+            Examine the column headers to populate mReporterIonHeaders
+            </summary>
+            <param name="columnNames"></param>
+            <param name="reporterIonMapping"></param>
+        </member>
+        <member name="M:PHRPReader.Reader.ReporterIonsFileReader.DefineColumnHeaders">
+            <summary>
+            Define header names
+            </summary>
+        </member>
+        <member name="M:PHRPReader.Reader.ReporterIonsFileReader.GetColumnHeaderNamesAndIDs">
+            <summary>
+            Header names and enums for the _ReporterIons.txt file
+            </summary>
+            <returns>Dictionary of header names and enum values</returns>
+        </member>
+        <member name="M:PHRPReader.Reader.ReporterIonsFileReader.GetColumnMapFromHeaderLine(System.Collections.Generic.List{System.String})">
+            <summary>
+            Compares the names in headerNames to the standard header names tracked by the dictionary returned by GetColumnHeaderNamesAndIDs
+            Populates a dictionary mapping enum ReporterIonsFileColumns to the 0-based index in columnNames
+            </summary>
+            <param name="headerNames"></param>
+            <returns>Dictionary mapping the enum value to the column index in headerNames (0-based column index)</returns>
+        </member>
+        <member name="M:PHRPReader.Reader.ReporterIonsFileReader.GetColumnNameByID(PHRPReader.Data.ReporterIonsFileColumns)">
+            <summary>
+            Get the column name associated with the given enum
+            </summary>
+            <param name="column"></param>
+            <returns>Column name</returns>
+        </member>
+        <member name="M:PHRPReader.Reader.ReporterIonsFileReader.ReadReporterIonData(System.String)">
+            <summary>
+            Open a tab-delimited _ReporterIons.txt file and read the data
+            </summary>
+            <param name="inputFilePath">Input file path</param>
+            <returns>A Dictionary where keys are ScanNumber and values are instances of the ReporterIonInfo class</returns>
+        </member>
+        <member name="T:PHRPReader.Reader.SICStatsReader">
+            <summary>
+            This class reads MASIC SIC stats data from a tab-delimited _SICStats.txt file
+            </summary>
+        </member>
+        <member name="F:PHRPReader.Reader.SICStatsReader.mColumnHeaders">
+            <summary>
+            Column headers
+            </summary>
+            <remarks>Keys are column name, values are 0-based column index</remarks>
+        </member>
+        <member name="F:PHRPReader.Reader.SICStatsReader.mSICStatsFileColumn">
+            <summary>
+            Mapping from enum to Scan Stats file column name
+            </summary>
+        </member>
+        <member name="P:PHRPReader.Reader.SICStatsReader.ErrorMessage">
+            <summary>
+            Error message
+            </summary>
+        </member>
+        <member name="M:PHRPReader.Reader.SICStatsReader.#ctor">
+            <summary>
+            Constructor
+            </summary>
+        </member>
+        <member name="M:PHRPReader.Reader.SICStatsReader.DefineColumnHeaders">
+            <summary>
+            Define header names
+            </summary>
+        </member>
+        <member name="M:PHRPReader.Reader.SICStatsReader.GetColumnHeaderNamesAndIDs">
+            <summary>
+            Header names and enums for the _SICStats.txt file
+            </summary>
+            <returns>Dictionary of header names and enum values</returns>
+        </member>
+        <member name="M:PHRPReader.Reader.SICStatsReader.GetColumnMapFromHeaderLine(System.Collections.Generic.List{System.String})">
+            <summary>
+            Compares the names in headerNames to the standard header names tracked by the dictionary returned by GetColumnHeaderNamesAndIDs
+            Populates a dictionary mapping enum SICStatsFileColumns to the 0-based index in columnNames
+            </summary>
+            <param name="headerNames"></param>
+            <returns>Dictionary mapping the enum value to the column index in headerNames (0-based column index)</returns>
+        </member>
+        <member name="M:PHRPReader.Reader.SICStatsReader.GetColumnNameByID(PHRPReader.Data.SICStatsFileColumns)">
+            <summary>
+            Get the column name associated with the given enum
+            </summary>
+            <param name="column"></param>
+            <returns>Column name</returns>
+        </member>
+        <member name="M:PHRPReader.Reader.SICStatsReader.ReadSICStatsData(System.String)">
+            <summary>
+            Open a tab-delimited _SICStats.txt file and read the data
+            </summary>
+            <param name="inputFilePath">Input file path</param>
+            <returns>A Dictionary where keys are fragment scan number and values are instances of SICStatsInfo</returns>
+        </member>
         <member name="T:PHRPReader.Reader.InspectSynFileReader">
             <summary>
-            PHRP SynFileReader for Inspect
+            PHRP SynFileReader for InSpecT
             </summary>
         </member>
         <member name="F:PHRPReader.Reader.InspectSynFileReader.FILENAME_SUFFIX_SYN">
             <summary>
-            Inspect synopsis file suffix
+            InSpecT synopsis file suffix
             </summary>
         </member>
         <member name="F:PHRPReader.Reader.InspectSynFileReader.FILENAME_SUFFIX_FHT">
             <summary>
-            Inspect first hits file suffix
+            InSpecT first hits file suffix
             </summary>
         </member>
         <member name="F:PHRPReader.Reader.InspectSynFileReader.INS_SEARCH_ENGINE_NAME">
@@ -4550,7 +5341,7 @@
         </member>
         <member name="F:PHRPReader.Reader.InspectSynFileReader.mSynopsisFileColumn">
             <summary>
-            Mapping from enum to synopsis file column name for Inspect
+            Mapping from enum to synopsis file column name for InSpecT
             </summary>
         </member>
         <member name="P:PHRPReader.Reader.InspectSynFileReader.PHRPFirstHitsFileName">
@@ -4719,7 +5510,7 @@
         </member>
         <member name="M:PHRPReader.Reader.InspectSynFileReader.LoadSearchEngineParameters(System.String,PHRPReader.Data.SearchEngineParameters@)">
             <summary>
-            Parses the specified Inspect parameter file
+            Parses the specified InSpecT parameter file
             </summary>
             <param name="searchEngineParamFileName"></param>
             <param name="searchEngineParams"></param>
@@ -4750,6 +5541,14 @@
             <summary>
             MODa first hits file suffix
             </summary>
+            <remarks>
+            <para>
+            This public constant is defined for compatibility with other classes
+            </para>
+            <para>
+            We don't actually create first-hits files for MaxQuant results
+            </para>
+            </remarks>
         </member>
         <member name="F:PHRPReader.Reader.MODaSynFileReader.MODa_SEARCH_ENGINE_NAME">
             <summary>
@@ -4958,6 +5757,14 @@
             <summary>
             MODPlus first hits file suffix
             </summary>
+            <remarks>
+            <para>
+            This public constant is defined for compatibility with other classes
+            </para>
+            <para>
+            We don't actually create first-hits files for MaxQuant results
+            </para>
+            </remarks>
         </member>
         <member name="F:PHRPReader.Reader.MODPlusSynFileReader.MODPlus_SEARCH_ENGINE_NAME">
             <summary>
@@ -5043,7 +5850,7 @@
             </summary>
             <returns>List of header names</returns>
         </member>
-        <member name="M:PHRPReader.Reader.MODPlusSynFileReader.GetColumnHeaderNamesAndIDs">
+        <member name="M:PHRPReader.Reader.MODPlusSynFileReader.GetColumnHeaderNamesAndIDs(System.Boolean)">
             <summary>
             Header names and enums for the PHRP synopsis file for this tool
             </summary>
@@ -5582,7 +6389,7 @@
         </member>
         <member name="M:PHRPReader.Reader.MSGFPlusSynFileReader.GetMSGFDBColumnNameByID(PHRPReader.Data.MSGFDBSynFileColumns)">
             <summary>
-            Get the MSGFDB column name associated with the given column
+            Get the MSGFDB column name associated with the given column (for legacy tool MSGFDB, not MS-GF+)
             </summary>
             <param name="column"></param>
             <returns>Column name</returns>
@@ -5687,6 +6494,7 @@
             <summary>
             Column headers
             </summary>
+            <remarks>Keys are column name, values are 0-based column index</remarks>
         </member>
         <member name="F:PHRPReader.Reader.MSGFResultsReader.mMSGFFileColumn">
             <summary>
@@ -5750,6 +6558,14 @@
             <summary>
             MSPathFinder first hits file suffix
             </summary>
+            <remarks>
+            <para>
+            This public constant is defined for compatibility with other classes
+            </para>
+            <para>
+            We don't actually create first-hits files for MaxQuant results
+            </para>
+            </remarks>
         </member>
         <member name="F:PHRPReader.Reader.MSPathFinderSynFileReader.MSPathFinder_SEARCH_ENGINE_NAME">
             <summary>
@@ -6061,7 +6877,7 @@
         </member>
         <member name="P:PHRPReader.Reader.SynFileReaderBaseClass.PeptideHitResultType">
             <summary>
-            Peptide hit result type; Sequest, XTandem, Inspect, MSGFPlus, etc.
+            Peptide hit result type; Sequest, XTandem, InSpecT, MSGFPlus, etc.
             </summary>
         </member>
         <member name="P:PHRPReader.Reader.SynFileReaderBaseClass.PepToProteinMap">
@@ -6142,7 +6958,10 @@
             <param name="inputFilePath">Input file path</param>
             <param name="peptideHitResultType">Peptide Hit Results file type</param>
             <param name="loadModsAndSeqInfo">Controls whether or not the _SeqInfo.txt and _SeqToProteinMap.txt files should be read</param>
-            <remarks>If inputFilePath is an empty string, the functions that solely depend on dataset name will be callable, but data related functions will not be callable</remarks>
+            <remarks>
+            If inputFilePath is an empty string, the methods that solely depend on dataset name will be callable,
+            but data related methods will not be callable
+            </remarks>
         </member>
         <member name="M:PHRPReader.Reader.SynFileReaderBaseClass.#ctor(System.String,System.String,PHRPReader.PeptideHitResultTypes,PHRPReader.StartupOptions)">
             <summary>
@@ -6152,7 +6971,10 @@
             <param name="inputFilePath">Input file path</param>
             <param name="peptideHitResultType"></param>
             <param name="startupOptions">Startup Options, in particular LoadModsAndSeqInfo and MaxProteinsPerPSM</param>
-            <remarks>If inputFilePath is an empty string, the functions that solely depend on dataset name will be callable, but data related functions will not be callable</remarks>
+            <remarks>
+            If inputFilePath is an empty string, the methods that solely depend on dataset name will be callable,
+            but data related methods will not be callable
+            </remarks>
         </member>
         <member name="M:PHRPReader.Reader.SynFileReaderBaseClass.InitializeReader(System.String,System.String,PHRPReader.PeptideHitResultTypes,PHRPReader.StartupOptions)">
             <summary>
@@ -6163,7 +6985,7 @@
             <param name="peptideHitResultType">Peptide Hit Results file type</param>
             <param name="startupOptions">Startup options</param>
             <remarks>
-            If inputFilePath is an empty string,  the functions that solely depend on dataset name will be callable, but data related functions will not be callable
+            If inputFilePath is an empty string, the methods that solely depend on dataset name will be callable, but data related methods will not be callable
             startupOptions.LoadModsAndSeqInfo controls whether or not the _SeqInfo.txt and _SeqToProteinMap.txt files should be read
             Setting startupOptions.MaxProteinsPerPSM to a non-zero value will limit the number of proteins that are tracked
             </remarks>
@@ -6239,27 +7061,6 @@
             <param name="searchEngineParamFileName">Name of the parameter file to parse (must reside in InputDirectoryPath)</param>
             <param name="searchEngineParams">Output: Search engine parameters class</param>
             <returns>True if successful, false if an error</returns>
-        </member>
-        <member name="M:PHRPReader.Reader.SynFileReaderBaseClass.AddHeaderColumn(System.String)">
-            <summary>
-            Add a PHRP synopsis or first hits header column to mColumnHeaders
-            </summary>
-            <param name="columnName"></param>
-            <remarks>
-            The column index will be set to mColumnHeaders.Count
-            That value will be updated by ParseColumnHeaders
-            </remarks>
-        </member>
-        <member name="M:PHRPReader.Reader.SynFileReaderBaseClass.AddHeaderColumn(System.Collections.Generic.IDictionary{System.String,System.Int32},System.String)">
-            <summary>
-            Add column to mColumnHeaders
-            </summary>
-            <param name="columnName"></param>
-            <param name="columnHeaders"></param>
-            <remarks>
-            The column index will be set to mColumnHeaders.Count
-            That value will later be updated by ParseColumnHeaders
-            </remarks>
         </member>
         <member name="M:PHRPReader.Reader.SynFileReaderBaseClass.AddScore(PHRPReader.Data.PSM,System.String[],System.String)">
             <summary>
@@ -6555,6 +7356,7 @@
             <summary>
             Column headers
             </summary>
+            <remarks>Keys are column name, values are 0-based column index</remarks>
         </member>
         <member name="F:PHRPReader.Reader.ExtendedScanStatsReader.mExtendedScanStatsFileColumn">
             <summary>
@@ -6608,6 +7410,12 @@
             <summary>
             This class reads MASIC ScanStats data from a tab-delimited _ScanStats.txt file
             </summary>
+        </member>
+        <member name="F:PHRPReader.Reader.ScanStatsReader.mColumnHeaders">
+            <summary>
+            Column headers
+            </summary>
+            <remarks>Keys are column name, values are 0-based column index</remarks>
         </member>
         <member name="F:PHRPReader.Reader.ScanStatsReader.mScanStatsFileColumn">
             <summary>
@@ -7084,6 +7892,14 @@
             <summary>
             X!Tandem first hits file suffix
             </summary>
+            <remarks>
+            <para>
+            This public constant is defined for compatibility with other classes
+            </para>
+            <para>
+            We don't actually create first-hits files for MaxQuant results
+            </para>
+            </remarks>
         </member>
         <member name="F:PHRPReader.Reader.XTandemSynFileReader.XT_SEARCH_ENGINE_NAME">
             <summary>
@@ -7301,6 +8117,16 @@
             </summary>
             <remarks>Use these options to define load behavior to be used when instantiating PHRP reader</remarks>
         </member>
+        <member name="P:PHRPReader.StartupOptions.DisableOpeningInputFiles">
+            <summary>
+            When true, do not try to open the input file
+            This allows the input file to be non-existent, or even an empty string
+            </summary>
+            <remarks>
+            Note that some methods (e.g. LoadSearchEngineParameters) accept a filename but not a full path
+            To allow for the InputDirectoryPath to be initialized, instantiate the reader with a full path to a non-existent file
+            </remarks>
+        </member>
         <member name="P:PHRPReader.StartupOptions.LoadModsAndSeqInfo">
             <summary>
             If true, load the modification and SeqInfo data
@@ -7332,6 +8158,42 @@
             <summary>
             Constructor
             </summary>
+        </member>
+        <member name="T:PHRPReader.XmlReaderUtilities">
+            <summary>
+            Utility methods for reading data from XML files using an XDocument
+            </summary>
+        </member>
+        <member name="M:PHRPReader.XmlReaderUtilities.GetElementValueOrDefault(System.Xml.Linq.XElement,System.String[])">
+            <summary>
+            Traverse an XML node hierarchy for the given element names
+            If the final element is found, return its value, otherwise return an empty string
+            </summary>
+            <param name="parentNode"></param>
+            /// <param name="elementNames"></param>
+            <remarks>See also <see cref="M:PHRPReader.XmlReaderUtilities.TryGetElementValue(System.Xml.Linq.XElement,System.String,System.String@)"/></remarks>
+            <returns>Value if found, or an empty string</returns>
+        </member>
+        <member name="M:PHRPReader.XmlReaderUtilities.TryGetAttribute(System.Xml.Linq.XElement,System.String,System.String@)">
+            <summary>
+            Get the named attribute from the given element
+            </summary>
+            <param name="item"></param>
+            <param name="attributeName"></param>
+            <param name="attributeValue"></param>
+            <returns>True if found, otherwise false</returns>
+        </member>
+        <member name="M:PHRPReader.XmlReaderUtilities.TryGetElementValue(System.Xml.Linq.XElement,System.String,System.String@)">
+            <summary>
+            Look for the given element below the given parent
+            If found, update elementValue with its value and return true
+            Otherwise, return false
+            </summary>
+            <param name="parentItem"></param>
+            <param name="elementName"></param>
+            <param name="elementValue"></param>
+            <returns>True if found, otherwise false</returns>
+            <remarks>See also <see cref="M:PHRPReader.XmlReaderUtilities.GetElementValueOrDefault(System.Xml.Linq.XElement,System.String[])"/></remarks>
         </member>
     </members>
 </doc>
