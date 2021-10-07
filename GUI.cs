@@ -3,7 +3,7 @@
 // Program started June 14, 2005
 //
 // E-mail: matthew.monroe@pnnl.gov or proteomics@pnnl.gov
-// Website: https://omics.pnl.gov/ or https://panomics.pnnl.gov/
+// Website: https://github.com/PNNL-Comp-Mass-Spec/ or https://panomics.pnnl.gov/ or https://www.pnnl.gov/integrative-omics
 // -------------------------------------------------------------------------------
 //
 // Licensed under the 2-Clause BSD License; you may not use this file except
@@ -935,7 +935,7 @@ namespace ProteinCoverageSummarizerGUI
             message.AppendFormat("This is version {0} ({1})\n", Application.ProductVersion, Program.PROGRAM_DATE);
             message.AppendLine();
             message.AppendLine("E-mail: matthew.monroe@pnnl.gov or proteomics@pnnl.gov");
-            message.AppendLine("Website: https://omics.pnl.gov or https://panomics.pnl.gov/");
+            message.AppendLine("Website: https://github.com/PNNL-Comp-Mass-Spec/ or https://panomics.pnnl.gov/ or https://www.pnnl.gov/integrative-omics");
             message.AppendLine();
             message.AppendLine("Licensed under the 2-Clause BSD License; https://opensource.org/licenses/BSD-2-Clause");
             message.AppendLine("Copyright 2018 Battelle Memorial Institute");
