@@ -1349,7 +1349,7 @@ namespace PeptideToProteinMapEngine
                             break;
 
                         default:
-                            // SEQUEST, X!Tandem, InSpecT, or MS-GF+ PHRP data file; need to post-process the results file
+                            // PHRP data file (from SEQUEST, X!Tandem, InSpecT, MS-GF+, MaxQuant, etc.); need to post-process the results file
                             success = PostProcessPSMResultsFile(inputFilePathWork, proteinToPepMapFilePath, DeleteTempFiles);
                             break;
                     }
