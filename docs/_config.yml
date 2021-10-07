@@ -1,0 +1,4 @@
+# Jekyll configuration
+name: protein-coverage-summarizer
+description: The Protein Coverage Summarizer can be used to determine the percent of the residues in each protein sequence that have been identified.
+url: https://pnnl-comp-mass-spec.github.io/protein-coverage-summarizer/
