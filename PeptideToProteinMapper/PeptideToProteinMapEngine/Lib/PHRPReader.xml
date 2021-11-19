@@ -2041,6 +2041,14 @@
             True if this was an unknown mass that was auto defined
             </summary>
         </member>
+        <member name="P:PHRPReader.Data.ModificationDefinition.UniModName">
+            <summary>
+            UniMod name
+            </summary>
+            <remarks>
+            To see standard mod names, login as a guest to http://www.unimod.org/modifications_list.php?
+            </remarks>
+        </member>
         <member name="M:PHRPReader.Data.ModificationDefinition.#ctor">
             <summary>
             Constructor
@@ -3677,14 +3685,13 @@
             <para>
             The sequence can simply contain single-letter amino acid symbols (capital letters) or a mix
             of amino acid symbols and modification symbols, for example:
-              A.BCDEFGHIJK.L
-              A.B*CDEFGHIJK.L
-              A.BCDEFGHIJK*.L
-              A.BCDEFGHIJK.L
+              R.PEPTIDEK.L
+              R.P*EPTIDEK.L
+              R.PEPTIDEK*.L
             </para>
             <para>
             Method ComputeCleavageState is overloaded to either except the peptide sequence with
-            prefix and suffix letters (e.g. A.BCDEFGHIJK.L) or accept the primary peptide sequence,
+            prefix and suffix letters (e.g. R.PEPTIDEK.L) or accept the primary peptide sequence,
             the prefix residue(s), and the suffix residue(s).
             </para>
             <para>Use EnzymeMatchSpec to specify the residues to match for cleavage</para>
@@ -3714,6 +3721,16 @@
         <member name="F:PHRPReader.PeptideCleavageStateCalculator.TERMINUS_SYMBOL_XTANDEM_CTerminus">
             <summary>
             Peptide C-terminus symbol for X!Tandem
+            </summary>
+        </member>
+        <member name="F:PHRPReader.PeptideCleavageStateCalculator.TRYPSIN_LEFT_RESIDUE_REGEX">
+            <summary>
+            Regular expression for the residue to the left of cleavage points for the given enzyme
+            </summary>
+        </member>
+        <member name="F:PHRPReader.PeptideCleavageStateCalculator.TRYPSIN_RIGHT_RESIDUE_REGEX">
+            <summary>
+            Regular expression for the residue to the right of cleavage points for the given enzyme
             </summary>
         </member>
         <member name="T:PHRPReader.PeptideCleavageStateCalculator.PeptideCleavageState">
@@ -3771,6 +3788,56 @@
             Standard enzymes
             </summary>
         </member>
+        <member name="F:PHRPReader.PeptideCleavageStateCalculator.StandardCleavageAgent.Trypsin">
+            <summary>
+            Trypsin: cleave after K or R, unless followed by P
+            </summary>
+        </member>
+        <member name="F:PHRPReader.PeptideCleavageStateCalculator.StandardCleavageAgent.TrypsinWithoutProlineRule">
+            <summary>
+            Trypsin: cleave after any K or R
+            </summary>
+        </member>
+        <member name="F:PHRPReader.PeptideCleavageStateCalculator.StandardCleavageAgent.TrypsinPlusFVLEY">
+            <summary>
+            Cleave after K, R, F, Y, V, E, or L
+            </summary>
+        </member>
+        <member name="F:PHRPReader.PeptideCleavageStateCalculator.StandardCleavageAgent.Chymotrypsin">
+            <summary>
+            Chymotrypsin: cleave after F, W, Y, or L
+            </summary>
+        </member>
+        <member name="F:PHRPReader.PeptideCleavageStateCalculator.StandardCleavageAgent.ChymotrypsinAndTrypsin">
+            <summary>
+            Both trypsin and chymotrypsin: cleave after F, W, Y, L, K, or R
+            </summary>
+        </member>
+        <member name="F:PHRPReader.PeptideCleavageStateCalculator.StandardCleavageAgent.GluC">
+            <summary>
+            Glu-C: cleave after E or D
+            </summary>
+        </member>
+        <member name="F:PHRPReader.PeptideCleavageStateCalculator.StandardCleavageAgent.CyanBr">
+            <summary>
+            Cyanogen bromide: cleave after M
+            </summary>
+        </member>
+        <member name="F:PHRPReader.PeptideCleavageStateCalculator.StandardCleavageAgent.EndoArgC">
+            <summary>
+            Arg-C: cleave after R
+            </summary>
+        </member>
+        <member name="F:PHRPReader.PeptideCleavageStateCalculator.StandardCleavageAgent.EndoLysC">
+            <summary>
+            Lys-C: cleave after K
+            </summary>
+        </member>
+        <member name="F:PHRPReader.PeptideCleavageStateCalculator.StandardCleavageAgent.EndoAspN">
+            <summary>
+            Asp-N: cleave before D
+            </summary>
+        </member>
         <member name="T:PHRPReader.PeptideCleavageStateCalculator.EnzymeMatchSpecInfo">
             <summary>
             Example RegEx match strings for EnzymeMatchSpecInfo:
@@ -3815,12 +3882,6 @@
             <summary>
             Constructor
             </summary>
-        </member>
-        <member name="M:PHRPReader.PeptideCleavageStateCalculator.CleavageStateToShort(PHRPReader.PeptideCleavageStateCalculator.PeptideCleavageState)">
-            <summary>
-            Converts Cleavage State to 0, 1, or 2
-            </summary>
-            <param name="cleavageState"></param>
         </member>
         <member name="M:PHRPReader.PeptideCleavageStateCalculator.ComputeCleavageState(System.String)">
             <summary>
@@ -3913,8 +3974,8 @@
             <summary>
             Examines the two residues to see if they represent an expected cleavage point
             </summary>
-            <param name="chLeftChar"></param>
-            <param name="chRightChar"></param>
+            <param name="leftChar"></param>
+            <param name="rightChar"></param>
             <returns>True if the characters match the currently defined cleavage rule</returns>
         </member>
         <member name="T:PHRPReader.PeptideMassCalculator">
@@ -4812,6 +4873,13 @@
             </summary>
             <param name="data"></param>
             <returns>True if a number, otherwise false</returns>
+        </member>
+        <member name="M:PHRPReader.ReaderFactory.IsSynopsisOrFirstHitsFile(System.String)">
+            <summary>
+            Examine the filename to see if it ends with one of the known suffixes for synopsis and first hits files created by PeptideHitResultsProcRunner
+            </summary>
+            <param name="fileNameOrPath"></param>
+            <returns>True if the name ends with a known suffix, otherwise false</returns>
         </member>
         <member name="M:PHRPReader.ReaderFactory.LookupColumnIndex(System.String,System.Collections.Generic.SortedDictionary{System.String,System.Int32})">
             <summary>
