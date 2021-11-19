@@ -1,16 +1,5 @@
-﻿using System;
-using System.ComponentModel;
-using System.Data;
-using System.IO;
-using System.Text;
-using System.Text.RegularExpressions;
+﻿using System.ComponentModel;
 using System.Windows.Forms;
-using Ookii.Dialogs;
-using PRISM;
-using PRISM.FileProcessor;
-using PRISMWin;
-using ProteinCoverageSummarizer;
-using ProteinFileReader;
 
 namespace ProteinCoverageSummarizerGUI
 {
@@ -21,7 +10,7 @@ namespace ProteinCoverageSummarizerGUI
         /// <summary>
         /// Required designer variable.
         /// </summary>
-        private System.ComponentModel.IContainer components = null;
+        private IContainer components = null;
 
         /// <summary>
         /// Clean up any resources being used.

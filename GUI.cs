@@ -22,6 +22,7 @@ using System.Windows.Forms;
 using Ookii.Dialogs;
 using PRISM;
 using PRISM.FileProcessor;
+using PRISMDatabaseUtils;
 using PRISMWin;
 using ProteinCoverageSummarizer;
 using ProteinFileReader;
@@ -642,13 +643,13 @@ namespace ProteinCoverageSummarizerGUI
                 var coverageResults = new DataTable(COVERAGE_RESULTS_DATA_TABLE);
 
                 // Add the columns to the data table
-                PRISMDatabaseUtils.DataTableUtils.AppendColumnStringToTable(coverageResults, COL_NAME_PROTEIN_NAME, string.Empty);
-                PRISMDatabaseUtils.DataTableUtils.AppendColumnFloatToTable(coverageResults, COL_NAME_PROTEIN_COVERAGE);
-                PRISMDatabaseUtils.DataTableUtils.AppendColumnStringToTable(coverageResults, COL_NAME_PROTEIN_DESCRIPTION, string.Empty);
-                PRISMDatabaseUtils.DataTableUtils.AppendColumnIntegerToTable(coverageResults, COL_NAME_NON_UNIQUE_PEPTIDE_COUNT);
-                PRISMDatabaseUtils.DataTableUtils.AppendColumnIntegerToTable(coverageResults, COL_NAME_UNIQUE_PEPTIDE_COUNT);
-                PRISMDatabaseUtils.DataTableUtils.AppendColumnIntegerToTable(coverageResults, COL_NAME_PROTEIN_RESIDUE_COUNT);
-                PRISMDatabaseUtils.DataTableUtils.AppendColumnStringToTable(coverageResults, COL_NAME_PROTEIN_SEQUENCE, string.Empty);
+                DataTableUtils.AppendColumnStringToTable(coverageResults, COL_NAME_PROTEIN_NAME, string.Empty);
+                DataTableUtils.AppendColumnFloatToTable(coverageResults, COL_NAME_PROTEIN_COVERAGE);
+                DataTableUtils.AppendColumnStringToTable(coverageResults, COL_NAME_PROTEIN_DESCRIPTION, string.Empty);
+                DataTableUtils.AppendColumnIntegerToTable(coverageResults, COL_NAME_NON_UNIQUE_PEPTIDE_COUNT);
+                DataTableUtils.AppendColumnIntegerToTable(coverageResults, COL_NAME_UNIQUE_PEPTIDE_COUNT);
+                DataTableUtils.AppendColumnIntegerToTable(coverageResults, COL_NAME_PROTEIN_RESIDUE_COUNT);
+                DataTableUtils.AppendColumnStringToTable(coverageResults, COL_NAME_PROTEIN_SEQUENCE, string.Empty);
 
                 // Note that Protein Sequence should be at ColIndex 6 = clsProteinCoverageSummarizer.OUTPUT_FILE_PROTEIN_SEQUENCE_COLUMN_NUMBER-1
                 mProteinSequenceColIndex = clsProteinCoverageSummarizer.OUTPUT_FILE_PROTEIN_SEQUENCE_COLUMN_NUMBER - 1;

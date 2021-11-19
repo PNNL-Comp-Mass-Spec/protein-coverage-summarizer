@@ -13,6 +13,8 @@
 // Copyright 2018 Battelle Memorial Institute
 
 using System;
+using PRISM;
+using PRISM.FileProcessor;
 using ProteinCoverageSummarizer;
 
 namespace ProteinCoverageSummarizerGUI
@@ -21,7 +23,7 @@ namespace ProteinCoverageSummarizerGUI
     /// This class uses ProteinCoverageSummarizer.dll to read in a protein FASTA file or delimited protein info file along with
     /// an accompanying file with peptide sequences to then compute the percent coverage of each of the proteins
     /// </summary>
-    public class clsProteinCoverageSummarizerRunner : PRISM.FileProcessor.ProcessFilesBase
+    public class clsProteinCoverageSummarizerRunner : ProcessFilesBase
     {
         // Ignore Spelling: Nikša
 
@@ -149,9 +151,9 @@ namespace ProteinCoverageSummarizerGUI
                     mOptionsShown = true;
                     Console.WriteLine("Processing Options");
                     Console.WriteLine();
-                    Console.WriteLine("{0,-35} {1}", "Input File:", PRISM.PathUtils.CompactPathString(inputFilePath, 80));
-                    Console.WriteLine("{0,-35} {1}", "Output Directory:", PRISM.PathUtils.CompactPathString(outputDirectoryPath, 80));
-                    Console.WriteLine("{0,-35} {1}", "Proteins File:", PRISM.PathUtils.CompactPathString(Options.ProteinInputFilePath, 80));
+                    Console.WriteLine("{0,-35} {1}", "Input File:", PathUtils.CompactPathString(inputFilePath, 80));
+                    Console.WriteLine("{0,-35} {1}", "Output Directory:", PathUtils.CompactPathString(outputDirectoryPath, 80));
+                    Console.WriteLine("{0,-35} {1}", "Proteins File:", PathUtils.CompactPathString(Options.ProteinInputFilePath, 80));
 
                     if (!string.IsNullOrWhiteSpace(parameterFilePath))
                     {

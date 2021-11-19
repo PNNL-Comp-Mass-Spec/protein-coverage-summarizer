@@ -19,6 +19,7 @@ using System.IO;
 using System.Linq;
 using PHRPReader;
 using PRISM;
+using PRISM.FileProcessor;
 using ProteinCoverageSummarizer;
 
 namespace PeptideToProteinMapEngine
@@ -28,7 +29,7 @@ namespace PeptideToProteinMapEngine
     /// an accompanying file with peptide sequences to find the proteins that contain each peptide
     /// It will also optionally compute the percent coverage of each of the proteins
     /// </summary>
-    public class clsPeptideToProteinMapEngine : PRISM.FileProcessor.ProcessFilesBase
+    public class clsPeptideToProteinMapEngine : ProcessFilesBase
     {
         // Ignore Spelling: phos, pre, struct
 
@@ -1191,9 +1192,9 @@ namespace PeptideToProteinMapEngine
                     mOptionsShown = true;
                     Console.WriteLine("Processing Options");
                     Console.WriteLine();
-                    Console.WriteLine("{0,-26} {1}", "Input File:", PRISM.PathUtils.CompactPathString(inputFilePath, 80));
-                    Console.WriteLine("{0,-26} {1}", "Output Directory:", PRISM.PathUtils.CompactPathString(outputDirectoryPath, 80));
-                    Console.WriteLine("{0,-26} {1}", "Proteins File:", PRISM.PathUtils.CompactPathString(Options.ProteinInputFilePath, 80));
+                    Console.WriteLine("{0,-26} {1}", "Input File:", PathUtils.CompactPathString(inputFilePath, 80));
+                    Console.WriteLine("{0,-26} {1}", "Output Directory:", PathUtils.CompactPathString(outputDirectoryPath, 80));
+                    Console.WriteLine("{0,-26} {1}", "Proteins File:", PathUtils.CompactPathString(Options.ProteinInputFilePath, 80));
 
                     if (!string.IsNullOrWhiteSpace(parameterFilePath))
                     {

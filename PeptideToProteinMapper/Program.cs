@@ -20,6 +20,7 @@ using System.Reflection;
 using System.Threading;
 using PeptideToProteinMapEngine;
 using PRISM;
+using PRISM.FileProcessor;
 using PRISM.Logging;
 using ProteinCoverageSummarizer;
 
@@ -187,7 +188,7 @@ namespace PeptideToProteinMapper
 
         private static string GetAppVersion()
         {
-            return PRISM.FileProcessor.ProcessFilesOrDirectoriesBase.GetAppVersion(PROGRAM_DATE);
+            return ProcessFilesOrDirectoriesBase.GetAppVersion(PROGRAM_DATE);
         }
 
         private static void RegisterEvents(IEventNotifier processingClass)

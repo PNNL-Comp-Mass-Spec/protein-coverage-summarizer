@@ -18,6 +18,7 @@ using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using PRISM;
+using PRISM.FileProcessor;
 using ProteinFileReader;
 
 namespace ProteinCoverageSummarizer
@@ -944,7 +945,7 @@ namespace ProteinCoverageSummarizer
         /// </summary>
         public static string GetAppDirectoryPath()
         {
-            return PRISM.FileProcessor.ProcessFilesOrDirectoriesBase.GetAppDirectoryPath();
+            return ProcessFilesOrDirectoriesBase.GetAppDirectoryPath();
         }
 
         /// <summary>
