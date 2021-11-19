@@ -137,12 +137,12 @@ namespace ProteinCoverageSummarizer
         /// <summary>
         /// Cached peptide info
         /// </summary>
-        public PeptideSequenceInfo[] mCachedPeptideSeqInfo = new PeptideSequenceInfo[0];
+        public PeptideSequenceInfo[] mCachedPeptideSeqInfo = Array.Empty<PeptideSequenceInfo>();
 
         /// <summary>
         /// Parallel to mCachedPeptideSeqInfo
         /// </summary>
-        private int[] mCachedPeptideToHashIndexPointer = new int[0];
+        private int[] mCachedPeptideToHashIndexPointer = Array.Empty<int>();
 
         private bool mIndicesSorted;
 

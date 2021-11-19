@@ -612,7 +612,7 @@ namespace ProteinCoverageSummarizer
             }
             else
             {
-                udtPeptideStats = new PeptideCountStats[0];
+                udtPeptideStats = Array.Empty<PeptideCountStats>();
             }
 
             // Query the SQLite DB to extract the protein information
