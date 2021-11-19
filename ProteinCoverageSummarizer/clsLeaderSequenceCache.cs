@@ -471,7 +471,9 @@ namespace ProteinCoverageSummarizer
             var cachedPeptideMatchIndex = Array.BinarySearch(mCachedPeptideToHashIndexPointer, 0, mCachedPeptideCount, targetHashIndex);
 
             while (cachedPeptideMatchIndex > 0 && mCachedPeptideToHashIndexPointer[cachedPeptideMatchIndex - 1] == targetHashIndex)
+            {
                 cachedPeptideMatchIndex--;
+            }
 
             return cachedPeptideMatchIndex;
         }

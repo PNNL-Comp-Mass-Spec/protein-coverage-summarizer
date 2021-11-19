@@ -599,7 +599,9 @@ namespace PeptideToProteinMapEngine
                         {
                             // Decrement matchIndex until the first match in proteinMapInfo is found
                             while (matchIndex > 0 && proteinMapInfo[matchIndex - 1].Peptide == cleanSequence)
+                            {
                                 matchIndex--;
+                            }
 
                             // Now write out each of the proteins for this peptide
                             // We're caching results to cachedData so that we can sort by protein name
@@ -1060,10 +1062,14 @@ namespace PeptideToProteinMapEngine
                     reader.SkipDuplicatePSMs = false;
 
                     foreach (var errorMessage in reader.ErrorMessages)
+                    {
                         ShowErrorMessage(errorMessage);
+                    }
 
                     foreach (var warningMessage in reader.WarningMessages)
+                    {
                         ShowMessage("Warning: " + warningMessage);
+                    }
 
                     reader.ClearErrors();
                     reader.ClearWarnings();
@@ -1142,7 +1148,9 @@ namespace PeptideToProteinMapEngine
                     else
                     {
                         foreach (var scanNumber in peptideEntry.Value)
+                        {
                             writer.WriteLine(peptide + "\t" + scanNumber);
+                        }
                     }
                 }
 
@@ -1399,7 +1407,9 @@ namespace PeptideToProteinMapEngine
 
             // ReSharper disable once ForeachCanBeConvertedToQueryUsingAnotherGetEnumerator
             foreach (var modName in inspectModNames)
+            {
                 peptide = peptide.Replace(modName, string.Empty);
+            }
 
             return prefix + peptide + suffix;
         }
