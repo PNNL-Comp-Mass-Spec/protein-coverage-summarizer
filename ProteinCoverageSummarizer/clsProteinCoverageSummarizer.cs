@@ -473,9 +473,7 @@ namespace ProteinCoverageSummarizer
                 outputFileName = outputFileBaseName + suffixToAppend;
             }
 
-            var outputFilePath = Path.Combine(GetOutputDirectoryPath(outputDirectoryPath, inputFilePath), outputFileName);
-
-            return outputFilePath;
+            return Path.Combine(GetOutputDirectoryPath(outputDirectoryPath, inputFilePath), outputFileName);
         }
 
         private string ConstructPeptideSequenceForKey(string peptideSequence, char prefixResidue, char suffixResidue)
