@@ -369,7 +369,7 @@ namespace PeptideToProteinMapper
                 Console.WriteLine("Use /LogDir to define the directory in which the log file should be created");
                 Console.WriteLine("Use /VerboseLog to create a detailed log file");
                 Console.WriteLine();
-                Console.WriteLine("Program written by Matthew Monroe for the Department of Energy (PNNL, Richland, WA) in 2008");
+                Console.WriteLine("Program written by Matthew Monroe for the Department of Energy (PNNL, Richland, WA)");
                 Console.WriteLine("Version: " + GetAppVersion());
                 Console.WriteLine();
                 Console.WriteLine("E-mail: matthew.monroe@pnnl.gov or proteomics@pnnl.gov");

@@ -930,7 +930,7 @@ namespace ProteinCoverageSummarizerGUI
             message.AppendLine("This program reads in a .fasta or .txt file containing protein names and sequences (and optionally descriptions).");
             message.AppendLine("The program also reads in a .txt file containing peptide sequences and protein names (though protein name is optional) then uses this information to compute the sequence coverage percent for each protein.");
             message.AppendLine();
-            message.AppendLine("Program written by Matthew Monroe and Nikša Blonder for the Department of Energy (PNNL, Richland, WA) in 2005");
+            message.AppendLine("Program written by Matthew Monroe and Nikša Blonder for the Department of Energy (PNNL, Richland, WA)");
             message.AppendLine();
             message.AppendFormat("This is version {0} ({1})\n", Application.ProductVersion, Program.PROGRAM_DATE);
             message.AppendLine();

@@ -350,7 +350,7 @@ namespace ProteinCoverageSummarizerGUI
                 Console.WriteLine("Use /KeepDB to keep the SQLite database after processing (by default it is deleted)");
                 Console.WriteLine();
 
-                Console.WriteLine("Program written by Matthew Monroe and Nikša Blonder for the Department of Energy (PNNL, Richland, WA) in 2005");
+                Console.WriteLine("Program written by Matthew Monroe and Nikša Blonder for the Department of Energy (PNNL, Richland, WA)");
                 Console.WriteLine("Version: " + GetAppVersion());
                 Console.WriteLine();
 
