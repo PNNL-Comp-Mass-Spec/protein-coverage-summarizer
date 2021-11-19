@@ -231,9 +231,7 @@ namespace ProteinCoverageSummarizer
                 OnDebugEvent("Checking for write permission by creating file " + filePath);
 
                 using (var writer = new StreamWriter(new FileStream(filePath, FileMode.Create, FileAccess.Write, FileShare.Read)))
-                {
                     writer.WriteLine("Test");
-                }
 
                 success = true;
             }

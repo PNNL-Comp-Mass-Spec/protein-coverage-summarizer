@@ -836,7 +836,7 @@ namespace ProteinCoverageSummarizerGUI
 
         private void SelectProteinInputFile()
         {
-            var dlgOpenFileDialog = new OpenFileDialog()
+            var dlgOpenFileDialog = new OpenFileDialog
             {
                 Filter = "Fasta Files (*.fasta)|*.fasta|Text Files(*.txt)|*.txt|All Files (*.*)|*.*",
                 FilterIndex = 3
@@ -852,7 +852,7 @@ namespace ProteinCoverageSummarizerGUI
 
         private void SelectPeptideInputFile()
         {
-            var dlgOpenFileDialog = new OpenFileDialog()
+            var dlgOpenFileDialog = new OpenFileDialog
             {
                 InitialDirectory = mLastFolderUsed,
                 Filter = "Text Files(*.txt)|*.txt|All Files (*.*)|*.*",
@@ -1096,7 +1096,7 @@ namespace ProteinCoverageSummarizerGUI
                 cmdAbort.Visible = true;
                 cmdStart.Visible = false;
 
-                mProteinCoverageSummarizer = new clsProteinCoverageSummarizerRunner()
+                mProteinCoverageSummarizer = new clsProteinCoverageSummarizerRunner
                 {
                     CallingAppHandlesEvents = true
                 };

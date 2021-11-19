@@ -636,7 +636,7 @@ namespace PeptideToProteinMapEngine
                                     // Ignore errors occur
                                 }
 
-                                var cachedDataEntry = new PepToProteinMapping()
+                                var cachedDataEntry = new PepToProteinMapping
                                 {
                                     Peptide = string.Copy(peptideEntry.Key),
                                     Protein = string.Copy(protein ?? string.Empty),
@@ -1044,7 +1044,7 @@ namespace PeptideToProteinMapEngine
                 }
 
                 // Initialize the PHRP startup options
-                var startupOptions = new StartupOptions()
+                var startupOptions = new StartupOptions
                 {
                     LoadModsAndSeqInfo = false,
                     LoadMSGFResults = false,
@@ -1431,7 +1431,7 @@ namespace PeptideToProteinMapEngine
             }
             else
             {
-                scanList = new SortedSet<int>() { scanNumber };
+                scanList = new SortedSet<int> { scanNumber };
                 mUniquePeptideList.Add(peptideSequence, scanList);
             }
         }

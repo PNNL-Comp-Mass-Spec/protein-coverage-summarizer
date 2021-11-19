@@ -282,7 +282,10 @@ namespace ProteinCoverageSummarizerGUI
                     ShowWindow(handle, SW_HIDE);
                 }
 
-                var objFormMain = new GUI() { KeepDB = options.KeepDB };
+                var objFormMain = new GUI
+                {
+                    KeepDB = options.KeepDB
+                };
 
                 objFormMain.ShowDialog();
 

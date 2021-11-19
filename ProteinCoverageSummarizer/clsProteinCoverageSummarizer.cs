@@ -2237,7 +2237,7 @@ namespace ProteinCoverageSummarizer
             }
             else
             {
-                proteins = new SortedSet<string>() { proteinName };
+                proteins = new SortedSet<string> { proteinName };
                 mPeptideToProteinMapResults.Add(cleanPeptideSequence, proteins);
             }
         }
