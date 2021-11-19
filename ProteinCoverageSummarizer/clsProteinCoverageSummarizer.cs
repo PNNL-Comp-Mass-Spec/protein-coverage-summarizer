@@ -1404,14 +1404,12 @@ namespace ProteinCoverageSummarizer
                             if (peptideColumnIndex >= 0)
                             {
                                 columnNumWithPeptideSequence = peptideColumnIndex + 1;
-                                OnStatusEvent(string.Format(
-                                    "Reading peptides from the 'Peptide' column in the input file (column {0})", columnNumWithPeptideSequence));
+                                OnStatusEvent("Reading peptides from the 'Peptide' column in the input file (column {0})", columnNumWithPeptideSequence);
                             }
                             else if (sequenceColumnIndex >= 0)
                             {
                                 columnNumWithPeptideSequence = sequenceColumnIndex + 1;
-                                OnStatusEvent(string.Format(
-                                    "Reading peptides from the 'Sequence' column in the input file (column {0})", columnNumWithPeptideSequence));
+                                OnStatusEvent("Reading peptides from the 'Sequence' column in the input file (column {0})", columnNumWithPeptideSequence);
                             }
                             else
                             {
@@ -1444,7 +1442,7 @@ namespace ProteinCoverageSummarizer
                         return false;
                     }
 
-                    progressMessageBase += " (leader seq length = " + mLeaderSequenceCache.LeaderSequenceMinimumLength.ToString() + ")";
+                    progressMessageBase += string.Format(" (leader seq length = {0})", mLeaderSequenceCache.LeaderSequenceMinimumLength);
 
                     UpdateProgress(progressMessageBase);
                 }

@@ -176,10 +176,12 @@ namespace PeptideToProteinMapper
 
             if (percentComplete > 100)
                 percentComplete = 100;
+
             if (string.IsNullOrEmpty(taskDescription))
                 taskDescription = "Processing";
 
-            Console.Write(taskDescription + ": " + percentComplete.ToString() + "% ");
+            Console.Write("{0}: {1}% ", taskDescription, percentComplete);
+
             if (addCarriageReturn)
             {
                 Console.WriteLine();

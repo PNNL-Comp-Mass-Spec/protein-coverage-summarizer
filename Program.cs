@@ -155,7 +155,9 @@ namespace ProteinCoverageSummarizerGUI
 
             if (percentComplete > 100)
                 percentComplete = 100;
-            Console.Write("Processing: " + percentComplete.ToString() + "% ");
+
+            Console.Write("Processing: {0}% ", percentComplete);
+
             if (addCarriageReturn)
             {
                 Console.WriteLine();

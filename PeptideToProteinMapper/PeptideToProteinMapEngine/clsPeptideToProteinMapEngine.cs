@@ -238,19 +238,19 @@ namespace PeptideToProteinMapEngine
 
             if (Path.GetFileName(filePath).EndsWith(FILENAME_SUFFIX_INSPECT_RESULTS_FILE, StringComparison.OrdinalIgnoreCase))
             {
-                OnStatusEvent(string.Format("Input file type: InSpecT results file (matched suffix {0})", FILENAME_SUFFIX_INSPECT_RESULTS_FILE));
+                OnStatusEvent("Input file type: InSpecT results file (matched suffix {0})", FILENAME_SUFFIX_INSPECT_RESULTS_FILE);
                 return PeptideInputFileFormatConstants.InspectResultsFile;
             }
 
             if (Path.GetFileName(filePath).EndsWith(FILENAME_SUFFIX_MSGFDB_RESULTS_FILE, StringComparison.OrdinalIgnoreCase))
             {
-                OnStatusEvent(string.Format("Input file type: MS-GF+ results file (matched suffix {0})", FILENAME_SUFFIX_MSGFDB_RESULTS_FILE));
+                OnStatusEvent("Input file type: MS-GF+ results file (matched suffix {0})", FILENAME_SUFFIX_MSGFDB_RESULTS_FILE);
                 return PeptideInputFileFormatConstants.MSGFPlusResultsFile;
             }
 
             if (Path.GetFileName(filePath).EndsWith(FILENAME_SUFFIX_MSGFPLUS_RESULTS_FILE, StringComparison.OrdinalIgnoreCase))
             {
-                OnStatusEvent(string.Format("Input file type: MS-GF+ results file (matched suffix {0})", FILENAME_SUFFIX_MSGFPLUS_RESULTS_FILE));
+                OnStatusEvent("Input file type: MS-GF+ results file (matched suffix {0})", FILENAME_SUFFIX_MSGFPLUS_RESULTS_FILE);
                 return PeptideInputFileFormatConstants.MSGFPlusResultsFile;
             }
 
@@ -627,7 +627,7 @@ namespace PeptideToProteinMapEngine
                                     if ((protein ?? "") != (proteins[proteinMapInfo[matchIndex].ProteinID] ?? ""))
                                     {
                                         // This is unexpected
-                                        ShowMessage("Warning: Unexpected protein ID lookup array mismatch for ID " + proteinMapInfo[matchIndex].ProteinID.ToString());
+                                        ShowMessage("Warning: Unexpected protein ID lookup array mismatch for ID " + proteinMapInfo[matchIndex].ProteinID);
                                     }
                                 }
                                 catch (Exception)

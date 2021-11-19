@@ -230,7 +230,7 @@ namespace ProteinCoverageSummarizer
                 if (peptideSequence == null || peptideSequence.Length < LeaderSequenceMinimumLength)
                 {
                     // Peptide is too short; cannot process it
-                    ErrorMessage = "Peptide length is shorter than " + LeaderSequenceMinimumLength.ToString() + "; unable to cache the peptide";
+                    ErrorMessage = "Peptide length is shorter than " + LeaderSequenceMinimumLength + "; unable to cache the peptide";
                     return false;
                 }
 

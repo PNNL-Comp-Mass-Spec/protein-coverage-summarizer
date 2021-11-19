@@ -323,7 +323,7 @@ namespace ProteinCoverageSummarizer
 
                 if (!File.Exists(mSQLiteDBFilePath))
                 {
-                    OnDebugEvent(string.Format("DeleteSQLiteDBFile: File doesn't exist; nothing to do ({0}); calling method: {1}", mSQLiteDBFilePath, callingMethod));
+                    OnDebugEvent("DeleteSQLiteDBFile: File doesn't exist; nothing to do ({0}); calling method: {1}", mSQLiteDBFilePath, callingMethod);
                     return;
                 }
 
@@ -368,7 +368,7 @@ namespace ProteinCoverageSummarizer
                 {
                     if (retryIndex > 0)
                     {
-                        OnWarningEvent(string.Format("Error deleting {0} (calling method {1}): {2}", mSQLiteDBFilePath, callingMethod, ex.Message));
+                        OnWarningEvent("Error deleting {0} (calling method {1}): {2}", mSQLiteDBFilePath, callingMethod, ex.Message);
                         OnWarningEvent("  Waiting " + retryHoldOffSeconds + " seconds, then trying again");
                     }
                 }
@@ -465,7 +465,7 @@ namespace ProteinCoverageSummarizer
                 else
                 {
                     mSQLiteDBFilePath = DefineSQLiteDBPath(Path.GetFileNameWithoutExtension(SQL_LITE_PROTEIN_CACHE_FILENAME) +
-                                                           fileAttemptCount.ToString() +
+                                                           fileAttemptCount +
                                                            Path.GetExtension(SQL_LITE_PROTEIN_CACHE_FILENAME));
                 }
 
