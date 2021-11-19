@@ -1102,10 +1102,13 @@ namespace ProteinCoverageSummarizerGUI
 
                 mProteinCoverageSummarizer = new clsProteinCoverageSummarizerRunner
                 {
-                    CallingAppHandlesEvents = true
+                    CallingAppHandlesEvents = true,
+                    Options =
+                    {
+                        KeepDB = KeepDB
+                    }
                 };
 
-                mProteinCoverageSummarizer.Options.KeepDB = KeepDB;
                 mProteinCoverageSummarizer.StatusEvent += ProteinCoverageSummarizer_StatusEvent;
                 mProteinCoverageSummarizer.ErrorEvent += ProteinCoverageSummarizer_ErrorEvent;
                 mProteinCoverageSummarizer.WarningEvent += ProteinCoverageSummarizer_WarningEvent;
@@ -1264,7 +1267,7 @@ namespace ProteinCoverageSummarizerGUI
 
         private void txtCoverage_KeyPress(object sender, KeyPressEventArgs e)
         {
-            TextBoxUtils.TextBoxKeyPressHandler(txtCoverage, e, false, false, false, false, false, false, false, false, false, false, true);
+            TextBoxUtils.TextBoxKeyPressHandler(txtCoverage, e, false);
         }
 
         private void txtCustomProteinSequence_Click(object sender, EventArgs e)
@@ -1275,7 +1278,7 @@ namespace ProteinCoverageSummarizerGUI
 
         private void txtCustomProteinSequence_KeyPress(object sender, KeyPressEventArgs e)
         {
-            TextBoxUtils.TextBoxKeyPressHandler(txtCustomProteinSequence, e, false, false, false, true, false, false, false, false, true, true, true);
+            TextBoxUtils.TextBoxKeyPressHandler(txtCustomProteinSequence, e, false, false, false, true, false, false, false, false, true, true);
         }
 
         private void txtCustomProteinSequence_TextChanged(object sender, EventArgs e)
