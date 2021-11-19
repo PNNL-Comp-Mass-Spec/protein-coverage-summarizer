@@ -18,7 +18,7 @@ using ProteinCoverageSummarizer;
 namespace ProteinCoverageSummarizerGUI
 {
     /// <summary>
-    /// This class uses ProteinCoverageSummarizer.dll to read in a protein fasta file or delimited protein info file along with
+    /// This class uses ProteinCoverageSummarizer.dll to read in a protein FASTA file or delimited protein info file along with
     /// an accompanying file with peptide sequences to then compute the percent coverage of each of the proteins
     /// </summary>
     public class clsProteinCoverageSummarizerRunner : PRISM.FileProcessor.ProcessFilesBase
@@ -38,7 +38,7 @@ namespace ProteinCoverageSummarizerGUI
         #region "Properties"
 
         /// <summary>
-        /// Set this to true if the calling app will handle events
+        /// Set this to true if the calling application will handle events
         /// </summary>
         public bool CallingAppHandlesEvents { get; set; }
 
