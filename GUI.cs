@@ -42,7 +42,7 @@ namespace ProteinCoverageSummarizerGUI
         /// </summary>
         public GUI()
         {
-            base.Closing += GUI_Closing;
+            Closing += GUI_Closing;
 
             // This call is required by the Windows Form Designer.
             InitializeComponent();
@@ -440,7 +440,7 @@ namespace ProteinCoverageSummarizerGUI
 
                         if (!settingsFile.SectionPresent(clsProteinCoverageSummarizer.XML_SECTION_PROCESSING_OPTIONS))
                         {
-                            this.ShowErrorMessage("The node '<section name=\"" + clsProteinCoverageSummarizer.XML_SECTION_PROCESSING_OPTIONS + "\"> was not found in the parameter file: ", "Invalid File");
+                            ShowErrorMessage("The node '<section name=\"" + clsProteinCoverageSummarizer.XML_SECTION_PROCESSING_OPTIONS + "\"> was not found in the parameter file: ", "Invalid File");
                             mSaveFullSettingsFileOnExit = true;
                         }
                         else
@@ -1102,13 +1102,12 @@ namespace ProteinCoverageSummarizerGUI
                 };
 
                 mProteinCoverageSummarizer.Options.KeepDB = KeepDB;
+                mProteinCoverageSummarizer.StatusEvent += ProteinCoverageSummarizer_StatusEvent;
+                mProteinCoverageSummarizer.ErrorEvent += ProteinCoverageSummarizer_ErrorEvent;
+                mProteinCoverageSummarizer.WarningEvent += ProteinCoverageSummarizer_WarningEvent;
 
-                this.mProteinCoverageSummarizer.StatusEvent += ProteinCoverageSummarizer_StatusEvent;
-                this.mProteinCoverageSummarizer.ErrorEvent += ProteinCoverageSummarizer_ErrorEvent;
-                this.mProteinCoverageSummarizer.WarningEvent += ProteinCoverageSummarizer_WarningEvent;
-
-                this.mProteinCoverageSummarizer.ProgressUpdate += ProteinCoverageSummarizer_ProgressChanged;
-                this.mProteinCoverageSummarizer.ProgressReset += ProteinCoverageSummarizer_ProgressReset;
+                mProteinCoverageSummarizer.ProgressUpdate += ProteinCoverageSummarizer_ProgressChanged;
+                mProteinCoverageSummarizer.ProgressReset += ProteinCoverageSummarizer_ProgressReset;
 
                 var success = SetOptionsFromGUI(mProteinCoverageSummarizer);
                 if (success)

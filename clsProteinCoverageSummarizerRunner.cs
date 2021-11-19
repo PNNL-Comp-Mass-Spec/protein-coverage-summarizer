@@ -113,9 +113,9 @@ namespace ProteinCoverageSummarizerGUI
             mProteinCoverageSummarizer = new clsProteinCoverageSummarizer(Options);
             RegisterEvents(mProteinCoverageSummarizer);
 
-            this.mProteinCoverageSummarizer.ProgressChanged += this.ProteinCoverageSummarizer_ProgressChanged;
+            mProteinCoverageSummarizer.ProgressChanged += ProteinCoverageSummarizer_ProgressChanged;
 
-            this.mProteinCoverageSummarizer.ProgressReset += this.ProteinCoverageSummarizer_ProgressReset;
+            mProteinCoverageSummarizer.ProgressReset += ProteinCoverageSummarizer_ProgressReset;
         }
 
         /// <summary>
