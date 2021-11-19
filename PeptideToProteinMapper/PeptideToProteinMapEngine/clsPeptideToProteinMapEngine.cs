@@ -1397,6 +1397,7 @@ namespace PeptideToProteinMapEngine
                 }
             }
 
+            // ReSharper disable once ForeachCanBeConvertedToQueryUsingAnotherGetEnumerator
             foreach (var modName in inspectModNames)
                 peptide = peptide.Replace(modName, string.Empty);
 
