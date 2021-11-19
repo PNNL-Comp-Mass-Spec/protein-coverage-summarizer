@@ -842,7 +842,7 @@ namespace ProteinCoverageSummarizerGUI
         {
             var dlgOpenFileDialog = new OpenFileDialog
             {
-                Filter = "Fasta Files (*.fasta)|*.fasta|Text Files(*.txt)|*.txt|All Files (*.*)|*.*",
+                Filter = "FASTA Files (*.fasta)|*.fasta|Text Files(*.txt)|*.txt|All Files (*.*)|*.*",
                 FilterIndex = 3
             };
 
