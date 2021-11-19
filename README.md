@@ -21,15 +21,15 @@ The release page also includes a .zip file with PeptideToProteinMapper.exe
 ### Example files:
 
 Input files:
-* [BSA_P171_QID1638_TestPeptides.txt](https://github.com/PNNL-Comp-Mass-Spec/protein-coverage-summarizer/blob/master/Docs/BSA/BSA_P171_QID1638_TestPeptides.txt)
-* [BSA_P171_QID1638_TestPeptides_SequenceOnly.txt](https://github.com/PNNL-Comp-Mass-Spec/protein-coverage-summarizer/blob/master/Docs/BSA/BSA_P171_QID1638_TestPeptides_SequenceOnly.txt)
-* [BSA_P171_QID1638_TestProteins.fasta](https://github.com/PNNL-Comp-Mass-Spec/protein-coverage-summarizer/blob/master/Docs/BSA/BSA_P171_QID1638_TestProteins.fasta)
+* [BSA_P171_QID1638_TestPeptides.txt](https://github.com/PNNL-Comp-Mass-Spec/protein-coverage-summarizer/blob/master/ExampleData/BSA/BSA_P171_QID1638_TestPeptides.txt)
+* [BSA_P171_QID1638_TestPeptides_SequenceOnly.txt](https://github.com/PNNL-Comp-Mass-Spec/protein-coverage-summarizer/blob/master/ExampleData/BSA/BSA_P171_QID1638_TestPeptides_SequenceOnly.txt)
+* [BSA_P171_QID1638_TestProteins.fasta](https://github.com/PNNL-Comp-Mass-Spec/protein-coverage-summarizer/blob/master/ExampleData/BSA/BSA_P171_QID1638_TestProteins.fasta)
 
 Output files:
-* [BSA_P171_QID1638_TestPeptides_coverage.txt](https://github.com/PNNL-Comp-Mass-Spec/protein-coverage-summarizer/blob/master/Docs/BSA/BSA_P171_QID1638_TestPeptides_coverage.txt)
-* [BSA_P171_QID1638_TestPeptides_ProteinToPeptideMapping.txt](https://github.com/PNNL-Comp-Mass-Spec/protein-coverage-summarizer/blob/master/Docs/BSA/BSA_P171_QID1638_TestPeptides_ProteinToPeptideMapping.txt)
-* [BSA_P171_QID1638_TestPeptides_SequenceOnly_coverage.txt](https://github.com/PNNL-Comp-Mass-Spec/protein-coverage-summarizer/blob/master/Docs/BSA/BSA_P171_QID1638_TestPeptides_SequenceOnly_coverage.txt)
-* [BSA_P171_QID1638_TestPeptides_SequenceOnly_ProteinToPeptideMapping.txt](https://github.com/PNNL-Comp-Mass-Spec/protein-coverage-summarizer/blob/master/Docs/BSA/BSA_P171_QID1638_TestPeptides_SequenceOnly_ProteinToPeptideMapping.txt)
+* [BSA_P171_QID1638_TestPeptides_coverage.txt](https://github.com/PNNL-Comp-Mass-Spec/protein-coverage-summarizer/blob/master/ExampleData/BSA/BSA_P171_QID1638_TestPeptides_coverage.txt)
+* [BSA_P171_QID1638_TestPeptides_ProteinToPeptideMapping.txt](https://github.com/PNNL-Comp-Mass-Spec/protein-coverage-summarizer/blob/master/ExampleData/BSA/BSA_P171_QID1638_TestPeptides_ProteinToPeptideMapping.txt)
+* [BSA_P171_QID1638_TestPeptides_SequenceOnly_coverage.txt](https://github.com/PNNL-Comp-Mass-Spec/protein-coverage-summarizer/blob/master/ExampleData/BSA/BSA_P171_QID1638_TestPeptides_SequenceOnly_coverage.txt)
+* [BSA_P171_QID1638_TestPeptides_SequenceOnly_ProteinToPeptideMapping.txt](https://github.com/PNNL-Comp-Mass-Spec/protein-coverage-summarizer/blob/master/ExampleData/BSA/BSA_P171_QID1638_TestPeptides_SequenceOnly_ProteinToPeptideMapping.txt)
 
 ## Console Version Syntax
 
