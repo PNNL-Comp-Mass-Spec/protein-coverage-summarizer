@@ -800,10 +800,7 @@ namespace ProteinCoverageSummarizer
             try
             {
                 // Make sure proteinNameForPeptide is a valid string
-                if (proteinNameForPeptides == null)
-                {
-                    proteinNameForPeptides = string.Empty;
-                }
+                proteinNameForPeptides ??= string.Empty;
 
                 var expectedPeptideIterations = Convert.ToInt32(Math.Ceiling(ProteinDataCache.GetProteinCountCached() / (double)PROTEIN_CHUNK_COUNT)) * peptideList.Count;
                 if (expectedPeptideIterations < 1)
@@ -1858,10 +1855,7 @@ namespace ProteinCoverageSummarizer
 
             mCachedProteinInfoStartIndex = startIndex;
             mCachedProteinInfoCount = 0;
-            if (mCachedProteinInfo == null)
-            {
-                mCachedProteinInfo = new clsProteinFileDataCache.ProteinInfo[PROTEIN_CHUNK_COUNT];
-            }
+            mCachedProteinInfo ??= new clsProteinFileDataCache.ProteinInfo[PROTEIN_CHUNK_COUNT];
 
             foreach (var udtProtein in ProteinDataCache.GetCachedProteins(startIndex, endIndex))
             {
