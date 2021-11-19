@@ -1,5 +1,17 @@
 Protein Coverage Summarizer Change Log
 
+Version 1.3.7993; November 19, 2021
+	- Update to ProteinFileReader v3.0.1
+
+Version 1.3.7888; August 6, 2021
+	- Use TryParse when reading the ProteinToPep map file
+
+Version 1.3.7753; March 24, 2021
+	- Use new PHRPReader class names
+
+Version 1.3.7721; February 20, 2021
+	- Update GetCleanPeptideSequence to optionally remove bracket-based modifications, e.g. [15.9998] or [Acetyl]
+
 Version 1.3.7394; March 30, 2020
 	- Update to .NET 4.7.2
 	- Add NuGet package PRISM-DatabaseUtils
