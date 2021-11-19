@@ -17,7 +17,9 @@ WelcomeLabel2=This will install [name/ver] on your computer.
 [Files]
 Source: ..\bin\Release\ProteinCoverageSummarizerGUI.exe            ; DestDir: {app}
 Source: ..\bin\Release\ProteinCoverageSummarizerGUI.exe.config     ; DestDir: {app}
+Source: ..\bin\Release\CsvHelper.dll                               ; DestDir: {app}
 Source: ..\bin\Release\Microsoft.Bcl.AsyncInterfaces.dll           ; DestDir: {app}
+Source: ..\bin\Release\Microsoft.Bcl.HashCode.dll                  ; DestDir: {app}
 Source: ..\bin\Release\Npgsql.dll                                  ; DestDir: {app}
 Source: ..\bin\Release\Ookii.Dialogs.dll                           ; DestDir: {app}
 Source: ..\bin\Release\PRISM.dll                                   ; DestDir: {app}
@@ -32,6 +34,7 @@ Source: ..\bin\Release\System.Numerics.Vectors.dll                 ; DestDir: {a
 Source: ..\bin\Release\System.Runtime.CompilerServices.Unsafe.dll  ; DestDir: {app}
 Source: ..\bin\Release\System.Text.Encodings.Web.dll               ; DestDir: {app}
 Source: ..\bin\Release\System.Text.Json.dll                        ; DestDir: {app}
+Source: ..\bin\Release\System.Threading.Channels.dll               ; DestDir: {app}
 Source: ..\bin\Release\System.Threading.Tasks.Extensions.dll       ; DestDir: {app}
 Source: ..\bin\Release\System.ValueTuple.dll                       ; DestDir: {app}
 Source: ..\bin\ProteinCoverageSummarizerSettings.xml               ; DestDir: {app}
