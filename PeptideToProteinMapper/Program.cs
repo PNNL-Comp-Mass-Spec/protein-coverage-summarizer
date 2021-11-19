@@ -418,25 +418,26 @@ namespace PeptideToProteinMapper
                 Console.Write(".");
             }
 
-            if (mVerboseLogFile != null)
+            if (mVerboseLogFile == null)
             {
-                if (taskDescription == null)
-                    taskDescription = string.Empty;
+                return;
+            }
 
-                if (taskDescription == (mVerboseLoggingMostRecentMessage ?? ""))
-                {
-                    mVerboseLogFile.WriteLine(DateTime.Now.ToString("yyyy-MM-dd hh:mm:ss tt") + "\t" +
-                                              percentComplete + "\t" +
-                                              ".");
-                }
-                else
-                {
-                    mVerboseLoggingMostRecentMessage = string.Copy(taskDescription);
+            taskDescription ??= string.Empty;
 
-                    mVerboseLogFile.WriteLine(DateTime.Now.ToString("yyyy-MM-dd hh:mm:ss tt") + "\t" +
-                                              percentComplete + "\t" +
-                                              taskDescription);
-                }
+            if (taskDescription == (mVerboseLoggingMostRecentMessage ?? ""))
+            {
+                mVerboseLogFile.WriteLine(DateTime.Now.ToString("yyyy-MM-dd hh:mm:ss tt") + "\t" +
+                                          percentComplete + "\t" +
+                                          ".");
+            }
+            else
+            {
+                mVerboseLoggingMostRecentMessage = string.Copy(taskDescription);
+
+                mVerboseLogFile.WriteLine(DateTime.Now.ToString("yyyy-MM-dd hh:mm:ss tt") + "\t" +
+                                          percentComplete + "\t" +
+                                          taskDescription);
             }
         }
 
