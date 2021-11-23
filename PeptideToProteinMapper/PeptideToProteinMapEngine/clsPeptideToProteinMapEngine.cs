@@ -714,6 +714,7 @@ namespace PeptideToProteinMapEngine
             try
             {
                 // Initialize the protein list dictionary
+                // Keys are protein name, values are protein ID (assigned by this method as proteins are read)
                 var proteinList = new Dictionary<string, int>();
 
                 // Initialize the protein to peptide mapping array
