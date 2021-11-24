@@ -432,9 +432,9 @@ namespace PeptideToProteinMapEngine
                 if (inputFileFormat == PeptideInputFileFormatConstants.ProteinAndPeptideFile)
                 {
                     hasPeptideOrSequenceColumn = true;
-                    if (columnNames.Length > 1 && (
-                                                      columnNames[1].StartsWith("peptide", StringComparison.OrdinalIgnoreCase) ||
-                                                      columnNames[1].StartsWith("sequence", StringComparison.OrdinalIgnoreCase)))
+                    if (columnNames.Length > 1 &&
+                        (columnNames[1].StartsWith("peptide", StringComparison.OrdinalIgnoreCase) ||
+                         columnNames[1].StartsWith("sequence", StringComparison.OrdinalIgnoreCase)))
                     {
                         return true;
                     }
@@ -496,9 +496,10 @@ namespace PeptideToProteinMapEngine
         /// <param name="peptideListFilePath"></param>
         /// <param name="proteinToPepMapFilePath"></param>
         /// <param name="deleteWorkingFiles"></param>
-        private bool PostProcessPSMResultsFile(string peptideListFilePath,
-                                               string proteinToPepMapFilePath,
-                                               bool deleteWorkingFiles)
+        private bool PostProcessPSMResultsFile(
+            string peptideListFilePath,
+            string proteinToPepMapFilePath,
+            bool deleteWorkingFiles)
         {
             const string UNKNOWN_PROTEIN_NAME = "__NoMatch__";
 
@@ -555,7 +556,8 @@ namespace PeptideToProteinMapEngine
                 using (var writer = new StreamWriter(new FileStream(peptideToProteinMappingFilePath, FileMode.Create, FileAccess.Write, FileShare.Read)))
                 {
                     // Write the headers
-                    writer.WriteLine("Peptide" + "\t" +
+                    writer.WriteLine(
+                        "Peptide" + "\t" +
                         "Protein" + "\t" +
                         "Residue_Start" + "\t" +
                         "Residue_End");
@@ -592,8 +594,7 @@ namespace PeptideToProteinMapEngine
                             // Match not found; this is unexpected
                             // However, this code will be reached if the peptide is not present in any of the proteins in the protein data file
                             // This code will also be reached for TopPIC results with ambiguous residues, e.g. -.M(NKSE)[16.0017]LIEKIASGADISK
-                            writer.WriteLine("{0}\t{1}\t{2}\t{3}",
-                                peptideEntry.Key, UNKNOWN_PROTEIN_NAME, 0, 0);
+                            writer.WriteLine("{0}\t{1}\t{2}\t{3}", peptideEntry.Key, UNKNOWN_PROTEIN_NAME, 0, 0);
                         }
                         else
                         {
@@ -840,9 +841,10 @@ namespace PeptideToProteinMapEngine
             return success;
         }
 
-        private string PreProcessInspectResultsFile(string inputFilePath,
-                                                    string outputDirectoryPath,
-                                                    string inspectParamFilePath)
+        private string PreProcessInspectResultsFile(
+            string inputFilePath,
+            string outputDirectoryPath,
+            string inspectParamFilePath)
         {
             // Read inspectParamFilePath to extract the mod names
             if (!ExtractModInfoFromInspectParamFile(inspectParamFilePath, ref mInspectModNameList))
@@ -856,9 +858,10 @@ namespace PeptideToProteinMapEngine
             return PreProcessPSMResultsFile(inputFilePath, outputDirectoryPath, PeptideInputFileFormatConstants.InspectResultsFile);
         }
 
-        private string PreProcessPSMResultsFile(string inputFilePath,
-                                                string outputDirectoryPath,
-                                                PeptideInputFileFormatConstants inputFileFormat)
+        private string PreProcessPSMResultsFile(
+            string inputFilePath,
+            string outputDirectoryPath,
+            PeptideInputFileFormatConstants inputFileFormat)
         {
             int terminatorSize;
 
