@@ -543,7 +543,7 @@ namespace PeptideToProteinMapEngine
 
                     if (string.Equals(proteinToPepMapFilePath, peptideToProteinMappingFilePath))
                     {
-                        // The filename was not in the exacted format
+                        // The filename was not in the expected format
                         peptideToProteinMappingFilePath = clsProteinCoverageSummarizer.ConstructOutputFilePath(
                             proteinToPepMapFilePath, FILENAME_SUFFIX_PEP_TO_PROTEIN_MAPPING,
                             Path.GetDirectoryName(proteinToPepMapFilePath), "");
