@@ -427,7 +427,7 @@ namespace PeptideToProteinMapper
 
             taskDescription ??= string.Empty;
 
-            if (taskDescription == (mVerboseLoggingMostRecentMessage ?? ""))
+            if (taskDescription == (mVerboseLoggingMostRecentMessage ?? string.Empty))
             {
                 mVerboseLogFile.WriteLine(DateTime.Now.ToString("yyyy-MM-dd hh:mm:ss tt") + "\t" +
                                           percentComplete + "\t" +

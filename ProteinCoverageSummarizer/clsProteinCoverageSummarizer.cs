@@ -877,7 +877,7 @@ namespace ProteinCoverageSummarizer
                                     out startResidue, out endResidue);
                             }
                             // Only search proteinNameForPeptide
-                            else if ((mCachedProteinInfo[proteinIndex].Name ?? "") == (proteinNameForPeptides ?? ""))
+                            else if ((mCachedProteinInfo[proteinIndex].Name ?? string.Empty) == (proteinNameForPeptides ?? string.Empty))
                             {
                                 // Define the peptide match key using the Unique Sequence ID, two colons, and the peptide sequence
                                 var proteinPeptideKey = Convert.ToString(mCachedProteinInfo[proteinIndex].UniqueSequenceID) + "::" + peptideSequenceForKey;
@@ -2070,12 +2070,12 @@ namespace ProteinCoverageSummarizer
                                         // No need to capitalize proteinSequence since it's already capitalized
                                         if (Options.IgnoreILDifferences)
                                         {
-                                            if ((proteinSequence.Substring(proteinSeqCharIndex, peptideLength) ?? "") == (mLeaderSequenceCache.mCachedPeptideSeqInfo[cachedPeptideMatchIndex].PeptideSequenceLtoI ?? ""))
+                                            if ((proteinSequence.Substring(proteinSeqCharIndex, peptideLength) ?? string.Empty) == (mLeaderSequenceCache.mCachedPeptideSeqInfo[cachedPeptideMatchIndex].PeptideSequenceLtoI ?? string.Empty))
                                             {
                                                 matchFound = true;
                                             }
                                         }
-                                        else if ((proteinSequence.Substring(proteinSeqCharIndex, peptideLength) ?? "") == (mLeaderSequenceCache.mCachedPeptideSeqInfo[cachedPeptideMatchIndex].PeptideSequence ?? ""))
+                                        else if ((proteinSequence.Substring(proteinSeqCharIndex, peptideLength) ?? string.Empty) == (mLeaderSequenceCache.mCachedPeptideSeqInfo[cachedPeptideMatchIndex].PeptideSequence ?? string.Empty))
                                         {
                                             matchFound = true;
                                         }
@@ -2083,12 +2083,12 @@ namespace ProteinCoverageSummarizer
                                     // Need to change proteinSequence to all caps when comparing to .PeptideSequence
                                     else if (Options.IgnoreILDifferences)
                                     {
-                                        if ((proteinSequence.Substring(proteinSeqCharIndex, peptideLength).ToUpper() ?? "") == (mLeaderSequenceCache.mCachedPeptideSeqInfo[cachedPeptideMatchIndex].PeptideSequenceLtoI ?? ""))
+                                        if ((proteinSequence.Substring(proteinSeqCharIndex, peptideLength).ToUpper() ?? string.Empty) == (mLeaderSequenceCache.mCachedPeptideSeqInfo[cachedPeptideMatchIndex].PeptideSequenceLtoI ?? string.Empty))
                                         {
                                             matchFound = true;
                                         }
                                     }
-                                    else if ((proteinSequence.Substring(proteinSeqCharIndex, peptideLength).ToUpper() ?? "") == (mLeaderSequenceCache.mCachedPeptideSeqInfo[cachedPeptideMatchIndex].PeptideSequence ?? ""))
+                                    else if ((proteinSequence.Substring(proteinSeqCharIndex, peptideLength).ToUpper() ?? string.Empty) == (mLeaderSequenceCache.mCachedPeptideSeqInfo[cachedPeptideMatchIndex].PeptideSequence ?? string.Empty))
                                     {
                                         matchFound = true;
                                     }

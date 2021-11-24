@@ -546,7 +546,7 @@ namespace PeptideToProteinMapEngine
                         // The filename was not in the expected format
                         peptideToProteinMappingFilePath = clsProteinCoverageSummarizer.ConstructOutputFilePath(
                             proteinToPepMapFilePath, FILENAME_SUFFIX_PEP_TO_PROTEIN_MAPPING,
-                            Path.GetDirectoryName(proteinToPepMapFilePath), "");
+                            Path.GetDirectoryName(proteinToPepMapFilePath), string.Empty);
                     }
                 }
 
@@ -624,7 +624,7 @@ namespace PeptideToProteinMapEngine
 
                                 try
                                 {
-                                    if ((protein ?? "") != (proteins[proteinMapInfo[matchIndex].ProteinID] ?? ""))
+                                    if ((protein ?? string.Empty) != (proteins[proteinMapInfo[matchIndex].ProteinID] ?? string.Empty))
                                     {
                                         // This is unexpected
                                         ShowMessage("Warning: Unexpected protein ID lookup array mismatch for ID " + proteinMapInfo[matchIndex].ProteinID);
@@ -1485,7 +1485,7 @@ namespace PeptideToProteinMapEngine
                 var xData = (ProteinIDMapInfo)x;
                 var peptide = Convert.ToString(y);
 
-                return String.CompareOrdinal(xData.Peptide, peptide);
+                return string.CompareOrdinal(xData.Peptide, peptide);
             }
         }
 
@@ -1493,13 +1493,13 @@ namespace PeptideToProteinMapEngine
         {
             public int Compare(PepToProteinMapping x, PepToProteinMapping y)
             {
-                var pepCompare = String.CompareOrdinal(x.Peptide, y.Peptide);
+                var pepCompare = string.CompareOrdinal(x.Peptide, y.Peptide);
                 if (pepCompare != 0)
                 {
                     return pepCompare;
                 }
 
-                return String.CompareOrdinal(x.Protein, y.Protein);
+                return string.CompareOrdinal(x.Protein, y.Protein);
             }
         }
 
