@@ -527,7 +527,7 @@ namespace PeptideToProteinMapEngine
                 string peptideToProteinMappingFilePath;
 
                 // Create the final result file
-                if (proteinToPepMapFilePath.Contains(FILENAME_SUFFIX_PSM_UNIQUE_PEPTIDES + clsProteinCoverageSummarizer.FILENAME_SUFFIX_PROTEIN_TO_PEPTIDE_MAPPING))
+                if (proteinToPepMapFilePath.EndsWith(FILENAME_SUFFIX_PSM_UNIQUE_PEPTIDES + clsProteinCoverageSummarizer.FILENAME_SUFFIX_PROTEIN_TO_PEPTIDE_MAPPING))
                 {
                     // This was an old name format that is no longer used
                     // This code block should, therefore, never be reached
