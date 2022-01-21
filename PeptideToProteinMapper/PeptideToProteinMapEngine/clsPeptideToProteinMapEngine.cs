@@ -84,30 +84,37 @@ namespace PeptideToProteinMapEngine
             /// Unknown file type
             /// </summary>
             Unknown = -1,
+
             /// <summary>
             /// Auto-determine the file type
             /// </summary>
             AutoDetermine = 0,
+
             /// <summary>
             ///  First column is peptide sequence
             /// </summary>
             PeptideListFile = 1,
+
             /// <summary>
             /// First column is protein name, second column is peptide sequence
             /// </summary>
             ProteinAndPeptideFile = 2,
+
             /// <summary>
             /// InSpecT results file; pre-process the file to determine the peptides present, then determine the proteins that contain the given peptides
             /// </summary>
             InspectResultsFile = 3,
+
             /// <summary>
             /// MS-GF+ results file; pre-process the file to determine the peptides present, then determine the proteins that contain the given peptides
             /// </summary>
             MSGFPlusResultsFile = 4,
+
             /// <summary>
             /// SEQUEST, InSpecT, X!Tandem, or MS-GF+ synopsis or first-hits file created by Peptide Hit Results Processor (PHRP); pre-processes the file to determine the peptides present, then determine the proteins that contain the given peptides
             /// </summary>
             PHRPFile = 5,
+
             /// <summary>
             /// Generic tab-delimited text file; will look for column names that start with Peptide, Protein, and Scan
             /// </summary>
@@ -281,6 +288,7 @@ namespace PeptideToProteinMapEngine
 
             // Could not determine the type from the filename; look for "Peptide" or "Sequence" in the header line
             IsHeaderLinePresent(filePath, PeptideInputFileFormatConstants.Unknown, out var hasPeptideOrSequenceColumn);
+
             if (hasPeptideOrSequenceColumn)
             {
                 OnStatusEvent("Input file type: Tab-delimited text (has column Peptide or Sequence))");
@@ -407,7 +415,8 @@ namespace PeptideToProteinMapEngine
         /// <param name="inputFileFormat">Input file format</param>
         /// <param name="hasPeptideOrSequenceColumn">
         /// Output: true if the file has a column named Peptide or Sequence
-        /// Will be set to True if inputFileFormat is ProteinAndPeptideFile or PeptideListFile</param>
+        /// Will always be set to True if inputFileFormat is ProteinAndPeptideFile or PeptideListFile, even if there is no header line
+        /// </param>
         /// <returns>True if the file has a header line</returns>
         private bool IsHeaderLinePresent(string filePath, PeptideInputFileFormatConstants inputFileFormat, out bool hasPeptideOrSequenceColumn)
         {
