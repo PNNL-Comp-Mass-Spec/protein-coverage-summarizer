@@ -19,7 +19,7 @@ using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
-using Ookii.Dialogs;
+using Ookii.Dialogs.WinForms;
 using PRISM;
 using PRISM.FileProcessor;
 using PRISMDatabaseUtils;
