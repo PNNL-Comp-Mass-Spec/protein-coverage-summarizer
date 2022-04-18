@@ -21,7 +21,7 @@ Source: ..\bin\Debug\CsvHelper.dll                               ; DestDir: {app
 Source: ..\bin\Debug\Microsoft.Bcl.AsyncInterfaces.dll           ; DestDir: {app}
 Source: ..\bin\Debug\Microsoft.Bcl.HashCode.dll                  ; DestDir: {app}
 Source: ..\bin\Debug\Npgsql.dll                                  ; DestDir: {app}
-Source: ..\bin\Debug\Ookii.Dialogs.dll                           ; DestDir: {app}
+Source: ..\bin\Debug\Ookii.Dialogs.WinForms.dll                  ; DestDir: {app}
 Source: ..\bin\Debug\PRISM.dll                                   ; DestDir: {app}
 Source: ..\bin\Debug\PRISMDatabaseUtils.dll                      ; DestDir: {app}
 Source: ..\bin\Debug\PRISMWin.dll                                ; DestDir: {app}
@@ -31,13 +31,14 @@ Source: ..\bin\Debug\System.Buffers.dll                          ; DestDir: {app
 Source: ..\bin\Debug\System.Data.SQLite.dll                      ; DestDir: {app}
 Source: ..\bin\Debug\System.Memory.dll                           ; DestDir: {app}
 Source: ..\bin\Debug\System.Numerics.Vectors.dll                 ; DestDir: {app}
+Source: ..\bin\Debug\System.Resources.Extensions.dll             ; DestDir: {app}
 Source: ..\bin\Debug\System.Runtime.CompilerServices.Unsafe.dll  ; DestDir: {app}
 Source: ..\bin\Debug\System.Text.Encodings.Web.dll               ; DestDir: {app}
 Source: ..\bin\Debug\System.Text.Json.dll                        ; DestDir: {app}
 Source: ..\bin\Debug\System.Threading.Channels.dll               ; DestDir: {app}
 Source: ..\bin\Debug\System.Threading.Tasks.Extensions.dll       ; DestDir: {app}
 Source: ..\bin\Debug\System.ValueTuple.dll                       ; DestDir: {app}
-Source: ..\bin\ProteinCoverageSummarizerSettings.xml               ; DestDir: {app}
+Source: ..\bin\ProteinCoverageSummarizerSettings.xml             ; DestDir: {app}
 Source: ..\bin\Debug\x64\SQLite.Interop.dll                      ; DestDir: {app}\x64
 Source: ..\bin\Debug\x86\SQLite.Interop.dll                      ; DestDir: {app}\x86
 
