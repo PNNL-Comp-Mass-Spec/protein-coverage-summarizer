@@ -10,7 +10,7 @@ copy PeptideToProteinMapEngine.dll "F:\Documents\Projects\DataMining\PeptideHitR
 
 copy PeptideToProteinMapEngine.dll "C:\DMS_Programs\PHRP\" /Y
 copy PeptideToProteinMapEngine.pdb "C:\DMS_Programs\PHRP\" /Y
-pause
+If not "%1"=="NoPause" If not "%2"=="NoPause" pause
 
 @echo off
 echo.
@@ -42,11 +42,11 @@ If "%1"=="NoCall" Goto Done
 echo.
 echo Also distribute ProteinCoverageSummarizer.dll
 echo.
-pause
+If not "%1"=="NoPause" If not "%2"=="NoPause" pause
 
 @echo on
-call ..\..\..\ProteinCoverageSummarizer\bin\Distribute_DLL.bat NoCall
+call ..\..\..\ProteinCoverageSummarizer\bin\Distribute_DLL.bat NoCall %2
 
 :Done
 
-pause
+If not "%1"=="NoPause" If not "%2"=="NoPause" pause

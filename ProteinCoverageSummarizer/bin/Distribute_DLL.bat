@@ -10,7 +10,7 @@ copy ProteinCoverageSummarizer.dll        "F:\Documents\Projects\DataMining\Pept
 copy ProteinCoverageSummarizer.dll        "F:\Documents\Projects\DataMining\PeptideHitResultsProcessor\PeptideHitResultsProcessor\Lib\" /Y
 copy ProteinCoverageSummarizer.dll        "F:\Documents\Projects\DataMining\PeptideHitResultsProcessor\PeptideHitResultsProcessor\bin\" /Y
 
-pause
+If not "%1"=="NoPause" If not "%2"=="NoPause" pause
 
 @echo off
 echo.
@@ -55,9 +55,9 @@ echo.
 echo.
 echo.
 echo Press any key to also distribute PeptideToProteinMapEngine.dll
-pause
+If not "%1"=="NoPause" If not "%2"=="NoPause" pause
 @echo on
 
-call ..\..\PeptideToProteinMapper\PeptideToProteinMapEngine\bin\Distribute_DLL.bat NoCall
+call ..\..\PeptideToProteinMapper\PeptideToProteinMapEngine\bin\Distribute_DLL.bat NoCall %2
 
 :Done
