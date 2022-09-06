@@ -450,9 +450,9 @@ namespace ProteinCoverageSummarizer
         /// <summary>
         /// Looks up the first index value in mCachedPeptideSeqInfo that matches leaderSequenceToFind
         /// </summary>
+        /// <remarks>Calls SortIndices if mIndicesSorted = False</remarks>
         /// <param name="leaderSequenceToFind"></param>
         /// <returns>The index value if found, or -1 if not found</returns>
-        /// <remarks>Calls SortIndices if mIndicesSorted = False</remarks>
         public int GetFirstPeptideIndexForLeaderSequence(string leaderSequenceToFind)
         {
             if (!mLeaderSequences.TryGetValue(leaderSequenceToFind, out var targetHashIndex))

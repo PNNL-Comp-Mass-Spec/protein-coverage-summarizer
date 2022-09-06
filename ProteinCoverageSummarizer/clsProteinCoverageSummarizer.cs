@@ -1051,10 +1051,10 @@ namespace ProteinCoverageSummarizer
         /// Uses outputDirectoryPath if defined
         /// Otherwise uses the directory where outputFilePath resides
         /// </summary>
+        /// <remarks>If an error, or unable to determine a directory, returns the directory with the application files</remarks>
         /// <param name="outputDirectoryPath"></param>
         /// <param name="outputFilePath"></param>
         /// <returns>Output directory path</returns>
-        /// <remarks>If an error, or unable to determine a directory, returns the directory with the application files</remarks>
         public static string GetOutputDirectoryPath(string outputDirectoryPath, string outputFilePath)
         {
             try
