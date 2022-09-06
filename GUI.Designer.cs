@@ -129,18 +129,18 @@ namespace ProteinCoverageSummarizerGUI
             | System.Windows.Forms.AnchorStyles.Right)));
             this.fraProteinInputFilePath.Controls.Add(this.cmdProteinSelectFile);
             this.fraProteinInputFilePath.Controls.Add(this.txtProteinInputFilePath);
-            this.fraProteinInputFilePath.Location = new System.Drawing.Point(8, 16);
+            this.fraProteinInputFilePath.Location = new System.Drawing.Point(10, 18);
             this.fraProteinInputFilePath.Name = "fraProteinInputFilePath";
-            this.fraProteinInputFilePath.Size = new System.Drawing.Size(1006, 48);
+            this.fraProteinInputFilePath.Size = new System.Drawing.Size(1001, 56);
             this.fraProteinInputFilePath.TabIndex = 0;
             this.fraProteinInputFilePath.TabStop = false;
             this.fraProteinInputFilePath.Text = "Protein Input File Path (FASTA or Tab-delimited)";
             // 
             // cmdProteinSelectFile
             // 
-            this.cmdProteinSelectFile.Location = new System.Drawing.Point(8, 16);
+            this.cmdProteinSelectFile.Location = new System.Drawing.Point(10, 18);
             this.cmdProteinSelectFile.Name = "cmdProteinSelectFile";
-            this.cmdProteinSelectFile.Size = new System.Drawing.Size(80, 24);
+            this.cmdProteinSelectFile.Size = new System.Drawing.Size(96, 28);
             this.cmdProteinSelectFile.TabIndex = 0;
             this.cmdProteinSelectFile.Text = "Select file";
             this.cmdProteinSelectFile.Click += new System.EventHandler(this.cmdProteinSelectFile_Click);
@@ -149,9 +149,9 @@ namespace ProteinCoverageSummarizerGUI
             // 
             this.txtProteinInputFilePath.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.txtProteinInputFilePath.Location = new System.Drawing.Point(104, 18);
+            this.txtProteinInputFilePath.Location = new System.Drawing.Point(125, 21);
             this.txtProteinInputFilePath.Name = "txtProteinInputFilePath";
-            this.txtProteinInputFilePath.Size = new System.Drawing.Size(886, 20);
+            this.txtProteinInputFilePath.Size = new System.Drawing.Size(857, 22);
             this.txtProteinInputFilePath.TabIndex = 1;
             this.txtProteinInputFilePath.TextChanged += new System.EventHandler(this.txtProteinInputFilePath_TextChanged);
             this.txtProteinInputFilePath.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtProteinInputFilePath_KeyPress);
@@ -262,18 +262,18 @@ namespace ProteinCoverageSummarizerGUI
             | System.Windows.Forms.AnchorStyles.Right)));
             this.fraPeptideInputFilePath.Controls.Add(this.cmdPeptideSelectFile);
             this.fraPeptideInputFilePath.Controls.Add(this.txtPeptideInputFilePath);
-            this.fraPeptideInputFilePath.Location = new System.Drawing.Point(8, 72);
+            this.fraPeptideInputFilePath.Location = new System.Drawing.Point(10, 83);
             this.fraPeptideInputFilePath.Name = "fraPeptideInputFilePath";
-            this.fraPeptideInputFilePath.Size = new System.Drawing.Size(1006, 48);
+            this.fraPeptideInputFilePath.Size = new System.Drawing.Size(1001, 55);
             this.fraPeptideInputFilePath.TabIndex = 1;
             this.fraPeptideInputFilePath.TabStop = false;
             this.fraPeptideInputFilePath.Text = "Peptide Input File Path (Tab-delimited)";
             // 
             // cmdPeptideSelectFile
             // 
-            this.cmdPeptideSelectFile.Location = new System.Drawing.Point(8, 16);
+            this.cmdPeptideSelectFile.Location = new System.Drawing.Point(10, 18);
             this.cmdPeptideSelectFile.Name = "cmdPeptideSelectFile";
-            this.cmdPeptideSelectFile.Size = new System.Drawing.Size(80, 24);
+            this.cmdPeptideSelectFile.Size = new System.Drawing.Size(96, 28);
             this.cmdPeptideSelectFile.TabIndex = 0;
             this.cmdPeptideSelectFile.Text = "Select file";
             this.cmdPeptideSelectFile.Click += new System.EventHandler(this.cmdPeptideSelectFile_Click);
@@ -282,9 +282,9 @@ namespace ProteinCoverageSummarizerGUI
             // 
             this.txtPeptideInputFilePath.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.txtPeptideInputFilePath.Location = new System.Drawing.Point(104, 18);
+            this.txtPeptideInputFilePath.Location = new System.Drawing.Point(125, 21);
             this.txtPeptideInputFilePath.Name = "txtPeptideInputFilePath";
-            this.txtPeptideInputFilePath.Size = new System.Drawing.Size(886, 20);
+            this.txtPeptideInputFilePath.Size = new System.Drawing.Size(857, 22);
             this.txtPeptideInputFilePath.TabIndex = 1;
             this.txtPeptideInputFilePath.TextChanged += new System.EventHandler(this.txtPeptideInputFilePath_TextChanged);
             this.txtPeptideInputFilePath.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtPeptideInputFilePath_KeyPress);
@@ -320,7 +320,7 @@ namespace ProteinCoverageSummarizerGUI
             // 
             this.txtMinimumSLiCScore.Location = new System.Drawing.Point(144, 104);
             this.txtMinimumSLiCScore.Name = "txtMinimumSLiCScore";
-            this.txtMinimumSLiCScore.Size = new System.Drawing.Size(40, 20);
+            this.txtMinimumSLiCScore.Size = new System.Drawing.Size(40, 22);
             this.txtMinimumSLiCScore.TabIndex = 5;
             // 
             // fraPeakMatchingOptions
@@ -361,7 +361,7 @@ namespace ProteinCoverageSummarizerGUI
             this.cboPMPredefinedThresholds.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cboPMPredefinedThresholds.Location = new System.Drawing.Point(336, 256);
             this.cboPMPredefinedThresholds.Name = "cboPMPredefinedThresholds";
-            this.cboPMPredefinedThresholds.Size = new System.Drawing.Size(264, 23);
+            this.cboPMPredefinedThresholds.Size = new System.Drawing.Size(264, 24);
             this.cboPMPredefinedThresholds.TabIndex = 5;
             // 
             // cmdPMThresholdsAutoPopulate
@@ -385,7 +385,7 @@ namespace ProteinCoverageSummarizerGUI
             this.cboMassTolType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cboMassTolType.Location = new System.Drawing.Point(144, 224);
             this.cboMassTolType.Name = "cboMassTolType";
-            this.cboMassTolType.Size = new System.Drawing.Size(136, 23);
+            this.cboMassTolType.Size = new System.Drawing.Size(136, 24);
             this.cboMassTolType.TabIndex = 2;
             // 
             // tbsOptions
@@ -395,10 +395,10 @@ namespace ProteinCoverageSummarizerGUI
             | System.Windows.Forms.AnchorStyles.Right)));
             this.tbsOptions.Controls.Add(this.TabPageFileFormatOptions);
             this.tbsOptions.Controls.Add(this.TabPagePeakMatchingThresholds);
-            this.tbsOptions.Location = new System.Drawing.Point(8, 192);
+            this.tbsOptions.Location = new System.Drawing.Point(10, 222);
             this.tbsOptions.Name = "tbsOptions";
             this.tbsOptions.SelectedIndex = 0;
-            this.tbsOptions.Size = new System.Drawing.Size(1006, 482);
+            this.tbsOptions.Size = new System.Drawing.Size(1001, 451);
             this.tbsOptions.TabIndex = 3;
             // 
             // TabPageFileFormatOptions
@@ -411,9 +411,9 @@ namespace ProteinCoverageSummarizerGUI
             this.TabPageFileFormatOptions.Controls.Add(this.fraOptions);
             this.TabPageFileFormatOptions.Controls.Add(this.fraPeptideDelimitedFileOptions);
             this.TabPageFileFormatOptions.Controls.Add(this.fraProteinDelimitedFileOptions);
-            this.TabPageFileFormatOptions.Location = new System.Drawing.Point(4, 22);
+            this.TabPageFileFormatOptions.Location = new System.Drawing.Point(4, 25);
             this.TabPageFileFormatOptions.Name = "TabPageFileFormatOptions";
-            this.TabPageFileFormatOptions.Size = new System.Drawing.Size(998, 456);
+            this.TabPageFileFormatOptions.Size = new System.Drawing.Size(993, 422);
             this.TabPageFileFormatOptions.TabIndex = 2;
             this.TabPageFileFormatOptions.Text = "File Format Options";
             // 
@@ -421,35 +421,35 @@ namespace ProteinCoverageSummarizerGUI
             // 
             this.lblStatus.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.lblStatus.Location = new System.Drawing.Point(547, 60);
+            this.lblStatus.Location = new System.Drawing.Point(656, 69);
             this.lblStatus.Name = "lblStatus";
-            this.lblStatus.Size = new System.Drawing.Size(429, 44);
+            this.lblStatus.Size = new System.Drawing.Size(309, 51);
             this.lblStatus.TabIndex = 7;
             this.lblStatus.Text = "Status ...";
             // 
             // cmdExit
             // 
-            this.cmdExit.Location = new System.Drawing.Point(552, 177);
+            this.cmdExit.Location = new System.Drawing.Point(662, 204);
             this.cmdExit.Name = "cmdExit";
-            this.cmdExit.Size = new System.Drawing.Size(96, 32);
+            this.cmdExit.Size = new System.Drawing.Size(116, 37);
             this.cmdExit.TabIndex = 5;
             this.cmdExit.Text = "E&xit";
             this.cmdExit.Click += new System.EventHandler(this.cmdExit_Click);
             // 
             // cmdStart
             // 
-            this.cmdStart.Location = new System.Drawing.Point(552, 128);
+            this.cmdStart.Location = new System.Drawing.Point(662, 148);
             this.cmdStart.Name = "cmdStart";
-            this.cmdStart.Size = new System.Drawing.Size(96, 32);
+            this.cmdStart.Size = new System.Drawing.Size(116, 37);
             this.cmdStart.TabIndex = 4;
             this.cmdStart.Text = "&Start";
             this.cmdStart.Click += new System.EventHandler(this.cmdStart_Click);
             // 
             // cmdAbort
             // 
-            this.cmdAbort.Location = new System.Drawing.Point(552, 128);
+            this.cmdAbort.Location = new System.Drawing.Point(662, 148);
             this.cmdAbort.Name = "cmdAbort";
-            this.cmdAbort.Size = new System.Drawing.Size(96, 32);
+            this.cmdAbort.Size = new System.Drawing.Size(116, 37);
             this.cmdAbort.TabIndex = 4;
             this.cmdAbort.Text = "Abort";
             this.cmdAbort.Click += new System.EventHandler(this.cmdAbort_Click);
@@ -458,9 +458,9 @@ namespace ProteinCoverageSummarizerGUI
             // 
             this.lblProgress.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.lblProgress.Location = new System.Drawing.Point(547, 13);
+            this.lblProgress.Location = new System.Drawing.Point(656, 15);
             this.lblProgress.Name = "lblProgress";
-            this.lblProgress.Size = new System.Drawing.Size(429, 44);
+            this.lblProgress.Size = new System.Drawing.Size(309, 51);
             this.lblProgress.TabIndex = 3;
             this.lblProgress.Text = "Progress ...";
             // 
@@ -475,85 +475,85 @@ namespace ProteinCoverageSummarizerGUI
             this.fraOptions.Controls.Add(this.chkOutputProteinSequence);
             this.fraOptions.Controls.Add(this.chkTrackPeptideCounts);
             this.fraOptions.Controls.Add(this.chkRemoveSymbolCharacters);
-            this.fraOptions.Location = new System.Drawing.Point(8, 218);
+            this.fraOptions.Location = new System.Drawing.Point(10, 252);
             this.fraOptions.Name = "fraOptions";
-            this.fraOptions.Size = new System.Drawing.Size(679, 142);
+            this.fraOptions.Size = new System.Drawing.Size(814, 163);
             this.fraOptions.TabIndex = 2;
             this.fraOptions.TabStop = false;
             this.fraOptions.Text = "Options";
             // 
             // chkIgnoreILDifferences
             // 
-            this.chkIgnoreILDifferences.Location = new System.Drawing.Point(400, 94);
+            this.chkIgnoreILDifferences.Location = new System.Drawing.Point(480, 108);
             this.chkIgnoreILDifferences.Name = "chkIgnoreILDifferences";
-            this.chkIgnoreILDifferences.Size = new System.Drawing.Size(224, 21);
+            this.chkIgnoreILDifferences.Size = new System.Drawing.Size(269, 25);
             this.chkIgnoreILDifferences.TabIndex = 7;
             this.chkIgnoreILDifferences.Text = "Ignore I/L Differences";
             // 
             // chkMatchPeptidePrefixAndSuffixToProtein
             // 
-            this.chkMatchPeptidePrefixAndSuffixToProtein.Location = new System.Drawing.Point(16, 120);
+            this.chkMatchPeptidePrefixAndSuffixToProtein.Location = new System.Drawing.Point(19, 138);
             this.chkMatchPeptidePrefixAndSuffixToProtein.Name = "chkMatchPeptidePrefixAndSuffixToProtein";
-            this.chkMatchPeptidePrefixAndSuffixToProtein.Size = new System.Drawing.Size(328, 21);
+            this.chkMatchPeptidePrefixAndSuffixToProtein.Size = new System.Drawing.Size(394, 25);
             this.chkMatchPeptidePrefixAndSuffixToProtein.TabIndex = 6;
             this.chkMatchPeptidePrefixAndSuffixToProtein.Text = "Match peptide prefix and suffix letters to protein sequence";
             // 
             // chkSearchAllProteinsSkipCoverageComputationSteps
             // 
-            this.chkSearchAllProteinsSkipCoverageComputationSteps.Location = new System.Drawing.Point(400, 68);
+            this.chkSearchAllProteinsSkipCoverageComputationSteps.Location = new System.Drawing.Point(480, 78);
             this.chkSearchAllProteinsSkipCoverageComputationSteps.Name = "chkSearchAllProteinsSkipCoverageComputationSteps";
-            this.chkSearchAllProteinsSkipCoverageComputationSteps.Size = new System.Drawing.Size(262, 21);
+            this.chkSearchAllProteinsSkipCoverageComputationSteps.Size = new System.Drawing.Size(314, 25);
             this.chkSearchAllProteinsSkipCoverageComputationSteps.TabIndex = 3;
             this.chkSearchAllProteinsSkipCoverageComputationSteps.Text = "Skip coverage computation (faster)";
             // 
             // chkSaveProteinToPeptideMappingFile
             // 
-            this.chkSaveProteinToPeptideMappingFile.Location = new System.Drawing.Point(400, 16);
+            this.chkSaveProteinToPeptideMappingFile.Location = new System.Drawing.Point(480, 18);
             this.chkSaveProteinToPeptideMappingFile.Name = "chkSaveProteinToPeptideMappingFile";
-            this.chkSaveProteinToPeptideMappingFile.Size = new System.Drawing.Size(247, 21);
+            this.chkSaveProteinToPeptideMappingFile.Size = new System.Drawing.Size(296, 25);
             this.chkSaveProteinToPeptideMappingFile.TabIndex = 2;
             this.chkSaveProteinToPeptideMappingFile.Text = "Save protein to peptide mapping details";
             this.chkSaveProteinToPeptideMappingFile.CheckedChanged += new System.EventHandler(this.chkSearchAllProteinsSaveDetails_CheckedChanged);
             // 
             // chkSaveSourceDataPlusProteinsFile
             // 
-            this.chkSaveSourceDataPlusProteinsFile.Location = new System.Drawing.Point(400, 42);
+            this.chkSaveSourceDataPlusProteinsFile.Location = new System.Drawing.Point(480, 48);
             this.chkSaveSourceDataPlusProteinsFile.Name = "chkSaveSourceDataPlusProteinsFile";
-            this.chkSaveSourceDataPlusProteinsFile.Size = new System.Drawing.Size(240, 21);
+            this.chkSaveSourceDataPlusProteinsFile.Size = new System.Drawing.Size(288, 25);
             this.chkSaveSourceDataPlusProteinsFile.TabIndex = 1;
             this.chkSaveSourceDataPlusProteinsFile.Text = "Create source data plus proteins file";
             this.chkSaveSourceDataPlusProteinsFile.CheckedChanged += new System.EventHandler(this.chkSearchAllProteinsForPeptideSequence_CheckedChanged);
             // 
             // chkSearchAllProteinsForPeptideSequence
             // 
-            this.chkSearchAllProteinsForPeptideSequence.Location = new System.Drawing.Point(16, 42);
+            this.chkSearchAllProteinsForPeptideSequence.Location = new System.Drawing.Point(19, 48);
             this.chkSearchAllProteinsForPeptideSequence.Name = "chkSearchAllProteinsForPeptideSequence";
-            this.chkSearchAllProteinsForPeptideSequence.Size = new System.Drawing.Size(240, 21);
+            this.chkSearchAllProteinsForPeptideSequence.Size = new System.Drawing.Size(288, 25);
             this.chkSearchAllProteinsForPeptideSequence.TabIndex = 1;
             this.chkSearchAllProteinsForPeptideSequence.Text = "Search All Proteins For Peptide Sequence";
             this.chkSearchAllProteinsForPeptideSequence.CheckedChanged += new System.EventHandler(this.chkSearchAllProteinsForPeptideSequence_CheckedChanged);
             // 
             // chkOutputProteinSequence
             // 
-            this.chkOutputProteinSequence.Location = new System.Drawing.Point(16, 16);
+            this.chkOutputProteinSequence.Location = new System.Drawing.Point(19, 18);
             this.chkOutputProteinSequence.Name = "chkOutputProteinSequence";
-            this.chkOutputProteinSequence.Size = new System.Drawing.Size(176, 21);
+            this.chkOutputProteinSequence.Size = new System.Drawing.Size(211, 25);
             this.chkOutputProteinSequence.TabIndex = 0;
             this.chkOutputProteinSequence.Text = "Output Protein Sequence";
             // 
             // chkTrackPeptideCounts
             // 
-            this.chkTrackPeptideCounts.Location = new System.Drawing.Point(16, 68);
+            this.chkTrackPeptideCounts.Location = new System.Drawing.Point(19, 78);
             this.chkTrackPeptideCounts.Name = "chkTrackPeptideCounts";
-            this.chkTrackPeptideCounts.Size = new System.Drawing.Size(264, 21);
+            this.chkTrackPeptideCounts.Size = new System.Drawing.Size(317, 25);
             this.chkTrackPeptideCounts.TabIndex = 4;
             this.chkTrackPeptideCounts.Text = "Track Unique And Non-Unique Peptide Counts";
             // 
             // chkRemoveSymbolCharacters
             // 
-            this.chkRemoveSymbolCharacters.Location = new System.Drawing.Point(16, 94);
+            this.chkRemoveSymbolCharacters.Location = new System.Drawing.Point(19, 108);
             this.chkRemoveSymbolCharacters.Name = "chkRemoveSymbolCharacters";
-            this.chkRemoveSymbolCharacters.Size = new System.Drawing.Size(368, 21);
+            this.chkRemoveSymbolCharacters.Size = new System.Drawing.Size(442, 25);
             this.chkRemoveSymbolCharacters.TabIndex = 5;
             this.chkRemoveSymbolCharacters.Text = "Remove non-letter characters from protein and peptide sequences";
             // 
@@ -566,9 +566,9 @@ namespace ProteinCoverageSummarizerGUI
             this.fraPeptideDelimitedFileOptions.Controls.Add(this.lblPeptideInputFileColumnDelimiter);
             this.fraPeptideDelimitedFileOptions.Controls.Add(this.cboPeptideInputFileColumnDelimiter);
             this.fraPeptideDelimitedFileOptions.Controls.Add(this.lblInputFileNotes);
-            this.fraPeptideDelimitedFileOptions.Location = new System.Drawing.Point(8, 112);
+            this.fraPeptideDelimitedFileOptions.Location = new System.Drawing.Point(10, 129);
             this.fraPeptideDelimitedFileOptions.Name = "fraPeptideDelimitedFileOptions";
-            this.fraPeptideDelimitedFileOptions.Size = new System.Drawing.Size(536, 104);
+            this.fraPeptideDelimitedFileOptions.Size = new System.Drawing.Size(643, 120);
             this.fraPeptideDelimitedFileOptions.TabIndex = 1;
             this.fraPeptideDelimitedFileOptions.TabStop = false;
             this.fraPeptideDelimitedFileOptions.Text = "Peptide Delimited Input File Options";
@@ -577,42 +577,42 @@ namespace ProteinCoverageSummarizerGUI
             // 
             this.cboPeptideInputFileColumnOrdering.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cboPeptideInputFileColumnOrdering.DropDownWidth = 70;
-            this.cboPeptideInputFileColumnOrdering.Location = new System.Drawing.Point(88, 24);
+            this.cboPeptideInputFileColumnOrdering.Location = new System.Drawing.Point(106, 28);
             this.cboPeptideInputFileColumnOrdering.Name = "cboPeptideInputFileColumnOrdering";
-            this.cboPeptideInputFileColumnOrdering.Size = new System.Drawing.Size(264, 21);
+            this.cboPeptideInputFileColumnOrdering.Size = new System.Drawing.Size(316, 24);
             this.cboPeptideInputFileColumnOrdering.TabIndex = 1;
             this.cboPeptideInputFileColumnOrdering.SelectedIndexChanged += new System.EventHandler(this.cboPeptideInputFileColumnOrdering_SelectedIndexChanged);
             // 
             // Label1
             // 
-            this.Label1.Location = new System.Drawing.Point(8, 24);
+            this.Label1.Location = new System.Drawing.Point(10, 28);
             this.Label1.Name = "Label1";
-            this.Label1.Size = new System.Drawing.Size(80, 16);
+            this.Label1.Size = new System.Drawing.Size(96, 18);
             this.Label1.TabIndex = 0;
             this.Label1.Text = "Column Order";
             // 
             // chkPeptideFileSkipFirstLine
             // 
-            this.chkPeptideFileSkipFirstLine.Location = new System.Drawing.Point(264, 56);
+            this.chkPeptideFileSkipFirstLine.Location = new System.Drawing.Point(317, 65);
             this.chkPeptideFileSkipFirstLine.Name = "chkPeptideFileSkipFirstLine";
-            this.chkPeptideFileSkipFirstLine.Size = new System.Drawing.Size(240, 24);
+            this.chkPeptideFileSkipFirstLine.Size = new System.Drawing.Size(288, 27);
             this.chkPeptideFileSkipFirstLine.TabIndex = 5;
             this.chkPeptideFileSkipFirstLine.Text = "Skip first line in peptide input file";
             // 
             // txtPeptideInputFileColumnDelimiter
             // 
-            this.txtPeptideInputFileColumnDelimiter.Location = new System.Drawing.Point(192, 56);
+            this.txtPeptideInputFileColumnDelimiter.Location = new System.Drawing.Point(230, 65);
             this.txtPeptideInputFileColumnDelimiter.MaxLength = 1;
             this.txtPeptideInputFileColumnDelimiter.Name = "txtPeptideInputFileColumnDelimiter";
-            this.txtPeptideInputFileColumnDelimiter.Size = new System.Drawing.Size(32, 20);
+            this.txtPeptideInputFileColumnDelimiter.Size = new System.Drawing.Size(39, 22);
             this.txtPeptideInputFileColumnDelimiter.TabIndex = 4;
             this.txtPeptideInputFileColumnDelimiter.Text = ";";
             // 
             // lblPeptideInputFileColumnDelimiter
             // 
-            this.lblPeptideInputFileColumnDelimiter.Location = new System.Drawing.Point(8, 56);
+            this.lblPeptideInputFileColumnDelimiter.Location = new System.Drawing.Point(10, 65);
             this.lblPeptideInputFileColumnDelimiter.Name = "lblPeptideInputFileColumnDelimiter";
-            this.lblPeptideInputFileColumnDelimiter.Size = new System.Drawing.Size(96, 16);
+            this.lblPeptideInputFileColumnDelimiter.Size = new System.Drawing.Size(115, 18);
             this.lblPeptideInputFileColumnDelimiter.TabIndex = 2;
             this.lblPeptideInputFileColumnDelimiter.Text = "Column Delimiter";
             // 
@@ -620,16 +620,16 @@ namespace ProteinCoverageSummarizerGUI
             // 
             this.cboPeptideInputFileColumnDelimiter.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cboPeptideInputFileColumnDelimiter.DropDownWidth = 70;
-            this.cboPeptideInputFileColumnDelimiter.Location = new System.Drawing.Point(112, 56);
+            this.cboPeptideInputFileColumnDelimiter.Location = new System.Drawing.Point(134, 65);
             this.cboPeptideInputFileColumnDelimiter.Name = "cboPeptideInputFileColumnDelimiter";
-            this.cboPeptideInputFileColumnDelimiter.Size = new System.Drawing.Size(70, 21);
+            this.cboPeptideInputFileColumnDelimiter.Size = new System.Drawing.Size(84, 24);
             this.cboPeptideInputFileColumnDelimiter.TabIndex = 3;
             // 
             // lblInputFileNotes
             // 
-            this.lblInputFileNotes.Location = new System.Drawing.Point(8, 82);
+            this.lblInputFileNotes.Location = new System.Drawing.Point(10, 95);
             this.lblInputFileNotes.Name = "lblInputFileNotes";
-            this.lblInputFileNotes.Size = new System.Drawing.Size(488, 16);
+            this.lblInputFileNotes.Size = new System.Drawing.Size(585, 18);
             this.lblInputFileNotes.TabIndex = 6;
             this.lblInputFileNotes.Text = "Note: prefix and suffix residues will be automatically removed from the input pep" +
     "tides";
@@ -642,18 +642,18 @@ namespace ProteinCoverageSummarizerGUI
             this.fraProteinDelimitedFileOptions.Controls.Add(this.txtProteinInputFileColumnDelimiter);
             this.fraProteinDelimitedFileOptions.Controls.Add(this.lblProteinInputFileColumnDelimiter);
             this.fraProteinDelimitedFileOptions.Controls.Add(this.cboProteinInputFileColumnDelimiter);
-            this.fraProteinDelimitedFileOptions.Location = new System.Drawing.Point(8, 16);
+            this.fraProteinDelimitedFileOptions.Location = new System.Drawing.Point(10, 18);
             this.fraProteinDelimitedFileOptions.Name = "fraProteinDelimitedFileOptions";
-            this.fraProteinDelimitedFileOptions.Size = new System.Drawing.Size(504, 88);
+            this.fraProteinDelimitedFileOptions.Size = new System.Drawing.Size(604, 102);
             this.fraProteinDelimitedFileOptions.TabIndex = 0;
             this.fraProteinDelimitedFileOptions.TabStop = false;
             this.fraProteinDelimitedFileOptions.Text = "Protein Delimited Input File Options";
             // 
             // chkProteinFileSkipFirstLine
             // 
-            this.chkProteinFileSkipFirstLine.Location = new System.Drawing.Point(264, 56);
+            this.chkProteinFileSkipFirstLine.Location = new System.Drawing.Point(317, 65);
             this.chkProteinFileSkipFirstLine.Name = "chkProteinFileSkipFirstLine";
-            this.chkProteinFileSkipFirstLine.Size = new System.Drawing.Size(216, 24);
+            this.chkProteinFileSkipFirstLine.Size = new System.Drawing.Size(259, 27);
             this.chkProteinFileSkipFirstLine.TabIndex = 5;
             this.chkProteinFileSkipFirstLine.Text = "Skip first line in protein input file";
             // 
@@ -661,33 +661,33 @@ namespace ProteinCoverageSummarizerGUI
             // 
             this.cboProteinInputFileColumnOrdering.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cboProteinInputFileColumnOrdering.DropDownWidth = 70;
-            this.cboProteinInputFileColumnOrdering.Location = new System.Drawing.Point(88, 24);
+            this.cboProteinInputFileColumnOrdering.Location = new System.Drawing.Point(106, 28);
             this.cboProteinInputFileColumnOrdering.Name = "cboProteinInputFileColumnOrdering";
-            this.cboProteinInputFileColumnOrdering.Size = new System.Drawing.Size(392, 21);
+            this.cboProteinInputFileColumnOrdering.Size = new System.Drawing.Size(470, 24);
             this.cboProteinInputFileColumnOrdering.TabIndex = 1;
             // 
             // lblProteinInputFileColumnOrdering
             // 
-            this.lblProteinInputFileColumnOrdering.Location = new System.Drawing.Point(8, 26);
+            this.lblProteinInputFileColumnOrdering.Location = new System.Drawing.Point(10, 30);
             this.lblProteinInputFileColumnOrdering.Name = "lblProteinInputFileColumnOrdering";
-            this.lblProteinInputFileColumnOrdering.Size = new System.Drawing.Size(80, 16);
+            this.lblProteinInputFileColumnOrdering.Size = new System.Drawing.Size(96, 18);
             this.lblProteinInputFileColumnOrdering.TabIndex = 0;
             this.lblProteinInputFileColumnOrdering.Text = "Column Order";
             // 
             // txtProteinInputFileColumnDelimiter
             // 
-            this.txtProteinInputFileColumnDelimiter.Location = new System.Drawing.Point(192, 56);
+            this.txtProteinInputFileColumnDelimiter.Location = new System.Drawing.Point(230, 65);
             this.txtProteinInputFileColumnDelimiter.MaxLength = 1;
             this.txtProteinInputFileColumnDelimiter.Name = "txtProteinInputFileColumnDelimiter";
-            this.txtProteinInputFileColumnDelimiter.Size = new System.Drawing.Size(32, 20);
+            this.txtProteinInputFileColumnDelimiter.Size = new System.Drawing.Size(39, 22);
             this.txtProteinInputFileColumnDelimiter.TabIndex = 4;
             this.txtProteinInputFileColumnDelimiter.Text = ";";
             // 
             // lblProteinInputFileColumnDelimiter
             // 
-            this.lblProteinInputFileColumnDelimiter.Location = new System.Drawing.Point(8, 58);
+            this.lblProteinInputFileColumnDelimiter.Location = new System.Drawing.Point(10, 67);
             this.lblProteinInputFileColumnDelimiter.Name = "lblProteinInputFileColumnDelimiter";
-            this.lblProteinInputFileColumnDelimiter.Size = new System.Drawing.Size(96, 16);
+            this.lblProteinInputFileColumnDelimiter.Size = new System.Drawing.Size(115, 18);
             this.lblProteinInputFileColumnDelimiter.TabIndex = 2;
             this.lblProteinInputFileColumnDelimiter.Text = "Column Delimiter";
             // 
@@ -695,9 +695,9 @@ namespace ProteinCoverageSummarizerGUI
             // 
             this.cboProteinInputFileColumnDelimiter.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cboProteinInputFileColumnDelimiter.DropDownWidth = 70;
-            this.cboProteinInputFileColumnDelimiter.Location = new System.Drawing.Point(112, 56);
+            this.cboProteinInputFileColumnDelimiter.Location = new System.Drawing.Point(134, 65);
             this.cboProteinInputFileColumnDelimiter.Name = "cboProteinInputFileColumnDelimiter";
-            this.cboProteinInputFileColumnDelimiter.Size = new System.Drawing.Size(70, 21);
+            this.cboProteinInputFileColumnDelimiter.Size = new System.Drawing.Size(84, 24);
             this.cboProteinInputFileColumnDelimiter.TabIndex = 3;
             // 
             // TabPagePeakMatchingThresholds
@@ -710,9 +710,9 @@ namespace ProteinCoverageSummarizerGUI
             this.TabPagePeakMatchingThresholds.Controls.Add(this.cboCharactersPerLine);
             this.TabPagePeakMatchingThresholds.Controls.Add(this.rtfRichTextBox);
             this.TabPagePeakMatchingThresholds.Controls.Add(this.dgResults);
-            this.TabPagePeakMatchingThresholds.Location = new System.Drawing.Point(4, 22);
+            this.TabPagePeakMatchingThresholds.Location = new System.Drawing.Point(4, 25);
             this.TabPagePeakMatchingThresholds.Name = "TabPagePeakMatchingThresholds";
-            this.TabPagePeakMatchingThresholds.Size = new System.Drawing.Size(826, 365);
+            this.TabPagePeakMatchingThresholds.Size = new System.Drawing.Size(1199, 527);
             this.TabPagePeakMatchingThresholds.TabIndex = 3;
             this.TabPagePeakMatchingThresholds.Text = "Results Browser";
             this.TabPagePeakMatchingThresholds.Visible = false;
@@ -720,10 +720,10 @@ namespace ProteinCoverageSummarizerGUI
             // txtCoverage
             // 
             this.txtCoverage.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.txtCoverage.Location = new System.Drawing.Point(512, 318);
+            this.txtCoverage.Location = new System.Drawing.Point(614, 468);
             this.txtCoverage.Name = "txtCoverage";
             this.txtCoverage.ReadOnly = true;
-            this.txtCoverage.Size = new System.Drawing.Size(216, 20);
+            this.txtCoverage.Size = new System.Drawing.Size(260, 22);
             this.txtCoverage.TabIndex = 7;
             this.txtCoverage.Text = "Coverage: 0%  (0 / 0)";
             this.txtCoverage.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtCoverage_KeyPress);
@@ -732,11 +732,11 @@ namespace ProteinCoverageSummarizerGUI
             // 
             this.txtRTFCode.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left)));
-            this.txtRTFCode.Location = new System.Drawing.Point(72, 16);
+            this.txtRTFCode.Location = new System.Drawing.Point(86, 18);
             this.txtRTFCode.Multiline = true;
             this.txtRTFCode.Name = "txtRTFCode";
             this.txtRTFCode.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.txtRTFCode.Size = new System.Drawing.Size(432, 222);
+            this.txtRTFCode.Size = new System.Drawing.Size(519, 358);
             this.txtRTFCode.TabIndex = 1;
             this.txtRTFCode.WordWrap = false;
             // 
@@ -744,11 +744,11 @@ namespace ProteinCoverageSummarizerGUI
             // 
             this.txtCustomProteinSequence.AcceptsReturn = true;
             this.txtCustomProteinSequence.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.txtCustomProteinSequence.Location = new System.Drawing.Point(88, 319);
+            this.txtCustomProteinSequence.Location = new System.Drawing.Point(106, 470);
             this.txtCustomProteinSequence.Multiline = true;
             this.txtCustomProteinSequence.Name = "txtCustomProteinSequence";
             this.txtCustomProteinSequence.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.txtCustomProteinSequence.Size = new System.Drawing.Size(416, 39);
+            this.txtCustomProteinSequence.Size = new System.Drawing.Size(499, 45);
             this.txtCustomProteinSequence.TabIndex = 6;
             this.txtCustomProteinSequence.Click += new System.EventHandler(this.txtCustomProteinSequence_Click);
             this.txtCustomProteinSequence.TextChanged += new System.EventHandler(this.txtCustomProteinSequence_TextChanged);
@@ -757,17 +757,17 @@ namespace ProteinCoverageSummarizerGUI
             // lblCustomProteinSequence
             // 
             this.lblCustomProteinSequence.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.lblCustomProteinSequence.Location = new System.Drawing.Point(4, 319);
+            this.lblCustomProteinSequence.Location = new System.Drawing.Point(5, 470);
             this.lblCustomProteinSequence.Name = "lblCustomProteinSequence";
-            this.lblCustomProteinSequence.Size = new System.Drawing.Size(88, 32);
+            this.lblCustomProteinSequence.Size = new System.Drawing.Size(105, 37);
             this.lblCustomProteinSequence.TabIndex = 5;
             this.lblCustomProteinSequence.Text = "Custom Protein Sequence";
             // 
             // chkAddSpace
             // 
-            this.chkAddSpace.Location = new System.Drawing.Point(736, 6);
+            this.chkAddSpace.Location = new System.Drawing.Point(883, 7);
             this.chkAddSpace.Name = "chkAddSpace";
-            this.chkAddSpace.Size = new System.Drawing.Size(120, 25);
+            this.chkAddSpace.Size = new System.Drawing.Size(144, 29);
             this.chkAddSpace.TabIndex = 3;
             this.chkAddSpace.Text = "Add space every 10 residues";
             this.chkAddSpace.CheckedChanged += new System.EventHandler(this.chkAddSpace_CheckStateChanged);
@@ -775,9 +775,9 @@ namespace ProteinCoverageSummarizerGUI
             // cboCharactersPerLine
             // 
             this.cboCharactersPerLine.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cboCharactersPerLine.Location = new System.Drawing.Point(512, 10);
+            this.cboCharactersPerLine.Location = new System.Drawing.Point(614, 12);
             this.cboCharactersPerLine.Name = "cboCharactersPerLine";
-            this.cboCharactersPerLine.Size = new System.Drawing.Size(216, 21);
+            this.cboCharactersPerLine.Size = new System.Drawing.Size(260, 24);
             this.cboCharactersPerLine.TabIndex = 2;
             this.cboCharactersPerLine.SelectedIndexChanged += new System.EventHandler(this.cboCharactersPerLine_SelectedIndexChanged);
             // 
@@ -786,9 +786,9 @@ namespace ProteinCoverageSummarizerGUI
             this.rtfRichTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.rtfRichTextBox.Location = new System.Drawing.Point(512, 40);
+            this.rtfRichTextBox.Location = new System.Drawing.Point(614, 46);
             this.rtfRichTextBox.Name = "rtfRichTextBox";
-            this.rtfRichTextBox.Size = new System.Drawing.Size(306, 270);
+            this.rtfRichTextBox.Size = new System.Drawing.Size(574, 413);
             this.rtfRichTextBox.TabIndex = 4;
             this.rtfRichTextBox.Text = "";
             this.rtfRichTextBox.WordWrap = false;
@@ -800,10 +800,10 @@ namespace ProteinCoverageSummarizerGUI
             this.dgResults.CaptionText = "Results";
             this.dgResults.DataMember = "";
             this.dgResults.HeaderForeColor = System.Drawing.SystemColors.ControlText;
-            this.dgResults.Location = new System.Drawing.Point(2, 16);
+            this.dgResults.Location = new System.Drawing.Point(2, 18);
             this.dgResults.Name = "dgResults";
             this.dgResults.PreferredColumnWidth = 80;
-            this.dgResults.Size = new System.Drawing.Size(504, 295);
+            this.dgResults.Size = new System.Drawing.Size(605, 442);
             this.dgResults.TabIndex = 0;
             this.dgResults.CurrentCellChanged += new System.EventHandler(this.dgResults_CurrentCellChanged);
             // 
@@ -813,18 +813,18 @@ namespace ProteinCoverageSummarizerGUI
             | System.Windows.Forms.AnchorStyles.Right)));
             this.fraOutputFolderPath.Controls.Add(this.cmdSelectOutputFolder);
             this.fraOutputFolderPath.Controls.Add(this.txtOutputFolderPath);
-            this.fraOutputFolderPath.Location = new System.Drawing.Point(8, 128);
+            this.fraOutputFolderPath.Location = new System.Drawing.Point(10, 148);
             this.fraOutputFolderPath.Name = "fraOutputFolderPath";
-            this.fraOutputFolderPath.Size = new System.Drawing.Size(1006, 56);
+            this.fraOutputFolderPath.Size = new System.Drawing.Size(1001, 64);
             this.fraOutputFolderPath.TabIndex = 2;
             this.fraOutputFolderPath.TabStop = false;
             this.fraOutputFolderPath.Text = "Output folder path";
             // 
             // cmdSelectOutputFolder
             // 
-            this.cmdSelectOutputFolder.Location = new System.Drawing.Point(8, 16);
+            this.cmdSelectOutputFolder.Location = new System.Drawing.Point(10, 18);
             this.cmdSelectOutputFolder.Name = "cmdSelectOutputFolder";
-            this.cmdSelectOutputFolder.Size = new System.Drawing.Size(80, 32);
+            this.cmdSelectOutputFolder.Size = new System.Drawing.Size(96, 37);
             this.cmdSelectOutputFolder.TabIndex = 0;
             this.cmdSelectOutputFolder.Text = "Select folder";
             this.cmdSelectOutputFolder.Click += new System.EventHandler(this.cmdSelectOutputFolder_Click);
@@ -833,15 +833,15 @@ namespace ProteinCoverageSummarizerGUI
             // 
             this.txtOutputFolderPath.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.txtOutputFolderPath.Location = new System.Drawing.Point(104, 18);
+            this.txtOutputFolderPath.Location = new System.Drawing.Point(125, 21);
             this.txtOutputFolderPath.Name = "txtOutputFolderPath";
-            this.txtOutputFolderPath.Size = new System.Drawing.Size(886, 20);
+            this.txtOutputFolderPath.Size = new System.Drawing.Size(857, 22);
             this.txtOutputFolderPath.TabIndex = 1;
             this.txtOutputFolderPath.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtOutputFolderPath_KeyPress);
             // 
             // GUI
             // 
-            this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
+            this.AutoScaleBaseSize = new System.Drawing.Size(6, 15);
             this.ClientSize = new System.Drawing.Size(1030, 683);
             this.Controls.Add(this.fraOutputFolderPath);
             this.Controls.Add(this.tbsOptions);
