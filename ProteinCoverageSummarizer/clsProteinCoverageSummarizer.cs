@@ -2316,13 +2316,13 @@ namespace ProteinCoverageSummarizer
 
         private void SearchProteinsUsingCachedPeptides(IDictionary<string, int> shortPeptideCache)
         {
-            if (shortPeptideCache.Count > 0)
-            {
-                UpdateProgress("Comparing proteins to short peptide sequences");
+            if (shortPeptideCache.Count == 0)
+                return;
 
-                // Need to step through the proteins and match them to the data in shortPeptideCache
-                FindSequenceMatchForPeptideList(shortPeptideCache, string.Empty);
-            }
+            UpdateProgress("Comparing proteins to short peptide sequences");
+
+            // Need to step through the proteins and match them to the data in shortPeptideCache
+            FindSequenceMatchForPeptideList(shortPeptideCache, string.Empty);
         }
 
         private void StorePeptideToProteinMatch(string cleanPeptideSequence, string proteinName)
@@ -2330,10 +2330,8 @@ namespace ProteinCoverageSummarizer
             // Store the mapping between peptide sequence and protein name
             if (mPeptideToProteinMapResults.TryGetValue(cleanPeptideSequence, out var proteins))
             {
-                if (!proteins.Contains(proteinName))
-                {
-                    proteins.Add(proteinName);
-                }
+                // Add proteinName to the sorted set if missing
+                proteins.Add(proteinName);
             }
             else
             {
