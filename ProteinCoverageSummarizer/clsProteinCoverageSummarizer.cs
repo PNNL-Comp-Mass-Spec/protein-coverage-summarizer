@@ -940,7 +940,7 @@ namespace ProteinCoverageSummarizer
         /// </summary>
         public static string GetAppDirectoryPath()
         {
-            return ProcessFilesOrDirectoriesBase.GetAppDirectoryPath();
+            return AppUtils.GetAppDirectoryPath();
         }
 
         /// <summary>

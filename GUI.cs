@@ -367,17 +367,17 @@ namespace ProteinCoverageSummarizerGUI
                     var parentDirectory = Directory.GetParent(filePath)?.FullName;
 
                     fileDialog.InitialDirectory = string.IsNullOrEmpty(parentDirectory)
-                        ? ProcessFilesOrDirectoriesBase.GetAppDirectoryPath()
+                        ? AppUtils.GetAppDirectoryPath()
                         : parentDirectory;
                 }
                 catch
                 {
-                    fileDialog.InitialDirectory = ProcessFilesOrDirectoriesBase.GetAppDirectoryPath();
+                    fileDialog.InitialDirectory = AppUtils.GetAppDirectoryPath();
                 }
             }
             else
             {
-                fileDialog.InitialDirectory = ProcessFilesOrDirectoriesBase.GetAppDirectoryPath();
+                fileDialog.InitialDirectory = AppUtils.GetAppDirectoryPath();
             }
 
             if (File.Exists(filePath))

@@ -190,7 +190,7 @@ namespace PeptideToProteinMapper
 
         private static string GetAppVersion()
         {
-            return ProcessFilesOrDirectoriesBase.GetAppVersion(PROGRAM_DATE);
+            return AppUtils.GetAppVersion(PROGRAM_DATE);
         }
 
         private static void RegisterEvents(IEventNotifier processingClass)

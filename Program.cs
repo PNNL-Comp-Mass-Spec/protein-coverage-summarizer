@@ -166,7 +166,7 @@ namespace ProteinCoverageSummarizerGUI
 
         private static string GetAppVersion()
         {
-            return ProcessFilesOrDirectoriesBase.GetAppVersion(PROGRAM_DATE);
+            return AppUtils.GetAppVersion(PROGRAM_DATE);
         }
 
         /// <summary>
@@ -315,7 +315,7 @@ namespace ProteinCoverageSummarizerGUI
                     "Recognizes files where the first line is column headers, reading peptides from the first column that starts with 'Peptide' " +
                     "and proteins from the first column that starts with 'Protein'"));
                 Console.WriteLine();
-                Console.WriteLine("Program syntax:" + Environment.NewLine + Path.GetFileName(ProcessFilesOrDirectoriesBase.GetAppPath()));
+                Console.WriteLine("Program syntax:" + Environment.NewLine + Path.GetFileName(AppUtils.GetAppPath()));
                 Console.WriteLine("  /I:PeptideInputFilePath /R:ProteinInputFilePath [/O:OutputDirectoryName]");
                 Console.WriteLine("  [/P:ParameterFilePath] [/F:FileFormatCode] [/SkipHeader]");
                 Console.WriteLine("  [/G] [/H] [/M] [/K] [/D] [/Debug] [/KeepDB]");
