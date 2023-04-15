@@ -404,11 +404,11 @@ namespace ProteinCoverageSummarizer
 
             if (startIndex >= 0 && endIndex < 0)
             {
-                sqlQuery += " WHERE UniqueSequenceID >= " + Convert.ToString(startIndex);
+                sqlQuery += string.Format(" WHERE UniqueSequenceID >= {0}", startIndex);
             }
             else if (startIndex >= 0 && endIndex >= 0)
             {
-                sqlQuery += " WHERE UniqueSequenceID BETWEEN " + Convert.ToString(startIndex) + " AND " + Convert.ToString(endIndex);
+                sqlQuery += string.Format(" WHERE UniqueSequenceID BETWEEN {0} AND {1}", startIndex, endIndex);
             }
 
             var cmd = mSQLitePersistentConnection.CreateCommand();
