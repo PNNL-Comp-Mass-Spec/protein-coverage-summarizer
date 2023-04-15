@@ -902,13 +902,18 @@
         </member>
         <member name="F:PHRPReader.Data.MaxQuantSynFileColumns.Peptide">
             <summary>
-            Peptide sequence, including modification symbols
+            Peptide sequence, without modification symbols
             </summary>
         </member>
         <member name="F:PHRPReader.Data.MaxQuantSynFileColumns.DynamicModifications">
             <summary>
             Comma separated list of dynamic modifications in the peptide
             </summary>
+            <remarks>
+            MaxQuant modification examples:
+              Oxidation 8
+              Oxidation 11,Oxidation 26
+            </remarks>
         </member>
         <member name="F:PHRPReader.Data.MaxQuantSynFileColumns.Proteins">
             <summary>
@@ -1317,6 +1322,306 @@
             Notes
             </summary>
         </member>
+        <member name="T:PHRPReader.Data.DiaNNSynFileColumns">
+            <summary>
+            DIA-NN synopsis file columns
+            </summary>
+        </member>
+        <member name="F:PHRPReader.Data.DiaNNSynFileColumns.ResultID">
+            <summary>
+            Result ID
+            </summary>
+        </member>
+        <member name="F:PHRPReader.Data.DiaNNSynFileColumns.Dataset">
+            <summary>
+            Dataset name (abbreviated dataset name, as assigned by the analysis manager)
+            </summary>
+        </member>
+        <member name="F:PHRPReader.Data.DiaNNSynFileColumns.DatasetID">
+            <summary>
+            Dataset ID
+            </summary>
+        </member>
+        <member name="F:PHRPReader.Data.DiaNNSynFileColumns.Scan">
+            <summary>
+            MS/MS scan number in the dataset
+            </summary>
+        </member>
+        <member name="F:PHRPReader.Data.DiaNNSynFileColumns.IonMobility">
+            <summary>
+            Ion Mobility
+            </summary>
+        </member>
+        <member name="F:PHRPReader.Data.DiaNNSynFileColumns.Charge">
+            <summary>
+            Charge state of the precursor ion
+            </summary>
+        </member>
+        <member name="F:PHRPReader.Data.DiaNNSynFileColumns.PrecursorMZ">
+            <summary>
+            Precursor ion m/z (computed from peptide mass and charge by PHRP)
+            </summary>
+        </member>
+        <member name="F:PHRPReader.Data.DiaNNSynFileColumns.MH">
+            <summary>
+            Monoisotopic (M+H)+ value, computed from peptide mass by PHRP
+            </summary>
+            <remarks>
+            This is (M+H)+
+            </remarks>
+        </member>
+        <member name="F:PHRPReader.Data.DiaNNSynFileColumns.Mass">
+            <summary>
+            Theoretical monoisotopic mass of the identified sequence (uncharged, including mods), as computed by PHRP
+            </summary>
+        </member>
+        <member name="F:PHRPReader.Data.DiaNNSynFileColumns.Peptide">
+            <summary>
+            Peptide sequence, without any modifications
+            </summary>
+        </member>
+        <member name="F:PHRPReader.Data.DiaNNSynFileColumns.Modifications">
+            <summary>
+            Comma-separated list of static and dynamic modification names and affected residue number
+            </summary>
+            <remarks>
+            <para>
+            This is read from column Modified.Sequence in report.tsv, then converted into MSFragger style modification names by PHRP
+            </para>
+            <para>
+            DIA-NN modification examples:
+              15M(15.9949)
+              8C(57.0215)
+              5M(15.9949), 8M(15.9949)
+              1M(15.9949), 5C(57.0215)
+              12M(15.9949), 2M(15.9949), 8M(15.9949)
+              N-term(42.0106)
+            </para>
+            </remarks>
+        </member>
+        <member name="F:PHRPReader.Data.DiaNNSynFileColumns.ProteinGroup">
+            <summary>
+            Protein group name
+            </summary>
+        </member>
+        <member name="F:PHRPReader.Data.DiaNNSynFileColumns.ProteinIDs">
+            <summary>
+            Protein names (from the FASTA file)
+            </summary>
+        </member>
+        <member name="F:PHRPReader.Data.DiaNNSynFileColumns.ProteinNames">
+            <summary>
+            Protein names, as determined by DIA-NN, typically corresponding to UniProt Name
+            </summary>
+        </member>
+        <member name="F:PHRPReader.Data.DiaNNSynFileColumns.GeneNames">
+            <summary>
+            Gene names
+            </summary>
+        </member>
+        <member name="F:PHRPReader.Data.DiaNNSynFileColumns.NTT">
+            <summary>
+            Number of tryptic termini
+            </summary>
+        </member>
+        <member name="F:PHRPReader.Data.DiaNNSynFileColumns.ProteinGroupQuantity">
+            <summary>
+            Protein Group Quantity
+            </summary>
+        </member>
+        <member name="F:PHRPReader.Data.DiaNNSynFileColumns.ProteinGroupNormalized">
+            <summary>
+            Protein Group Normalized
+            </summary>
+        </member>
+        <member name="F:PHRPReader.Data.DiaNNSynFileColumns.ProteinGroupMaxLFQ">
+            <summary>
+            Protein Group Max LFQ
+            </summary>
+        </member>
+        <member name="F:PHRPReader.Data.DiaNNSynFileColumns.GenesQuantity">
+            <summary>
+            Genes Quantity
+            </summary>
+        </member>
+        <member name="F:PHRPReader.Data.DiaNNSynFileColumns.GenesNormalized">
+            <summary>
+            Genes Normalized
+            </summary>
+        </member>
+        <member name="F:PHRPReader.Data.DiaNNSynFileColumns.GenesMaxLFQ">
+            <summary>
+            Genes Max LFQ
+            </summary>
+        </member>
+        <member name="F:PHRPReader.Data.DiaNNSynFileColumns.GenesMaxLFQUnique">
+            <summary>
+            Genes Max LFQ Unique
+            </summary>
+        </member>
+        <member name="F:PHRPReader.Data.DiaNNSynFileColumns.QValue">
+            <summary>
+            QValue computed by DIA-NN
+            </summary>
+        </member>
+        <member name="F:PHRPReader.Data.DiaNNSynFileColumns.PEP">
+            <summary>
+            PEP (posterior error probability)
+            </summary>
+        </member>
+        <member name="F:PHRPReader.Data.DiaNNSynFileColumns.GlobalQValue">
+            <summary>
+            Global QValue
+            </summary>
+        </member>
+        <member name="F:PHRPReader.Data.DiaNNSynFileColumns.ProteinQValue">
+            <summary>
+            Protein QValue
+            </summary>
+        </member>
+        <member name="F:PHRPReader.Data.DiaNNSynFileColumns.ProteinGroupQValue">
+            <summary>
+            Protein Group QValue
+            </summary>
+        </member>
+        <member name="F:PHRPReader.Data.DiaNNSynFileColumns.GlobalProteinGroupQValue">
+            <summary>
+            Global Protein Group QValue
+            </summary>
+        </member>
+        <member name="F:PHRPReader.Data.DiaNNSynFileColumns.GeneGroupQValue">
+            <summary>
+            Gene Group QValue
+            </summary>
+        </member>
+        <member name="F:PHRPReader.Data.DiaNNSynFileColumns.TranslatedQValue">
+            <summary>
+            Translated QValue
+            </summary>
+            <remarks>
+            Translation involves sequence propagation
+            </remarks>
+        </member>
+        <member name="F:PHRPReader.Data.DiaNNSynFileColumns.Proteotypic">
+            <summary>
+            Proteotypic
+            </summary>
+            <remarks>
+            1 if the peptide is specific to a given protein or gene, otherwise 0
+            </remarks>
+        </member>
+        <member name="F:PHRPReader.Data.DiaNNSynFileColumns.PrecursorQuantity">
+            <summary>
+            Precursor Quantity
+            </summary>
+        </member>
+        <member name="F:PHRPReader.Data.DiaNNSynFileColumns.PrecursorNormalized">
+            <summary>
+            Precursor Normalized
+            </summary>
+        </member>
+        <member name="F:PHRPReader.Data.DiaNNSynFileColumns.PrecursorTranslated">
+            <summary>
+            Precursor Translated
+            </summary>
+        </member>
+        <member name="F:PHRPReader.Data.DiaNNSynFileColumns.TranslatedQuality">
+            <summary>
+            Translated Quality
+            </summary>
+        </member>
+        <member name="F:PHRPReader.Data.DiaNNSynFileColumns.MS1Translated">
+            <summary>
+            MS1 Translated
+            </summary>
+        </member>
+        <member name="F:PHRPReader.Data.DiaNNSynFileColumns.QuantityQuality">
+            <summary>
+            Quantity Quality
+            </summary>
+        </member>
+        <member name="F:PHRPReader.Data.DiaNNSynFileColumns.ElutionTime">
+            <summary>
+            Elution Time (aka retention time)
+            </summary>
+        </member>
+        <member name="F:PHRPReader.Data.DiaNNSynFileColumns.ElutionTimeStart">
+            <summary>
+            Elution Time Start
+            </summary>
+        </member>
+        <member name="F:PHRPReader.Data.DiaNNSynFileColumns.ElutionTimeStop">
+            <summary>
+            Elution Time Stop
+            </summary>
+        </member>
+        <member name="F:PHRPReader.Data.DiaNNSynFileColumns.IndexedRT">
+            <summary>
+            Indexed Retention Time (iRT)
+            </summary>
+        </member>
+        <member name="F:PHRPReader.Data.DiaNNSynFileColumns.IndexedIonMobility">
+            <summary>
+            Indexed Ion Mobility
+            </summary>
+        </member>
+        <member name="F:PHRPReader.Data.DiaNNSynFileColumns.PredictedRT">
+            <summary>
+            Predicted Retention Time
+            </summary>
+        </member>
+        <member name="F:PHRPReader.Data.DiaNNSynFileColumns.PredictedIndexedRT">
+            <summary>
+            Predicted Indexed Retention Time
+            </summary>
+        </member>
+        <member name="F:PHRPReader.Data.DiaNNSynFileColumns.MS1ProfileCorrelation">
+            <summary>
+            MS1 Profile Correlation
+            </summary>
+        </member>
+        <member name="F:PHRPReader.Data.DiaNNSynFileColumns.MS1Area">
+            <summary>
+            MS1 Area
+            </summary>
+        </member>
+        <member name="F:PHRPReader.Data.DiaNNSynFileColumns.Evidence">
+            <summary>
+            Evidence (score)
+            </summary>
+            <remarks>Higher values are better</remarks>
+        </member>
+        <member name="F:PHRPReader.Data.DiaNNSynFileColumns.SpectrumSimilarity">
+            <summary>
+            Spectrum Similarity
+            </summary>
+        </member>
+        <member name="F:PHRPReader.Data.DiaNNSynFileColumns.Averagine">
+            <summary>
+            Averagine
+            </summary>
+        </member>
+        <member name="F:PHRPReader.Data.DiaNNSynFileColumns.MassEvidence">
+            <summary>
+            Mass Evidence
+            </summary>
+            <remarks>Higher values are better</remarks>
+        </member>
+        <member name="F:PHRPReader.Data.DiaNNSynFileColumns.CScore">
+            <summary>
+            CScore
+            </summary>
+        </member>
+        <member name="F:PHRPReader.Data.DiaNNSynFileColumns.DecoyEvidence">
+            <summary>
+            Decoy Evidence
+            </summary>
+        </member>
+        <member name="F:PHRPReader.Data.DiaNNSynFileColumns.DecoyCScore">
+            <summary>
+            Decoy CScore
+            </summary>
+        </member>
         <member name="T:PHRPReader.Data.MSFraggerSynFileColumns">
             <summary>
             MSFragger synopsis file columns
@@ -1385,13 +1690,19 @@
         </member>
         <member name="F:PHRPReader.Data.MSFraggerSynFileColumns.Peptide">
             <summary>
-            Peptide sequence, including modification symbols
+            Peptide sequence, without modification symbols
             </summary>
         </member>
         <member name="F:PHRPReader.Data.MSFraggerSynFileColumns.Modifications">
             <summary>
             Comma separated list of static and dynamic modifications in the peptide
             </summary>
+            <remarks>
+            MSFragger modification examples:
+              7M(15.9949)
+              11M(15.9949), 1M(15.9949)
+              12K(229.1629), 18K(229.1629), 6K(229.1629), N-term(229.1629)
+            </remarks>
         </member>
         <member name="F:PHRPReader.Data.MSFraggerSynFileColumns.Protein">
             <summary>
@@ -2352,10 +2663,32 @@
             Feature score
             </summary>
         </member>
+        <member name="F:PHRPReader.Data.TopPICSynFileColumns.Feature_Apex_Time">
+            <summary>
+            Feature apex time (in minutes)
+            </summary>
+        </member>
+        <member name="F:PHRPReader.Data.TopPICSynFileColumns.Protein_Count">
+            <summary>
+            Number of proteins for this peptide (aka proteoform)
+            </summary>
+        </member>
         <member name="F:PHRPReader.Data.TopPICSynFileColumns.Protein">
             <summary>
             Protein name
             </summary>
+        </member>
+        <member name="F:PHRPReader.Data.TopPICSynFileColumns.Protein_Nterminal_Form">
+            <summary>
+            Protein N-terminus state
+            </summary>
+            <remarks>
+            Examples:
+              NONE
+              M_ACETYLATION
+              NME
+              NME_ACETYLATION
+            </remarks>
         </member>
         <member name="F:PHRPReader.Data.TopPICSynFileColumns.ResidueStart">
             <summary>
@@ -3588,7 +3921,7 @@
         <member name="M:PHRPReader.Data.PeptideModificationContainer.LookupModificationMassByName(System.String,System.Double@)">
             <summary>
             Resolve a modification name to a modification mass
-            Checks both selected UniMod names and the names in mMassCorrectionTags
+            Checks both names in mMassCorrectionTags and UniMod names
             </summary>
             <param name="modName">Modification name</param>
             <param name="modMass">Monoisotopic mass</param>
@@ -4108,12 +4441,13 @@
             <param name="peptideSequence">Peptide sequence (can optionally contain modification symbols; can optionally contain prefix and suffix residues)</param>
             <param name="updateCleanSequence"></param>
         </member>
-        <member name="M:PHRPReader.Data.PSM.SetPeptide(System.String,PHRPReader.PeptideCleavageStateCalculator)">
+        <member name="M:PHRPReader.Data.PSM.SetPeptide(System.String,PHRPReader.PeptideCleavageStateCalculator,System.Boolean)">
             <summary>
             Update the peptide sequence (auto-determines the clean sequence); also auto-update the cleavage state info
             </summary>
             <param name="peptide">Peptide sequence (can optionally contain modification symbols; can optionally contain prefix and suffix residues)</param>
             <param name="cleavageStateCalculator">Cleavage state calculator object</param>
+            <param name="assumeTryptic">When true, if the peptide sequence does not have prefix or suffix letters, assume the peptide is tryptic</param>
         </member>
         <member name="M:PHRPReader.Data.PSM.SetScore(System.String,System.String)">
             <summary>
@@ -4135,6 +4469,13 @@
             Auto-determine the number of missed cleavages, cleavage state, and number of tryptic termini based on the peptide sequence
             </summary>
             <param name="cleavageStateCalculator"></param>
+        </member>
+        <member name="M:PHRPReader.Data.PSM.UpdateCleavageInfo(PHRPReader.PeptideCleavageStateCalculator,System.String)">
+            <summary>
+            Auto-determine the number of missed cleavages, cleavage state, and number of tryptic termini based on the given peptide sequence
+            </summary>
+            <param name="cleavageStateCalculator"></param>
+            <param name="sequenceWithPrefixAndSuffix">Peptide sequence, including prefix and suffix residues</param>
         </member>
         <member name="T:PHRPReader.Data.ScanStatsExInfo">
             <summary>
@@ -4383,7 +4724,7 @@
             <summary>
             Dynamic and static mods to search for
             </summary>
-            <remarks>This only populated for MSAlign, MODa, and MODPlus</remarks>
+            <remarks>This only populated for MSAlign, MODa, MODPlus, and DIA-NN</remarks>
         </member>
         <member name="P:PHRPReader.Data.SearchEngineParameters.Parameters">
             <summary>
@@ -4655,6 +4996,11 @@
             MSFragger
             </summary>
         </member>
+        <member name="F:PHRPReader.PeptideHitResultTypes.DiaNN">
+            <summary>
+            DIA-NN
+            </summary>
+        </member>
         <member name="T:PHRPReader.MSGFPlusParamFileModExtractor">
             <summary>
             This class reads a DMS-based parameter file for MS-GF+ or MSPathFinder to extract the dynamic and static modification information
@@ -4680,6 +5026,13 @@
             <summary>
             Custom amino acid definition parameter file keyword
             </summary>
+            <remarks>Only used by MS-GF+</remarks>
+        </member>
+        <member name="F:PHRPReader.MSGFPlusParamFileModExtractor.PARAM_TAG_STATIC_CYS_CARBAMIDOMETHYL">
+            <summary>
+            DIA-NN parameter indicating that static Cys carbamidomethyl (+57.021) was used (aka iodoacetamide alkylation)
+            </summary>
+            <remarks>Only used by DIA-NN</remarks>
         </member>
         <member name="T:PHRPReader.MSGFPlusParamFileModExtractor.MSGFPlusModType">
             <summary>
@@ -4733,13 +5086,39 @@
         </member>
         <member name="F:PHRPReader.MSGFPlusParamFileModExtractor.ModSpecFormats.MSGFPlusAndMSPathFinder">
             <summary>
-            MS-GF+ or MSPathFinder
+            MS-GF+, MSPathFinder, and DIA-NN
             </summary>
+            <remarks>
+            Examples:
+                       # Mass or Formula, Residues, ModType, Position, Name
+              DynamicMod=O1,         M, opt, any, Oxidation         # Oxidized methionine
+              DynamicMod=C2H3N1O1,   C, opt, any, Carbamidomethyl   # Carbamidomethyl C
+              DynamicMod=199.955,    C, opt, any, Mercury           # Mercury Hg(II) adduct (+199.955)
+              StaticMod=229.1629,    *,  fix, N-term,    TMT6plex
+            </remarks>
         </member>
         <member name="F:PHRPReader.MSGFPlusParamFileModExtractor.ModSpecFormats.TopPIC">
             <summary>
             TopPIC
             </summary>
+            <remarks>
+            Examples:
+                      # Name,            Mass,  Residues, Position, UniModID
+              StaticMod=Carbamidomethyl, 57.021464,  C,   any,      4
+              DynamicMod=Acetyl,         42.010565,  K,   any,      1      # Acetyl
+            </remarks>
+        </member>
+        <member name="F:PHRPReader.MSGFPlusParamFileModExtractor.ModSpecFormats.DiaNN">
+            <summary>
+            DIA-NN
+            </summary>
+            <remarks>
+            Examples:
+                       # Name,        Mass,  Residues
+              DynamicMod=UniMod:35,   15.994915,  M       # Oxidized methionine
+              DynamicMod=UniMod:1,    42.010565,  *n      # Acetylation protein N-term
+              DynamicMod=UniMod:21,   79.966331,  STY     # Phosphorylated STY
+            </remarks>
         </member>
         <member name="T:PHRPReader.MSGFPlusParamFileModExtractor.ModInfo">
             <summary>
@@ -4840,12 +5219,23 @@
         </member>
         <member name="M:PHRPReader.MSGFPlusParamFileModExtractor.ExtractModInfoFromParamFile(System.String,PHRPReader.MSGFPlusParamFileModExtractor.ModSpecFormats,System.Collections.Generic.List{PHRPReader.MSGFPlusParamFileModExtractor.ModInfo}@)">
             <summary>
-            Extracts mod info from a MS-GF+ or MSPathFinder param file, or from a MSGFPlus_Mods.txt file (previously MSGFDB_Mods.txt)
+            Extracts mod info from a MS-GF+, MSPathFinder, TopPIC, or DIA-NN param file, or from a MSGFPlus_Mods.txt file (previously MSGFDB_Mods.txt)
             </summary>
             <param name="paramFilePath"></param>
             <param name="modSpecFormat"></param>
             <param name="modList"></param>
             <returns>True if success; false if a problem</returns>
+        </member>
+        <member name="M:PHRPReader.MSGFPlusParamFileModExtractor.ParseModSpecDiaNN(System.String,System.Collections.Generic.IReadOnlyList{System.String},PHRPReader.MSGFPlusParamFileModExtractor.MSGFPlusModType,System.Int32@,PHRPReader.MSGFPlusParamFileModExtractor.ModInfo@)">
+            <summary>
+            Parse the mod spec definition from a DIA-NN parameter file
+            </summary>
+            <param name="paramFilePath"></param>
+            <param name="splitLine"></param>
+            <param name="modType">MSGFPlusModType.DynamicMod or MSGFPlusModType.StaticMod</param>
+            <param name="unnamedModID"></param>
+            <param name="udtModInfo"></param>
+            <returns>True if successful, false if an error</returns>
         </member>
         <member name="M:PHRPReader.MSGFPlusParamFileModExtractor.ParseModSpecMSGFPlus(System.String,System.Collections.Generic.IReadOnlyList{System.String},System.Int32@,PHRPReader.MSGFPlusParamFileModExtractor.ModInfo@)">
             <summary>
@@ -4870,10 +5260,19 @@
         </member>
         <member name="M:PHRPReader.MSGFPlusParamFileModExtractor.ResolveMSGFPlusModsWithModDefinitions(System.Collections.Generic.List{PHRPReader.MSGFPlusParamFileModExtractor.ModInfo},PHRPReader.Data.PeptideModificationContainer)">
             <summary>
-            Resolve MS-GF+, MSPathFinder, or TopPIC mods with mod definitions
+            Resolve MS-GF+, MSPathFinder, TopPIC, or DIA-NN mods with modification definitions
             </summary>
             <param name="modList"></param>
             <param name="peptideMods"></param>
+        </member>
+        <member name="M:PHRPReader.MSGFPlusParamFileModExtractor.ValidateIsValidModSpec(System.String,System.String)">
+            <summary>
+            If the data line starts with text in parameter modTag followed by an equals sign, return the text after the equals sign
+            </summary>
+            <remarks>If the line has a comment (which starts with #), the comment will not be included in the returned text</remarks>
+            <param name="lineIn"></param>
+            <param name="modTag"></param>
+            <returns>Modification definition if found, otherwise an empty string</returns>
         </member>
         <member name="T:PHRPReader.PeptideCleavageStateCalculator">
             <summary>
@@ -6205,6 +6604,214 @@
             <summary>
             This code added by Visual Studio to correctly implement the disposable pattern.
             </summary>
+        </member>
+        <member name="T:PHRPReader.Reader.DiaNNSynFileReader">
+            <summary>
+            PHRP SynFileReader for DIA-NN
+            </summary>
+        </member>
+        <member name="F:PHRPReader.Reader.DiaNNSynFileReader.FILENAME_SUFFIX_SYN">
+            <summary>
+            DIA-NN synopsis file suffix
+            </summary>
+        </member>
+        <member name="F:PHRPReader.Reader.DiaNNSynFileReader.FILENAME_SUFFIX_FHT">
+            <summary>
+            DIA-NN first hits file suffix
+            </summary>
+            <remarks>
+            <para>
+            This public constant is defined for compatibility with other classes
+            </para>
+            <para>
+            We don't actually create first-hits files for DIA-NN results
+            </para>
+            </remarks>
+        </member>
+        <member name="F:PHRPReader.Reader.DiaNNSynFileReader.DiaNN_SEARCH_ENGINE_NAME">
+            <summary>
+            Search engine name
+            </summary>
+        </member>
+        <member name="F:PHRPReader.Reader.DiaNNSynFileReader.mSynopsisFileColumn">
+            <summary>
+            Mapping from enum to synopsis file column name for DIA-NN
+            </summary>
+        </member>
+        <member name="P:PHRPReader.Reader.DiaNNSynFileReader.PHRPFirstHitsFileName">
+            <summary>
+            First hits file
+            </summary>
+        </member>
+        <member name="P:PHRPReader.Reader.DiaNNSynFileReader.PHRPModSummaryFileName">
+            <summary>
+            Mod summary file
+            </summary>
+        </member>
+        <member name="P:PHRPReader.Reader.DiaNNSynFileReader.PHRPPepToProteinMapFileName">
+            <summary>
+            Peptide to protein map file
+            </summary>
+        </member>
+        <member name="P:PHRPReader.Reader.DiaNNSynFileReader.PHRPProteinModsFileName">
+            <summary>
+            Protein mods file
+            </summary>
+        </member>
+        <member name="P:PHRPReader.Reader.DiaNNSynFileReader.PHRPSynopsisFileName">
+            <summary>
+            Synopsis file
+            </summary>
+        </member>
+        <member name="P:PHRPReader.Reader.DiaNNSynFileReader.PHRPResultToSeqMapFileName">
+            <summary>
+            Result to sequence map file
+            </summary>
+        </member>
+        <member name="P:PHRPReader.Reader.DiaNNSynFileReader.PHRPSeqInfoFileName">
+            <summary>
+            Sequence info file
+            </summary>
+        </member>
+        <member name="P:PHRPReader.Reader.DiaNNSynFileReader.PHRPSeqToProteinMapFileName">
+            <summary>
+            Sequence to protein map file
+            </summary>
+        </member>
+        <member name="P:PHRPReader.Reader.DiaNNSynFileReader.SearchEngineName">
+            <summary>
+            Search engine name
+            </summary>
+        </member>
+        <member name="M:PHRPReader.Reader.DiaNNSynFileReader.#ctor(System.String,System.String)">
+            <summary>
+            Constructor; assumes loadModsAndSeqInfo=True
+            </summary>
+            <param name="datasetName">Dataset name</param>
+            <param name="inputFilePath">Input file path</param>
+        </member>
+        <member name="M:PHRPReader.Reader.DiaNNSynFileReader.#ctor(System.String,System.String,System.Boolean)">
+            <summary>
+            Constructor
+            </summary>
+            <param name="datasetName">Dataset name</param>
+            <param name="inputFilePath">Input file path</param>
+            <param name="loadModsAndSeqInfo">If True, load the ModSummary file and SeqInfo files</param>
+        </member>
+        <member name="M:PHRPReader.Reader.DiaNNSynFileReader.#ctor(System.String,System.String,PHRPReader.StartupOptions)">
+            <summary>
+            Constructor
+            </summary>
+            <param name="datasetName">Dataset name</param>
+            <param name="inputFilePath">Input file path</param>
+            <param name="startupOptions">Startup Options, in particular LoadModsAndSeqInfo and MaxProteinsPerPSM</param>
+        </member>
+        <member name="M:PHRPReader.Reader.DiaNNSynFileReader.GetColumnHeaderNames">
+            <summary>
+            Get the header names in the PHRP synopsis or first hits file for this tool
+            </summary>
+            <returns>List of header names</returns>
+        </member>
+        <member name="M:PHRPReader.Reader.DiaNNSynFileReader.GetColumnHeaderNamesAndIDs">
+            <summary>
+            Header names and enums for the PHRP synopsis file for this tool
+            </summary>
+            <returns>Dictionary of header names and enum values</returns>
+        </member>
+        <member name="M:PHRPReader.Reader.DiaNNSynFileReader.GetColumnMapFromHeaderLine(System.Collections.Generic.List{System.String})">
+            <summary>
+            Compares the names in headerNames to the standard header names tracked by the dictionary returned by GetColumnHeaderNamesAndIDs
+            Populates a dictionary mapping enum DiaNNSynFileColumns to the 0-based index in columnNames
+            </summary>
+            <param name="headerNames"></param>
+            <returns>Dictionary mapping the enum value to the column index in headerNames (0-based column index)</returns>
+        </member>
+        <member name="M:PHRPReader.Reader.DiaNNSynFileReader.GetColumnNameByID(PHRPReader.Data.DiaNNSynFileColumns)">
+            <summary>
+            Get the synopsis file column name associated with the given enum
+            </summary>
+            <param name="column"></param>
+            <returns>Column name</returns>
+        </member>
+        <member name="M:PHRPReader.Reader.DiaNNSynFileReader.GetPHRPFirstHitsFileName(System.String)">
+            <summary>
+            Default first hits file for the given dataset
+            </summary>
+            <param name="datasetName"></param>
+            <returns>Filename</returns>
+        </member>
+        <member name="M:PHRPReader.Reader.DiaNNSynFileReader.GetPHRPModSummaryFileName(System.String)">
+            <summary>
+            Default ModSummary file name for the given dataset
+            </summary>
+            <param name="datasetName"></param>
+            <returns>Filename</returns>
+        </member>
+        <member name="M:PHRPReader.Reader.DiaNNSynFileReader.GetPHRPPepToProteinMapFileName(System.String)">
+            <summary>
+            Default PepToProtMap file name for the given dataset
+            </summary>
+            <param name="datasetName"></param>
+            <returns>Filename</returns>
+        </member>
+        <member name="M:PHRPReader.Reader.DiaNNSynFileReader.GetPHRPProteinModsFileName(System.String)">
+            <summary>
+            Default ProteinMods file name for the given dataset
+            </summary>
+            <param name="datasetName"></param>
+            <returns>Filename</returns>
+        </member>
+        <member name="M:PHRPReader.Reader.DiaNNSynFileReader.GetPHRPSynopsisFileName(System.String)">
+            <summary>
+            Default Synopsis file name for the given dataset
+            </summary>
+            <param name="datasetName"></param>
+            <returns>Filename</returns>
+        </member>
+        <member name="M:PHRPReader.Reader.DiaNNSynFileReader.GetPHRPResultToSeqMapFileName(System.String)">
+            <summary>
+            Default ResultToSeq map file name for the given dataset
+            </summary>
+            <param name="datasetName"></param>
+            <returns>Filename</returns>
+        </member>
+        <member name="M:PHRPReader.Reader.DiaNNSynFileReader.GetPHRPSeqInfoFileName(System.String)">
+            <summary>
+            Default SeqInfo map file name for the given dataset
+            </summary>
+            <param name="datasetName"></param>
+            <returns>Filename</returns>
+        </member>
+        <member name="M:PHRPReader.Reader.DiaNNSynFileReader.GetPHRPSeqToProteinMapFileName(System.String)">
+            <summary>
+            Default SeqToProtein map file name for the given dataset
+            </summary>
+            <param name="datasetName"></param>
+            <returns>Filename</returns>
+        </member>
+        <member name="M:PHRPReader.Reader.DiaNNSynFileReader.GetSearchEngineName">
+            <summary>
+            Search engine name
+            </summary>
+        </member>
+        <member name="M:PHRPReader.Reader.DiaNNSynFileReader.LoadSearchEngineParameters(System.String,PHRPReader.Data.SearchEngineParameters@)">
+            <summary>
+            Parses the specified DIA-NN parameter file
+            </summary>
+            <param name="searchEngineParamFileName"></param>
+            <param name="searchEngineParams"></param>
+            <returns>True if successful, false if an error</returns>
+        </member>
+        <member name="M:PHRPReader.Reader.DiaNNSynFileReader.ParsePHRPDataLine(System.String,System.Int32,PHRPReader.Data.PSM@,System.Boolean)">
+            <summary>
+            Parse the data line read from a PHRP results file
+            </summary>
+            <remarks>When fastReadMode is True, you should call FinalizePSM to populate the remaining fields</remarks>
+            <param name="line">Data line</param>
+            <param name="linesRead">Number of lines read so far (used for error reporting)</param>
+            <param name="psm">Output: PSM details</param>
+            <param name="fastReadMode">When set to true, reads the next data line, but doesn't perform text parsing required to determine cleavage state</param>
+            <returns>True if successful, false if an error</returns>
         </member>
         <member name="T:PHRPReader.Reader.MaxQuantSynFileReader">
             <summary>
@@ -8360,7 +8967,12 @@
         </member>
         <member name="F:PHRPReader.Reader.SynFileReaderBaseClass.AmbiguousModInfo.ModMassString">
             <summary>
-            Modification mass (as a string)
+            Modification mass (as a string) or modification name
+            </summary>
+        </member>
+        <member name="M:PHRPReader.Reader.SynFileReaderBaseClass.AmbiguousModInfo.ToString">
+            <summary>
+            Show the modification mass
             </summary>
         </member>
         <member name="F:PHRPReader.Reader.SynFileReaderBaseClass.mDatasetName">
@@ -8683,7 +9295,7 @@
         </member>
         <member name="M:PHRPReader.Reader.SynFileReaderBaseClass.LoadModSummary">
             <summary>
-            Reads the data in modSummaryFilePath.  Populates mModInfo with the modification names, masses, and affected residues
+            Reads the data in modSummaryFilePath. Populates mModInfo with the modification names, masses, and affected residues
             </summary>
             <returns>True if success; false if an error</returns>
         </member>
@@ -8702,6 +9314,19 @@
             Parse the column names in splitLine and update the local column header mapping
             </summary>
             <param name="splitLine"></param>
+        </member>
+        <member name="M:PHRPReader.Reader.SynFileReaderBaseClass.ParseDelimitedList(System.String,System.Char,System.Boolean)">
+            <summary>
+            Convert a list of delimited items to an enumerable list, trimming whitespace from each item
+            </summary>
+            <param name="delimitedList"></param>
+            <param name="delimiter"></param>
+            <param name="includeEmptyItems">If true, include empty items in the list</param>
+            <remarks>
+            If delimitedList is "Value1;;Value2" and includeEmptyItems is false, a 2 item list will be returned
+            If delimitedList is "Value1;;Value2" and includeEmptyItems is true,  a 3 item list will be returned
+            </remarks>
+            <returns>List of items</returns>
         </member>
         <member name="M:PHRPReader.Reader.SynFileReaderBaseClass.ParseKeyValueSetting(System.String,System.Char)">
             <summary>
