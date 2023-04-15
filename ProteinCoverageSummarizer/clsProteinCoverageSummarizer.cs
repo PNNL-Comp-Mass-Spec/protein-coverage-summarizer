@@ -74,6 +74,26 @@ namespace ProteinCoverageSummarizer
         private const int PROTEIN_CHUNK_COUNT = 50000;
 
         /// <summary>
+        /// Protein column name in the _ProteinToPeptideMapping.txt file
+        /// </summary>
+        public const string PROTEIN_TO_PEPTIDE_MAP_FILE_PROTEIN_COLUMN = "Protein Name";
+
+        /// <summary>
+        /// Peptide column name in the _ProteinToPeptideMapping.txt file
+        /// </summary>
+        public const string PROTEIN_TO_PEPTIDE_MAP_FILE_PEPTIDE_COLUMN = "Peptide Sequence";
+
+        /// <summary>
+        /// Prefix residue column name in the _ProteinToPeptideMapping.txt file
+        /// </summary>
+        public const string PROTEIN_TO_PEPTIDE_MAP_FILE_PREFIX_RESIDUE_COLUMN = "Prefix Residue";
+
+        /// <summary>
+        /// Suffix residue column name in the _ProteinToPeptideMapping.txt file
+        /// </summary>
+        public const string PROTEIN_TO_PEPTIDE_MAP_FILE_SUFFIX_RESIDUE_COLUMN = "Suffix Residue";
+
+        /// <summary>
         /// Protein coverage error codes
         /// </summary>
         public enum ProteinCoverageErrorCodes
@@ -902,7 +922,23 @@ namespace ProteinCoverageSummarizer
                                 {
                                     if (Options.SaveProteinToPeptideMappingFile)
                                     {
-                                        WriteEntryToProteinToPeptideMappingFile(mCachedProteinInfo[proteinIndex].Name, peptideSequenceForKeySource, startResidue, endResidue);
+                                        // '\0' is the default value for a character
+
+                                        if (Options.MapFileIncludesPrefixAndSuffixColumns &&
+                                            (prefixResidue == '\0' || suffixResidue == '\0'))
+                                        {
+                                            // Determine the prefix and suffix residues using the protein sequence
+                                            prefixResidue = GetResidueInProteinSequence(mCachedProteinInfo[proteinIndex].Sequence, startResidueNumber - 1);
+                                            suffixResidue = GetResidueInProteinSequence(mCachedProteinInfo[proteinIndex].Sequence, endResidueNumber + 1);
+                                        }
+
+                                        WriteEntryToProteinToPeptideMappingFile(
+                                            mCachedProteinInfo[proteinIndex].Name,
+                                            peptideSequenceForKeySource,
+                                            startResidueNumber,
+                                            endResidueNumber,
+                                            prefixResidue,
+                                            suffixResidue);
                                     }
 
                                     if (Options.SaveSourceDataPlusProteinsFile)
@@ -1463,7 +1499,21 @@ namespace ProteinCoverageSummarizer
                             AutoFlush = true
                         };
 
-                        mProteinToPeptideMappingOutputFile.WriteLine("Protein Name" + "\t" + "Peptide Sequence" + "\t" + "Residue Start" + "\t" + "Residue End");
+                        var headerNames = new List<string>
+                        {
+                            PROTEIN_TO_PEPTIDE_MAP_FILE_PROTEIN_COLUMN,
+                            PROTEIN_TO_PEPTIDE_MAP_FILE_PEPTIDE_COLUMN,
+                            "Residue Start",
+                            "Residue End"
+                        };
+
+                        if (Options.MapFileIncludesPrefixAndSuffixColumns)
+                        {
+                            headerNames.Add(PROTEIN_TO_PEPTIDE_MAP_FILE_PREFIX_RESIDUE_COLUMN);
+                            headerNames.Add(PROTEIN_TO_PEPTIDE_MAP_FILE_SUFFIX_RESIDUE_COLUMN);
+                        }
+
+                        mProteinToPeptideMappingOutputFile.WriteLine(string.Join("\t", headerNames));
                     }
 
                     var peptideColumnIndex = GetPeptideColumnIndex(Options.PeptideFileFormatCode, peptideInputFilePath, sepChars, out var proteinColumnIndex, out var scanColumnIndex);
@@ -2159,7 +2209,31 @@ namespace ProteinCoverageSummarizer
                                             {
                                                 if (Options.SaveProteinToPeptideMappingFile)
                                                 {
-                                                    WriteEntryToProteinToPeptideMappingFile(mCachedProteinInfo[proteinIndex].Name, peptideSequenceForKeySource, proteinSeqCharIndex + 1, endIndex + 1);
+                                                    // Determine the prefix and suffix residues using the protein sequence
+                                                    var startResidueNumber = proteinSeqCharIndex + 1;
+                                                    var endResidueNumber = endIndex + 1;
+
+                                                    char prefixResidue;
+                                                    char suffixResidue;
+
+                                                    if (Options.MapFileIncludesPrefixAndSuffixColumns)
+                                                    {
+                                                        prefixResidue = GetResidueInProteinSequence(mCachedProteinInfo[proteinIndex].Sequence, startResidueNumber - 1);
+                                                        suffixResidue = GetResidueInProteinSequence(mCachedProteinInfo[proteinIndex].Sequence, endResidueNumber + 1);
+                                                    }
+                                                    else
+                                                    {
+                                                        prefixResidue = '\0';
+                                                        suffixResidue = '\0';
+                                                    }
+
+                                                    WriteEntryToProteinToPeptideMappingFile(
+                                                        mCachedProteinInfo[proteinIndex].Name,
+                                                        peptideSequenceForKeySource,
+                                                        startResidueNumber,
+                                                        endResidueNumber,
+                                                        prefixResidue,
+                                                        suffixResidue);
                                                 }
 
                                                 if (Options.SaveSourceDataPlusProteinsFile)
@@ -2534,12 +2608,21 @@ namespace ProteinCoverageSummarizer
             }
         }
 
-        private void WriteEntryToProteinToPeptideMappingFile(string proteinName, string peptideSequenceForKey, int startResidue, int endResidue)
+        private void WriteEntryToProteinToPeptideMappingFile(
+            string proteinName,
+            string peptideSequenceForKey,
+            int startResidueNumber,
+            int endResidueNumber,
+            char prefixResidue,
+            char suffixResidue)
         {
-            if (Options.SaveProteinToPeptideMappingFile)
-            {
-                mProteinToPeptideMappingOutputFile?.WriteLine(proteinName + "\t" + peptideSequenceForKey + "\t" + startResidue + "\t" + endResidue);
-            }
+            if (!Options.SaveProteinToPeptideMappingFile)
+                return;
+
+            mProteinToPeptideMappingOutputFile?.WriteLine(
+                "{0}\t{1}\t{2}\t{3}{4}",
+                proteinName, peptideSequenceForKey, startResidueNumber, endResidueNumber,
+                Options.MapFileIncludesPrefixAndSuffixColumns ? "\t" + prefixResidue + "\t" + suffixResidue : string.Empty);
         }
 
         private void ResetProgress(string stepDescription)

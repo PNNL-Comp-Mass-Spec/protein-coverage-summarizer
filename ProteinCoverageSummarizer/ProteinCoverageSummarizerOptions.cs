@@ -42,6 +42,11 @@
         public bool KeepDB { get; set; }
 
         /// <summary>
+        /// When true, add columns Prefix and Suffix to the protein to peptide map file
+        /// </summary>
+        public bool MapFileIncludesPrefixAndSuffixColumns { get; set; }
+
+        /// <summary>
         /// When true, require that each peptide's prefix and suffix letters match the protein sequence
         /// </summary>
         public bool MatchPeptidePrefixAndSuffixToProtein { get; set; }
@@ -53,7 +58,7 @@
         public string OutputDirectoryPath { get; set; }
 
         /// <summary>
-        /// When true, include the protein sequence in the output file
+        /// When true, include the protein sequence in the protein coverage output file
         /// </summary>
         public bool OutputProteinSequence { get; set; }
 
@@ -142,6 +147,7 @@
             IgnoreILDifferences = false;
             OutputProteinSequence = true;
             SaveProteinToPeptideMappingFile = false;
+            MapFileIncludesPrefixAndSuffixColumns = false;
             SaveSourceDataPlusProteinsFile = false;
             SearchAllProteinsForPeptideSequence = true;
             SearchAllProteinsSkipCoverageComputationSteps = false;
