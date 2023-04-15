@@ -429,7 +429,7 @@ namespace ProteinCoverageSummarizer
                 // NonUniquePeptideCount INTEGER,
                 // UniquePeptideCount INTEGER
 
-                var proteinInfo = new ProteinInfo
+                yield return new ProteinInfo
                 {
                     UniqueSequenceID = Convert.ToInt32(reader["UniqueSequenceID"]),
                     Name = Convert.ToString(reader["Name"]),
@@ -437,8 +437,6 @@ namespace ProteinCoverageSummarizer
                     Description = Convert.ToString(reader["Description"]),
                     Sequence = Convert.ToString(reader["Sequence"])
                 };
-
-                yield return proteinInfo;
             }
 
             // Close the SQL Reader
