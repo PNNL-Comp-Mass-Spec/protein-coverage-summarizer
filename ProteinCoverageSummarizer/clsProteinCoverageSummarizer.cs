@@ -14,11 +14,11 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using PRISM;
-using PRISM.FileProcessor;
 using ProteinFileReader;
 
 namespace ProteinCoverageSummarizer
@@ -269,7 +269,7 @@ namespace ProteinCoverageSummarizer
         /// Percent complete
         /// </summary>
         /// <remarks>Value between 0 and 100, but can contain decimal percentage values</remarks>
-        public float ProgressPercentComplete => Convert.ToSingle(Math.Round(mProgressPercentComplete, 2));
+        public float ProgressPercentComplete => (float)Math.Round(mProgressPercentComplete, 2);
 
         /// <summary>
         /// Protein to peptide map file path
@@ -500,7 +500,8 @@ namespace ProteinCoverageSummarizer
         {
             string peptideSequenceForKey;
 
-            if (Convert.ToInt32(prefixResidue) == 0 && Convert.ToInt32(suffixResidue) == 0)
+            // '\0' is the default value for a character
+            if (prefixResidue == '\0' && suffixResidue == '\0')
             {
                 peptideSequenceForKey = peptideSequence;
             }
@@ -596,7 +597,7 @@ namespace ProteinCoverageSummarizer
                         continue;
                     }
 
-                    var proteinID = Convert.ToInt32(proteinPeptideKey.Substring(0, colonIndex));
+                    var proteinID = int.Parse(proteinPeptideKey.Substring(0, colonIndex));
 
                     if (!proteinIDLookup.TryGetValue(proteinID, out var targetIndex))
                     {
@@ -667,7 +668,7 @@ namespace ProteinCoverageSummarizer
 
                 if (proteinsProcessed % 25 == 0)
                 {
-                    UpdateProgress(proteinsProcessed / Convert.ToSingle(ProteinDataCache.GetProteinCountCached()) * 100,
+                    UpdateProgress(proteinsProcessed / (float)ProteinDataCache.GetProteinCountCached() * 100,
                         ProteinCoverageProcessingSteps.WriteProteinCoverageFile);
                 }
 
@@ -822,7 +823,7 @@ namespace ProteinCoverageSummarizer
                 // Make sure proteinNameForPeptide is a valid string
                 proteinNameForPeptides ??= string.Empty;
 
-                var expectedPeptideIterations = Convert.ToInt32(Math.Ceiling(ProteinDataCache.GetProteinCountCached() / (double)PROTEIN_CHUNK_COUNT)) * peptideList.Count;
+                var expectedPeptideIterations = (int)(Math.Ceiling(ProteinDataCache.GetProteinCountCached() / (double)PROTEIN_CHUNK_COUNT)) * peptideList.Count;
                 if (expectedPeptideIterations < 1)
                     expectedPeptideIterations = 1;
 
@@ -888,7 +889,8 @@ namespace ProteinCoverageSummarizer
                             {
                                 // Search through all Protein sequences and capitalize matches for Peptide Sequence
 
-                                var proteinPeptideKey = Convert.ToString(mCachedProteinInfo[proteinIndex].UniqueSequenceID) + "::" + peptideSequenceForKey;
+                                var proteinPeptideKey = string.Format("{0}::{1}", mCachedProteinInfo[proteinIndex].UniqueSequenceID, peptideSequenceForKey);
+
                                 // NOTE: The following is valid only because mCachedProteinInfo is an array, and not a generic collection
                                 mCachedProteinInfo[proteinIndex].Sequence = CapitalizeMatchingProteinSequenceLetters(
                                     mCachedProteinInfo[proteinIndex].Sequence, peptideSequenceToSearchOn,
@@ -900,7 +902,7 @@ namespace ProteinCoverageSummarizer
                             else if ((mCachedProteinInfo[proteinIndex].Name ?? string.Empty) == (proteinNameForPeptides ?? string.Empty))
                             {
                                 // Define the peptide match key using the Unique Sequence ID, two colons, and the peptide sequence
-                                var proteinPeptideKey = Convert.ToString(mCachedProteinInfo[proteinIndex].UniqueSequenceID) + "::" + peptideSequenceForKey;
+                                var proteinPeptideKey = string.Format("{0}::{1}", mCachedProteinInfo[proteinIndex].UniqueSequenceID, peptideSequenceForKey);
 
                                 // Capitalize matching residues in sequence
                                 // NOTE: The following is valid only because mCachedProteinInfo is an array, and not a generic collection
@@ -952,7 +954,7 @@ namespace ProteinCoverageSummarizer
                         peptideIterationsComplete++;
                         if (peptideIterationsComplete % 10 == 0)
                         {
-                            UpdateProgress(Convert.ToSingle(peptideIterationsComplete / (double)expectedPeptideIterations * 100),
+                            UpdateProgress((float)(peptideIterationsComplete / (double)expectedPeptideIterations * 100),
                                 ProteinCoverageProcessingSteps.SearchProteinsAgainstShortPeptides);
                         }
                     }
@@ -1200,7 +1202,7 @@ namespace ProteinCoverageSummarizer
 
                     if (index % 100 == 0)
                     {
-                        UpdateProgress(index / Convert.ToSingle(ProteinDataCache.GetProteinCountCached()) * 100,
+                        UpdateProgress(index / (float)ProteinDataCache.GetProteinCountCached() * 100,
                             ProteinCoverageProcessingSteps.ComputePercentCoverage);
                     }
 
@@ -1312,11 +1314,11 @@ namespace ProteinCoverageSummarizer
                         Options.MatchPeptidePrefixAndSuffixToProtein = settingsFileReader.GetParam(XML_SECTION_PROCESSING_OPTIONS, "MatchPeptidePrefixAndSuffixToProtein", Options.MatchPeptidePrefixAndSuffixToProtein);
                         Options.IgnoreILDifferences = settingsFileReader.GetParam(XML_SECTION_PROCESSING_OPTIONS, "IgnoreILDifferences", Options.IgnoreILDifferences);
                         Options.PeptideFileSkipFirstLine = settingsFileReader.GetParam(XML_SECTION_PROCESSING_OPTIONS, "PeptideFileSkipFirstLine", Options.PeptideFileSkipFirstLine);
-                        Options.PeptideInputFileDelimiter = settingsFileReader.GetParam(XML_SECTION_PROCESSING_OPTIONS, "PeptideInputFileDelimiter", Convert.ToString(Options.PeptideInputFileDelimiter))[0];
-                        Options.PeptideFileFormatCode = (ProteinCoverageSummarizerOptions.PeptideFileColumnOrderingCode)Convert.ToInt32(settingsFileReader.GetParam(XML_SECTION_PROCESSING_OPTIONS, "PeptideFileFormatCode", (int)Options.PeptideFileFormatCode));
+                        Options.PeptideInputFileDelimiter = settingsFileReader.GetParam(XML_SECTION_PROCESSING_OPTIONS, "PeptideInputFileDelimiter", Options.PeptideInputFileDelimiter.ToString())[0];
+                        Options.PeptideFileFormatCode = (ProteinCoverageSummarizerOptions.PeptideFileColumnOrderingCode)settingsFileReader.GetParam(XML_SECTION_PROCESSING_OPTIONS, "PeptideFileFormatCode", (int)Options.PeptideFileFormatCode);
                         ProteinDataCache.Options.DelimitedFileSkipFirstLine = settingsFileReader.GetParam(XML_SECTION_PROCESSING_OPTIONS, "ProteinFileSkipFirstLine", ProteinDataCache.Options.DelimitedFileSkipFirstLine);
-                        ProteinDataCache.Options.DelimitedInputFileDelimiter = settingsFileReader.GetParam(XML_SECTION_PROCESSING_OPTIONS, "DelimitedProteinFileDelimiter", Convert.ToString(ProteinDataCache.Options.DelimitedInputFileDelimiter))[0];
-                        ProteinDataCache.Options.DelimitedFileFormatCode = (DelimitedProteinFileReader.ProteinFileFormatCode)Convert.ToInt32(settingsFileReader.GetParam(XML_SECTION_PROCESSING_OPTIONS, "DelimitedProteinFileFormatCode", (int)ProteinDataCache.Options.DelimitedFileFormatCode));
+                        ProteinDataCache.Options.DelimitedInputFileDelimiter = settingsFileReader.GetParam(XML_SECTION_PROCESSING_OPTIONS, "DelimitedProteinFileDelimiter", ProteinDataCache.Options.DelimitedInputFileDelimiter.ToString())[0];
+                        ProteinDataCache.Options.DelimitedFileFormatCode = (DelimitedProteinFileReader.ProteinFileFormatCode)settingsFileReader.GetParam(XML_SECTION_PROCESSING_OPTIONS, "DelimitedProteinFileFormatCode", (int)ProteinDataCache.Options.DelimitedFileFormatCode);
                     }
                 }
                 else
@@ -1544,7 +1546,7 @@ namespace ProteinCoverageSummarizer
                         linesRead++;
                         if (linesRead % 500 == 1)
                         {
-                            UpdateProgress("Reading peptide input file", Convert.ToSingle(bytesRead / (double)reader.BaseStream.Length * 100),
+                            UpdateProgress("Reading peptide input file", (float)(bytesRead / (double)reader.BaseStream.Length * 100),
                                 ProteinCoverageProcessingSteps.CachePeptides);
                         }
 
@@ -1977,7 +1979,7 @@ namespace ProteinCoverageSummarizer
                     linesRead++;
                     if (linesRead % 500 == 1)
                     {
-                        UpdateProgress("Creating the data plus all-proteins output file", Convert.ToSingle(bytesRead / (double)reader.BaseStream.Length * 100), ProteinCoverageProcessingSteps.SaveAllProteinsVersionOfInputFile);
+                        UpdateProgress("Creating the data plus all-proteins output file", (float)(bytesRead / (double)reader.BaseStream.Length * 100), ProteinCoverageProcessingSteps.SaveAllProteinsVersionOfInputFile);
                     }
 
                     if (linesRead == 1 &&
@@ -2048,7 +2050,7 @@ namespace ProteinCoverageSummarizer
                 OnStatusEvent(progressMessageBase);
 
                 var proteinProcessIterations = 0;
-                var proteinProcessIterationsExpected = Convert.ToInt32(Math.Ceiling(ProteinDataCache.GetProteinCountCached() / (double)PROTEIN_CHUNK_COUNT)) * PROTEIN_CHUNK_COUNT;
+                var proteinProcessIterationsExpected = (int)Math.Ceiling(ProteinDataCache.GetProteinCountCached() / (double)PROTEIN_CHUNK_COUNT) * PROTEIN_CHUNK_COUNT;
                 if (proteinProcessIterationsExpected < 1)
                     proteinProcessIterationsExpected = 1;
 
@@ -2195,7 +2197,7 @@ namespace ProteinCoverageSummarizer
 
                                             if (Options.TrackPeptideCounts)
                                             {
-                                                var proteinPeptideKey = Convert.ToString(mCachedProteinInfo[proteinIndex].UniqueSequenceID) + "::" + peptideSequenceForKey;
+                                                var proteinPeptideKey = string.Format("{0}::{1}", mCachedProteinInfo[proteinIndex].UniqueSequenceID, peptideSequenceForKey);
 
                                                 matchIsNew = IncrementCountByKey(mProteinPeptideStats, proteinPeptideKey);
                                             }
@@ -2259,7 +2261,7 @@ namespace ProteinCoverageSummarizer
                         proteinProcessIterations++;
                         if (proteinProcessIterations % 100 == 0)
                         {
-                            UpdateProgress(Convert.ToSingle(proteinProcessIterations / (double)proteinProcessIterationsExpected * 100), ProteinCoverageProcessingSteps.SearchProteinsUsingLeaderSequences);
+                            UpdateProgress((float)(proteinProcessIterations / (double)proteinProcessIterationsExpected * 100), ProteinCoverageProcessingSteps.SearchProteinsUsingLeaderSequences);
                         }
 
                         if (mAbortProcessing)
@@ -2684,7 +2686,7 @@ namespace ProteinCoverageSummarizer
             var endPercent = mPercentCompleteStartLevels[(int)currentProcessingStep + 1];
 
             // Use the start and end percent complete values for the specified processing step to convert percentComplete to an overall percent complete value
-            mProgressPercentComplete = startPercent + Convert.ToSingle(percentComplete / 100.0 * (endPercent - startPercent));
+            mProgressPercentComplete = startPercent + (float)(percentComplete / 100.0 * (endPercent - startPercent));
 
             ProgressChanged?.Invoke(ProgressStepDescription, ProgressPercentComplete);
         }

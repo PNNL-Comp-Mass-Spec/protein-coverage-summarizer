@@ -203,7 +203,7 @@ namespace ProteinCoverageSummarizer
         /// <remarks>
         /// Value between 0 and 100, but can contain decimal percentage values
         /// </remarks>
-        public float ProgressPercentComplete => Convert.ToSingle(Math.Round(mProgressPercentComplete, 2));
+        public float ProgressPercentComplete => (float)Math.Round(mProgressPercentComplete, 2);
 
         #endregion
 
@@ -358,7 +358,7 @@ namespace ProteinCoverageSummarizer
                         if (linesRead % 100 == 1)
                         {
                             UpdateProgress("Scanning input file to determine minimum peptide length: " + linesRead,
-                                           bytesRead / Convert.ToSingle(reader.BaseStream.Length) * 100);
+                                           bytesRead / (float)(reader.BaseStream.Length) * 100);
                         }
 
                         if (linesRead == 1 && peptideFileSkipFirstLine)

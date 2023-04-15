@@ -411,7 +411,7 @@ namespace PeptideToProteinMapper
             {
                 Console.WriteLine();
 
-                DisplayProgressPercent(taskDescription, Convert.ToInt32(percentComplete), false);
+                DisplayProgressPercent(taskDescription, (int)percentComplete, false);
                 mLastPercentDisplayed = DateTime.UtcNow;
             }
             else if (DateTime.UtcNow.Subtract(mLastProgressReportTime).TotalMilliseconds > PROGRESS_DOT_INTERVAL_MSEC)

@@ -836,7 +836,7 @@ namespace PeptideToProteinMapEngine
                         if (linesRead % 1000 == 0)
                         {
                             UpdateProgress(PERCENT_COMPLETE_POSTPROCESSING +
-                                Convert.ToSingle(bytesRead / (double)reader.BaseStream.Length * 100) * (PERCENT_COMPLETE_POSTPROCESSING - PERCENT_COMPLETE_RUNNING_PROTEIN_COVERAGE_SUMMARIZER) / 100);
+                                (float)(bytesRead / (double)reader.BaseStream.Length * 100) * (PERCENT_COMPLETE_POSTPROCESSING - PERCENT_COMPLETE_RUNNING_PROTEIN_COVERAGE_SUMMARIZER) / 100);
                         }
                     }
                 }
@@ -1027,7 +1027,7 @@ namespace PeptideToProteinMapEngine
                         if (linesRead % 1000 == 0)
                         {
                             UpdateProgress(PERCENT_COMPLETE_PREPROCESSING +
-                                Convert.ToSingle(bytesRead / (double)reader.BaseStream.Length * 100) * (PERCENT_COMPLETE_RUNNING_PROTEIN_COVERAGE_SUMMARIZER - PERCENT_COMPLETE_PREPROCESSING) / 100);
+                                (float)(bytesRead / (double)reader.BaseStream.Length * 100) * (PERCENT_COMPLETE_RUNNING_PROTEIN_COVERAGE_SUMMARIZER - PERCENT_COMPLETE_PREPROCESSING) / 100);
                         }
                     }
                 }
@@ -1468,7 +1468,7 @@ namespace PeptideToProteinMapEngine
         {
             var percentCompleteEffective =
                 PERCENT_COMPLETE_RUNNING_PROTEIN_COVERAGE_SUMMARIZER +
-                percentComplete * Convert.ToSingle((PERCENT_COMPLETE_POSTPROCESSING - PERCENT_COMPLETE_RUNNING_PROTEIN_COVERAGE_SUMMARIZER) / 100.0);
+                percentComplete * (float)((PERCENT_COMPLETE_POSTPROCESSING - PERCENT_COMPLETE_RUNNING_PROTEIN_COVERAGE_SUMMARIZER) / 100.0);
 
             UpdateProgress(taskDescription, percentCompleteEffective);
         }
@@ -1509,7 +1509,7 @@ namespace PeptideToProteinMapEngine
                     return 0;
 
                 var xData = (ProteinIDMapInfo)x;
-                var peptide = Convert.ToString(y);
+                var peptide = y.ToString();
 
                 return string.CompareOrdinal(xData.Peptide, peptide);
             }
