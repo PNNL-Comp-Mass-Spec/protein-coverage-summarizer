@@ -61,6 +61,16 @@ namespace PeptideToProteinMapEngine
         private const string FILENAME_SUFFIX_PSM_UNIQUE_PEPTIDES = "_peptides";
 
         /// <summary>
+        /// Protein column name in the _PepToProtMap.txt file
+        /// </summary>
+        public const string PEPTIDE_TO_PROTEIN_MAP_FILE_PROTEIN_COLUMN = "Protein";
+
+        /// <summary>
+        /// Peptide column name in the _PepToProtMap.txt file
+        /// </summary>
+        public const string PEPTIDE_TO_PROTEIN_MAP_FILE_PEPTIDE_COLUMN = "Peptide";
+
+        /// <summary>
         /// Initial % complete value displayed at the start of pre-processing
         /// </summary>
         private const float PERCENT_COMPLETE_PREPROCESSING = 0;
@@ -565,11 +575,15 @@ namespace PeptideToProteinMapEngine
                 using (var writer = new StreamWriter(new FileStream(peptideToProteinMappingFilePath, FileMode.Create, FileAccess.Write, FileShare.Read)))
                 {
                     // Write the headers
-                    writer.WriteLine(
-                        "Peptide" + "\t" +
-                        "Protein" + "\t" +
-                        "Residue_Start" + "\t" +
-                        "Residue_End");
+                    var headerNames = new List<string>
+                    {
+                        PEPTIDE_TO_PROTEIN_MAP_FILE_PEPTIDE_COLUMN,
+                        PEPTIDE_TO_PROTEIN_MAP_FILE_PROTEIN_COLUMN,
+                        "Residue_Start",
+                        "Residue_End"
+                    };
+
+                    writer.WriteLine(string.Join("\t", headerNames));
 
                     // Initialize the Binary Search comparer
                     var proteinMapPeptideComparer = new ProteinIDMapInfoPeptideSearchComparer();
