@@ -329,6 +329,19 @@ namespace ProteinCoverageSummarizer
             return containsTrueEntries;
         }
 
+        /// <summary>
+        /// Look for the peptide sequence in the given protein sequence
+        /// </summary>
+        /// <param name="proteinSequence">Protein sequence</param>
+        /// <param name="peptideSequence">Peptide sequence</param>
+        /// <param name="proteinPeptideKey">Key to use with dictionary mProteinPeptideStats when Options.TrackPeptideCounts is true</param>
+        /// <param name="prefixResidue">Peptide prefix residue; only used if Options.MatchPeptidePrefixAndSuffixToProtein is true</param>
+        /// <param name="suffixResidue">Peptide suffix residue; only used if Options.MatchPeptidePrefixAndSuffixToProtein is true</param>
+        /// <param name="matchFound">Output: true if the protein sequence contains the peptide</param>
+        /// <param name="matchIsNew">Output: true if this is a new match (but will always be true if Options.TrackPeptideCounts is false)</param>
+        /// <param name="startResidueNumber">Start residue number of the peptide in the protein (the first residue in the protein is 1); 0 if no match</param>
+        /// <param name="endResidueNumber">End residue number of the peptide in the protein; 0 if no match</param>
+        /// <returns>Protein sequence, with letters capitalized if Options.SearchAllProteinsSkipCoverageComputationSteps is false</returns>
         private string CapitalizeMatchingProteinSequenceLetters(
             string proteinSequence,
             string peptideSequence,
@@ -337,11 +350,11 @@ namespace ProteinCoverageSummarizer
             char suffixResidue,
             out bool matchFound,
             out bool matchIsNew,
-            out int startResidue,
-            out int endResidue)
+            out int startResidueNumber,
+            out int endResidueNumber)
         {
-            // Note: this function assumes peptideSequence, prefix, and suffix have all uppercase letters
-            // prefix and suffix are only used if mMatchPeptidePrefixAndSuffixToProtein = true
+            // Note: this function assumes peptideSequence, prefixResidue, and suffixResidue have all uppercase letters
+            // prefix and suffix residues are only used if Options.MatchPeptidePrefixAndSuffixToProtein = true
 
             // Note: This is a count of the number of times the peptide is present in the protein sequence (typically 1); this value is not stored anywhere
             var peptideCount = 0;
@@ -351,8 +364,8 @@ namespace ProteinCoverageSummarizer
             matchFound = false;
             matchIsNew = false;
 
-            startResidue = 0;
-            endResidue = 0;
+            startResidueNumber = 0;
+            endResidueNumber = 0;
 
             int charIndex;
 
@@ -369,14 +382,15 @@ namespace ProteinCoverageSummarizer
 
             if (charIndex >= 0)
             {
-                startResidue = charIndex + 1;
-                endResidue = startResidue + peptideSequence.Length - 1;
+                startResidueNumber = charIndex + 1;
+
+                endResidueNumber = startResidueNumber + peptideSequence.Length - 1;
 
                 matchFound = true;
 
                 if (Options.MatchPeptidePrefixAndSuffixToProtein)
                 {
-                    currentMatchValid = ValidatePrefixAndSuffix(proteinSequence, prefixResidue, suffixResidue, charIndex, endResidue - 1);
+                    currentMatchValid = ValidatePrefixAndSuffix(proteinSequence, prefixResidue, suffixResidue, charIndex, endResidueNumber - 1);
                 }
                 else
                 {
@@ -389,8 +403,8 @@ namespace ProteinCoverageSummarizer
                 }
                 else
                 {
-                    startResidue = 0;
-                    endResidue = 0;
+                    startResidueNumber = 0;
+                    endResidueNumber = 0;
                 }
             }
             else
@@ -435,10 +449,10 @@ namespace ProteinCoverageSummarizer
                         {
                             peptideCount++;
 
-                            if (startResidue == 0)
+                            if (startResidueNumber == 0)
                             {
-                                startResidue = charIndex + 1;
-                                endResidue = startResidue + peptideSequence.Length - 1;
+                                startResidueNumber = charIndex + 1;
+                                endResidueNumber = startResidueNumber + peptideSequence.Length - 1;
                             }
                         }
                     }
@@ -449,7 +463,7 @@ namespace ProteinCoverageSummarizer
             {
                 if (peptideCount == 0)
                 {
-                    // The protein contained peptideSequence, but mMatchPeptidePrefixAndSuffixToProtein = true and either prefixResidue or suffixResidue doesn't match
+                    // The protein contained peptideSequence, but Options.MatchPeptidePrefixAndSuffixToProtein = true and either prefixResidue or suffixResidue doesn't match
                     matchFound = false;
                 }
                 else if (Options.TrackPeptideCounts)
@@ -881,9 +895,9 @@ namespace ProteinCoverageSummarizer
                         for (var proteinIndex = 0; proteinIndex < proteinCount; proteinIndex++)
                         {
                             var matchFound = false;
-                            var matchIsNew = default(bool);
-                            var startResidue = default(int);
-                            var endResidue = default(int);
+                            var matchIsNew = false;
+                            var startResidueNumber = 0;
+                            var endResidueNumber = 0;
 
                             if (Options.SearchAllProteinsForPeptideSequence || proteinNameForPeptides.Length == 0)
                             {
@@ -896,7 +910,7 @@ namespace ProteinCoverageSummarizer
                                     mCachedProteinInfo[proteinIndex].Sequence, peptideSequenceToSearchOn,
                                     proteinPeptideKey, prefixResidue, suffixResidue,
                                     out matchFound, out matchIsNew,
-                                    out startResidue, out endResidue);
+                                    out startResidueNumber, out endResidueNumber);
                             }
                             // Only search proteinNameForPeptide
                             else if ((mCachedProteinInfo[proteinIndex].Name ?? string.Empty) == (proteinNameForPeptides ?? string.Empty))
@@ -910,7 +924,7 @@ namespace ProteinCoverageSummarizer
                                     mCachedProteinInfo[proteinIndex].Sequence, peptideSequenceToSearchOn,
                                     proteinPeptideKey, prefixResidue, suffixResidue,
                                     out matchFound, out matchIsNew,
-                                    out startResidue, out endResidue);
+                                    out startResidueNumber, out endResidueNumber);
                             }
 
                             if (matchFound)
@@ -2280,6 +2294,18 @@ namespace ProteinCoverageSummarizer
             {
                 SetErrorMessage("Error in SearchProteinsUsingLeaderSequences: " + ex.Message, ex);
             }
+        }
+
+        private static char GetResidueInProteinSequence(string proteinSequence, int residueNumber)
+        {
+            if (residueNumber < 1)
+                return '-';
+
+            // ReSharper disable once ConvertIfStatementToReturnStatement
+            if (residueNumber > proteinSequence.Length)
+                return '-';
+
+            return proteinSequence[residueNumber - 1];
         }
 
         private void SearchProteinsUsingCachedPeptides(IDictionary<string, int> shortPeptideCache)
