@@ -572,19 +572,22 @@ namespace ProteinCoverageSummarizer
             using var writer = new StreamWriter(new FileStream(ResultsFilePath, FileMode.Create, FileAccess.Write, FileShare.Read));
 
             // Note: If the column ordering is changed, be sure to update OUTPUT_FILE_PROTEIN_DESCRIPTION_COLUMN_NUMBER and OUTPUT_FILE_PROTEIN_SEQUENCE_COLUMN_NUMBER
-            var dataLine = "Protein Name" + "\t" +
-                           "Percent Coverage" + "\t" +
-                           "Protein Description" + "\t" +
-                           "Non Unique Peptide Count" + "\t" +
-                           "Unique Peptide Count" + "\t" +
-                           "Protein Residue Count";
+            var headerNames = new List<string>
+            {
+                "Protein Name",
+                "Percent Coverage",
+                "Protein Description",
+                "Non Unique Peptide Count",
+                "Unique Peptide Count",
+                "Protein Residue Count"
+            };
 
             if (Options.OutputProteinSequence)
             {
-                dataLine += "\tProtein Sequence";
+                headerNames.Add("Protein Sequence");
             }
 
-            writer.WriteLine(dataLine);
+            writer.WriteLine(string.Join("\t", headerNames));
 
             // Contains pointers to entries in udtPeptideStats()
             // Keys are protein IDs, values are the index in udtPeptideStats
@@ -652,6 +655,8 @@ namespace ProteinCoverageSummarizer
 
             // Query the SQLite DB to extract the protein information
             var proteinsProcessed = 0;
+            var outputValues = new List<string>();
+
             foreach (var udtProtein in ProteinDataCache.GetCachedProteins())
             {
                 var uniquePeptideCount = 0;
@@ -666,19 +671,20 @@ namespace ProteinCoverageSummarizer
                     }
                 }
 
-                dataLine = udtProtein.Name + "\t" +
-                           Math.Round(udtProtein.PercentCoverage * 100, 3) + "\t" +
-                           udtProtein.Description + "\t" +
-                           nonUniquePeptideCount + "\t" +
-                           uniquePeptideCount + "\t" +
-                           udtProtein.Sequence.Length;
+                outputValues.Clear();
+                outputValues.Add(udtProtein.Name);
+                outputValues.Add(Math.Round(udtProtein.PercentCoverage * 100, 3).ToString(CultureInfo.InvariantCulture));
+                outputValues.Add(udtProtein.Description);
+                outputValues.Add(nonUniquePeptideCount.ToString());
+                outputValues.Add(uniquePeptideCount.ToString());
+                outputValues.Add(udtProtein.Sequence.Length.ToString());
 
                 if (Options.OutputProteinSequence)
                 {
-                    dataLine += "\t" + udtProtein.Sequence;
+                    outputValues.Add(udtProtein.Sequence);
                 }
 
-                writer.WriteLine(dataLine);
+                writer.WriteLine(string.Join("\t", outputValues));
 
                 if (proteinsProcessed % 25 == 0)
                 {
