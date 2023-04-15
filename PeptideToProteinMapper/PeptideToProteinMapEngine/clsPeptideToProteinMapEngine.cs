@@ -1307,7 +1307,7 @@ namespace PeptideToProteinMapEngine
                         break;
 
                     case PeptideInputFileFormatConstants.PHRPFile:
-                        // SEQUEST, X!Tandem, InSpecT, or MS-GF+ PHRP data file; need to pre-process it
+                        // MS-GF+, MaxQuant, MSFragger, DIA-NN, etc. PHRP data file; need to pre-process it
                         // Make sure RemoveSymbolCharacters is true
                         Options.RemoveSymbolCharacters = true;
 
@@ -1380,6 +1380,7 @@ namespace PeptideToProteinMapEngine
                     {
                         case PeptideInputFileFormatConstants.PeptideListFile:
                         case PeptideInputFileFormatConstants.ProteinAndPeptideFile:
+                        case PeptideInputFileFormatConstants.TabDelimitedText:
                             // No post-processing is required
                             success = true;
                             break;
