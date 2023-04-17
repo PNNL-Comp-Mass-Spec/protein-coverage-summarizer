@@ -8,7 +8,8 @@ copy ProteinCoverageSummarizer.dll        "F:\Documents\Projects\DataMining\DMS_
 copy ProteinCoverageSummarizer.dll        "F:\Documents\Projects\DataMining\PeptideHitResultsProcessor\bin\Debug\" /Y
 
 copy ProteinCoverageSummarizer.dll        "F:\Documents\Projects\DataMining\PeptideHitResultsProcessor\PeptideHitResultsProcessor\Lib\" /Y
-copy ProteinCoverageSummarizer.dll        "F:\Documents\Projects\DataMining\PeptideHitResultsProcessor\PeptideHitResultsProcessor\bin\" /Y
+copy ProteinCoverageSummarizer.dll        "F:\Documents\Projects\DataMining\PeptideHitResultsProcessor\PeptideHitResultsProcessor\bin\Debug\" /Y
+copy ProteinCoverageSummarizer.dll        "F:\Documents\Projects\DataMining\PeptideHitResultsProcessor\PeptideHitResultsProcessor\bin\Release\" /Y
 
 If not "%1"=="NoPause" If not "%2"=="NoPause" pause
 
@@ -36,7 +37,8 @@ copy ProteinCoverageSummarizer.pdb "F:\Documents\Projects\DataMining\Protein_Cov
 copy ProteinCoverageSummarizer.pdb "F:\Documents\Projects\DataMining\PeptideHitResultsProcessor\bin\Debug\" /Y
 
 copy ProteinCoverageSummarizer.pdb "F:\Documents\Projects\DataMining\PeptideHitResultsProcessor\PeptideHitResultsProcessor\Lib\" /Y
-copy ProteinCoverageSummarizer.pdb "F:\Documents\Projects\DataMining\PeptideHitResultsProcessor\PeptideHitResultsProcessor\bin\" /Y
+copy ProteinCoverageSummarizer.pdb "F:\Documents\Projects\DataMining\PeptideHitResultsProcessor\PeptideHitResultsProcessor\bin\Debug\" /Y
+copy ProteinCoverageSummarizer.pdb "F:\Documents\Projects\DataMining\PeptideHitResultsProcessor\PeptideHitResultsProcessor\bin\Release\" /Y
 
 copy ProteinCoverageSummarizer.pdb "F:\Documents\Projects\DataMining\DMS_Managers\Analysis_Manager\AM_Common\" /Y
 

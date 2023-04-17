@@ -17,14 +17,17 @@ echo.
 echo.
 @echo on
 
-copy PeptideToProteinMapEngine.dll "F:\Documents\projects\dataMining\PeptideHitResultsProcessor\PeptideHitResultsProcessor\bin\" /Y
 copy PeptideToProteinMapEngine.dll "F:\Documents\projects\dataMining\PeptideHitResultsProcessor\PeptideHitResultsProcessor\Lib\" /Y
+copy PeptideToProteinMapEngine.dll "F:\Documents\projects\dataMining\PeptideHitResultsProcessor\PeptideHitResultsProcessor\bin\Debug" /Y
+copy PeptideToProteinMapEngine.dll "F:\Documents\projects\dataMining\PeptideHitResultsProcessor\PeptideHitResultsProcessor\bin\Release" /Y
 copy PeptideToProteinMapEngine.dll "F:\Documents\projects\dataMining\Protein_Coverage_Summarizer\PeptideToProteinMapper\bin\Debug\" /Y
 copy PeptideToProteinMapEngine.dll "F:\Documents\projects\dataMining\Protein_Coverage_Summarizer\PeptideToProteinMapper\bin\Release\" /Y
 
-copy PeptideToProteinMapEngine.pdb "F:\Documents\projects\dataMining\PeptideHitResultsProcessor\bin\" /Y
-copy PeptideToProteinMapEngine.pdb "F:\Documents\projects\dataMining\PeptideHitResultsProcessor\PeptideHitResultsProcessor\bin\" /Y
+copy PeptideToProteinMapEngine.pdb "F:\Documents\projects\dataMining\PeptideHitResultsProcessor\bin\Debug\" /Y
+copy PeptideToProteinMapEngine.pdb "F:\Documents\projects\dataMining\PeptideHitResultsProcessor\bin\Release\" /Y
 copy PeptideToProteinMapEngine.pdb "F:\Documents\projects\dataMining\PeptideHitResultsProcessor\PeptideHitResultsProcessor\Lib\" /Y
+copy PeptideToProteinMapEngine.pdb "F:\Documents\projects\dataMining\PeptideHitResultsProcessor\PeptideHitResultsProcessor\bin\Debug\" /Y
+copy PeptideToProteinMapEngine.pdb "F:\Documents\projects\dataMining\PeptideHitResultsProcessor\PeptideHitResultsProcessor\bin\Release\" /Y
 copy PeptideToProteinMapEngine.pdb "F:\Documents\projects\dataMining\Protein_Coverage_Summarizer\PeptideToProteinMapper\bin\Debug\" /Y
 copy PeptideToProteinMapEngine.pdb "F:\Documents\projects\dataMining\Protein_Coverage_Summarizer\PeptideToProteinMapper\bin\Release\" /Y
 
