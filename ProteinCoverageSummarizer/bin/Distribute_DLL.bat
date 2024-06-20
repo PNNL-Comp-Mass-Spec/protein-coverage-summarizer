@@ -42,9 +42,9 @@ copy ProteinCoverageSummarizer.pdb "F:\Documents\Projects\DataMining\PeptideHitR
 
 copy ProteinCoverageSummarizer.pdb "F:\Documents\Projects\DataMining\DMS_Managers\Analysis_Manager\AM_Common\" /Y
 
-copy ProteinCoverageSummarizer.dll "F:\Documents\Projects\JoshAldrich\AScore\AScore_DLL\lib\" /Y
-copy ProteinCoverageSummarizer.dll "F:\Documents\Projects\JoshAldrich\AScore\AScore_DLL\bin\AnyCPU\Debug\" /Y
-copy ProteinCoverageSummarizer.dll "F:\Documents\Projects\JoshAldrich\AScore\AScore_Console\bin\Debug\" /Y
+copy ProteinCoverageSummarizer.dll "F:\Documents\Projects\Josh_Aldrich\AScore\AScore_DLL\lib\" /Y
+copy ProteinCoverageSummarizer.dll "F:\Documents\Projects\Josh_Aldrich\AScore\AScore_DLL\bin\AnyCPU\Debug\" /Y
+copy ProteinCoverageSummarizer.dll "F:\Documents\Projects\Josh_Aldrich\AScore\AScore_Console\bin\Debug\" /Y
 
 popd
 

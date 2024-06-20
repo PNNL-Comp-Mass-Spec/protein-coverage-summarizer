@@ -31,9 +31,9 @@ copy PeptideToProteinMapEngine.pdb "F:\Documents\projects\dataMining\PeptideHitR
 copy PeptideToProteinMapEngine.pdb "F:\Documents\projects\dataMining\Protein_Coverage_Summarizer\PeptideToProteinMapper\bin\Debug\" /Y
 copy PeptideToProteinMapEngine.pdb "F:\Documents\projects\dataMining\Protein_Coverage_Summarizer\PeptideToProteinMapper\bin\Release\" /Y
 
-copy PeptideToProteinMapEngine.dll "F:\Documents\Projects\JoshAldrich\AScore\AScore_DLL\lib\" /Y
-copy PeptideToProteinMapEngine.dll "F:\Documents\Projects\JoshAldrich\AScore\AScore_DLL\bin\AnyCPU\Debug\" /Y
-copy PeptideToProteinMapEngine.dll "F:\Documents\Projects\JoshAldrich\AScore\AScore_Console\bin\Debug\" /Y
+copy PeptideToProteinMapEngine.dll "F:\Documents\Projects\Josh_Aldrich\AScore\AScore_DLL\lib\" /Y
+copy PeptideToProteinMapEngine.dll "F:\Documents\Projects\Josh_Aldrich\AScore\AScore_DLL\bin\AnyCPU\Debug\" /Y
+copy PeptideToProteinMapEngine.dll "F:\Documents\Projects\Josh_Aldrich\AScore\AScore_Console\bin\Debug\" /Y
 
 popd
 
