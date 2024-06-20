@@ -42,7 +42,7 @@ namespace ProteinCoverageSummarizer
     [CLSCompliant(true)]
     public class clsProteinCoverageSummarizer : EventNotifier
     {
-        // Ignore Spelling: Acetyl, A-Za-z, Lf, Nikša, pre, struct, udt
+        // Ignore Spelling: Acetyl, app, A-Za-z, cls, Lf, Nikša, pre, struct, udt
 
         #region "Constants and Enums"
 
