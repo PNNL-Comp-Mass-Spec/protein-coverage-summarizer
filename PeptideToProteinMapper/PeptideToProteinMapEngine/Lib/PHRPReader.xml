@@ -168,8 +168,8 @@
             <summary>
             Updates filePath to have _msgfdb instead of _msgfplus if basePHRPFileName contains _msgfdb
             </summary>
-            <param name="filePath"></param>
-            <param name="basePHRPFileName"></param>
+            <param name="filePath">File path</param>
+            <param name="basePHRPFileName">Base PHRP filename</param>
         </member>
         <member name="M:PHRPReader.clsPHRPReader.ClearErrors">
             <summary>
@@ -232,7 +232,7 @@
             Auto-determine the dataset name using the input file path
             </summary>
             <remarks>Returns an empty string if unable to determine the dataset name</remarks>
-            <param name="filePath"></param>
+            <param name="filePath">Input file path</param>
             <returns>Dataset name</returns>
         </member>
         <member name="M:PHRPReader.clsPHRPReader.AutoDetermineDatasetName(System.String,PHRPReader.PeptideHitResultTypes)">
@@ -240,15 +240,15 @@
             Auto-determine the dataset name using the input file path and specified PeptideHit result type
             </summary>
             <remarks>Returns an empty string if unable to determine the dataset name</remarks>
-            <param name="filePath"></param>
-            <param name="resultType"></param>
+            <param name="filePath">Input file path</param>
+            <param name="resultType">PHRP result type</param>
             <returns>Dataset name</returns>
         </member>
         <member name="M:PHRPReader.clsPHRPReader.AutoDetermineResultType(System.String)">
             <summary>
             Determine the PeptideHit result type given the input file path
             </summary>
-            <param name="filePath"></param>
+            <param name="filePath">Input file path</param>
         </member>
         <member name="M:PHRPReader.clsPHRPReader.FindModSummaryFile(PHRPReader.PeptideHitResultTypes,System.String,System.String,System.String,System.String@)">
             <summary>
@@ -300,7 +300,7 @@
             <summary>
             Get the peptide hit result type for the given result type name
             </summary>
-            <param name="resultTypeName"></param>
+            <param name="resultTypeName">PHRP result type name</param>
         </member>
         <member name="M:PHRPReader.clsPHRPReader.GetPHRPAuxiliaryFileSuffixes">
             <summary>
@@ -311,85 +311,85 @@
             <summary>
             Returns the default first-hits file name for the given PeptideHit result type
             </summary>
-            <param name="resultType"></param>
-            <param name="datasetName"></param>
+            <param name="resultType">PHRP result type</param>
+            <param name="datasetName">Dataset name</param>
             <returns>Filename</returns>
         </member>
         <member name="M:PHRPReader.clsPHRPReader.GetPHRPModSummaryFileName(PHRPReader.PeptideHitResultTypes,System.String)">
             <summary>
             Returns the default ModSummary file name for the given PeptideHit result type
             </summary>
-            <param name="resultType"></param>
-            <param name="datasetName"></param>
+            <param name="resultType">PHRP result type</param>
+            <param name="datasetName">Dataset name</param>
             <returns>Filename</returns>
         </member>
         <member name="M:PHRPReader.clsPHRPReader.GetPHRPPepToProteinMapFileName(PHRPReader.PeptideHitResultTypes,System.String)">
             <summary>
             Returns the default PepToProtMap file name for the given PeptideHit result type
             </summary>
-            <param name="resultType"></param>
-            <param name="datasetName"></param>
+            <param name="resultType">PHRP result type</param>
+            <param name="datasetName">Dataset name</param>
             <returns>Filename</returns>
         </member>
         <member name="M:PHRPReader.clsPHRPReader.GetPHRPProteinModsFileName(PHRPReader.PeptideHitResultTypes,System.String)">
             <summary>
             Returns the default ProteinMods file name for the given PeptideHit result type
             </summary>
-            <param name="resultType"></param>
-            <param name="datasetName"></param>
+            <param name="resultType">PHRP result type</param>
+            <param name="datasetName">Dataset name</param>
             <returns>Filename</returns>
         </member>
         <member name="M:PHRPReader.clsPHRPReader.GetPHRPSynopsisFileName(PHRPReader.PeptideHitResultTypes,System.String)">
             <summary>
             Returns the default Synopsis file name for the given PeptideHit result type
             </summary>
-            <param name="resultType"></param>
-            <param name="datasetName"></param>
+            <param name="resultType">PHRP result type</param>
+            <param name="datasetName">Dataset name</param>
             <returns>Filename</returns>
         </member>
         <member name="M:PHRPReader.clsPHRPReader.GetPHRPResultToSeqMapFileName(PHRPReader.PeptideHitResultTypes,System.String)">
             <summary>
             Returns the default ResultToSeq Map file name for the given PeptideHit result type
             </summary>
-            <param name="resultType"></param>
-            <param name="datasetName"></param>
+            <param name="resultType">PHRP result type</param>
+            <param name="datasetName">Dataset name</param>
             <returns>Filename</returns>
         </member>
         <member name="M:PHRPReader.clsPHRPReader.GetPHRPSeqInfoFileName(PHRPReader.PeptideHitResultTypes,System.String)">
             <summary>
             Returns the default SeqInfo file name for the given PeptideHit result type
             </summary>
-            <param name="resultType"></param>
-            <param name="datasetName"></param>
+            <param name="resultType">PHRP result type</param>
+            <param name="datasetName">Dataset name</param>
             <returns>Filename</returns>
         </member>
         <member name="M:PHRPReader.clsPHRPReader.GetPHRPSeqToProteinMapFileName(PHRPReader.PeptideHitResultTypes,System.String)">
             <summary>
             Returns the default SeqToProtein Map file name for the given PeptideHit result type
             </summary>
-            <param name="resultType"></param>
-            <param name="datasetName"></param>
+            <param name="resultType">PHRP result type</param>
+            <param name="datasetName">Dataset name</param>
             <returns>Filename</returns>
         </member>
         <member name="M:PHRPReader.clsPHRPReader.GetScanStatsFilename(System.String)">
             <summary>
             Get the ScanStats filename for the given dataset
             </summary>
-            <param name="datasetName"></param>
+            <param name="datasetName">Dataset name</param>
             <returns>Filename</returns>
         </member>
         <member name="M:PHRPReader.clsPHRPReader.GetExtendedScanStatsFilename(System.String)">
             <summary>
             Get the extended ScanStats filename for the given dataset
             </summary>
-            <param name="datasetName"></param>
+            <param name="datasetName">Dataset name</param>
             <returns>Filename</returns>
         </member>
         <member name="M:PHRPReader.clsPHRPReader.GetToolVersionInfoFilename(PHRPReader.PeptideHitResultTypes)">
             <summary>
             Get the tool version info filename for the given analysis tool
             </summary>
-            <param name="resultType"></param>
+            <param name="resultType">PHRP result type</param>
             <returns>Filename</returns>
         </member>
         <member name="M:PHRPReader.clsPHRPReader.IsLetterAtoZ(System.Char)">
@@ -405,23 +405,23 @@
             <summary>
             Examines the string to determine if it is numeric
             </summary>
-            <param name="data"></param>
+            <param name="data">Value to examine</param>
             <returns>True if a number, otherwise false</returns>
         </member>
         <member name="M:PHRPReader.clsPHRPReader.LookupColumnIndex(System.String,System.Collections.Generic.SortedDictionary{System.String,System.Int32})">
             <summary>
             Returns the index of the indicated column, as tracked by columnHeaders
             </summary>
-            <param name="columnName"></param>
-            <param name="columnHeaders"></param>
+            <param name="columnName">Column name</param>
+            <param name="columnHeaders">Dictionary of column names and index values</param>
             <returns>Column index, or -1 if not found</returns>
         </member>
         <member name="M:PHRPReader.clsPHRPReader.LookupColumnIndex(System.Enum,System.Collections.Generic.SortedDictionary{System.Enum,System.Int32})">
             <summary>
             Returns the index of the indicated column, as tracked by columnHeaders
             </summary>
-            <param name="columnEnum"></param>
-            <param name="columnHeaders"></param>
+            <param name="columnEnum">Column enum</param>
+            <param name="columnHeaders">Dictionary of column names and index values</param>
             <returns>Column index, or -1 if not found</returns>
         </member>
         <member name="M:PHRPReader.clsPHRPReader.LookupColumnValue(System.String[],System.String,System.Collections.Generic.SortedDictionary{System.String,System.Int32})">
@@ -484,7 +484,7 @@
             <summary>
             Dispose of this class
             </summary>
-            <param name="disposing"></param>
+            <param name="disposing">True if disposing this instance</param>
         </member>
         <member name="M:PHRPReader.clsPHRPReader.Dispose">
             <summary>
@@ -1386,7 +1386,7 @@
             </summary>
             <remarks>
             <para>
-            This is read from column Modified.Sequence in report.tsv, then converted into MSFragger style modification names by PHRP
+            This is read from column Modified.Sequence in Dataset_report.tsv, then converted into MSFragger style modification names by PHRP
             </para>
             <para>
             DIA-NN modification examples:
@@ -2887,9 +2887,9 @@
             <summary>
             Constructor
             </summary>
-            <param name="scanNumber"></param>
-            <param name="scanTimeMinutes"></param>
-            <param name="scanType"></param>
+            <param name="scanNumber">Scan number</param>
+            <param name="scanTimeMinutes">Scan time, in minutes</param>
+            <param name="scanType">Scan type (aka scan level)</param>
         </member>
         <member name="T:PHRPReader.Data.ReporterIonColumnInfo">
             <summary>
@@ -2933,9 +2933,9 @@
             <summary>
             Constructor
             </summary>
-            <param name="intensityColumnIndex"></param>
-            <param name="intensityColumnName"></param>
-            <param name="reporterIonMz"></param>
+            <param name="intensityColumnIndex">Intensity column index</param>
+            <param name="intensityColumnName">Intensity column name</param>
+            <param name="reporterIonMz">Reporter ion m/z</param>
         </member>
         <member name="M:PHRPReader.Data.ReporterIonColumnInfo.ToString">
             <summary>
@@ -3009,7 +3009,7 @@
             <summary>
             Constructor
             </summary>
-            <param name="scanNumber"></param>
+            <param name="scanNumber">Scan number</param>
         </member>
         <member name="M:PHRPReader.Data.ReporterIonInfo.ToString">
             <summary>
@@ -3240,8 +3240,8 @@
             <summary>
             Constructor
             </summary>
-            <param name="parentIonIndex"></param>
-            <param name="fragScanNumber"></param>
+            <param name="parentIonIndex">Parent ion index</param>
+            <param name="fragScanNumber">Fragmentation scan number</param>
         </member>
         <member name="M:PHRPReader.Data.SICStatsInfo.ToString">
             <summary>
@@ -3343,20 +3343,20 @@
             <summary>
             Constructor
             </summary>
-            <param name="residue"></param>
-            <param name="residueLocInPeptide"></param>
-            <param name="residueTerminusState"></param>
-            <param name="modDefinition"></param>
+            <param name="residue">Residue symbol</param>
+            <param name="residueLocInPeptide">Residue location in the peptide</param>
+            <param name="residueTerminusState">Residue terminus state</param>
+            <param name="modDefinition">Modification definition</param>
         </member>
         <member name="M:PHRPReader.Data.AminoAcidModInfo.#ctor(System.Char,System.Int32,PHRPReader.Data.AminoAcidModInfo.ResidueTerminusState,PHRPReader.Data.ModificationDefinition,System.Int32)">
             <summary>
             Constructor with endResidueLocInPeptide
             </summary>
-            <param name="residue"></param>
-            <param name="residueLocInPeptide"></param>
-            <param name="residueTerminusState"></param>
-            <param name="modDefinition"></param>
-            <param name="endResidueLocInPeptide"></param>
+            <param name="residue">Residue symbol</param>
+            <param name="residueLocInPeptide">Residue location in the peptide</param>
+            <param name="residueTerminusState">Residue terminus state</param>
+            <param name="modDefinition">Modification definition</param>
+            <param name="endResidueLocInPeptide">For ambiguous mods, indicates the last residue on which the mod could appear</param>
         </member>
         <member name="M:PHRPReader.Data.AminoAcidModInfo.ToString">
             <summary>
@@ -3398,20 +3398,20 @@
             <summary>
             Add a new element to the empirical formula
             </summary>
-            <param name="elementSymbol"></param>
-            <param name="elementCount"></param>
+            <param name="elementSymbol">Element symbol</param>
+            <param name="elementCount">Element count</param>
         </member>
         <member name="M:PHRPReader.Data.EmpiricalFormula.AddElements(PHRPReader.Data.EmpiricalFormula)">
             <summary>
-            Adds all of the elements from the given empirical formula
+            Adds all the elements from the given empirical formula
             </summary>
-            <param name="empiricalFormula"></param>
+            <param name="empiricalFormula">Empirical formula</param>
         </member>
         <member name="M:PHRPReader.Data.EmpiricalFormula.GetElementCount(System.Char)">
             <summary>
             Return the number of atoms of the given element in the empirical formula
             </summary>
-            <param name="elementSymbol"></param>
+            <param name="elementSymbol">Element symbol</param>
             <returns>Element Count, or 0 if the element is not in ElementCounts</returns>
         </member>
         <member name="M:PHRPReader.Data.EmpiricalFormula.ToString">
@@ -3426,7 +3426,7 @@
         </member>
         <member name="F:PHRPReader.Data.ModificationDefinition.LAST_RESORT_MODIFICATION_SYMBOL">
             <summary>
-            Modification symbol used after all of the DEFAULT_MODIFICATION_SYMBOLS have been used
+            Modification symbol used after all the DEFAULT_MODIFICATION_SYMBOLS have been used
             </summary>
         </member>
         <member name="F:PHRPReader.Data.ModificationDefinition.NO_SYMBOL_MODIFICATION_SYMBOL">
@@ -3590,38 +3590,38 @@
             <summary>
             Constructor that takes a mod symbol and mod mass
             </summary>
-            <param name="modificationSymbol"></param>
-            <param name="modificationMass"></param>
+            <param name="modificationSymbol">Modification symbol</param>
+            <param name="modificationMass">Modification mass</param>
         </member>
         <member name="M:PHRPReader.Data.ModificationDefinition.#ctor(System.Double,System.String,PHRPReader.Data.ModificationDefinition.ResidueModificationType)">
             <summary>
             Constructor that takes a mod mass, target residues, and modification type
             </summary>
-            <param name="modificationMass"></param>
-            <param name="targetResidues"></param>
-            <param name="modificationType"></param>
+            <param name="modificationMass">Modification mass</param>
+            <param name="targetResidues">Target residues</param>
+            <param name="modificationType">Modification type</param>
         </member>
         <member name="M:PHRPReader.Data.ModificationDefinition.#ctor(System.Char,System.Double,System.String,PHRPReader.Data.ModificationDefinition.ResidueModificationType,System.String)">
             <summary>
             Constructor that takes a mod symbol, mod mass, target residues, modification type, and mass correction tag
             </summary>
-            <param name="modificationSymbol"></param>
-            <param name="modificationMass"></param>
-            <param name="targetResidues"></param>
-            <param name="modificationType"></param>
-            <param name="massCorrectionTag"></param>
+            <param name="modificationSymbol">Modification symbol</param>
+            <param name="modificationMass">Modification mass</param>
+            <param name="targetResidues">Target residues</param>
+            <param name="modificationType">Modification type</param>
+            <param name="massCorrectionTag">Mass correction tag</param>
         </member>
         <member name="M:PHRPReader.Data.ModificationDefinition.#ctor(System.Char,System.Double,System.String,PHRPReader.Data.ModificationDefinition.ResidueModificationType,System.String,System.Char,System.Boolean)">
             <summary>
             Constructor that takes a mod symbol, mod mass, target residues, modification type, mass correction tag, and affected atom
             </summary>
-            <param name="modificationSymbol"></param>
-            <param name="modificationMass"></param>
-            <param name="targetResidues"></param>
-            <param name="modificationType"></param>
-            <param name="massCorrectionTag"></param>
-            <param name="chAffectedAtom"></param>
-            <param name="unknownModAutoDefined"></param>
+            <param name="modificationSymbol">Modification symbol</param>
+            <param name="modificationMass">Modification mass</param>
+            <param name="targetResidues">Target residues</param>
+            <param name="modificationType">Modification type</param>
+            <param name="massCorrectionTag">Mass correction tag</param>
+            <param name="chAffectedAtom">Affected atom</param>
+            <param name="unknownModAutoDefined">True if this is an auto-defined unknown modification</param>
         </member>
         <member name="M:PHRPReader.Data.ModificationDefinition.Clear">
             <summary>
@@ -3632,39 +3632,39 @@
             <summary>
             Compares b to this object, ignoring .ModificationSymbol and ignoring .AffectedResidues
             </summary>
-            <param name="b"></param>
+            <param name="b">Modification definition to compare</param>
             <returns>True if the items are equivalent</returns>
         </member>
         <member name="M:PHRPReader.Data.ModificationDefinition.EquivalentMassTypeTagAndAtom(PHRPReader.Data.ModificationDefinition,PHRPReader.Data.ModificationDefinition)">
             <summary>
             Compare a to b but ignore .ModificationSymbol and .AffectedResidues
             </summary>
-            <param name="a"></param>
-            <param name="b"></param>
+            <param name="a">First modification definition</param>
+            <param name="b">Second modification definition</param>
             <returns>True if the items are equivalent</returns>
         </member>
         <member name="M:PHRPReader.Data.ModificationDefinition.EquivalentMassTypeTagAtomAndResidues(PHRPReader.Data.ModificationDefinition)">
             <summary>
             Compares b to this object, ignoring .ModificationSymbol
             </summary>
-            <param name="b"></param>
+            <param name="b">Modification definition to compare</param>
             <returns>True if the items are equivalent</returns>
         </member>
         <member name="M:PHRPReader.Data.ModificationDefinition.EquivalentMassTypeTagAtomAndResidues(PHRPReader.Data.ModificationDefinition,PHRPReader.Data.ModificationDefinition)">
             <summary>
             Compares b to this object
             </summary>
-            <param name="a"></param>
-            <param name="b"></param>
+            <param name="a">First modification definition</param>
+            <param name="b">Second modification definition</param>
             <returns>True if the items are equivalent</returns>
         </member>
         <member name="M:PHRPReader.Data.ModificationDefinition.EquivalentTargetResidues(System.String,System.String,System.Boolean)">
             <summary>
             Compare the residue lists (ignoring order)
             </summary>
-            <param name="residues1"></param>
-            <param name="residues2"></param>
-            <param name="allowResidues2ToBeSubsetOfResidues1"></param>
+            <param name="residues1">First list of residues</param>
+            <param name="residues2">Second list of residues</param>
+            <param name="allowResidues2ToBeSubsetOfResidues1">True if residues2 is allowed to be a subset of residues1</param>
             <returns>True if they contain the same residues</returns>
         </member>
         <member name="M:PHRPReader.Data.ModificationDefinition.CanAffectPeptideOrProteinTerminus">
@@ -3693,14 +3693,14 @@
             <summary>
             Retrieve the modification type symbol for the given modification Type
             </summary>
-            <param name="modificationType"></param>
+            <param name="modificationType">Modification type</param>
             <returns>D, S, T, I, or P</returns>
         </member>
         <member name="M:PHRPReader.Data.ModificationDefinition.TargetResiduesContain(System.Char)">
             <summary>
             Check whether the target residues contain the given residue
             </summary>
-            <param name="chComparisonResidue"></param>
+            <param name="chComparisonResidue">Comparison residue</param>
             <returns>True if successful, false if an error</returns>
         </member>
         <member name="M:PHRPReader.Data.ModificationDefinition.ToString">
@@ -3796,8 +3796,8 @@
             However, do not add if a duplicate modification
             Furthermore, if everything matches except for .TargetResidues, add the new target residues to the existing, matching mod
             </summary>
-            <param name="modificationDefinition"></param>
-            <param name="useNextAvailableModificationSymbol"></param>
+            <param name="modificationDefinition">Modification definition</param>
+            <param name="useNextAvailableModificationSymbol">When true, use the next available modification symbol</param>
             <returns>The index of the newly added modification, or the index of the modification that modificationDefinition matches </returns>
         </member>
         <member name="M:PHRPReader.Data.PeptideModificationContainer.AppendStandardRefinementModifications">
@@ -3812,10 +3812,10 @@
         </member>
         <member name="M:PHRPReader.Data.PeptideModificationContainer.FindClosestMatchedMod(System.Collections.Generic.IReadOnlyCollection{System.Collections.Generic.KeyValuePair{System.Double,PHRPReader.Data.ModificationDefinition}},System.Char,System.Boolean)">
             <summary>
-            Find the modification in matchedMods with smallest delta mass value
+            Find the modification in matchedMods with the smallest delta mass value
             </summary>
             <param name="matchedMods">List of modifications where keys are absolute value of delta mass and values are the modification definition</param>
-            <param name="chTargetResidue"></param>
+            <param name="chTargetResidue">Target residue</param>
             <param name="addTargetResidue">If true, add the target residue to the modification definition's target residues list (if missing)</param>
         </member>
         <member name="M:PHRPReader.Data.PeptideModificationContainer.GenerateGenericModMassName(System.Double)">
@@ -3823,26 +3823,26 @@
             Converts a modification mass to a generic 8 character name
             The name will always start with + or - then will have the modification mass, rounded as necessary to give an 8 character name
             </summary>
-            <param name="modificationMass"></param>
+            <param name="modificationMass">Modification mass</param>
         </member>
         <member name="M:PHRPReader.Data.PeptideModificationContainer.GetBestIntegerBasedMassCorrectionTag(System.Double)">
             <summary>
             Looks for the best match in mIntegerMassCorrectionTagLookup for modificationMass (which should be close to a integer value)
             </summary>
-            <param name="modificationMass"></param>
+            <param name="modificationMass">Modification mass</param>
             <returns>The mass correction tag name if a match, otherwise an empty string</returns>
         </member>
         <member name="M:PHRPReader.Data.PeptideModificationContainer.GetModificationByIndex(System.Int32)">
             <summary>
             Get a modification, by index
             </summary>
-            <param name="index"></param>
+            <param name="index">Index</param>
         </member>
         <member name="M:PHRPReader.Data.PeptideModificationContainer.GetModificationTypeByIndex(System.Int32)">
             <summary>
             Get the modification type, by modification index
             </summary>
-            <param name="index"></param>
+            <param name="index">Index</param>
         </member>
         <member name="M:PHRPReader.Data.PeptideModificationContainer.LookupMassCorrectionTagByMass(System.Double)">
             <summary>
@@ -3852,7 +3852,7 @@
             Searches known mods using 3 digits of precision, then 2 digits, then 1 digit
             If no match, adds as a new, unknown modification
             </remarks>
-            <param name="modificationMass"></param>
+            <param name="modificationMass">Modification mass</param>
             <returns>Mod name, or empty string if no match</returns>
         </member>
         <member name="M:PHRPReader.Data.PeptideModificationContainer.LookupMassCorrectionTagByMass(System.Double,System.Byte)">
@@ -3863,8 +3863,8 @@
             Searches known mods using massDigitsOfPrecision digits of precision, then massDigitsOfPrecision-1 digits, ... 1 digit
             If no match, adds as a new, unknown modification
             </remarks>
-            <param name="modificationMass"></param>
-            <param name="massDigitsOfPrecision"></param>
+            <param name="modificationMass">Modification mass</param>
+            <param name="massDigitsOfPrecision">Mass digits of precision</param>
             <returns>Mod name, or empty string if no match</returns>
         </member>
         <member name="M:PHRPReader.Data.PeptideModificationContainer.LookupMassCorrectionTagByMass(System.Double,System.Byte,System.Boolean)">
@@ -3875,18 +3875,18 @@
             Searches known mods using massDigitsOfPrecision digits of precision, then massDigitsOfPrecision-1 digits, ... 1 digit
             If no match, adds as a new, unknown modification
             </remarks>
-            <param name="modificationMass"></param>
-            <param name="massDigitsOfPrecision"></param>
-            <param name="addToModificationListIfUnknown"></param>
+            <param name="modificationMass">Modification mass</param>
+            <param name="massDigitsOfPrecision">Mass digits of precision</param>
+            <param name="addToModificationListIfUnknown">When true, add to the modification list if unknown</param>
             <returns>Mod name, or empty string if no match</returns>
         </member>
         <member name="M:PHRPReader.Data.PeptideModificationContainer.LookupMassCorrectionTagByMass(System.Double,System.Byte,System.Boolean,System.Byte)">
             <summary>
             Find the mass correction tag with the given mass, adding to the unknown modification list if not found and addToModificationListIfUnknown is true
             </summary>
-            <param name="modificationMass"></param>
+            <param name="modificationMass">Modification mass</param>
             <param name="massDigitsOfPrecision">Number of digits after the decimal point to round to when comparing mod masses</param>
-            <param name="addToModificationListIfUnknown"></param>
+            <param name="addToModificationListIfUnknown">When true, add to the modification list if unknown</param>
             <param name="massDigitsOfPrecisionLoose">Number of digits after the decimal point to round to, for a more lenient match (if no match found using massDigitsOfPrecision)</param>
             <returns>Mod name, or empty string if no match</returns>
         </member>
@@ -3895,10 +3895,10 @@
             Looks for a modification of type .DynamicMod or type .UnknownType in mModifications having .ModificationSymbol = modificationSymbol and chTargetResidue in .TargetResidues
             </summary>
             <remarks>If modificationSymbol does not match any of the mods, a modification with a mass of 0 is returned</remarks>
-            <param name="modificationSymbol"></param>
-            <param name="chTargetResidue"></param>
-            <param name="residueTerminusState"></param>
-            <param name="existingModFound"></param>
+            <param name="modificationSymbol">Modification symbol</param>
+            <param name="chTargetResidue">Target residue</param>
+            <param name="residueTerminusState">Residue terminus state</param>
+            <param name="existingModFound">Output: true if an existing modification was found</param>
             <returns>Modification details</returns>
         </member>
         <member name="M:PHRPReader.Data.PeptideModificationContainer.LookupModificationDefinitionByMass(System.Double,System.Char,PHRPReader.Data.AminoAcidModInfo.ResidueTerminusState,System.Boolean@,System.Boolean,System.Byte,System.Byte)">
@@ -3906,14 +3906,14 @@
             Looks for an existing modification with the given modification mass and target residues
             </summary>
             <remarks>If chTargetResidue is default(char) or AminoAcidModInfo.ResidueTerminusState.None, follows similar matching logic, but skips defined modifications with defined .TargetResidues</remarks>
-            <param name="modificationMass"></param>
+            <param name="modificationMass">Modification mass</param>
             <param name="chTargetResidue">
             If defined, returns the first modification with the given mass and containing the residue in .TargetResidues;
             if no match, looks for the first modification with the given mass and no defined .TargetResidues
             </param>
-            <param name="residueTerminusState"></param>
-            <param name="existingModFound"></param>
-            <param name="addToModificationListIfUnknown"></param>
+            <param name="residueTerminusState">Residue terminus state</param>
+            <param name="existingModFound">Output: true if an existing modification was found</param>
+            <param name="addToModificationListIfUnknown">When true, add to the modification list if unknown</param>
             <param name="massDigitsOfPrecision">Number of digits after the decimal point to round to when comparing mod masses</param>
             <param name="massDigitsOfPrecisionLoose">Number of digits after the decimal point to round to, for a more lenient match (if no match found using massDigitsOfPrecision)</param>
             <returns>The best matched modification; if no match is found, returns a newly created modification definition, adding it to mModifications if addToModificationListIfUnknown is True</returns>
@@ -3932,14 +3932,14 @@
             Looks for an existing modification with the given modification mass, modification type, and target residues
             </summary>
             <remarks>If chTargetResidue is default(char) or AminoAcidModInfo.ResidueTerminusState.None, follows similar matching logic, but skips defined modifications with defined .TargetResidues</remarks>
-            <param name="modificationMass"></param>
-            <param name="modType"></param>
+            <param name="modificationMass">Modification mass</param>
+            <param name="modType">Modification type</param>
             <param name="chTargetResidue">
             If defined, returns the first modification with the given mass and containing the residue in .TargetResidues;
             if no match, looks for the first modification with the given mass and no defined .TargetResidues</param>
-            <param name="residueTerminusState"></param>
-            <param name="existingModFound"></param>
-            <param name="addToModificationListIfUnknown"></param>
+            <param name="residueTerminusState">Residue terminus state</param>
+            <param name="existingModFound">Output: true if an existing modification was found</param>
+            <param name="addToModificationListIfUnknown">When true, add to the modification list if unknown</param>
             <param name="massDigitsOfPrecision">Number of digits after the decimal point to round to when comparing mod masses</param>
             <param name="massDigitsOfPrecisionLoose">Number of digits after the decimal point to round to, for a more lenient match (if no match found using massDigitsOfPrecision)</param>
             <returns>The best matched modification; if no match is found, returns a newly created modification definition, adding it to mModifications if addToModificationListIfUnknown = True</returns>
@@ -3948,16 +3948,16 @@
             <summary>
             Load the mass correction tags file
             </summary>
-            <param name="filePath"></param>
-            <param name="fileNotFound"></param>
+            <param name="filePath">Mass correction tags file path</param>
+            <param name="fileNotFound">Output: true if the file was not found</param>
             <returns>True if successful, false if an error</returns>
         </member>
         <member name="M:PHRPReader.Data.PeptideModificationContainer.ReadModificationDefinitionsFile(System.String,System.Boolean@)">
             <summary>
             Read a modification definitions file (_ModDefs.txt)
             </summary>
-            <param name="filePath"></param>
-            <param name="fileNotFound"></param>
+            <param name="filePath">Modification definitions file path</param>
+            <param name="fileNotFound">Output: true if the file was not found</param>
             <returns>True if successful, false if an error</returns>
         </member>
         <member name="M:PHRPReader.Data.PeptideModificationContainer.ResetOccurrenceCountStats">
@@ -3974,10 +3974,10 @@
             <summary>
             Verify that a modification is present, adding it if missing
             </summary>
-            <param name="modificationMass"></param>
-            <param name="targetResidues"></param>
-            <param name="modificationType"></param>
-            <param name="massDigitsOfPrecision"></param>
+            <param name="modificationMass">Modification mass</param>
+            <param name="targetResidues">Target residues</param>
+            <param name="modificationType">Modification type</param>
+            <param name="massDigitsOfPrecision">Mass digits of precision</param>
             <returns>True if the modification was matched or was added; false if an error</returns>
         </member>
         <member name="T:PHRPReader.Data.PepToProteinMapInfo">
@@ -4076,39 +4076,39 @@
             <summary>
             Constructor
             </summary>
-            <param name="proteinName"></param>
-            <param name="seqID"></param>
-            <param name="cleavageState"></param>
-            <param name="terminusState"></param>
+            <param name="proteinName">Protein name</param>
+            <param name="seqID">Protein sequence ID</param>
+            <param name="cleavageState">Cleavage state</param>
+            <param name="terminusState">Terminus state</param>
         </member>
         <member name="M:PHRPReader.Data.ProteinInfo.#ctor(System.String,System.String,System.Int32,PHRPReader.PeptideCleavageStateCalculator.PeptideCleavageState,PHRPReader.PeptideCleavageStateCalculator.PeptideTerminusState)">
             <summary>
             Constructor
             </summary>
-            <param name="proteinName"></param>
-            <param name="proteinDescription"></param>
-            <param name="seqID"></param>
-            <param name="cleavageState"></param>
-            <param name="terminusState"></param>
+            <param name="proteinName">Protein name</param>
+            <param name="proteinDescription">Protein description</param>
+            <param name="seqID">Protein sequence ID</param>
+            <param name="cleavageState">Cleavage state</param>
+            <param name="terminusState">Terminus state</param>
         </member>
         <member name="M:PHRPReader.Data.ProteinInfo.#ctor(System.String,System.String,System.Int32,PHRPReader.PeptideCleavageStateCalculator.PeptideCleavageState,PHRPReader.PeptideCleavageStateCalculator.PeptideTerminusState,System.Int32,System.Int32)">
             <summary>
             Constructor
             </summary>
-            <param name="proteinName"></param>
-            <param name="proteinDescription"></param>
-            <param name="seqID"></param>
-            <param name="cleavageState"></param>
-            <param name="terminusState"></param>
-            <param name="proteinResidueStart"></param>
-            <param name="proteinResidueEnd"></param>
+            <param name="proteinName">Protein name</param>
+            <param name="proteinDescription">Protein description</param>
+            <param name="seqID">Protein sequence ID</param>
+            <param name="cleavageState">Cleavage state</param>
+            <param name="terminusState">Terminus state</param>
+            <param name="proteinResidueStart">Residue number in the protein at which this sequence starts</param>
+            <param name="proteinResidueEnd">Residue number in the protein at which this sequence ends</param>
         </member>
         <member name="M:PHRPReader.Data.ProteinInfo.UpdateLocationInProtein(System.Int32,System.Int32)">
             <summary>
             Update the start/end residues for this protein (or peptide)
             </summary>
-            <param name="proteinResidueStart"></param>
-            <param name="proteinResidueEnd"></param>
+            <param name="proteinResidueStart">Residue number in the protein at which this sequence starts</param>
+            <param name="proteinResidueEnd">Residue number in the protein at which this sequence ends</param>
         </member>
         <member name="M:PHRPReader.Data.ProteinInfo.ToString">
             <summary>
@@ -4326,9 +4326,9 @@
         </member>
         <member name="M:PHRPReader.Data.PSM.AddCombinedScan(System.Int32)">
             <summary>
-            Add an additional scan number to associate with this PSM
+            Add a scan number to associate with this PSM
             </summary>
-            <param name="scanNumber"></param>
+            <param name="scanNumber">Additional scan number</param>
         </member>
         <member name="M:PHRPReader.Data.PSM.AddModifiedResidue(PHRPReader.Data.AminoAcidModInfo)">
             <summary>
@@ -4360,21 +4360,21 @@
             Add a new protein to associate with this peptide
             </summary>
             <remarks>Does not update the ProteinDetails dictionary</remarks>
-            <param name="proteinName"></param>
+            <param name="proteinName">Protein name</param>
         </member>
         <member name="M:PHRPReader.Data.PSM.AddProtein(PHRPReader.Data.ProteinInfo)">
             <summary>
             Add detailed info of a protein associated with this peptide
             </summary>
             <remarks>Updates both the Protein list and the ProteinDetails dictionary</remarks>
-            <param name="proteinInfo"></param>
+            <param name="proteinInfo">Protein info</param>
         </member>
         <member name="M:PHRPReader.Data.PSM.AddProteinDetail(PHRPReader.Data.ProteinInfo)">
             <summary>
             Add detailed info of a protein associated with this peptide
             </summary>
             <remarks>Updates both the Protein list and the ProteinDetails dictionary</remarks>
-            <param name="proteinInfo"></param>
+            <param name="proteinInfo">Protein info</param>
         </member>
         <member name="M:PHRPReader.Data.PSM.Clear">
             <summary>
@@ -4439,7 +4439,7 @@
             </summary>
             <remarks>Does not update the cleavage state info.  If updateCleanSequence is false, call UpdateCleanSequence at a later time to populate mPeptideCleanSequence</remarks>
             <param name="peptideSequence">Peptide sequence (can optionally contain modification symbols; can optionally contain prefix and suffix residues)</param>
-            <param name="updateCleanSequence"></param>
+            <param name="updateCleanSequence">When true, auto-determine the clean sequence</param>
         </member>
         <member name="M:PHRPReader.Data.PSM.SetPeptide(System.String,PHRPReader.PeptideCleavageStateCalculator,System.Boolean)">
             <summary>
@@ -4453,28 +4453,28 @@
             <summary>
             Add/update an additional score to associate with this peptide
             </summary>
-            <param name="scoreName"></param>
-            <param name="scoreValue"></param>
+            <param name="scoreName">Score name</param>
+            <param name="scoreValue">Score value</param>
         </member>
         <member name="M:PHRPReader.Data.PSM.TryGetScore(System.String,System.String@)">
             <summary>
             Returns the value stored for the specified score
             </summary>
-            <param name="scoreName"></param>
-            <param name="scoreValue"></param>
+            <param name="scoreName">Score name</param>
+            <param name="scoreValue">Score value</param>
             <returns>True if the score is defined, otherwise false</returns>
         </member>
         <member name="M:PHRPReader.Data.PSM.UpdateCleavageInfo(PHRPReader.PeptideCleavageStateCalculator)">
             <summary>
             Auto-determine the number of missed cleavages, cleavage state, and number of tryptic termini based on the peptide sequence
             </summary>
-            <param name="cleavageStateCalculator"></param>
+            <param name="cleavageStateCalculator">Peptide cleavage state calculator</param>
         </member>
         <member name="M:PHRPReader.Data.PSM.UpdateCleavageInfo(PHRPReader.PeptideCleavageStateCalculator,System.String)">
             <summary>
             Auto-determine the number of missed cleavages, cleavage state, and number of tryptic termini based on the given peptide sequence
             </summary>
-            <param name="cleavageStateCalculator"></param>
+            <param name="cleavageStateCalculator">Peptide cleavage state calculator</param>
             <param name="sequenceWithPrefixAndSuffix">Peptide sequence, including prefix and suffix residues</param>
         </member>
         <member name="T:PHRPReader.Data.ScanStatsExInfo">
@@ -4582,7 +4582,7 @@
             <summary>
             Constructor
             </summary>
-            <param name="scanNumber"></param>
+            <param name="scanNumber">Scan number</param>
         </member>
         <member name="M:PHRPReader.Data.ScanStatsExInfo.ToString">
             <summary>
@@ -4674,9 +4674,9 @@
             <summary>
             Constructor
             </summary>
-            <param name="scanNumber"></param>
-            <param name="scanTimeMinutes"></param>
-            <param name="scanType"></param>
+            <param name="scanNumber">Scan number</param>
+            <param name="scanTimeMinutes">Scan time, in minutes</param>
+            <param name="scanType">Scan type (aka scan level)</param>
         </member>
         <member name="T:PHRPReader.Data.SearchEngineParameters">
             <summary>
@@ -4771,41 +4771,41 @@
             <summary>
             Constructor
             </summary>
-            <param name="searchEngineName"></param>
+            <param name="searchEngineName">Search engine name</param>
         </member>
         <member name="M:PHRPReader.Data.SearchEngineParameters.#ctor(System.String,System.Collections.Generic.List{PHRPReader.Data.ModificationDefinition})">
             <summary>
             Constructor
             </summary>
-            <param name="searchEngineName"></param>
-            <param name="modList"></param>
+            <param name="searchEngineName">Search engine name</param>
+            <param name="modList">List of modification definitions</param>
         </member>
         <member name="M:PHRPReader.Data.SearchEngineParameters.#ctor(System.String,System.Collections.Generic.List{PHRPReader.Data.ModificationDefinition},System.Collections.Generic.Dictionary{System.String,System.String})">
             <summary>
             Constructor
             </summary>
-            <param name="searchEngineName"></param>
-            <param name="modList"></param>
-            <param name="parameters"></param>
+            <param name="searchEngineName">Search engine name</param>
+            <param name="modList">List of modification definitions</param>
+            <param name="parameters">Dictionary of parameters loaded from the search engine parameter file</param>
         </member>
         <member name="M:PHRPReader.Data.SearchEngineParameters.AddModification(PHRPReader.Data.ModificationDefinition)">
             <summary>
             Add a new dynamic or static modification
             </summary>
-            <param name="modDef"></param>
+            <param name="modDef">Modification definition</param>
         </member>
         <member name="M:PHRPReader.Data.SearchEngineParameters.AddUpdateParameter(System.Collections.Generic.KeyValuePair{System.String,System.String})">
             <summary>
             Add/update a parameter
             </summary>
-            <param name="kvSetting"></param>
+            <param name="kvSetting">Key-value pair of parameter name and parameter value</param>
         </member>
         <member name="M:PHRPReader.Data.SearchEngineParameters.AddUpdateParameter(System.String,System.String)">
             <summary>
             Add/update a parameter
             </summary>
-            <param name="paramName"></param>
-            <param name="paramValue"></param>
+            <param name="paramName">Parameter name</param>
+            <param name="paramValue">Parameter value</param>
         </member>
         <member name="M:PHRPReader.Data.SearchEngineParameters.ClearModifications">
             <summary>
@@ -4821,19 +4821,19 @@
             <summary>
             Update the search engine parameter file path
             </summary>
-            <param name="paramFilePath"></param>
+            <param name="paramFilePath">Parameter file path</param>
         </member>
         <member name="M:PHRPReader.Data.SearchEngineParameters.UpdateSearchEngineVersion(System.String)">
             <summary>
             Update the search engine version
             </summary>
-            <param name="searchEngineVersion"></param>
+            <param name="searchEngineVersion">Search engine version</param>
         </member>
         <member name="M:PHRPReader.Data.SearchEngineParameters.UpdateSearchDate(System.DateTime)">
             <summary>
             Update the search date
             </summary>
-            <param name="searchDate"></param>
+            <param name="searchDate">Search date</param>
         </member>
         <member name="T:PHRPReader.Data.SequenceInfo">
             <summary>
@@ -4878,7 +4878,7 @@
             <summary>
             Update the monoisotopic mass for this sequence
             </summary>
-            <param name="monoMass"></param>
+            <param name="monoMass">Monoisotopic mass</param>
         </member>
         <member name="M:PHRPReader.Data.SequenceInfo.ToString">
             <summary>
@@ -5219,59 +5219,59 @@
         </member>
         <member name="M:PHRPReader.MSGFPlusParamFileModExtractor.ExtractModInfoFromParamFile(System.String,PHRPReader.MSGFPlusParamFileModExtractor.ModSpecFormats,System.Collections.Generic.List{PHRPReader.MSGFPlusParamFileModExtractor.ModInfo}@)">
             <summary>
-            Extracts mod info from a MS-GF+, MSPathFinder, TopPIC, or DIA-NN param file, or from a MSGFPlus_Mods.txt file (previously MSGFDB_Mods.txt)
+            Extracts mod info from an MS-GF+, MSPathFinder, TopPIC, or DIA-NN param file, or from a MSGFPlus_Mods.txt file (previously MSGFDB_Mods.txt)
             </summary>
-            <param name="paramFilePath"></param>
-            <param name="modSpecFormat"></param>
-            <param name="modList"></param>
+            <param name="paramFilePath">Parameter file path</param>
+            <param name="modSpecFormat">Modification spec format</param>
+            <param name="modList">Output: list of extracted modifications</param>
             <returns>True if success; false if a problem</returns>
         </member>
         <member name="M:PHRPReader.MSGFPlusParamFileModExtractor.ParseModSpecDiaNN(System.String,System.Collections.Generic.IReadOnlyList{System.String},PHRPReader.MSGFPlusParamFileModExtractor.MSGFPlusModType,System.Int32@,PHRPReader.MSGFPlusParamFileModExtractor.ModInfo@)">
             <summary>
             Parse the mod spec definition from a DIA-NN parameter file
             </summary>
-            <param name="paramFilePath"></param>
-            <param name="splitLine"></param>
+            <param name="paramFilePath">Parameter file path</param>
+            <param name="splitLine">Line parts after splitting a delimited data line</param>
             <param name="modType">MSGFPlusModType.DynamicMod or MSGFPlusModType.StaticMod</param>
-            <param name="unnamedModID"></param>
-            <param name="udtModInfo"></param>
+            <param name="unnamedModID">Number of unnamed Mod IDs</param>
+            <param name="udtModInfo">Output: modification info</param>
             <returns>True if successful, false if an error</returns>
         </member>
         <member name="M:PHRPReader.MSGFPlusParamFileModExtractor.ParseModSpecMSGFPlus(System.String,System.Collections.Generic.IReadOnlyList{System.String},System.Int32@,PHRPReader.MSGFPlusParamFileModExtractor.ModInfo@)">
             <summary>
-            Parse the mod spec definition from a MS-GF+ or MSPathFinder parameter file
+            Parse the mod spec definition from an MS-GF+ or MSPathFinder parameter file
             </summary>
-            <param name="paramFilePath"></param>
-            <param name="splitLine"></param>
-            <param name="unnamedModID"></param>
-            <param name="udtModInfo"></param>
+            <param name="paramFilePath">Parameter file path</param>
+            <param name="splitLine">Line parts after splitting a delimited data line</param>
+            <param name="unnamedModID">Number of unnamed Mod IDs</param>
+            <param name="udtModInfo">Output: modification info</param>
             <returns>True if successful, false if an error</returns>
         </member>
         <member name="M:PHRPReader.MSGFPlusParamFileModExtractor.ParseModSpecTopPIC(System.String,System.Collections.Generic.IReadOnlyList{System.String},PHRPReader.MSGFPlusParamFileModExtractor.MSGFPlusModType,System.Int32@,PHRPReader.MSGFPlusParamFileModExtractor.ModInfo@)">
             <summary>
             Parse the mod spec definition from a TopPIC parameter file
             </summary>
-            <param name="paramFilePath"></param>
-            <param name="splitLine"></param>
+            <param name="paramFilePath">Parameter file path</param>
+            <param name="splitLine">Line parts after splitting a delimited data line</param>
             <param name="modType">MSGFPlusModType.DynamicMod or MSGFPlusModType.StaticMod</param>
-            <param name="unnamedModID"></param>
-            <param name="udtModInfo"></param>
+            <param name="unnamedModID">Number of unnamed Mod IDs</param>
+            <param name="udtModInfo">Output: modification info</param>
             <returns>True if successful, false if an error</returns>
         </member>
         <member name="M:PHRPReader.MSGFPlusParamFileModExtractor.ResolveMSGFPlusModsWithModDefinitions(System.Collections.Generic.List{PHRPReader.MSGFPlusParamFileModExtractor.ModInfo},PHRPReader.Data.PeptideModificationContainer)">
             <summary>
             Resolve MS-GF+, MSPathFinder, TopPIC, or DIA-NN mods with modification definitions
             </summary>
-            <param name="modList"></param>
-            <param name="peptideMods"></param>
+            <param name="modList">List of modification info</param>
+            <param name="peptideMods">Peptide modifications</param>
         </member>
         <member name="M:PHRPReader.MSGFPlusParamFileModExtractor.ValidateIsValidModSpec(System.String,System.String)">
             <summary>
             If the data line starts with text in parameter modTag followed by an equals sign, return the text after the equals sign
             </summary>
             <remarks>If the line has a comment (which starts with #), the comment will not be included in the returned text</remarks>
-            <param name="lineIn"></param>
-            <param name="modTag"></param>
+            <param name="lineIn">Data line</param>
+            <param name="modTag">Modification tag</param>
             <returns>Modification definition if found, otherwise an empty string</returns>
         </member>
         <member name="T:PHRPReader.PeptideCleavageStateCalculator">
@@ -5459,8 +5459,8 @@
             <summary>
             Constructor
             </summary>
-            <param name="leftResidueRegEx"></param>
-            <param name="rightResidueRegEx"></param>
+            <param name="leftResidueRegEx">Left residue Regex</param>
+            <param name="rightResidueRegEx">Right residue Regex</param>
         </member>
         <member name="P:PHRPReader.PeptideCleavageStateCalculator.EnzymeMatchSpec">
             <summary>
@@ -5486,54 +5486,54 @@
             Determines the cleavage state of the specified peptide
             </summary>
             <remarks>Peptide can have prefix and suffix letters, for example K.PEPTIDE.G</remarks>
-            <param name="sequenceWithPrefixAndSuffix"></param>
+            <param name="sequenceWithPrefixAndSuffix">Peptide sequence, including prefix and suffix</param>
         </member>
         <member name="M:PHRPReader.PeptideCleavageStateCalculator.ComputeCleavageState(System.String,System.String,System.String)">
             <summary>
             Determine the cleavage state of cleanSequence utilizing the rules specified in mEnzymeMatchSpec
             </summary>
             <remarks>Peptide cannot have prefix and suffix letters, and thus must be in the form PEPTIDE</remarks>
-            <param name="cleanSequence"></param>
-            <param name="prefixResidues"></param>
-            <param name="suffixResidues"></param>
+            <param name="cleanSequence">Clean peptide sequence</param>
+            <param name="prefixResidues">prefix residues</param>
+            <param name="suffixResidues">Suffix residues</param>
         </member>
         <member name="M:PHRPReader.PeptideCleavageStateCalculator.ComputeNumberOfMissedCleavages(System.String)">
             <summary>
             Count the number of missed cleavages in the peptide
             </summary>
             <remarks>Peptide can have prefix and suffix letters, for example K.PEPTIDE.G</remarks>
-            <param name="sequenceWithPrefixAndSuffix"></param>
+            <param name="sequenceWithPrefixAndSuffix">Peptide sequence, including prefix and suffix</param>
         </member>
         <member name="M:PHRPReader.PeptideCleavageStateCalculator.ComputeTerminusState(System.String)">
             <summary>
             Determine the terminus state of the peptide
             </summary>
             <remarks>Peptide must have prefix and suffix letters, for example K.PEPTIDE.G</remarks>
-            <param name="sequenceWithPrefixAndSuffix"></param>
+            <param name="sequenceWithPrefixAndSuffix">Peptide sequence, including prefix and suffix</param>
         </member>
         <member name="M:PHRPReader.PeptideCleavageStateCalculator.ComputeTerminusState(System.Char,System.Char)">
             <summary>
             Determine the terminus state given the prefix and suffix characters
             </summary>
             <remarks>For example, if the peptide is -.PEPTIDE.G, pass prefix="-" and suffix="G"</remarks>
-            <param name="prefix"></param>
-            <param name="suffix"></param>
+            <param name="prefix">Prefix character</param>
+            <param name="suffix">Suffix character</param>
         </member>
         <member name="M:PHRPReader.PeptideCleavageStateCalculator.ComputeTerminusState(System.String,System.String,System.String)">
             <summary>
             Determine the terminus state of the peptide
             </summary>
             <remarks>Peptide cannot have prefix and suffix letters, and thus must be in the form PEPTIDE</remarks>
-            <param name="cleanSequence"></param>
-            <param name="prefixResidues"></param>
-            <param name="suffixResidues"></param>
+            <param name="cleanSequence">Clean peptide sequence</param>
+            <param name="prefixResidues">prefix residues</param>
+            <param name="suffixResidues">Suffix residues</param>
         </member>
         <member name="M:PHRPReader.PeptideCleavageStateCalculator.ExtractCleanSequenceFromSequenceWithMods(System.String,System.Boolean)">
             <summary>
             Removes all modification symbols (*, #, +, 8, etc.) from the peptide; optionally removes prefix and suffix letters
             </summary>
-            <param name="sequenceWithMods"></param>
-            <param name="checkForPrefixAndSuffixResidues"></param>
+            <param name="sequenceWithMods">Peptide sequence, with modification symbols and/or modification masses</param>
+            <param name="checkForPrefixAndSuffixResidues">When true, check for prefix and suffix residues</param>
             <returns>Clean peptide sequence</returns>
         </member>
         <member name="M:PHRPReader.PeptideCleavageStateCalculator.GetDefaultEnzymeMatchSpec">
@@ -5545,14 +5545,14 @@
             <summary>
             Define custom enzyme match rules using RegEx strings
             </summary>
-            <param name="leftResidueRegEx"></param>
-            <param name="rightResidueRegEx"></param>
+            <param name="leftResidueRegEx">Left residue Regex</param>
+            <param name="rightResidueRegEx">Right residue Regex</param>
         </member>
         <member name="M:PHRPReader.PeptideCleavageStateCalculator.SetStandardEnzymeMatchSpec(PHRPReader.PeptideCleavageStateCalculator.StandardCleavageAgent)">
             <summary>
             Select a standard enzyme match rule
             </summary>
-            <param name="standardCleavageAgent"></param>
+            <param name="standardCleavageAgent">Standard cleavage agent</param>
         </member>
         <member name="M:PHRPReader.PeptideCleavageStateCalculator.SplitPrefixAndSuffixFromSequence(System.String,System.String@,System.String@,System.String@)">
             <summary>
@@ -5572,8 +5572,8 @@
             <summary>
             Examines the two residues to see if they represent an expected cleavage point
             </summary>
-            <param name="leftChar"></param>
-            <param name="rightChar"></param>
+            <param name="leftChar">Left character</param>
+            <param name="rightChar">Right character</param>
             <returns>True if the characters match the currently defined cleavage rule</returns>
         </member>
         <member name="T:PHRPReader.PeptideMassCalculator">
@@ -5674,11 +5674,13 @@
             <summary>
             Peptide C-terminus mass
             </summary>
+            <remarks>Defaults to the mass of oxygen and hydrogen</remarks>
         </member>
         <member name="P:PHRPReader.PeptideMassCalculator.PeptideNTerminusMass">
             <summary>
             Peptide N-terminus mass
             </summary>
+            <remarks>Defaults to the mass of hydrogen</remarks>
         </member>
         <member name="P:PHRPReader.PeptideMassCalculator.RemovePrefixAndSuffixIfPresent">
             <summary>
@@ -5700,14 +5702,14 @@
             Compute the monoisotopic mass of the given empirical formula
             </summary>
             <remarks>Throws an exception if an unknown symbol is encountered</remarks>
-            <param name="empiricalFormula"></param>
+            <param name="empiricalFormula">Empirical formula</param>
         </member>
         <member name="M:PHRPReader.PeptideMassCalculator.ComputeMonoisotopicMass(System.Collections.Generic.Dictionary{System.String,System.Int32},System.Collections.Generic.List{System.String}@)">
             <summary>
             Compute the monoisotopic mass of the compound represented by elementalComposition
             </summary>
-            <param name="elementalComposition"></param>
-            <param name="unknownSymbols"></param>
+            <param name="elementalComposition">Elemental composition</param>
+            <param name="unknownSymbols">Output: list of unknown symbols</param>
         </member>
         <member name="M:PHRPReader.PeptideMassCalculator.ComputeSequenceMass(System.String)">
             <summary>
@@ -5736,16 +5738,16 @@
              K.Q-17.0265QIEESTSDYDKEK.L
             </summary>
             <remarks>Looks for and removes prefix and suffix letters if .RemovePrefixAndSuffixIfPresent = True</remarks>
-            <param name="sequence"></param>
+            <param name="sequence">Peptide sequence</param>
         </member>
         <member name="M:PHRPReader.PeptideMassCalculator.ConvoluteMass(System.Double,System.Int32,System.Int32)">
             <summary>
             Converts the m/z value from one charge state to another charge state.  Either charge state can be 0, which means an uncharged peptide
             </summary>
             <remarks>Uses the charge carrier mass defined by ChargeCarrierMass</remarks>
-            <param name="massMZ"></param>
-            <param name="currentCharge"></param>
-            <param name="desiredCharge"></param>
+            <param name="massMZ">m/z</param>
+            <param name="currentCharge">Current charge; if 0, assumes massMZ is the neutral, monoisotopic mass</param>
+            <param name="desiredCharge">Desired charge</param>
         </member>
         <member name="M:PHRPReader.PeptideMassCalculator.ConvoluteMass(System.Double,System.Int32,System.Int32,System.Double)">
             <summary>
@@ -5767,23 +5769,23 @@
             <summary>
             Returns the mass of the specified amino acid
             </summary>
-            <param name="chAminoAcidSymbol"></param>
+            <param name="chAminoAcidSymbol">Amino acid symbol</param>
         </member>
         <member name="M:PHRPReader.PeptideMassCalculator.GetAminoAcidEmpiricalFormula(System.Char)">
             <summary>
             Returns a List with the number of atoms of C, H, N, O, and S in the specified amino acid
             </summary>
-            <param name="chAminoAcidSymbol"></param>
+            <param name="chAminoAcidSymbol">Amino acid symbol</param>
         </member>
         <member name="M:PHRPReader.PeptideMassCalculator.GetAminoAcidEmpiricalFormula(System.Int32,System.Int32,System.Int32,System.Int32,System.Int32)">
             <summary>
             Create a new EmpiricalFormula instance with the specified number of atoms
             </summary>
-            <param name="countC"></param>
-            <param name="countH"></param>
-            <param name="countN"></param>
-            <param name="countO"></param>
-            <param name="countS"></param>
+            <param name="countC">Number of carbon atoms</param>
+            <param name="countH">Number of hydrogen atoms</param>
+            <param name="countN">Number of nitrogen atoms</param>
+            <param name="countO">Number of oxygen atoms</param>
+            <param name="countS">Number of sulfur atoms</param>
         </member>
         <member name="M:PHRPReader.PeptideMassCalculator.GetAtomicFormulaRegEx(System.Collections.Generic.Dictionary{System.String,System.Double})">
             <summary>
@@ -5793,7 +5795,7 @@
              C3H3NOS4
              CH23NO-5S+4
             </summary>
-            <param name="elementMonoMasses"></param>
+            <param name="elementMonoMasses">Dictionary with element symbols and monoisotopic masses</param>
             <returns>RegEx with named capture groups ElementSymbol and ElementCount</returns>
         </member>
         <member name="M:PHRPReader.PeptideMassCalculator.GetElementMonoMasses">
@@ -5809,41 +5811,41 @@
              C3H3NOS4
              CH23NO-5S+4
             </summary>
-            <param name="empiricalFormula"></param>
+            <param name="empiricalFormula">Empirical formula</param>
             <returns>EmpiricalFormula instance tracking the element symbols and counts</returns>
         </member>
         <member name="M:PHRPReader.PeptideMassCalculator.MassToPPM(System.Double,System.Double)">
             <summary>
             Converts massToConvert to ppm, based on the value of currentMZ
             </summary>
-            <param name="massToConvert"></param>
-            <param name="currentMZ"></param>
+            <param name="massToConvert">Mass to convert</param>
+            <param name="currentMZ">Current m/z</param>
         </member>
         <member name="M:PHRPReader.PeptideMassCalculator.MHToMonoisotopicMass(System.Double)">
             <summary>
             Converts and MH mass to the uncharged (neutral) mass
             </summary>
             <remarks>Equivalent to ConvoluteMass(mH, 1, 0)</remarks>
-            <param name="mH"></param>
+            <param name="mH">Mass value of MH</param>
         </member>
         <member name="M:PHRPReader.PeptideMassCalculator.MonoisotopicMassToMZ(System.Double,System.Int32)">
             <summary>
             Converts an uncharged (neutral) mass to the m/z value for the specified charge
             </summary>
             <remarks>Equivalent to ConvoluteMass(monoisotopicMass, 0, desiredCharge)</remarks>
-            <param name="monoisotopicMass"></param>
-            <param name="desiredCharge"></param>
+            <param name="monoisotopicMass">Monoisotopic mass</param>
+            <param name="desiredCharge">Desired charge</param>
         </member>
         <member name="M:PHRPReader.PeptideMassCalculator.PPMToMass(System.Double,System.Double)">
             <summary>
             Converts from a ppm value to a mass value, using the specified mass value as a reference point
             </summary>
-            <param name="ppmToConvert"></param>
-            <param name="currentMass"></param>
+            <param name="ppmToConvert">PPM value to convert</param>
+            <param name="currentMass">Current mass</param>
         </member>
         <member name="M:PHRPReader.PeptideMassCalculator.ResetAminoAcidMasses">
             <summary>
-            Reset all of the amino acid masses and atom counts to default values
+            Reset all the amino acid masses and atom counts to default values
             </summary>
         </member>
         <member name="M:PHRPReader.PeptideMassCalculator.ResetAminoAcidToDefault(System.Char)">
@@ -5877,15 +5879,15 @@
             <summary>
             Defines a custom mass for an amino acid
             </summary>
-            <param name="chAminoAcidSymbol"></param>
-            <param name="mass"></param>
+            <param name="chAminoAcidSymbol">Amino acid symbol</param>
+            <param name="mass">Amino acid mass</param>
             <returns>True if successful, False if an invalid amino acid symbol</returns>
         </member>
         <member name="M:PHRPReader.PeptideMassCalculator.UpdateAminoAcidStatEntry(System.Byte)">
             <summary>
             Updates an entry in parallel arrays AminoAcidMasses and AminoAcidSymbols
             </summary>
-            <param name="aminoAcidIndex"></param>
+            <param name="aminoAcidIndex">Index to update</param>
         </member>
         <member name="T:PHRPReader.ReaderFactory">
             <summary>
@@ -6140,26 +6142,26 @@
             <summary>
             Add a PHRP file to find when auto-determining the input file type
             </summary>
-            <param name="filesToFind"></param>
-            <param name="resultType"></param>
-            <param name="getPhrpFilenameMethod"></param>
-            <param name="datasetName"></param>
+            <param name="filesToFind">Files to find</param>
+            <param name="resultType">PHRP result type</param>
+            <param name="getPhrpFilenameMethod">PHRP filename method</param>
+            <param name="datasetName">Dataset name</param>
         </member>
         <member name="M:PHRPReader.ReaderFactory.AddFileToFind(System.Collections.Generic.ICollection{System.Collections.Generic.KeyValuePair{System.String,PHRPReader.PeptideHitResultTypes}},PHRPReader.PeptideHitResultTypes,System.String)">
             <summary>
             Add a PHRP file to find when auto-determining the input file type
             </summary>
-            <param name="filesToFind"></param>
-            <param name="resultType"></param>
-            <param name="phrpFilename"></param>
+            <param name="filesToFind">Files to find</param>
+            <param name="resultType">PHRP result type</param>
+            <param name="phrpFilename">PHRP filename</param>
         </member>
         <member name="M:PHRPReader.ReaderFactory.AddSuffixToCheck(System.Collections.Generic.ICollection{System.Collections.Generic.KeyValuePair{System.String,PHRPReader.PeptideHitResultTypes}},PHRPReader.PeptideHitResultTypes,System.String)">
             <summary>
             Add a filename suffix to check when auto-determining the input file type
             </summary>
-            <param name="suffixesToCheck"></param>
-            <param name="resultType"></param>
-            <param name="suffix"></param>
+            <param name="suffixesToCheck">Suffixes to check</param>
+            <param name="resultType">PHRP result type</param>
+            <param name="suffix">Filename suffix</param>
         </member>
         <member name="M:PHRPReader.ReaderFactory.AutoDetermineBestInputFile(System.String)">
             <summary>
@@ -6212,7 +6214,7 @@
             Auto-determine the dataset name using the input file path
             </summary>
             <remarks>Returns an empty string if unable to determine the dataset name</remarks>
-            <param name="filePath"></param>
+            <param name="filePath">Input file path</param>
             <returns>Dataset name</returns>
         </member>
         <member name="M:PHRPReader.ReaderFactory.AutoDetermineDatasetName(System.String,PHRPReader.PeptideHitResultTypes)">
@@ -6220,37 +6222,37 @@
             Auto-determine the dataset name using the input file path and specified PeptideHit result type
             </summary>
             <remarks>Returns an empty string if unable to determine the dataset name</remarks>
-            <param name="filePath"></param>
-            <param name="resultType"></param>
+            <param name="filePath">Input file path</param>
+            <param name="resultType">PHRP result type</param>
             <returns>Dataset name</returns>
         </member>
         <member name="M:PHRPReader.ReaderFactory.AutoDetermineResultType(System.String)">
             <summary>
             Determine the PeptideHit result type given the input file path
             </summary>
-            <param name="filePath"></param>
+            <param name="filePath">Input file path</param>
         </member>
         <member name="M:PHRPReader.ReaderFactory.AutoSwitchToFHTIfRequired(System.String,System.String)">
             <summary>
             Updates filePath to have _fht instead of _syn if filePath contains_syn yet basePHRPFileName contains _fht
             </summary>
-            <param name="filePath"></param>
-            <param name="basePHRPFileName"></param>
+            <param name="filePath">Input file path</param>
+            <param name="basePHRPFileName">Based PHRP filename</param>
         </member>
         <member name="M:PHRPReader.ReaderFactory.AutoSwitchToLegacyMSGFDBIfRequired(System.String,System.String)">
             <summary>
             Updates filePath to have _msgfdb instead of _msgfplus if basePHRPFileName contains _msgfdb
             </summary>
-            <param name="filePath"></param>
-            <param name="basePHRPFileName"></param>
+            <param name="filePath">File path</param>
+            <param name="basePHRPFileName">Base PHRP filename</param>
         </member>
         <member name="M:PHRPReader.ReaderFactory.AutoTrimExtraSuffix(System.String,System.String@)">
             <summary>
             Check whether filePath ends in other known PHRP extensions
             If it does, remove the suffix and return the trimmed path
             </summary>
-            <param name="filePath"></param>
-            <param name="filePathTrimmed"></param>
+            <param name="filePath">File path</param>
+            <param name="filePathTrimmed">Output: trimmed file path, or an empty string if the file does not end in a known extension</param>
             <returns>True if the path was trimmed, otherwise false</returns>
         </member>
         <member name="M:PHRPReader.ReaderFactory.ClearErrors">
@@ -6269,7 +6271,7 @@
             Note that if the _SeqInfo.txt file is available, this method will not be used
             </summary>
             <remarks>peptideWithNumericMods will look like R.TDM+15.9949ESALPVTVLSAEDIAK.T</remarks>
-            <param name="peptide"></param>
+            <param name="peptide">Peptide sequence</param>
             <param name="peptideWithNumericMods">Output: Peptide with numeric mods</param>
             <param name="peptideMods">Output: List of modified amino acids</param>
             <returns>True if successful, false if an error</returns>
@@ -6279,8 +6281,8 @@
             This method extracts the Parent Ion m/z from the filter string
             </summary>
             <remarks>The original version of this code is in ThermoRawFileReader.FilterTextUtilities.ExtractParentIonMZFromFilterText(string, out double)</remarks>
-            <param name="filterText"></param>
-            <param name="parentIonMz"></param>
+            <param name="filterText">Thermo scan filter</param>
+            <param name="parentIonMz">Output: parenter ion m/z</param>
             <returns>True if parsing successful</returns>
         </member>
         <member name="M:PHRPReader.ReaderFactory.FinalizeCurrentPSM">
@@ -6333,7 +6335,7 @@
             <summary>
             Join a series of string values together, separating by a tab
             </summary>
-            <param name="dataValues"></param>
+            <param name="dataValues">List of items</param>
             <param name="indexStart">Index of the first item to include</param>
             <returns>Tab-separated list of values</returns>
         </member>
@@ -6341,7 +6343,7 @@
             <summary>
             Determines the collision mode using the Scan Type name
             </summary>
-            <param name="scanTypeName"></param>
+            <param name="scanTypeName">Scan type name</param>
         </member>
         <member name="M:PHRPReader.ReaderFactory.GetMSGFFileName(System.String)">
             <summary>
@@ -6353,7 +6355,7 @@
             <summary>
             Get the peptide hit result type for the given result type name
             </summary>
-            <param name="resultTypeName"></param>
+            <param name="resultTypeName">Result type name</param>
         </member>
         <member name="M:PHRPReader.ReaderFactory.GetPHRPAuxiliaryFileSuffixes">
             <summary>
@@ -6364,92 +6366,92 @@
             <summary>
             Returns the default first-hits file name for the given PeptideHit result type
             </summary>
-            <param name="resultType"></param>
-            <param name="datasetName"></param>
+            <param name="resultType">PHRP result type</param>
+            <param name="datasetName">Dataset name</param>
             <returns>Filename</returns>
         </member>
         <member name="M:PHRPReader.ReaderFactory.GetPHRPModSummaryFileName(PHRPReader.PeptideHitResultTypes,System.String)">
             <summary>
             Returns the default ModSummary file name for the given PeptideHit result type
             </summary>
-            <param name="resultType"></param>
-            <param name="datasetName"></param>
+            <param name="resultType">PHRP result type</param>
+            <param name="datasetName">Dataset name</param>
             <returns>Filename</returns>
         </member>
         <member name="M:PHRPReader.ReaderFactory.GetPHRPPepToProteinMapFileName(PHRPReader.PeptideHitResultTypes,System.String)">
             <summary>
             Returns the default PepToProtMap file name for the given PeptideHit result type
             </summary>
-            <param name="resultType"></param>
-            <param name="datasetName"></param>
+            <param name="resultType">PHRP result type</param>
+            <param name="datasetName">Dataset name</param>
             <returns>Filename</returns>
         </member>
         <member name="M:PHRPReader.ReaderFactory.GetPHRPProteinModsFileName(PHRPReader.PeptideHitResultTypes,System.String)">
             <summary>
             Returns the default ProteinMods file name for the given PeptideHit result type
             </summary>
-            <param name="resultType"></param>
-            <param name="datasetName"></param>
+            <param name="resultType">PHRP result type</param>
+            <param name="datasetName">Dataset name</param>
             <returns>Filename</returns>
         </member>
         <member name="M:PHRPReader.ReaderFactory.GetPHRPSynopsisFileName(PHRPReader.PeptideHitResultTypes,System.String)">
             <summary>
             Returns the default Synopsis file name for the given PeptideHit result type
             </summary>
-            <param name="resultType"></param>
-            <param name="datasetName"></param>
+            <param name="resultType">PHRP result type</param>
+            <param name="datasetName">Dataset name</param>
             <returns>Filename</returns>
         </member>
         <member name="M:PHRPReader.ReaderFactory.GetPHRPResultToSeqMapFileName(PHRPReader.PeptideHitResultTypes,System.String)">
             <summary>
             Returns the default ResultToSeq Map file name for the given PeptideHit result type
             </summary>
-            <param name="resultType"></param>
-            <param name="datasetName"></param>
+            <param name="resultType">PHRP result type</param>
+            <param name="datasetName">Dataset name</param>
             <returns>Filename</returns>
         </member>
         <member name="M:PHRPReader.ReaderFactory.GetPHRPSeqInfoFileName(PHRPReader.PeptideHitResultTypes,System.String)">
             <summary>
             Returns the default SeqInfo file name for the given PeptideHit result type
             </summary>
-            <param name="resultType"></param>
-            <param name="datasetName"></param>
+            <param name="resultType">PHRP result type</param>
+            <param name="datasetName">Dataset name</param>
             <returns>Filename</returns>
         </member>
         <member name="M:PHRPReader.ReaderFactory.GetPHRPSeqToProteinMapFileName(PHRPReader.PeptideHitResultTypes,System.String)">
             <summary>
             Returns the default SeqToProtein Map file name for the given PeptideHit result type
             </summary>
-            <param name="resultType"></param>
-            <param name="datasetName"></param>
+            <param name="resultType">PHRP result type</param>
+            <param name="datasetName">Dataset name</param>
             <returns>Filename</returns>
         </member>
         <member name="M:PHRPReader.ReaderFactory.GetScanStatsFilename(System.String)">
             <summary>
             Get the ScanStats filename for the given dataset
             </summary>
-            <param name="datasetName"></param>
+            <param name="datasetName">Dataset name</param>
             <returns>Filename</returns>
         </member>
         <member name="M:PHRPReader.ReaderFactory.GetExtendedScanStatsFilename(System.String)">
             <summary>
             Get the extended ScanStats filename for the given dataset
             </summary>
-            <param name="datasetName"></param>
+            <param name="datasetName">Dataset name</param>
             <returns>Filename</returns>
         </member>
         <member name="M:PHRPReader.ReaderFactory.GetToolVersionInfoFilename(PHRPReader.PeptideHitResultTypes)">
             <summary>
             Get the tool version info filename for the given analysis tool
             </summary>
-            <param name="resultType"></param>
+            <param name="resultType">PHRP result type</param>
             <returns>Filename</returns>
         </member>
         <member name="M:PHRPReader.ReaderFactory.GetToolVersionInfoFilenames(PHRPReader.PeptideHitResultTypes)">
             <summary>
             Get the tool version info filename for the given analysis tool
             </summary>
-            <param name="resultType"></param>
+            <param name="resultType">PHRP result type</param>
             <returns>Filename</returns>
         </member>
         <member name="M:PHRPReader.ReaderFactory.InitializeClass(System.String,PHRPReader.PeptideHitResultTypes)">
@@ -6472,14 +6474,14 @@
             <summary>
             Examines the string to determine if it is numeric
             </summary>
-            <param name="data"></param>
+            <param name="data">Value to parse</param>
             <returns>True if a number, otherwise false</returns>
         </member>
         <member name="M:PHRPReader.ReaderFactory.IsSynopsisOrFirstHitsFile(System.String)">
             <summary>
             Examine the filename to see if it ends with one of the known suffixes for synopsis and first hits files created by PeptideHitResultsProcRunner
             </summary>
-            <param name="fileNameOrPath"></param>
+            <param name="fileNameOrPath">File name or file path</param>
             <returns>True if the name ends with a known suffix, otherwise false</returns>
         </member>
         <member name="M:PHRPReader.ReaderFactory.LineContainsColumns(System.Collections.Generic.IReadOnlyCollection{System.String},System.String[])">
@@ -6487,33 +6489,33 @@
             Look for the given column names, returning true if all are found
             </summary>
             <remarks>Uses case-sensitive comparison</remarks>
-            <param name="columnNames"></param>
-            <param name="columnNamesToFind"></param>
-            <returns>True if all of the columns are found, otherwise false</returns>
+            <param name="columnNames">Column names to search</param>
+            <param name="columnNamesToFind">Column names to find</param>
+            <returns>True if all the columns are found, otherwise false</returns>
         </member>
         <member name="M:PHRPReader.ReaderFactory.LineContainsColumns(System.Collections.Generic.IReadOnlyCollection{System.String},System.Boolean,System.String[])">
             <summary>
             Look for the given column names, returning true if all are found
             </summary>
-            <param name="columnNames"></param>
+            <param name="columnNames">Column names to search</param>
             <param name="ignoreCase">When true, ignore case when comparing names</param>
-            <param name="columnNamesToFind"></param>
-            <returns>True if all of the columns are found, otherwise false</returns>
+            <param name="columnNamesToFind">Column names to find</param>
+            <returns>True if all the columns are found, otherwise false</returns>
         </member>
         <member name="M:PHRPReader.ReaderFactory.LookupColumnIndex(System.String,System.Collections.Generic.SortedDictionary{System.String,System.Int32})">
             <summary>
             Returns the index of the indicated column, as tracked by columnHeaders
             </summary>
-            <param name="columnName"></param>
-            <param name="columnHeaders"></param>
+            <param name="columnName">Column name</param>
+            <param name="columnHeaders">Dictionary of column names and index values</param>
             <returns>Column index, or -1 if not found</returns>
         </member>
         <member name="M:PHRPReader.ReaderFactory.LookupColumnIndex(System.Enum,System.Collections.Generic.SortedDictionary{System.Enum,System.Int32})">
             <summary>
             Returns the index of the indicated column, as tracked by columnHeaders
             </summary>
-            <param name="columnEnum"></param>
-            <param name="columnHeaders"></param>
+            <param name="columnEnum">Column enum</param>
+            <param name="columnHeaders">Dictionary of column names and index values</param>
             <returns>Column index, or -1 if not found</returns>
         </member>
         <member name="M:PHRPReader.ReaderFactory.LookupColumnValue(System.String[],System.String,System.Collections.Generic.SortedDictionary{System.String,System.Int32})">
@@ -6565,9 +6567,9 @@
             <summary>
             Read the column names in the first line of the file
             </summary>
-            <param name="filePath"></param>
-            <param name="columnNames"></param>
-            <param name="columnDelimiter"></param>
+            <param name="filePath">File to examine</param>
+            <param name="columnNames">Output: column names from the first line</param>
+            <param name="columnDelimiter">Column delimiter</param>
             <returns>True if successful, false if an error</returns>
         </member>
         <member name="M:PHRPReader.ReaderFactory.ReadModSummaryFile(System.String,System.Collections.Generic.IDictionary{System.Char,PHRPReader.Data.ModificationDefinition},System.Collections.Generic.IDictionary{System.String,System.Collections.Generic.List{PHRPReader.Data.ModificationDefinition}})">
@@ -6583,10 +6585,10 @@
             <summary>
             If the column exists, get the value for the column and return true
             </summary>
-            <param name="columns"></param>
-            <param name="columnName"></param>
-            <param name="columnHeaders"></param>
-            <param name="columnValue"></param>
+            <param name="columns">Column data</param>
+            <param name="columnName">Column name to find</param>
+            <param name="columnHeaders">Column headers</param>
+            <param name="columnValue">Output: value from columns if the colum name was recognized</param>
             <returns>True if the column exists, otherwise false</returns>
         </member>
         <member name="F:PHRPReader.ReaderFactory.disposedValue">
@@ -6598,7 +6600,7 @@
             <summary>
             Dispose of this class
             </summary>
-            <param name="disposing"></param>
+            <param name="disposing">True if disposing this instance</param>
         </member>
         <member name="M:PHRPReader.ReaderFactory.Dispose">
             <summary>
@@ -6723,70 +6725,70 @@
             Compares the names in headerNames to the standard header names tracked by the dictionary returned by GetColumnHeaderNamesAndIDs
             Populates a dictionary mapping enum DiaNNSynFileColumns to the 0-based index in columnNames
             </summary>
-            <param name="headerNames"></param>
+            <param name="headerNames">List of header names</param>
             <returns>Dictionary mapping the enum value to the column index in headerNames (0-based column index)</returns>
         </member>
         <member name="M:PHRPReader.Reader.DiaNNSynFileReader.GetColumnNameByID(PHRPReader.Data.DiaNNSynFileColumns)">
             <summary>
             Get the synopsis file column name associated with the given enum
             </summary>
-            <param name="column"></param>
+            <param name="column">Column enum</param>
             <returns>Column name</returns>
         </member>
         <member name="M:PHRPReader.Reader.DiaNNSynFileReader.GetPHRPFirstHitsFileName(System.String)">
             <summary>
             Default first hits file for the given dataset
             </summary>
-            <param name="datasetName"></param>
+            <param name="datasetName">Dataset name</param>
             <returns>Filename</returns>
         </member>
         <member name="M:PHRPReader.Reader.DiaNNSynFileReader.GetPHRPModSummaryFileName(System.String)">
             <summary>
             Default ModSummary file name for the given dataset
             </summary>
-            <param name="datasetName"></param>
+            <param name="datasetName">Dataset name</param>
             <returns>Filename</returns>
         </member>
         <member name="M:PHRPReader.Reader.DiaNNSynFileReader.GetPHRPPepToProteinMapFileName(System.String)">
             <summary>
             Default PepToProtMap file name for the given dataset
             </summary>
-            <param name="datasetName"></param>
+            <param name="datasetName">Dataset name</param>
             <returns>Filename</returns>
         </member>
         <member name="M:PHRPReader.Reader.DiaNNSynFileReader.GetPHRPProteinModsFileName(System.String)">
             <summary>
             Default ProteinMods file name for the given dataset
             </summary>
-            <param name="datasetName"></param>
+            <param name="datasetName">Dataset name</param>
             <returns>Filename</returns>
         </member>
         <member name="M:PHRPReader.Reader.DiaNNSynFileReader.GetPHRPSynopsisFileName(System.String)">
             <summary>
             Default Synopsis file name for the given dataset
             </summary>
-            <param name="datasetName"></param>
+            <param name="datasetName">Dataset name</param>
             <returns>Filename</returns>
         </member>
         <member name="M:PHRPReader.Reader.DiaNNSynFileReader.GetPHRPResultToSeqMapFileName(System.String)">
             <summary>
             Default ResultToSeq map file name for the given dataset
             </summary>
-            <param name="datasetName"></param>
+            <param name="datasetName">Dataset name</param>
             <returns>Filename</returns>
         </member>
         <member name="M:PHRPReader.Reader.DiaNNSynFileReader.GetPHRPSeqInfoFileName(System.String)">
             <summary>
             Default SeqInfo map file name for the given dataset
             </summary>
-            <param name="datasetName"></param>
+            <param name="datasetName">Dataset name</param>
             <returns>Filename</returns>
         </member>
         <member name="M:PHRPReader.Reader.DiaNNSynFileReader.GetPHRPSeqToProteinMapFileName(System.String)">
             <summary>
             Default SeqToProtein map file name for the given dataset
             </summary>
-            <param name="datasetName"></param>
+            <param name="datasetName">Dataset name</param>
             <returns>Filename</returns>
         </member>
         <member name="M:PHRPReader.Reader.DiaNNSynFileReader.GetSearchEngineName">
@@ -6798,8 +6800,8 @@
             <summary>
             Parses the specified DIA-NN parameter file
             </summary>
-            <param name="searchEngineParamFileName"></param>
-            <param name="searchEngineParams"></param>
+            <param name="searchEngineParamFileName">DIA-NN parameter file name</param>
+            <param name="searchEngineParams">Search engine parameters</param>
             <returns>True if successful, false if an error</returns>
         </member>
         <member name="M:PHRPReader.Reader.DiaNNSynFileReader.ParsePHRPDataLine(System.String,System.Int32,PHRPReader.Data.PSM@,System.Boolean)">
@@ -6931,70 +6933,70 @@
             Compares the names in headerNames to the standard header names tracked by the dictionary returned by GetColumnHeaderNamesAndIDs
             Populates a dictionary mapping enum MaxQuantSynFileColumns to the 0-based index in columnNames
             </summary>
-            <param name="headerNames"></param>
+            <param name="headerNames">List of header names</param>
             <returns>Dictionary mapping the enum value to the column index in headerNames (0-based column index)</returns>
         </member>
         <member name="M:PHRPReader.Reader.MaxQuantSynFileReader.GetColumnNameByID(PHRPReader.Data.MaxQuantSynFileColumns)">
             <summary>
             Get the synopsis file column name associated with the given enum
             </summary>
-            <param name="column"></param>
+            <param name="column">Column enum</param>
             <returns>Column name</returns>
         </member>
         <member name="M:PHRPReader.Reader.MaxQuantSynFileReader.GetPHRPFirstHitsFileName(System.String)">
             <summary>
             Default first hits file for the given dataset
             </summary>
-            <param name="datasetName"></param>
+            <param name="datasetName">Dataset name</param>
             <returns>Filename</returns>
         </member>
         <member name="M:PHRPReader.Reader.MaxQuantSynFileReader.GetPHRPModSummaryFileName(System.String)">
             <summary>
             Default ModSummary file name for the given dataset
             </summary>
-            <param name="datasetName"></param>
+            <param name="datasetName">Dataset name</param>
             <returns>Filename</returns>
         </member>
         <member name="M:PHRPReader.Reader.MaxQuantSynFileReader.GetPHRPPepToProteinMapFileName(System.String)">
             <summary>
             Default PepToProtMap file name for the given dataset
             </summary>
-            <param name="datasetName"></param>
+            <param name="datasetName">Dataset name</param>
             <returns>Filename</returns>
         </member>
         <member name="M:PHRPReader.Reader.MaxQuantSynFileReader.GetPHRPProteinModsFileName(System.String)">
             <summary>
             Default ProteinMods file name for the given dataset
             </summary>
-            <param name="datasetName"></param>
+            <param name="datasetName">Dataset name</param>
             <returns>Filename</returns>
         </member>
         <member name="M:PHRPReader.Reader.MaxQuantSynFileReader.GetPHRPSynopsisFileName(System.String)">
             <summary>
             Default Synopsis file name for the given dataset
             </summary>
-            <param name="datasetName"></param>
+            <param name="datasetName">Dataset name</param>
             <returns>Filename</returns>
         </member>
         <member name="M:PHRPReader.Reader.MaxQuantSynFileReader.GetPHRPResultToSeqMapFileName(System.String)">
             <summary>
             Default ResultToSeq map file name for the given dataset
             </summary>
-            <param name="datasetName"></param>
+            <param name="datasetName">Dataset name</param>
             <returns>Filename</returns>
         </member>
         <member name="M:PHRPReader.Reader.MaxQuantSynFileReader.GetPHRPSeqInfoFileName(System.String)">
             <summary>
             Default SeqInfo map file name for the given dataset
             </summary>
-            <param name="datasetName"></param>
+            <param name="datasetName">Dataset name</param>
             <returns>Filename</returns>
         </member>
         <member name="M:PHRPReader.Reader.MaxQuantSynFileReader.GetPHRPSeqToProteinMapFileName(System.String)">
             <summary>
             Default SeqToProtein map file name for the given dataset
             </summary>
-            <param name="datasetName"></param>
+            <param name="datasetName">Dataset name</param>
             <returns>Filename</returns>
         </member>
         <member name="M:PHRPReader.Reader.MaxQuantSynFileReader.GetSearchEngineName">
@@ -7006,8 +7008,8 @@
             <summary>
             Parses the specified MaxQuant parameter file
             </summary>
-            <param name="searchEngineParamFileName"></param>
-            <param name="searchEngineParams"></param>
+            <param name="searchEngineParamFileName"> MaxQuant parameter file name</param>
+            <param name="searchEngineParams">Search engine parameters</param>
             <returns>True if successful, false if an error</returns>
         </member>
         <member name="M:PHRPReader.Reader.MaxQuantSynFileReader.ParsePHRPDataLine(System.String,System.Int32,PHRPReader.Data.PSM@,System.Boolean)">
@@ -7139,70 +7141,70 @@
             Compares the names in headerNames to the standard header names tracked by the dictionary returned by GetColumnHeaderNamesAndIDs
             Populates a dictionary mapping enum MSFraggerSynFileColumns to the 0-based index in columnNames
             </summary>
-            <param name="headerNames"></param>
+            <param name="headerNames">List of header names</param>
             <returns>Dictionary mapping the enum value to the column index in headerNames (0-based column index)</returns>
         </member>
         <member name="M:PHRPReader.Reader.MSFraggerSynFileReader.GetColumnNameByID(PHRPReader.Data.MSFraggerSynFileColumns)">
             <summary>
             Get the synopsis file column name associated with the given enum
             </summary>
-            <param name="column"></param>
+            <param name="column">Column enum</param>
             <returns>Column name</returns>
         </member>
         <member name="M:PHRPReader.Reader.MSFraggerSynFileReader.GetPHRPFirstHitsFileName(System.String)">
             <summary>
             Default first hits file for the given dataset
             </summary>
-            <param name="datasetName"></param>
+            <param name="datasetName">Dataset name</param>
             <returns>Filename</returns>
         </member>
         <member name="M:PHRPReader.Reader.MSFraggerSynFileReader.GetPHRPModSummaryFileName(System.String)">
             <summary>
             Default ModSummary file name for the given dataset
             </summary>
-            <param name="datasetName"></param>
+            <param name="datasetName">Dataset name</param>
             <returns>Filename</returns>
         </member>
         <member name="M:PHRPReader.Reader.MSFraggerSynFileReader.GetPHRPPepToProteinMapFileName(System.String)">
             <summary>
             Default PepToProtMap file name for the given dataset
             </summary>
-            <param name="datasetName"></param>
+            <param name="datasetName">Dataset name</param>
             <returns>Filename</returns>
         </member>
         <member name="M:PHRPReader.Reader.MSFraggerSynFileReader.GetPHRPProteinModsFileName(System.String)">
             <summary>
             Default ProteinMods file name for the given dataset
             </summary>
-            <param name="datasetName"></param>
+            <param name="datasetName">Dataset name</param>
             <returns>Filename</returns>
         </member>
         <member name="M:PHRPReader.Reader.MSFraggerSynFileReader.GetPHRPSynopsisFileName(System.String)">
             <summary>
             Default Synopsis file name for the given dataset
             </summary>
-            <param name="datasetName"></param>
+            <param name="datasetName">Dataset name</param>
             <returns>Filename</returns>
         </member>
         <member name="M:PHRPReader.Reader.MSFraggerSynFileReader.GetPHRPResultToSeqMapFileName(System.String)">
             <summary>
             Default ResultToSeq map file name for the given dataset
             </summary>
-            <param name="datasetName"></param>
+            <param name="datasetName">Dataset name</param>
             <returns>Filename</returns>
         </member>
         <member name="M:PHRPReader.Reader.MSFraggerSynFileReader.GetPHRPSeqInfoFileName(System.String)">
             <summary>
             Default SeqInfo map file name for the given dataset
             </summary>
-            <param name="datasetName"></param>
+            <param name="datasetName">Dataset name</param>
             <returns>Filename</returns>
         </member>
         <member name="M:PHRPReader.Reader.MSFraggerSynFileReader.GetPHRPSeqToProteinMapFileName(System.String)">
             <summary>
             Default SeqToProtein map file name for the given dataset
             </summary>
-            <param name="datasetName"></param>
+            <param name="datasetName">Dataset name</param>
             <returns>Filename</returns>
         </member>
         <member name="M:PHRPReader.Reader.MSFraggerSynFileReader.GetPrecursorSearchTolerances(PHRPReader.Data.SearchEngineParameters,System.Double@,System.Double@,System.Boolean@,System.Boolean@)">
@@ -7225,8 +7227,8 @@
             <summary>
             Parses the specified MSFragger parameter file
             </summary>
-            <param name="searchEngineParamFileName"></param>
-            <param name="searchEngineParams"></param>
+            <param name="searchEngineParamFileName">MSFragger parameter file name</param>
+            <param name="searchEngineParams">Search engine parameters</param>
             <returns>True if successful, false if an error</returns>
         </member>
         <member name="M:PHRPReader.Reader.MSFraggerSynFileReader.ParsePHRPDataLine(System.String,System.Int32,PHRPReader.Data.PSM@,System.Boolean)">
@@ -7291,14 +7293,14 @@
             Compares the names in headerNames to the standard header names tracked by the dictionary returned by GetColumnHeaderNamesAndIDs
             Populates a dictionary mapping enum PrecursorInfoFileColumns to the 0-based index in columnNames
             </summary>
-            <param name="headerNames"></param>
+            <param name="headerNames">List of header names</param>
             <returns>Dictionary mapping the enum value to the column index in headerNames (0-based column index)</returns>
         </member>
         <member name="M:PHRPReader.Reader.PrecursorInfoFileReader.GetColumnNameByID(PHRPReader.Data.PrecursorInfoFileColumns)">
             <summary>
             Get the column name associated with the given enum
             </summary>
-            <param name="column"></param>
+            <param name="column">Column enum</param>
             <returns>Column name</returns>
         </member>
         <member name="M:PHRPReader.Reader.PrecursorInfoFileReader.ReadPrecursorInfoFile(System.String)">
@@ -7352,8 +7354,8 @@
             <summary>
             Examine the column headers to populate mReporterIonHeaders
             </summary>
-            <param name="columnNames"></param>
-            <param name="reporterIonMapping"></param>
+            <param name="columnNames">List of column names</param>
+            <param name="reporterIonMapping">Reporter ion mapping</param>
         </member>
         <member name="M:PHRPReader.Reader.ReporterIonsFileReader.DefineColumnHeaders">
             <summary>
@@ -7371,14 +7373,14 @@
             Compares the names in headerNames to the standard header names tracked by the dictionary returned by GetColumnHeaderNamesAndIDs
             Populates a dictionary mapping enum ReporterIonsFileColumns to the 0-based index in columnNames
             </summary>
-            <param name="headerNames"></param>
+            <param name="headerNames">List of header names</param>
             <returns>Dictionary mapping the enum value to the column index in headerNames (0-based column index)</returns>
         </member>
         <member name="M:PHRPReader.Reader.ReporterIonsFileReader.GetColumnNameByID(PHRPReader.Data.ReporterIonsFileColumns)">
             <summary>
             Get the column name associated with the given enum
             </summary>
-            <param name="column"></param>
+            <param name="column">Column enum</param>
             <returns>Column name</returns>
         </member>
         <member name="M:PHRPReader.Reader.ReporterIonsFileReader.ReadReporterIonData(System.String)">
@@ -7430,14 +7432,14 @@
             Compares the names in headerNames to the standard header names tracked by the dictionary returned by GetColumnHeaderNamesAndIDs
             Populates a dictionary mapping enum SICStatsFileColumns to the 0-based index in columnNames
             </summary>
-            <param name="headerNames"></param>
+            <param name="headerNames">List of header names</param>
             <returns>Dictionary mapping the enum value to the column index in headerNames (0-based column index)</returns>
         </member>
         <member name="M:PHRPReader.Reader.SICStatsReader.GetColumnNameByID(PHRPReader.Data.SICStatsFileColumns)">
             <summary>
             Get the column name associated with the given enum
             </summary>
-            <param name="column"></param>
+            <param name="column">Column enum</param>
             <returns>Column name</returns>
         </member>
         <member name="M:PHRPReader.Reader.SICStatsReader.ReadSICStatsData(System.String)">
@@ -7544,7 +7546,7 @@
             <summary>
             Determines the precursor mass tolerance
             </summary>
-            <param name="searchEngineParams"></param>
+            <param name="searchEngineParams">Search engine parameters</param>
             <param name="tolerancePPM">Precursor mass tolerance, in ppm</param>
             <returns>Precursor tolerance, in Da</returns>
         </member>
@@ -7565,70 +7567,70 @@
             Compares the names in headerNames to the standard header names tracked by the dictionary returned by GetColumnHeaderNamesAndIDs
             Populates a dictionary mapping enum InspectSynFileColumns to the 0-based index in columnNames
             </summary>
-            <param name="headerNames"></param>
+            <param name="headerNames">List of header names</param>
             <returns>Dictionary mapping the enum value to the column index in headerNames (0-based column index)</returns>
         </member>
         <member name="M:PHRPReader.Reader.InspectSynFileReader.GetColumnNameByID(PHRPReader.Data.InspectSynFileColumns)">
             <summary>
             Get the synopsis file column name associated with the given enum
             </summary>
-            <param name="column"></param>
+            <param name="column">Column enum</param>
             <returns>Column name</returns>
         </member>
         <member name="M:PHRPReader.Reader.InspectSynFileReader.GetPHRPFirstHitsFileName(System.String)">
             <summary>
             Default first hits file for the given dataset
             </summary>
-            <param name="datasetName"></param>
+            <param name="datasetName">Dataset name</param>
             <returns>Filename</returns>
         </member>
         <member name="M:PHRPReader.Reader.InspectSynFileReader.GetPHRPModSummaryFileName(System.String)">
             <summary>
             Default ModSummary file name for the given dataset
             </summary>
-            <param name="datasetName"></param>
+            <param name="datasetName">Dataset name</param>
             <returns>Filename</returns>
         </member>
         <member name="M:PHRPReader.Reader.InspectSynFileReader.GetPHRPPepToProteinMapFileName(System.String)">
             <summary>
             Default PepToProtMap file name for the given dataset
             </summary>
-            <param name="datasetName"></param>
+            <param name="datasetName">Dataset name</param>
             <returns>Filename</returns>
         </member>
         <member name="M:PHRPReader.Reader.InspectSynFileReader.GetPHRPProteinModsFileName(System.String)">
             <summary>
             Default ProteinMods file name for the given dataset
             </summary>
-            <param name="datasetName"></param>
+            <param name="datasetName">Dataset name</param>
             <returns>Filename</returns>
         </member>
         <member name="M:PHRPReader.Reader.InspectSynFileReader.GetPHRPSynopsisFileName(System.String)">
             <summary>
             Default Synopsis file name for the given dataset
             </summary>
-            <param name="datasetName"></param>
+            <param name="datasetName">Dataset name</param>
             <returns>Filename</returns>
         </member>
         <member name="M:PHRPReader.Reader.InspectSynFileReader.GetPHRPResultToSeqMapFileName(System.String)">
             <summary>
             Default ResultToSeq map file name for the given dataset
             </summary>
-            <param name="datasetName"></param>
+            <param name="datasetName">Dataset name</param>
             <returns>Filename</returns>
         </member>
         <member name="M:PHRPReader.Reader.InspectSynFileReader.GetPHRPSeqInfoFileName(System.String)">
             <summary>
             Default SeqInfo map file name for the given dataset
             </summary>
-            <param name="datasetName"></param>
+            <param name="datasetName">Dataset name</param>
             <returns>Filename</returns>
         </member>
         <member name="M:PHRPReader.Reader.InspectSynFileReader.GetPHRPSeqToProteinMapFileName(System.String)">
             <summary>
             Default SeqToProtein map file name for the given dataset
             </summary>
-            <param name="datasetName"></param>
+            <param name="datasetName">Dataset name</param>
             <returns>Filename</returns>
         </member>
         <member name="M:PHRPReader.Reader.InspectSynFileReader.GetSearchEngineName">
@@ -7640,8 +7642,8 @@
             <summary>
             Parses the specified InSpecT parameter file
             </summary>
-            <param name="searchEngineParamFileName"></param>
-            <param name="searchEngineParams"></param>
+            <param name="searchEngineParamFileName">InSpecT parameter file name</param>
+            <param name="searchEngineParams">Search engine parameters</param>
             <returns>True if successful, false if an error</returns>
         </member>
         <member name="M:PHRPReader.Reader.InspectSynFileReader.ParsePHRPDataLine(System.String,System.Int32,PHRPReader.Data.PSM@,System.Boolean)">
@@ -7760,7 +7762,7 @@
             <summary>
             Determines the precursor mass tolerance
             </summary>
-            <param name="searchEngineParams"></param>
+            <param name="searchEngineParams">Search engine parameters</param>
             <param name="tolerancePPM">Precursor mass tolerance, in ppm</param>
             <returns>Precursor tolerance, in Da</returns>
         </member>
@@ -7781,70 +7783,70 @@
             Compares the names in headerNames to the standard header names tracked by the dictionary returned by GetColumnHeaderNamesAndIDs
             Populates a dictionary mapping enum MODaSynFileColumns to the 0-based index in columnNames
             </summary>
-            <param name="headerNames"></param>
+            <param name="headerNames">List of header names</param>
             <returns>Dictionary mapping the enum value to the column index in headerNames (0-based column index)</returns>
         </member>
         <member name="M:PHRPReader.Reader.MODaSynFileReader.GetColumnNameByID(PHRPReader.Data.MODaSynFileColumns)">
             <summary>
             Get the synopsis file column name associated with the given enum
             </summary>
-            <param name="column"></param>
+            <param name="column">Column enum</param>
             <returns>Column name</returns>
         </member>
         <member name="M:PHRPReader.Reader.MODaSynFileReader.GetPHRPFirstHitsFileName(System.String)">
             <summary>
             Default first hits file for the given dataset
             </summary>
-            <param name="datasetName"></param>
+            <param name="datasetName">Dataset name</param>
             <returns>Filename</returns>
         </member>
         <member name="M:PHRPReader.Reader.MODaSynFileReader.GetPHRPModSummaryFileName(System.String)">
             <summary>
             Default ModSummary file name for the given dataset
             </summary>
-            <param name="datasetName"></param>
+            <param name="datasetName">Dataset name</param>
             <returns>Filename</returns>
         </member>
         <member name="M:PHRPReader.Reader.MODaSynFileReader.GetPHRPPepToProteinMapFileName(System.String)">
             <summary>
             Default PepToProtMap file name for the given dataset
             </summary>
-            <param name="datasetName"></param>
+            <param name="datasetName">Dataset name</param>
             <returns>Filename</returns>
         </member>
         <member name="M:PHRPReader.Reader.MODaSynFileReader.GetPHRPProteinModsFileName(System.String)">
             <summary>
             Default ProteinMods file name for the given dataset
             </summary>
-            <param name="datasetName"></param>
+            <param name="datasetName">Dataset name</param>
             <returns>Filename</returns>
         </member>
         <member name="M:PHRPReader.Reader.MODaSynFileReader.GetPHRPSynopsisFileName(System.String)">
             <summary>
             Default Synopsis file name for the given dataset
             </summary>
-            <param name="datasetName"></param>
+            <param name="datasetName">Dataset name</param>
             <returns>Filename</returns>
         </member>
         <member name="M:PHRPReader.Reader.MODaSynFileReader.GetPHRPResultToSeqMapFileName(System.String)">
             <summary>
             Default ResultToSeq map file name for the given dataset
             </summary>
-            <param name="datasetName"></param>
+            <param name="datasetName">Dataset name</param>
             <returns>Filename</returns>
         </member>
         <member name="M:PHRPReader.Reader.MODaSynFileReader.GetPHRPSeqInfoFileName(System.String)">
             <summary>
             Default SeqInfo map file name for the given dataset
             </summary>
-            <param name="datasetName"></param>
+            <param name="datasetName">Dataset name</param>
             <returns>Filename</returns>
         </member>
         <member name="M:PHRPReader.Reader.MODaSynFileReader.GetPHRPSeqToProteinMapFileName(System.String)">
             <summary>
             Default SeqToProtein map file name for the given dataset
             </summary>
-            <param name="datasetName"></param>
+            <param name="datasetName">Dataset name</param>
             <returns>Filename</returns>
         </member>
         <member name="M:PHRPReader.Reader.MODaSynFileReader.GetSearchEngineName">
@@ -7856,8 +7858,8 @@
             <summary>
             Parses the specified MODa parameter file
             </summary>
-            <param name="searchEngineParamFileName"></param>
-            <param name="searchEngineParams"></param>
+            <param name="searchEngineParamFileName">MODa parameter file name</param>
+            <param name="searchEngineParams">Search engine parameters</param>
             <returns>True if successful, false if an error</returns>
         </member>
         <member name="M:PHRPReader.Reader.MODaSynFileReader.ParsePHRPDataLine(System.String,System.Int32,PHRPReader.Data.PSM@,System.Boolean)">
@@ -7989,70 +7991,70 @@
             Compares the names in headerNames to the standard header names tracked by the dictionary returned by GetColumnHeaderNamesAndIDs
             Populates a dictionary mapping enum MODPlusSynFileColumns to the 0-based index in columnNames
             </summary>
-            <param name="headerNames"></param>
+            <param name="headerNames">List of header names</param>
             <returns>Dictionary mapping the enum value to the column index in headerNames (0-based column index)</returns>
         </member>
         <member name="M:PHRPReader.Reader.MODPlusSynFileReader.GetColumnNameByID(PHRPReader.Data.MODPlusSynFileColumns)">
             <summary>
             Get the synopsis file column name associated with the given enum
             </summary>
-            <param name="column"></param>
+            <param name="column">Column enum</param>
             <returns>Column name</returns>
         </member>
         <member name="M:PHRPReader.Reader.MODPlusSynFileReader.GetPHRPFirstHitsFileName(System.String)">
             <summary>
             Default first hits file for the given dataset
             </summary>
-            <param name="datasetName"></param>
+            <param name="datasetName">Dataset name</param>
             <returns>Filename</returns>
         </member>
         <member name="M:PHRPReader.Reader.MODPlusSynFileReader.GetPHRPModSummaryFileName(System.String)">
             <summary>
             Default ModSummary file name for the given dataset
             </summary>
-            <param name="datasetName"></param>
+            <param name="datasetName">Dataset name</param>
             <returns>Filename</returns>
         </member>
         <member name="M:PHRPReader.Reader.MODPlusSynFileReader.GetPHRPPepToProteinMapFileName(System.String)">
             <summary>
             Default PepToProtMap file name for the given dataset
             </summary>
-            <param name="datasetName"></param>
+            <param name="datasetName">Dataset name</param>
             <returns>Filename</returns>
         </member>
         <member name="M:PHRPReader.Reader.MODPlusSynFileReader.GetPHRPProteinModsFileName(System.String)">
             <summary>
             Default ProteinMods file name for the given dataset
             </summary>
-            <param name="datasetName"></param>
+            <param name="datasetName">Dataset name</param>
             <returns>Filename</returns>
         </member>
         <member name="M:PHRPReader.Reader.MODPlusSynFileReader.GetPHRPSynopsisFileName(System.String)">
             <summary>
             Default Synopsis file name for the given dataset
             </summary>
-            <param name="datasetName"></param>
+            <param name="datasetName">Dataset name</param>
             <returns>Filename</returns>
         </member>
         <member name="M:PHRPReader.Reader.MODPlusSynFileReader.GetPHRPResultToSeqMapFileName(System.String)">
             <summary>
             Default ResultToSeq map file name for the given dataset
             </summary>
-            <param name="datasetName"></param>
+            <param name="datasetName">Dataset name</param>
             <returns>Filename</returns>
         </member>
         <member name="M:PHRPReader.Reader.MODPlusSynFileReader.GetPHRPSeqInfoFileName(System.String)">
             <summary>
             Default SeqInfo map file name for the given dataset
             </summary>
-            <param name="datasetName"></param>
+            <param name="datasetName">Dataset name</param>
             <returns>Filename</returns>
         </member>
         <member name="M:PHRPReader.Reader.MODPlusSynFileReader.GetPHRPSeqToProteinMapFileName(System.String)">
             <summary>
             Default SeqToProtein map file name for the given dataset
             </summary>
-            <param name="datasetName"></param>
+            <param name="datasetName">Dataset name</param>
             <returns>Filename</returns>
         </member>
         <member name="M:PHRPReader.Reader.MODPlusSynFileReader.GetSearchEngineName">
@@ -8064,8 +8066,8 @@
             <summary>
             Parses the specified MODp parameter file
             </summary>
-            <param name="searchEngineParamFileName"></param>
-            <param name="searchEngineParams"></param>
+            <param name="searchEngineParamFileName">MODp parameter file name</param>
+            <param name="searchEngineParams">Search engine parameters</param>
             <returns>True if successful, false if an error</returns>
         </member>
         <member name="M:PHRPReader.Reader.MODPlusSynFileReader.ParsePHRPDataLine(System.String,System.Int32,PHRPReader.Data.PSM@,System.Boolean)">
@@ -8176,7 +8178,7 @@
             <summary>
             Determines the precursor mass tolerance
             </summary>
-            <param name="searchEngineParams"></param>
+            <param name="searchEngineParams">Search engine parameters</param>
             <param name="tolerancePPM">Precursor mass tolerance, in ppm</param>
             <returns>Precursor tolerance, in Da</returns>
         </member>
@@ -8197,70 +8199,70 @@
             Compares the names in headerNames to the standard header names tracked by the dictionary returned by GetColumnHeaderNamesAndIDs
             Populates a dictionary mapping enum MSAlignSynFileColumns to the 0-based index in columnNames
             </summary>
-            <param name="headerNames"></param>
+            <param name="headerNames">List of header names</param>
             <returns>Dictionary mapping the enum value to the column index in headerNames (0-based column index)</returns>
         </member>
         <member name="M:PHRPReader.Reader.MSAlignSynFileReader.GetColumnNameByID(PHRPReader.Data.MSAlignSynFileColumns)">
             <summary>
             Get the synopsis file column name associated with the given enum
             </summary>
-            <param name="column"></param>
+            <param name="column">Column enum</param>
             <returns>Column name</returns>
         </member>
         <member name="M:PHRPReader.Reader.MSAlignSynFileReader.GetPHRPFirstHitsFileName(System.String)">
             <summary>
             Default first hits file for the given dataset
             </summary>
-            <param name="datasetName"></param>
+            <param name="datasetName">Dataset name</param>
             <returns>Filename</returns>
         </member>
         <member name="M:PHRPReader.Reader.MSAlignSynFileReader.GetPHRPModSummaryFileName(System.String)">
             <summary>
             Default ModSummary file name for the given dataset
             </summary>
-            <param name="datasetName"></param>
+            <param name="datasetName">Dataset name</param>
             <returns>Filename</returns>
         </member>
         <member name="M:PHRPReader.Reader.MSAlignSynFileReader.GetPHRPPepToProteinMapFileName(System.String)">
             <summary>
             Default PepToProtMap file name for the given dataset
             </summary>
-            <param name="datasetName"></param>
+            <param name="datasetName">Dataset name</param>
             <returns>Filename</returns>
         </member>
         <member name="M:PHRPReader.Reader.MSAlignSynFileReader.GetPHRPProteinModsFileName(System.String)">
             <summary>
             Default ProteinMods file name for the given dataset
             </summary>
-            <param name="datasetName"></param>
+            <param name="datasetName">Dataset name</param>
             <returns>Filename</returns>
         </member>
         <member name="M:PHRPReader.Reader.MSAlignSynFileReader.GetPHRPSynopsisFileName(System.String)">
             <summary>
             Default Synopsis file name for the given dataset
             </summary>
-            <param name="datasetName"></param>
+            <param name="datasetName">Dataset name</param>
             <returns>Filename</returns>
         </member>
         <member name="M:PHRPReader.Reader.MSAlignSynFileReader.GetPHRPResultToSeqMapFileName(System.String)">
             <summary>
             Default ResultToSeq map file name for the given dataset
             </summary>
-            <param name="datasetName"></param>
+            <param name="datasetName">Dataset name</param>
             <returns>Filename</returns>
         </member>
         <member name="M:PHRPReader.Reader.MSAlignSynFileReader.GetPHRPSeqInfoFileName(System.String)">
             <summary>
             Default SeqInfo map file name for the given dataset
             </summary>
-            <param name="datasetName"></param>
+            <param name="datasetName">Dataset name</param>
             <returns>Filename</returns>
         </member>
         <member name="M:PHRPReader.Reader.MSAlignSynFileReader.GetPHRPSeqToProteinMapFileName(System.String)">
             <summary>
             Default SeqToProtein map file name for the given dataset
             </summary>
-            <param name="datasetName"></param>
+            <param name="datasetName">Dataset name</param>
             <returns>Filename</returns>
         </member>
         <member name="M:PHRPReader.Reader.MSAlignSynFileReader.GetSearchEngineName">
@@ -8272,8 +8274,8 @@
             <summary>
             Parses the specified MSAlign parameter file
             </summary>
-            <param name="searchEngineParamFileName"></param>
-            <param name="searchEngineParams"></param>
+            <param name="searchEngineParamFileName">MSAlign parameter file name</param>
+            <param name="searchEngineParams">Search engine parameters</param>
             <returns>True if successful, false if an error</returns>
         </member>
         <member name="M:PHRPReader.Reader.MSAlignSynFileReader.ParsePHRPDataLine(System.String,System.Int32,PHRPReader.Data.PSM@,System.Boolean)">
@@ -8469,9 +8471,9 @@
             <summary>
             Determines the precursor mass tolerance for either MS-GF+, MSPathFinder, or TopPIC
             </summary>
-            <param name="searchEngineParams"></param>
+            <param name="searchEngineParams">Search engine parameters</param>
             <param name="tolerancePPM">Precursor mass tolerance, in ppm</param>
-            <param name="resultType"></param>
+            <param name="resultType">PHRP result type</param>
             <returns>Precursor tolerance, in Da</returns>
         </member>
         <member name="M:PHRPReader.Reader.MSGFPlusSynFileReader.GetCustomChargeCarrierMass(PHRPReader.Data.SearchEngineParameters,System.Double@)">
@@ -8481,8 +8483,8 @@
             Otherwise return false
             </summary>
             <remarks>This method is used by PHRPMassErrorValidator in the Analysis Manager</remarks>
-            <param name="searchEngineParams"></param>
-            <param name="chargeCarrierMass"></param>
+            <param name="searchEngineParams">Search engine parameters</param>
+            <param name="chargeCarrierMass">Charge carrier mass</param>
             <returns>True if successful, false if an error</returns>
         </member>
         <member name="M:PHRPReader.Reader.MSGFPlusSynFileReader.GetColumnHeaderNames">
@@ -8496,8 +8498,8 @@
             Header names and enums for the PHRP synopsis file for this tool
             </summary>
             <remarks>This includes headers for synopsis files from both MSGFDB and MS-GF+</remarks>
-            <param name="includeLegacyNames"></param>
-            <param name="includeExtraColumns"></param>
+            <param name="includeLegacyNames">When true, include legacy column names</param>
+            <param name="includeExtraColumns">When true, include IMS_Scan and IMS_Drift_Time columns</param>
             <returns>Dictionary of header names and enum values</returns>
         </member>
         <member name="M:PHRPReader.Reader.MSGFPlusSynFileReader.GetColumnMapFromHeaderLine(System.Collections.Generic.List{System.String})">
@@ -8505,77 +8507,77 @@
             Compares the names in headerNames to the standard header names tracked by the dictionary returned by GetColumnHeaderNamesAndIDs
             Populates a dictionary mapping enum MSGFPlusSynFileColumns to the 0-based index in columnNames
             </summary>
-            <param name="headerNames"></param>
+            <param name="headerNames">List of header names</param>
             <returns>Dictionary mapping the enum value to the column index in headerNames (0-based column index)</returns>
         </member>
         <member name="M:PHRPReader.Reader.MSGFPlusSynFileReader.GetColumnNameByID(PHRPReader.Data.MSGFPlusSynFileColumns)">
             <summary>
             Get the synopsis file column name associated with the given enum
             </summary>
-            <param name="column"></param>
+            <param name="column">Column enum</param>
             <returns>Column name</returns>
         </member>
         <member name="M:PHRPReader.Reader.MSGFPlusSynFileReader.GetMSGFDBColumnNameByID(PHRPReader.Data.MSGFDBSynFileColumns)">
             <summary>
             Get the MSGFDB column name associated with the given column (for legacy tool MSGFDB, not MS-GF+)
             </summary>
-            <param name="column"></param>
+            <param name="column">Column enum</param>
             <returns>Column name</returns>
         </member>
         <member name="M:PHRPReader.Reader.MSGFPlusSynFileReader.GetPHRPFirstHitsFileName(System.String)">
             <summary>
             Default first hits file for the given dataset
             </summary>
-            <param name="datasetName"></param>
+            <param name="datasetName">Dataset name</param>
             <returns>Filename</returns>
         </member>
         <member name="M:PHRPReader.Reader.MSGFPlusSynFileReader.GetPHRPModSummaryFileName(System.String)">
             <summary>
             Default ModSummary file name for the given dataset
             </summary>
-            <param name="datasetName"></param>
+            <param name="datasetName">Dataset name</param>
             <returns>Filename</returns>
         </member>
         <member name="M:PHRPReader.Reader.MSGFPlusSynFileReader.GetPHRPPepToProteinMapFileName(System.String)">
             <summary>
             Default PepToProtMap file name for the given dataset
             </summary>
-            <param name="datasetName"></param>
+            <param name="datasetName">Dataset name</param>
             <returns>Filename</returns>
         </member>
         <member name="M:PHRPReader.Reader.MSGFPlusSynFileReader.GetPHRPProteinModsFileName(System.String)">
             <summary>
             Default ProteinMods file name for the given dataset
             </summary>
-            <param name="datasetName"></param>
+            <param name="datasetName">Dataset name</param>
             <returns>Filename</returns>
         </member>
         <member name="M:PHRPReader.Reader.MSGFPlusSynFileReader.GetPHRPSynopsisFileName(System.String)">
             <summary>
             Default Synopsis file name for the given dataset
             </summary>
-            <param name="datasetName"></param>
+            <param name="datasetName">Dataset name</param>
             <returns>Filename</returns>
         </member>
         <member name="M:PHRPReader.Reader.MSGFPlusSynFileReader.GetPHRPResultToSeqMapFileName(System.String)">
             <summary>
             Default ResultToSeq map file name for the given dataset
             </summary>
-            <param name="datasetName"></param>
+            <param name="datasetName">Dataset name</param>
             <returns>Filename</returns>
         </member>
         <member name="M:PHRPReader.Reader.MSGFPlusSynFileReader.GetPHRPSeqInfoFileName(System.String)">
             <summary>
             Default SeqInfo map file name for the given dataset
             </summary>
-            <param name="datasetName"></param>
+            <param name="datasetName">Dataset name</param>
             <returns>Filename</returns>
         </member>
         <member name="M:PHRPReader.Reader.MSGFPlusSynFileReader.GetPHRPSeqToProteinMapFileName(System.String)">
             <summary>
             Default SeqToProtein map file name for the given dataset
             </summary>
-            <param name="datasetName"></param>
+            <param name="datasetName">Dataset name</param>
             <returns>Filename</returns>
         </member>
         <member name="M:PHRPReader.Reader.MSGFPlusSynFileReader.GetSearchEngineName">
@@ -8587,8 +8589,8 @@
             <summary>
             Parses the specified MS-GF+ (previously MSGFDB) parameter file
             </summary>
-            <param name="searchEngineParamFilePath"></param>
-            <param name="searchEngineParams"></param>
+            <param name="searchEngineParamFilePath">MS-GF+ parameter file name</param>
+            <param name="searchEngineParams">Search engine parameters</param>
             <returns>True if successful, false if an error</returns>
         </member>
         <member name="M:PHRPReader.Reader.MSGFPlusSynFileReader.ParsePHRPDataLine(System.String,System.Int32,PHRPReader.Data.PSM@,System.Boolean)">
@@ -8607,10 +8609,10 @@
             Look for custom amino acid definitions in the MS-GF+ parameter file
             If any are found, update the amino acid mass values in the PeptideMassCalculator instance
             </summary>
-            <param name="searchEngineParamFilePath"></param>
-            <param name="modFileProcessor"></param>
-            <param name="peptideMassCalculator"></param>
-            <param name="errorMessage"></param>
+            <param name="searchEngineParamFilePath">MS-GF+ parameter file path</param>
+            <param name="modFileProcessor">Modification parser</param>
+            <param name="peptideMassCalculator">Peptide mass calculator</param>
+            <param name="errorMessage">Output: error message</param>
             <returns>True if successful, false if an error</returns>
         </member>
         <member name="T:PHRPReader.Reader.MSGFResultsReader">
@@ -8655,14 +8657,14 @@
             Compares the names in headerNames to the standard header names tracked by the dictionary returned by GetColumnHeaderNamesAndIDs
             Populates a dictionary mapping enum MSGFFileColumns to the 0-based index in columnNames
             </summary>
-            <param name="headerNames"></param>
+            <param name="headerNames">List of header names</param>
             <returns>Dictionary mapping the enum value to the column index in headerNames (0-based column index)</returns>
         </member>
         <member name="M:PHRPReader.Reader.MSGFResultsReader.GetColumnNameByID(PHRPReader.Data.MSGFFileColumns)">
             <summary>
             Get the column name associated with the given enum
             </summary>
-            <param name="column"></param>
+            <param name="column">Column enum</param>
             <returns>Column name</returns>
         </member>
         <member name="M:PHRPReader.Reader.MSGFResultsReader.ReadMSGFData(System.String)">
@@ -8790,70 +8792,70 @@
             Compares the names in headerNames to the standard header names tracked by the dictionary returned by GetColumnHeaderNamesAndIDs
             Populates a dictionary mapping enum MSPathFinderSynFileColumns to the 0-based index in columnNames
             </summary>
-            <param name="headerNames"></param>
+            <param name="headerNames">List of header names</param>
             <returns>Dictionary mapping the enum value to the column index in headerNames (0-based column index)</returns>
         </member>
         <member name="M:PHRPReader.Reader.MSPathFinderSynFileReader.GetColumnNameByID(PHRPReader.Data.MSPathFinderSynFileColumns)">
             <summary>
             Get the synopsis file column name associated with the given enum
             </summary>
-            <param name="column"></param>
+            <param name="column">Column enum</param>
             <returns>Column name</returns>
         </member>
         <member name="M:PHRPReader.Reader.MSPathFinderSynFileReader.GetPHRPFirstHitsFileName(System.String)">
             <summary>
             Default first hits file for the given dataset
             </summary>
-            <param name="datasetName"></param>
+            <param name="datasetName">Dataset name</param>
             <returns>Empty string, since MSPathFinder does not have a first-hits file; just the _syn.txt file</returns>
         </member>
         <member name="M:PHRPReader.Reader.MSPathFinderSynFileReader.GetPHRPModSummaryFileName(System.String)">
             <summary>
             Default ModSummary file name for the given dataset
             </summary>
-            <param name="datasetName"></param>
+            <param name="datasetName">Dataset name</param>
             <returns>Filename</returns>
         </member>
         <member name="M:PHRPReader.Reader.MSPathFinderSynFileReader.GetPHRPPepToProteinMapFileName(System.String)">
             <summary>
             Default PepToProtMap file name for the given dataset
             </summary>
-            <param name="datasetName"></param>
+            <param name="datasetName">Dataset name</param>
             <returns>Filename</returns>
         </member>
         <member name="M:PHRPReader.Reader.MSPathFinderSynFileReader.GetPHRPProteinModsFileName(System.String)">
             <summary>
             Default ProteinMods file name for the given dataset
             </summary>
-            <param name="datasetName"></param>
+            <param name="datasetName">Dataset name</param>
             <returns>Filename</returns>
         </member>
         <member name="M:PHRPReader.Reader.MSPathFinderSynFileReader.GetPHRPSynopsisFileName(System.String)">
             <summary>
             Default Synopsis file name for the given dataset
             </summary>
-            <param name="datasetName"></param>
+            <param name="datasetName">Dataset name</param>
             <returns>Filename</returns>
         </member>
         <member name="M:PHRPReader.Reader.MSPathFinderSynFileReader.GetPHRPResultToSeqMapFileName(System.String)">
             <summary>
             Default ResultToSeq map file name for the given dataset
             </summary>
-            <param name="datasetName"></param>
+            <param name="datasetName">Dataset name</param>
             <returns>Filename</returns>
         </member>
         <member name="M:PHRPReader.Reader.MSPathFinderSynFileReader.GetPHRPSeqInfoFileName(System.String)">
             <summary>
             Default SeqInfo map file name for the given dataset
             </summary>
-            <param name="datasetName"></param>
+            <param name="datasetName">Dataset name</param>
             <returns>Filename</returns>
         </member>
         <member name="M:PHRPReader.Reader.MSPathFinderSynFileReader.GetPHRPSeqToProteinMapFileName(System.String)">
             <summary>
             Default SeqToProtein map file name for the given dataset
             </summary>
-            <param name="datasetName"></param>
+            <param name="datasetName">Dataset name</param>
             <returns>Filename</returns>
         </member>
         <member name="M:PHRPReader.Reader.MSPathFinderSynFileReader.GetSearchEngineName">
@@ -8865,8 +8867,8 @@
             <summary>
             Parses the specified MSPathFinder parameter file
             </summary>
-            <param name="searchEngineParamFileName"></param>
-            <param name="searchEngineParams"></param>
+            <param name="searchEngineParamFileName">MSPathFinder parameter file name</param>
+            <param name="searchEngineParams">Search engine parameters</param>
             <returns>True if successful, false if an error</returns>
         </member>
         <member name="M:PHRPReader.Reader.MSPathFinderSynFileReader.ParsePHRPDataLine(System.String,System.Int32,PHRPReader.Data.PSM@,System.Boolean)">
@@ -8937,13 +8939,13 @@
             <summary>
             Constructor
             </summary>
-            <param name="modSummaryFilePath"></param>
+            <param name="modSummaryFilePath">Modification summary file path</param>
         </member>
         <member name="M:PHRPReader.Reader.PHRPModSummaryReader.GetModificationMassAsText(System.String)">
             <summary>
             Returns the mass value associated with the given mass correction tag
             </summary>
-            <param name="massCorrectionTag"></param>
+            <param name="massCorrectionTag">Mass correction tag</param>
         </member>
         <member name="T:PHRPReader.Reader.SynFileReaderBaseClass">
             <summary>
@@ -9144,7 +9146,7 @@
             </remarks>
             <param name="datasetName">Dataset name</param>
             <param name="inputFilePath">Input file path</param>
-            <param name="peptideHitResultType"></param>
+            <param name="peptideHitResultType">PHRP results type</param>
             <param name="startupOptions">Startup Options, in particular LoadModsAndSeqInfo and MaxProteinsPerPSM</param>
         </member>
         <member name="M:PHRPReader.Reader.SynFileReaderBaseClass.InitializeReader(System.String,System.String,PHRPReader.PeptideHitResultTypes,PHRPReader.StartupOptions)">
@@ -9237,9 +9239,9 @@
             <summary>
             Add a score to a PSM
             </summary>
-            <param name="psm"></param>
-            <param name="columns"></param>
-            <param name="scoreColumnName"></param>
+            <param name="psm">PSM</param>
+            <param name="columns">column data</param>
+            <param name="scoreColumnName">Score column name</param>
         </member>
         <member name="M:PHRPReader.Reader.SynFileReaderBaseClass.ClearErrors">
             <summary>
@@ -9261,14 +9263,14 @@
             Look for ambiguous mods in sequenceWithMods
             For example, -30.09 in I.(TIIQ)[-30.09]APQGVSLQYTSR.Q
             </summary>
-            <param name="sequenceWithMods"></param>
+            <param name="sequenceWithMods">Peptide sequence, with modification masses</param>
             <returns>List of ambiguous mods, where the keys are the start residues and the values are the ambiguous mod info</returns>
         </member>
         <member name="M:PHRPReader.Reader.SynFileReaderBaseClass.FinalizePSM(PHRPReader.Data.PSM)">
             <summary>
             Finalize the PSM by updating the clean sequence, updating mod info, and updating the sequence info
             </summary>
-            <param name="psm"></param>
+            <param name="psm">PSM</param>
         </member>
         <member name="M:PHRPReader.Reader.SynFileReaderBaseClass.GetColumnMapFromHeaderLine``1(System.Collections.Generic.List{System.String},System.Collections.Generic.SortedDictionary{System.String,``0})">
             <summary>
@@ -9283,14 +9285,14 @@
             <summary>
             Report an exception as an error
             </summary>
-            <param name="baseMessage"></param>
-            <param name="ex"></param>
+            <param name="baseMessage">Base message</param>
+            <param name="ex">Exception</param>
         </member>
         <member name="M:PHRPReader.Reader.SynFileReaderBaseClass.IsNumber(System.String)">
             <summary>
             Examines the string to determine if it is numeric
             </summary>
-            <param name="data"></param>
+            <param name="data">Value to parse</param>
             <returns>True if a number, otherwise false</returns>
         </member>
         <member name="M:PHRPReader.Reader.SynFileReaderBaseClass.LoadModSummary">
@@ -9305,22 +9307,22 @@
             Rounds the number to the specified number of digits, trimming off trailing zeros
             Example output: +79.9663 or -17.016
             </summary>
-            <param name="value"></param>
-            <param name="digitsOfPrecision"></param>
+            <param name="value">Number to format</param>
+            <param name="digitsOfPrecision">Digits of precision</param>
             <returns>Formatted number</returns>
         </member>
         <member name="M:PHRPReader.Reader.SynFileReaderBaseClass.ParseColumnHeaders(System.String[])">
             <summary>
             Parse the column names in splitLine and update the local column header mapping
             </summary>
-            <param name="splitLine"></param>
+            <param name="splitLine">Array of column names</param>
         </member>
         <member name="M:PHRPReader.Reader.SynFileReaderBaseClass.ParseDelimitedList(System.String,System.Char,System.Boolean)">
             <summary>
             Convert a list of delimited items to an enumerable list, trimming whitespace from each item
             </summary>
-            <param name="delimitedList"></param>
-            <param name="delimiter"></param>
+            <param name="delimitedList">Delimited list of items</param>
+            <param name="delimiter">Delimiter</param>
             <param name="includeEmptyItems">If true, include empty items in the list</param>
             <remarks>
             If delimitedList is "Value1;;Value2" and includeEmptyItems is false, a 2 item list will be returned
@@ -9333,8 +9335,8 @@
             Splits text on text, returning a KeyValuePair object where the key is the text to the left of the delimiter and the value is the text to the right
             </summary>
             <remarks>Automatically trims whitespace</remarks>
-            <param name="text"></param>
-            <param name="chDelimiter"></param>
+            <param name="text">Text to parse</param>
+            <param name="chDelimiter">Delimiter</param>
             <returns>KeyValuePair with key and value from text; key and value will be empty if chDelimiter was not found</returns>
         </member>
         <member name="M:PHRPReader.Reader.SynFileReaderBaseClass.ParseKeyValueSetting(System.String,System.Char,System.String)">
@@ -9342,8 +9344,8 @@
             Splits text on text, returning a KeyValuePair object where the key is the text to the left of the delimiter and the value is the text to the right
             </summary>
             <remarks>Automatically trims whitespace</remarks>
-            <param name="text"></param>
-            <param name="chDelimiter"></param>
+            <param name="text">Text to parse</param>
+            <param name="chDelimiter">Delimiter</param>
             <param name="commentChar">If defined, looks for this character in the value portion of the setting and removes that character plus any text after it</param>
             <returns>KeyValuePair with key and value from text; key and value will be empty if chDelimiter was not found</returns>
         </member>
@@ -9373,27 +9375,27 @@
             <summary>
             Determine the search engine version using a Tool_Version_Info file
             </summary>
-            <param name="peptideHitResultType"></param>
-            <param name="searchEngineParams"></param>
+            <param name="peptideHitResultType">PHRP result type</param>
+            <param name="searchEngineParams">Search engine parameters</param>
             <returns>True if successful, false if an error</returns>
         </member>
         <member name="M:PHRPReader.Reader.SynFileReaderBaseClass.ReportError(System.String)">
             <summary>
             Report an error
             </summary>
-            <param name="message"></param>
+            <param name="message">Error message</param>
         </member>
         <member name="M:PHRPReader.Reader.SynFileReaderBaseClass.ReportWarning(System.String)">
             <summary>
             Report a warning
             </summary>
-            <param name="message"></param>
+            <param name="message">Warning message</param>
         </member>
         <member name="M:PHRPReader.Reader.SynFileReaderBaseClass.ShowMessage(System.String)">
             <summary>
             Report a status message
             </summary>
-            <param name="message"></param>
+            <param name="message">Status message</param>
         </member>
         <member name="M:PHRPReader.Reader.SynFileReaderBaseClass.UpdatePSMUsingSeqInfo(PHRPReader.Data.PSM)">
             <summary>
@@ -9401,7 +9403,7 @@
             Also updates the modification info
             Also updates SeqID
             </summary>
-            <param name="currentPSM"></param>
+            <param name="currentPSM">Current PSM</param>
             <returns>True if successful, False if currentPSM.ResultID is not found in mResultToSeqMap</returns>
         </member>
         <member name="T:PHRPReader.Reader.PHRPSeqMapReader">
@@ -9476,8 +9478,8 @@
             Constructor
             </summary>
             <param name="inputDirectoryPath">Input directory path</param>
-            <param name="resultToSeqMapFilename">ResultToSeqMap filename</param>
-            <param name="seqToProteinMapFilename"></param>
+            <param name="resultToSeqMapFilename">Result to sequence map filename</param>
+            <param name="seqToProteinMapFilename">Sequence to protein map filename</param>
             <param name="seqInfoFilename">SeqInfo filename</param>
         </member>
         <member name="M:PHRPReader.Reader.PHRPSeqMapReader.GetProteinMapping(System.Collections.Generic.SortedList{System.Int32,System.Int32},System.Collections.Generic.SortedList{System.Int32,System.Collections.Generic.List{PHRPReader.Data.ProteinInfo}},System.Collections.Generic.SortedList{System.Int32,PHRPReader.Data.SequenceInfo})">
@@ -9504,7 +9506,7 @@
             Load the Peptide to Protein mapping using the specified PHRP result file
             </summary>
             <remarks>The PepToProtMap file contains Residue_Start and Residue_End columns</remarks>
-            <param name="filePath"></param>
+            <param name="filePath">Peptide to protein map file path</param>
             <param name="pepToProteinMap">Peptide to protein mapping</param>
             <returns>True if successful, false if an error</returns>
         </member>
@@ -9512,7 +9514,7 @@
             <summary>
             Load the Result to Seq mapping using the specified PHRP result file
             </summary>
-            <param name="filePath"></param>
+            <param name="filePath">Result to seq map file path</param>
             <param name="resultToSeqMap">Result to sequence mapping</param>
             <returns>True if successful, false if an error</returns>
         </member>
@@ -9520,14 +9522,14 @@
             <summary>
             Load the sequence info
             </summary>
-            <param name="filePath"></param>
+            <param name="filePath">Sequence file path</param>
             <param name="seqInfo">Sequences</param>
         </member>
         <member name="M:PHRPReader.Reader.PHRPSeqMapReader.LoadSeqToProteinMapping(System.String,System.Collections.Generic.IDictionary{System.Int32,System.Collections.Generic.List{PHRPReader.Data.ProteinInfo}})">
             <summary>
             Load the Sequence to Protein mapping using the specified PHRP result file
             </summary>
-            <param name="filePath"></param>
+            <param name="filePath">Sequence to protein map file path</param>
             <param name="seqToProteinMap">Sequence to protein map</param>
             <returns>True if successful, false if an error</returns>
         </member>
@@ -9573,14 +9575,14 @@
             Compares the names in headerNames to the standard header names tracked by the dictionary returned by GetColumnHeaderNamesAndIDs
             Populates a dictionary mapping enum ExtendedScanStatsFileColumns to the 0-based index in columnNames
             </summary>
-            <param name="headerNames"></param>
+            <param name="headerNames">List of header names</param>
             <returns>Dictionary mapping the enum value to the column index in headerNames (0-based column index)</returns>
         </member>
         <member name="M:PHRPReader.Reader.ExtendedScanStatsReader.GetColumnNameByID(PHRPReader.Data.ExtendedScanStatsFileColumns)">
             <summary>
             Get the column name associated with the given enum
             </summary>
-            <param name="column"></param>
+            <param name="column">Column enum</param>
             <returns>Column name</returns>
         </member>
         <member name="M:PHRPReader.Reader.ExtendedScanStatsReader.ReadExtendedScanStatsData(System.String)">
@@ -9632,14 +9634,14 @@
             Compares the names in headerNames to the standard header names tracked by the dictionary returned by GetColumnHeaderNamesAndIDs
             Populates a dictionary mapping enum ScanStatsFileColumns to the 0-based index in columnNames
             </summary>
-            <param name="headerNames"></param>
+            <param name="headerNames">List of header names</param>
             <returns>Dictionary mapping the enum value to the column index in headerNames (0-based column index)</returns>
         </member>
         <member name="M:PHRPReader.Reader.ScanStatsReader.GetColumnNameByID(PHRPReader.Data.ScanStatsFileColumns)">
             <summary>
             Get the column name associated with the given enum
             </summary>
-            <param name="column"></param>
+            <param name="column">Column enum</param>
             <returns>Column name</returns>
         </member>
         <member name="M:PHRPReader.Reader.ScanStatsReader.ReadScanStatsData(System.String)">
@@ -9751,7 +9753,7 @@
             <summary>
             Determines the precursor mass tolerance
             </summary>
-            <param name="searchEngineParams"></param>
+            <param name="searchEngineParams">Search engine parameters</param>
             <param name="tolerancePPM">Precursor mass tolerance, in ppm</param>
             <returns>Precursor tolerance, in Da</returns>
         </member>
@@ -9772,70 +9774,70 @@
             Compares the names in headerNames to the standard header names tracked by the dictionary returned by GetColumnHeaderNamesAndIDs
             Populates a dictionary mapping enum SequestSynopsisFileColumns to the 0-based index in columnNames
             </summary>
-            <param name="headerNames"></param>
+            <param name="headerNames">List of header names</param>
             <returns>Dictionary mapping the enum value to the column index in headerNames (0-based column index)</returns>
         </member>
         <member name="M:PHRPReader.Reader.SequestSynFileReader.GetColumnNameByID(PHRPReader.Data.SequestSynopsisFileColumns)">
             <summary>
             Get the synopsis file column name associated with the given enum
             </summary>
-            <param name="column"></param>
+            <param name="column">Column enum</param>
             <returns>Column name</returns>
         </member>
         <member name="M:PHRPReader.Reader.SequestSynFileReader.GetPHRPFirstHitsFileName(System.String)">
             <summary>
             Default first hits file for the given dataset
             </summary>
-            <param name="datasetName"></param>
+            <param name="datasetName">Dataset name</param>
             <returns>Filename</returns>
         </member>
         <member name="M:PHRPReader.Reader.SequestSynFileReader.GetPHRPModSummaryFileName(System.String)">
             <summary>
             Default ModSummary file name for the given dataset
             </summary>
-            <param name="datasetName"></param>
+            <param name="datasetName">Dataset name</param>
             <returns>Filename</returns>
         </member>
         <member name="M:PHRPReader.Reader.SequestSynFileReader.GetPHRPPepToProteinMapFileName(System.String)">
             <summary>
             Default PepToProtMap file name for the given dataset
             </summary>
-            <param name="datasetName"></param>
+            <param name="datasetName">Dataset name</param>
             <returns>Filename</returns>
         </member>
         <member name="M:PHRPReader.Reader.SequestSynFileReader.GetPHRPProteinModsFileName(System.String)">
             <summary>
             Default ProteinMods file name for the given dataset
             </summary>
-            <param name="datasetName"></param>
+            <param name="datasetName">Dataset name</param>
             <returns>Filename</returns>
         </member>
         <member name="M:PHRPReader.Reader.SequestSynFileReader.GetPHRPSynopsisFileName(System.String)">
             <summary>
             Default Synopsis file name for the given dataset
             </summary>
-            <param name="datasetName"></param>
+            <param name="datasetName">Dataset name</param>
             <returns>Filename</returns>
         </member>
         <member name="M:PHRPReader.Reader.SequestSynFileReader.GetPHRPResultToSeqMapFileName(System.String)">
             <summary>
             Default ResultToSeq map file name for the given dataset
             </summary>
-            <param name="datasetName"></param>
+            <param name="datasetName">Dataset name</param>
             <returns>Filename</returns>
         </member>
         <member name="M:PHRPReader.Reader.SequestSynFileReader.GetPHRPSeqInfoFileName(System.String)">
             <summary>
             Default SeqInfo map file name for the given dataset
             </summary>
-            <param name="datasetName"></param>
+            <param name="datasetName">Dataset name</param>
             <returns>Filename</returns>
         </member>
         <member name="M:PHRPReader.Reader.SequestSynFileReader.GetPHRPSeqToProteinMapFileName(System.String)">
             <summary>
             Default SeqToProtein map file name for the given dataset
             </summary>
-            <param name="datasetName"></param>
+            <param name="datasetName">Dataset name</param>
             <returns>Filename</returns>
         </member>
         <member name="M:PHRPReader.Reader.SequestSynFileReader.GetSearchEngineName">
@@ -9847,8 +9849,8 @@
             <summary>
             Parses the specified SEQUEST parameter file
             </summary>
-            <param name="searchEngineParamFileName"></param>
-            <param name="searchEngineParams"></param>
+            <param name="searchEngineParamFileName">SEQUEST parameter file name</param>
+            <param name="searchEngineParams">Search engine parameters</param>
             <returns>True if successful, false if an error</returns>
         </member>
         <member name="M:PHRPReader.Reader.SequestSynFileReader.ParsePHRPDataLine(System.String,System.Int32,PHRPReader.Data.PSM@,System.Boolean)">
@@ -9972,70 +9974,70 @@
             Compares the names in headerNames to the standard header names tracked by the dictionary returned by GetColumnHeaderNamesAndIDs
             Populates a dictionary mapping enum TopPICSynFileColumns to the 0-based index in columnNames
             </summary>
-            <param name="headerNames"></param>
+            <param name="headerNames">List of header names</param>
             <returns>Dictionary mapping the enum value to the column index in headerNames (0-based column index)</returns>
         </member>
         <member name="M:PHRPReader.Reader.TopPICSynFileReader.GetColumnNameByID(PHRPReader.Data.TopPICSynFileColumns)">
             <summary>
             Get the synopsis file column name associated with the given enum
             </summary>
-            <param name="column"></param>
+            <param name="column">Column enum</param>
             <returns>Column name</returns>
         </member>
         <member name="M:PHRPReader.Reader.TopPICSynFileReader.GetPHRPFirstHitsFileName(System.String)">
             <summary>
             Default first hits file for the given dataset
             </summary>
-            <param name="datasetName"></param>
+            <param name="datasetName">Dataset name</param>
             <returns>Filename</returns>
         </member>
         <member name="M:PHRPReader.Reader.TopPICSynFileReader.GetPHRPModSummaryFileName(System.String)">
             <summary>
             Default ModSummary file name for the given dataset
             </summary>
-            <param name="datasetName"></param>
+            <param name="datasetName">Dataset name</param>
             <returns>Filename</returns>
         </member>
         <member name="M:PHRPReader.Reader.TopPICSynFileReader.GetPHRPPepToProteinMapFileName(System.String)">
             <summary>
             Default PepToProtMap file name for the given dataset
             </summary>
-            <param name="datasetName"></param>
+            <param name="datasetName">Dataset name</param>
             <returns>Filename</returns>
         </member>
         <member name="M:PHRPReader.Reader.TopPICSynFileReader.GetPHRPProteinModsFileName(System.String)">
             <summary>
             Default ProteinMods file name for the given dataset
             </summary>
-            <param name="datasetName"></param>
+            <param name="datasetName">Dataset name</param>
             <returns>Filename</returns>
         </member>
         <member name="M:PHRPReader.Reader.TopPICSynFileReader.GetPHRPSynopsisFileName(System.String)">
             <summary>
             Default Synopsis file name for the given dataset
             </summary>
-            <param name="datasetName"></param>
+            <param name="datasetName">Dataset name</param>
             <returns>Filename</returns>
         </member>
         <member name="M:PHRPReader.Reader.TopPICSynFileReader.GetPHRPResultToSeqMapFileName(System.String)">
             <summary>
             Default ResultToSeq map file name for the given dataset
             </summary>
-            <param name="datasetName"></param>
+            <param name="datasetName">Dataset name</param>
             <returns>Filename</returns>
         </member>
         <member name="M:PHRPReader.Reader.TopPICSynFileReader.GetPHRPSeqInfoFileName(System.String)">
             <summary>
             Default SeqInfo map file name for the given dataset
             </summary>
-            <param name="datasetName"></param>
+            <param name="datasetName">Dataset name</param>
             <returns>Filename</returns>
         </member>
         <member name="M:PHRPReader.Reader.TopPICSynFileReader.GetPHRPSeqToProteinMapFileName(System.String)">
             <summary>
             Default SeqToProtein map file name for the given dataset
             </summary>
-            <param name="datasetName"></param>
+            <param name="datasetName">Dataset name</param>
             <returns>Filename</returns>
         </member>
         <member name="M:PHRPReader.Reader.TopPICSynFileReader.GetSearchEngineName">
@@ -10047,8 +10049,8 @@
             <summary>
             Parses the specified TopPIC parameter file
             </summary>
-            <param name="searchEngineParamFileName"></param>
-            <param name="searchEngineParams"></param>
+            <param name="searchEngineParamFileName">TopPIC parameter file name</param>
+            <param name="searchEngineParams">Search engine parameters</param>
             <returns>True if successful, false if an error</returns>
         </member>
         <member name="M:PHRPReader.Reader.TopPICSynFileReader.ParsePHRPDataLine(System.String,System.Int32,PHRPReader.Data.PSM@,System.Boolean)">
@@ -10167,7 +10169,7 @@
             <summary>
             Determines the precursor mass tolerance
             </summary>
-            <param name="searchEngineParams"></param>
+            <param name="searchEngineParams">Search engine parameters</param>
             <param name="tolerancePPM">Precursor mass tolerance, in ppm</param>
             <returns>Precursor tolerance, in Da</returns>
         </member>
@@ -10188,77 +10190,77 @@
             Compares the names in headerNames to the standard header names tracked by the dictionary returned by GetColumnHeaderNamesAndIDs
             Populates a dictionary mapping enum XTandemSynFileColumns to the 0-based index in columnNames
             </summary>
-            <param name="headerNames"></param>
+            <param name="headerNames">List of header names</param>
             <returns>Dictionary mapping the enum value to the column index in headerNames (0-based column index)</returns>
         </member>
         <member name="M:PHRPReader.Reader.XTandemSynFileReader.GetColumnNameByID(PHRPReader.Data.XTandemSynFileColumns)">
             <summary>
             Get the synopsis file column name associated with the given enum
             </summary>
-            <param name="column"></param>
+            <param name="column">Column enum</param>
             <returns>Column name</returns>
         </member>
         <member name="M:PHRPReader.Reader.XTandemSynFileReader.GetPHRPFirstHitsFileName(System.String)">
             <summary>
             Default first hits file for the given dataset
             </summary>
-            <param name="datasetName"></param>
+            <param name="datasetName">Dataset name</param>
             <returns>Empty string, since X!Tandem does not have a first-hits file; just the _xt.txt file</returns>
         </member>
         <member name="M:PHRPReader.Reader.XTandemSynFileReader.GetPHRPModSummaryFileName(System.String)">
             <summary>
             Default ModSummary file name for the given dataset
             </summary>
-            <param name="datasetName"></param>
+            <param name="datasetName">Dataset name</param>
             <returns>Filename</returns>
         </member>
         <member name="M:PHRPReader.Reader.XTandemSynFileReader.GetPHRPPepToProteinMapFileName(System.String)">
             <summary>
             Default PepToProtMap file name for the given dataset
             </summary>
-            <param name="datasetName"></param>
+            <param name="datasetName">Dataset name</param>
             <returns>Filename</returns>
         </member>
         <member name="M:PHRPReader.Reader.XTandemSynFileReader.GetPHRPProteinModsFileName(System.String)">
             <summary>
             Default ProteinMods file name for the given dataset
             </summary>
-            <param name="datasetName"></param>
+            <param name="datasetName">Dataset name</param>
             <returns>Filename</returns>
         </member>
         <member name="M:PHRPReader.Reader.XTandemSynFileReader.GetPHRPSynopsisFileName(System.String)">
             <summary>
             Default Synopsis file name for the given dataset
             </summary>
-            <param name="datasetName"></param>
+            <param name="datasetName">Dataset name</param>
             <returns>Filename</returns>
         </member>
         <member name="M:PHRPReader.Reader.XTandemSynFileReader.GetPHRPResultToSeqMapFileName(System.String)">
             <summary>
             Default ResultToSeq map file name for the given dataset
             </summary>
-            <param name="datasetName"></param>
+            <param name="datasetName">Dataset name</param>
             <returns>Filename</returns>
         </member>
         <member name="M:PHRPReader.Reader.XTandemSynFileReader.GetPHRPSeqInfoFileName(System.String)">
             <summary>
             Default SeqInfo map file name for the given dataset
             </summary>
-            <param name="datasetName"></param>
+            <param name="datasetName">Dataset name</param>
             <returns>Filename</returns>
         </member>
         <member name="M:PHRPReader.Reader.XTandemSynFileReader.GetPHRPSeqToProteinMapFileName(System.String)">
             <summary>
             Default SeqToProtein map file name for the given dataset
             </summary>
-            <param name="datasetName"></param>
+            <param name="datasetName">Dataset name</param>
             <returns>Filename</returns>
         </member>
         <member name="M:PHRPReader.Reader.XTandemSynFileReader.GetAdditionalSearchEngineParamFileNames(System.String)">
             <summary>
             Additional search engine parameter file names
             </summary>
-            <param name="searchEngineParamFilePath"></param>
+            <param name="searchEngineParamFilePath">Search engine parameter file path</param>
         </member>
         <member name="M:PHRPReader.Reader.XTandemSynFileReader.GetSearchEngineName">
             <summary>
@@ -10270,18 +10272,18 @@
             Parses the specified X!Tandem parameter file
             Note that the file specified by parameter "list path, default parameters" will also be auto-parsed (if found in directory mInputDirectoryPath)
             </summary>
-            <param name="searchEngineParamFileName"></param>
-            <param name="searchEngineParams"></param>
+            <param name="searchEngineParamFileName">X!Tandem parameter file name</param>
+            <param name="searchEngineParams">Search engine parameters</param>
             <returns>True if successful, false if an error</returns>
         </member>
         <member name="M:PHRPReader.Reader.XTandemSynFileReader.ParseXTandemParamFile(System.String,PHRPReader.Data.SearchEngineParameters,System.Boolean,System.Boolean)">
             <summary>
             Parse an X!Tandem parameter file
             </summary>
-            <param name="paramFileName"></param>
-            <param name="searchEngineParams"></param>
-            <param name="lookForDefaultParamsFileName"></param>
-            <param name="determineFastaFileNameUsingTaxonomyFile"></param>
+            <param name="paramFileName">X!Tandem parameter file name</param>
+            <param name="searchEngineParams">Search engine parameters</param>
+            <param name="lookForDefaultParamsFileName">When true, look for the default X!Tandem parameter file</param>
+            <param name="determineFastaFileNameUsingTaxonomyFile">When true, determine the FASTA file name using the taxonomy file</param>
             <returns>True if successful, false if an error</returns>
         </member>
         <member name="M:PHRPReader.Reader.XTandemSynFileReader.ParsePHRPDataLine(System.String,System.Int32,PHRPReader.Data.PSM@,System.Boolean)">
@@ -10354,17 +10356,17 @@
             If the final element is found, return its value, otherwise return an empty string
             </summary>
             <remarks>See also <see cref="M:PHRPReader.XmlReaderUtilities.TryGetElementValue(System.Xml.Linq.XElement,System.String,System.String@)"/></remarks>
-            <param name="parentNode"></param>
-            <param name="elementNames"></param>
+            <param name="parentNode">Parent node</param>
+            <param name="elementNames">Element names</param>
             <returns>Value if found, or an empty string</returns>
         </member>
         <member name="M:PHRPReader.XmlReaderUtilities.TryGetAttribute(System.Xml.Linq.XElement,System.String,System.String@)">
             <summary>
             Get the named attribute from the given element
             </summary>
-            <param name="item"></param>
-            <param name="attributeName"></param>
-            <param name="attributeValue"></param>
+            <param name="item">XML element</param>
+            <param name="attributeName">Attribute name</param>
+            <param name="attributeValue">Attribute value</param>
             <returns>True if found, otherwise false</returns>
         </member>
         <member name="M:PHRPReader.XmlReaderUtilities.TryGetElementValue(System.Xml.Linq.XElement,System.String,System.String@)">
@@ -10374,9 +10376,9 @@
             Otherwise, return false
             </summary>
             <remarks>See also <see cref="M:PHRPReader.XmlReaderUtilities.GetElementValueOrDefault(System.Xml.Linq.XElement,System.String[])"/></remarks>
-            <param name="parentItem"></param>
-            <param name="elementName"></param>
-            <param name="elementValue"></param>
+            <param name="parentItem">Parent XML element</param>
+            <param name="elementName">Element name</param>
+            <param name="elementValue">Element value</param>
             <returns>True if found, otherwise false</returns>
         </member>
     </members>
