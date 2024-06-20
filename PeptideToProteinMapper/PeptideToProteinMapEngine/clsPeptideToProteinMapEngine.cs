@@ -145,9 +145,9 @@ namespace PeptideToProteinMapEngine
             /// <summary>
             /// Show the peptide sequence
             /// </summary>
-            public override string ToString()
+            public readonly override string ToString()
             {
-                return Peptide + ", Protein ID " + ProteinID;
+                return string.Format("{0}, Protein ID {1}", Peptide, ProteinID);
             }
         }
 
@@ -161,9 +161,9 @@ namespace PeptideToProteinMapEngine
             /// <summary>
             /// Show the peptide sequence
             /// </summary>
-            public override string ToString()
+            public readonly override string ToString()
             {
-                return Peptide + ", Protein " + Protein;
+                return string.Format("{0}, Protein {1}", Peptide, Protein);
             }
         }
         #endregion
@@ -184,7 +184,7 @@ namespace PeptideToProteinMapEngine
         // Keys may have mod symbols in them; those symbols will be removed in PreProcessDataWriteOutPeptides
         private SortedList<string, SortedSet<int>> mUniquePeptideList;
 
-        // Mod names must be lower case, and 4 characters in length (or shorter)
+        // Mod names must be lowercase, and 4 characters in length (or shorter)
         // Only used with InSpecT since mods in MS-GF+ are simply numbers, e.g. R.DNFM+15.995SATQAVEYGLVDAVM+15.995TK.R
         // while mods in SEQUEST and XTandem are symbols (*, #, @)
         private List<string> mInspectModNameList;
@@ -227,7 +227,7 @@ namespace PeptideToProteinMapEngine
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="options"></param>
+        /// <param name="options">Options</param>
         public clsPeptideToProteinMapEngine(ProteinCoverageSummarizerOptions options)
         {
             Options = options;
@@ -246,7 +246,7 @@ namespace PeptideToProteinMapEngine
         /// <summary>
         /// Auto-determine the file format
         /// </summary>
-        /// <param name="filePath"></param>
+        /// <param name="filePath">Input file path</param>
         public PeptideInputFileFormatConstants DetermineResultsFileFormat(string filePath)
         {
             Console.WriteLine();
@@ -313,8 +313,8 @@ namespace PeptideToProteinMapEngine
         /// <summary>
         /// Parse an InSpecT parameter file to determine the modification names
         /// </summary>
-        /// <param name="inspectParamFilePath"></param>
-        /// <param name="inspectModNames"></param>
+        /// <param name="inspectParamFilePath">InSpecT parameter file path</param>
+        /// <param name="inspectModNames">List of InSpecT modification names</param>
         public bool ExtractModInfoFromInspectParamFile(string inspectParamFilePath, ref List<string> inspectModNames)
         {
             try
@@ -487,7 +487,7 @@ namespace PeptideToProteinMapEngine
         /// <summary>
         /// Load settings from an XML-based parameter file
         /// </summary>
-        /// <param name="parameterFilePath"></param>
+        /// <param name="parameterFilePath">XML-based parameter file path</param>
         // ReSharper disable once UnusedMember.Global
         public bool LoadParameterFileSettings(string parameterFilePath)
         {
@@ -512,9 +512,9 @@ namespace PeptideToProteinMapEngine
         /// <summary>
         /// Post-process a PSM results file
         /// </summary>
-        /// <param name="peptideListFilePath"></param>
-        /// <param name="proteinToPepMapFilePath"></param>
-        /// <param name="deleteWorkingFiles"></param>
+        /// <param name="peptideListFilePath"> PSM results file path</param>
+        /// <param name="proteinToPepMapFilePath">Protein to peptide map file path</param>
+        /// <param name="deleteWorkingFiles">When true, delete working files when done processing</param>
         private bool PostProcessPSMResultsFile(
             string peptideListFilePath,
             string proteinToPepMapFilePath,
@@ -1194,10 +1194,10 @@ namespace PeptideToProteinMapEngine
         /// <summary>
         /// Process the input file to map peptides to proteins in the FASTA file
         /// </summary>
-        /// <param name="inputFilePath"></param>
-        /// <param name="outputDirectoryPath"></param>
-        /// <param name="parameterFilePath"></param>
-        /// <param name="resetErrorCode"></param>
+        /// <param name="inputFilePath">Input file path</param>
+        /// <param name="outputDirectoryPath">Output directory path</param>
+        /// <param name="parameterFilePath">Parameter file path</param>
+        /// <param name="resetErrorCode">When true, reset the error code</param>
         /// <returns>True if success, false if an error</returns>
         public override bool ProcessFile(string inputFilePath, string outputDirectoryPath, string parameterFilePath, bool resetErrorCode)
         {
@@ -1446,8 +1446,8 @@ namespace PeptideToProteinMapEngine
         /// Add peptideSequence to mUniquePeptideList if not defined, including tracking the scanNumber
         /// Otherwise, update the scan list for the peptide
         /// </summary>
-        /// <param name="peptideSequence"></param>
-        /// <param name="scanNumber"></param>
+        /// <param name="peptideSequence">Peptide sequence</param>
+        /// <param name="scanNumber">Scan number</param>
         private void UpdateUniquePeptideList(string peptideSequence, int scanNumber)
         {
             if (mUniquePeptideList.TryGetValue(peptideSequence, out var scanList))

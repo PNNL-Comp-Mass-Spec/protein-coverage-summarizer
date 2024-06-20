@@ -31,7 +31,7 @@ namespace ProteinCoverageSummarizer
     /// <summary>
     /// Progress changed event
     /// </summary>
-    /// <param name="taskDescription"></param>
+    /// <param name="taskDescription">Task description</param>
     /// <param name="percentComplete">Value between 0 and 100, but can contain decimal percentage values</param>
     public delegate void ProgressChangedEventHandler(string taskDescription, float percentComplete);
 
@@ -291,7 +291,7 @@ namespace ProteinCoverageSummarizer
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="options"></param>
+        /// <param name="options">Options</param>
         public clsProteinCoverageSummarizer(ProteinCoverageSummarizerOptions options)
         {
             Options = options;
@@ -486,10 +486,10 @@ namespace ProteinCoverageSummarizer
         /// In either case, suffixToAppend is appended
         /// The Output directory is based on outputDirectoryPath if defined, otherwise it is the directory where inputFilePath resides
         /// </summary>
-        /// <param name="inputFilePath"></param>
-        /// <param name="suffixToAppend"></param>
-        /// <param name="outputDirectoryPath"></param>
-        /// <param name="outputFileBaseName"></param>
+        /// <param name="inputFilePath">Input file path</param>
+        /// <param name="suffixToAppend">Suffix to append</param>
+        /// <param name="outputDirectoryPath">Output directory path</param>
+        /// <param name="outputFileBaseName">Output file base name</param>
         public static string ConstructOutputFilePath(
             string inputFilePath,
             string suffixToAppend,
@@ -773,9 +773,9 @@ namespace ProteinCoverageSummarizer
         /// <summary>
         /// Look for the columnToFind in the first non-blank line of the input file
         /// </summary>
-        /// <param name="peptideInputFilePath"></param>
-        /// <param name="columnToFind"></param>
-        /// <param name="matchStartIfNotFound"></param>
+        /// <param name="peptideInputFilePath">Input file path</param>
+        /// <param name="columnToFind">Clumn name to find</param>
+        /// <param name="matchStartIfNotFound">When true, look for a column that starts with columnName if an exact match is not found</param>
         /// <returns>Zero-base column index, or -1 if not found</returns>
         private int FindColumnIndex(string peptideInputFilePath, string columnToFind, bool matchStartIfNotFound = true)
         {
@@ -798,9 +798,9 @@ namespace ProteinCoverageSummarizer
         /// <summary>
         /// Look for the first column whose name matches columnToFind
         /// </summary>
-        /// <param name="columnNames"></param>
-        /// <param name="columnToFind"></param>
-        /// <param name="matchStartIfNotFound">Set to True to look for a column that starts with columnName if an exact match is not found</param>
+        /// <param name="columnNames">List of column names</param>
+        /// <param name="columnToFind">Column name to find</param>
+        /// <param name="matchStartIfNotFound">When true, look for a column that starts with columnName if an exact match is not found</param>
         /// <returns>Column index if found, or -1 if not found</returns>
         public static int FindColumnIndex(IReadOnlyList<string> columnNames, string columnToFind, bool matchStartIfNotFound = true)
         {
@@ -1056,9 +1056,9 @@ namespace ProteinCoverageSummarizer
         /// <summary>
         /// Get the text in the column at the given index
         /// </summary>
-        /// <param name="lineParts"></param>
-        /// <param name="columnIndex"></param>
-        /// <param name="columnValue"></param>
+        /// <param name="lineParts">Line parts after splitting a delimited data line</param>
+        /// <param name="columnIndex">Column index</param>
+        /// <param name="columnValue">Output: value at index columnIndex in lineParts</param>
         /// <returns>
         /// True if columnIndex is within range of the items in lineParts
         /// and if the value is not an empty string
@@ -1110,8 +1110,8 @@ namespace ProteinCoverageSummarizer
         /// Otherwise uses the directory where outputFilePath resides
         /// </summary>
         /// <remarks>If an error, or unable to determine a directory, returns the directory with the application files</remarks>
-        /// <param name="outputDirectoryPath"></param>
-        /// <param name="outputFilePath"></param>
+        /// <param name="outputDirectoryPath">Output directory path</param>
+        /// <param name="outputFilePath">Output file path</param>
         /// <returns>Output directory path</returns>
         public static string GetOutputDirectoryPath(string outputDirectoryPath, string outputFilePath)
         {
@@ -1242,7 +1242,7 @@ namespace ProteinCoverageSummarizer
         /// If the key is not defined, add it
         /// </summary>
         /// <param name="dictionaryToUpdate">Dictionary where values are the item count for each key</param>
-        /// <param name="keyName"></param>
+        /// <param name="keyName">Key name to increment</param>
         /// <param name="isNewPSM">Set this to false if this is a duplicate entry for a given scan number (e.g. different protein, or not the top scoring peptide)</param>
         /// <returns>True if the protein is new and was added to mProteinPeptideStats </returns>
         private bool IncrementCountByKey(IDictionary<string, int> dictionaryToUpdate, string keyName, bool isNewPSM = true)
@@ -1289,7 +1289,7 @@ namespace ProteinCoverageSummarizer
         /// <summary>
         /// Load settings from an XML-based parameter file
         /// </summary>
-        /// <param name="parameterFilePath"></param>
+        /// <param name="parameterFilePath">XML-based parameter file path</param>
         /// <returns>True if success (including if parameterFilePath is an empty string), false if an error</returns>
         public bool LoadParameterFileSettings(string parameterFilePath)
         {
@@ -1770,10 +1770,10 @@ namespace ProteinCoverageSummarizer
         /// <summary>
         /// Process the file to compute protein sequence coverage
         /// </summary>
-        /// <param name="inputFilePath"></param>
-        /// <param name="outputDirectoryPath"></param>
-        /// <param name="parameterFilePath"></param>
-        /// <param name="resetErrorCode"></param>
+        /// <param name="inputFilePath">Input file path</param>
+        /// <param name="outputDirectoryPath">Output directory path</param>
+        /// <param name="parameterFilePath">Parameter file path</param>
+        /// <param name="resetErrorCode">When true, reset the error code</param>
         /// <returns>True if success, false if an error</returns>
         public bool ProcessFile(
             string inputFilePath,
@@ -1787,12 +1787,12 @@ namespace ProteinCoverageSummarizer
         /// <summary>
         /// Process the file to compute protein sequence coverage
         /// </summary>
-        /// <param name="inputFilePath"></param>
-        /// <param name="outputDirectoryPath"></param>
-        /// <param name="parameterFilePath"></param>
-        /// <param name="resetErrorCode"></param>
-        /// <param name="proteinToPepMapFilePath"></param>
-        /// <param name="outputFileBaseName"></param>
+        /// <param name="inputFilePath">Input file path</param>
+        /// <param name="outputDirectoryPath">Output directory path</param>
+        /// <param name="parameterFilePath">Parameter file path</param>
+        /// <param name="resetErrorCode">When true, reset the error code</param>
+        /// <param name="proteinToPepMapFilePath">Protein to peptide map file path</param>
+        /// <param name="outputFileBaseName">Output file base name</param>
         /// <returns>True if success, false if an error</returns>
         public bool ProcessFile(
             string inputFilePath,
@@ -2468,10 +2468,10 @@ namespace ProteinCoverageSummarizer
         /// specified Options.PeptideFileFormatCode = PeptideFileColumnOrderingCode.ProteinName_PeptideSequence
         /// If Options.PeptideFileFormatCode is PeptideFileColumnOrderingCode.SequenceOnly, the file isn't even opened
         /// </summary>
-        /// <param name="peptideInputFilePath"></param>
-        /// <param name="peptideFileFormatCode">Input / Output parameter</param>
-        /// <param name="skipFirstLine"></param>
-        /// <param name="columnDelimiter"></param>
+        /// <param name="peptideInputFilePath">Iinput file path</param>
+        /// <param name="peptideFileFormatCode">Input/Output: file format code</param>
+        /// <param name="skipFirstLine">When true, skip the first line</param>
+        /// <param name="columnDelimiter">Column delimiter</param>
         /// <returns>True if no problems; False if the user chooses to abort</returns>
         public static bool ValidateColumnCountInInputFile(
             string peptideInputFilePath,
