@@ -75,16 +75,16 @@
       <Version>4.0.0</Version>
     </PackageReference>
     <PackageReference Include="PRISM-DatabaseUtils">
-      <Version>1.4.7</Version>
+      <Version>1.4.15</Version>
     </PackageReference>
     <PackageReference Include="PRISM-Library">
-      <Version>2.8.26</Version>
+      <Version>2.8.31</Version>
     </PackageReference>
     <PackageReference Include="PRISMWin-Library">
-      <Version>1.1.15</Version>
+      <Version>1.1.17</Version>
     </PackageReference>
     <PackageReference Include="ProteinFileReader">
-      <Version>3.0.4</Version>
+      <Version>3.1.0</Version>
     </PackageReference>
     <PackageReference Include="System.Data.SQLite.Core">
       <Version>1.0.111</Version>
