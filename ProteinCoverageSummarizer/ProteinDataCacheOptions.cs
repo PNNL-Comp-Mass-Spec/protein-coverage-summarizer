@@ -8,7 +8,7 @@ namespace ProteinCoverageSummarizer
     public class ProteinDataCacheOptions
     {
         /// <summary>
-        ///  Delimiter character for delimited protein files
+        /// Delimiter character for delimited protein files
         /// </summary>
         /// <remarks>Only used for delimited protein input files, not for FASTA files</remarks>
         private char mDelimitedInputFileDelimiter;

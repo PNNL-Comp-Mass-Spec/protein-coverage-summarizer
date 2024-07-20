@@ -41,7 +41,7 @@ namespace ProteinCoverageSummarizerGUI
         /// <summary>
         /// Program date
         /// </summary>
-        public const string PROGRAM_DATE = "June 20, 2024";
+        public const string PROGRAM_DATE = "July 19, 2024";
 
         private static string mParameterFilePath;
 

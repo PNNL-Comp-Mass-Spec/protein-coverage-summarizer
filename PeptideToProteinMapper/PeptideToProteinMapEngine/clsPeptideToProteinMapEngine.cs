@@ -101,7 +101,7 @@ namespace PeptideToProteinMapEngine
             AutoDetermine = 0,
 
             /// <summary>
-            ///  First column is peptide sequence
+            /// First column is peptide sequence
             /// </summary>
             PeptideListFile = 1,
 
