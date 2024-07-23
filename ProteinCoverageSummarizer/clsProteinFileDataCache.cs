@@ -398,9 +398,7 @@ namespace ProteinCoverageSummarizer
                 mSQLitePersistentConnection = ConnectToSQLiteDB(false);
             }
 
-            var sqlQuery =
-                " SELECT UniqueSequenceID, Name, Description, Sequence, PercentCoverage" +
-                " FROM udtProteinInfoType";
+            var sqlQuery = "SELECT UniqueSequenceID, Name, Description, Sequence, PercentCoverage FROM udtProteinInfoType";
 
             if (startIndex >= 0 && endIndex < 0)
             {
