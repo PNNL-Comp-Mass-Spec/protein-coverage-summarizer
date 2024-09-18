@@ -7,6 +7,8 @@ namespace ProteinCoverageSummarizer
     /// </summary>
     public class ProteinDataCacheOptions
     {
+        // Ignore Spelling: FASTA
+
         /// <summary>
         /// Delimiter character for delimited protein files
         /// </summary>
