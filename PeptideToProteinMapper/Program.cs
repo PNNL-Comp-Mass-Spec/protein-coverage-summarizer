@@ -48,7 +48,7 @@ namespace PeptideToProteinMapper
         /// <summary>
         /// Program date
         /// </summary>
-        public const string PROGRAM_DATE = "July 22, 2024";
+        public const string PROGRAM_DATE = "September 17, 2024";
 
         private static string mParameterFilePath;
         private static string mInspectParameterFilePath;
