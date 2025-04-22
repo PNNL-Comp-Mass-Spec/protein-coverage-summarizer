@@ -20,7 +20,6 @@ using System.Reflection;
 using System.Threading;
 using PeptideToProteinMapEngine;
 using PRISM;
-using PRISM.FileProcessor;
 using PRISM.Logging;
 using ProteinCoverageSummarizer;
 
@@ -215,7 +214,7 @@ namespace PeptideToProteinMapper
                 if (commandLineParser.InvalidParametersPresent(validParameters))
                 {
                     ShowErrorMessage("Invalid command line parameters",
-                        (from item in commandLineParser.InvalidParameters(validParameters) select ("/" + item)).ToList());
+                        (from item in commandLineParser.InvalidParameters(validParameters) select "/" + item).ToList());
                     return false;
                 }
 

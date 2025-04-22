@@ -19,7 +19,6 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using PRISM;
-using PRISM.FileProcessor;
 using ProteinCoverageSummarizer;
 
 namespace ProteinCoverageSummarizerGUI
@@ -192,7 +191,7 @@ namespace ProteinCoverageSummarizerGUI
                 if (commandLineParser.InvalidParametersPresent(validParameters))
                 {
                     ShowErrorMessage("Invalid command line parameters",
-                        (from item in commandLineParser.InvalidParameters(validParameters) select ("/" + item)).ToList());
+                        (from item in commandLineParser.InvalidParameters(validParameters) select "/" + item).ToList());
                     invalidParameters = true;
                     return false;
                 }
