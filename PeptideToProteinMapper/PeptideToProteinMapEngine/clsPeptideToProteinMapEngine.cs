@@ -1480,10 +1480,8 @@ namespace PeptideToProteinMapEngine
         {
             if (mUniquePeptideList.TryGetValue(peptideSequence, out var scanList))
             {
-                if (!scanList.Contains(scanNumber))
-                {
-                    scanList.Add(scanNumber);
-                }
+                // Add the scan number if not yet present
+                scanList.Add(scanNumber);
             }
             else
             {
