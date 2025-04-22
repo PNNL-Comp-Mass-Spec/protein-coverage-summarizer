@@ -30,7 +30,7 @@ namespace ProteinCoverageSummarizer
     /// </summary>
     public class clsLeaderSequenceCache
     {
-        // Ignore Spelling: isoleucine, leucine, leucines, structs, A-Za-z
+        // Ignore Spelling: cls, isoleucine, leucine, leucines, Lto, structs, A-Za-z
 
         /// <summary>
         /// Constructor

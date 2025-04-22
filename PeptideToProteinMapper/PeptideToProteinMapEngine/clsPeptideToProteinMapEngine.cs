@@ -31,7 +31,7 @@ namespace PeptideToProteinMapEngine
     /// </summary>
     public class clsPeptideToProteinMapEngine : ProcessFilesBase
     {
-        // Ignore Spelling: phos, pre, struct
+        // Ignore Spelling: cls, MSGFDB, MSGFPlus, phos, pre, struct
 
         #region "Constants and Enums"
 

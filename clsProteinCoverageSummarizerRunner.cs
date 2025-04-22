@@ -25,7 +25,7 @@ namespace ProteinCoverageSummarizerGUI
     /// </summary>
     public class clsProteinCoverageSummarizerRunner : ProcessFilesBase
     {
-        // Ignore Spelling: Nikša
+        // Ignore Spelling: app, cls, Nikša
 
         #region "Class wide variables"
 
