@@ -1688,7 +1688,7 @@ namespace ProteinCoverageSummarizer
 
                 if (Options.SaveSourceDataPlusProteinsFile)
                 {
-                    // Create a new version of the input file, but with all of the proteins listed
+                    // Create a new version of the input file, but with very protein listed
                     SaveDataPlusAllProteinsFile(peptideInputFilePath, outputDirectoryPath, outputFileBaseName, sepChars, terminatorSize);
                 }
 
@@ -1737,13 +1737,13 @@ namespace ProteinCoverageSummarizer
 
                 if (Options.SearchAllProteinsSkipCoverageComputationSteps)
                 {
-                    // Make sure all of the protein sequences are uppercase
+                    // Assure that the protein sequences are uppercase
                     ProteinDataCache.Options.ChangeProteinSequencesToLowercase = false;
                     ProteinDataCache.Options.ChangeProteinSequencesToUppercase = true;
                 }
                 else
                 {
-                    // Make sure all of the protein sequences are lowercase
+                    // Assure that the protein sequences are lowercase
                     ProteinDataCache.Options.ChangeProteinSequencesToLowercase = true;
                     ProteinDataCache.Options.ChangeProteinSequencesToUppercase = false;
                 }
@@ -1906,7 +1906,7 @@ namespace ProteinCoverageSummarizer
         {
             // We use a SQLite database to store the protein sequences (to avoid running out of memory when parsing large protein lists)
             // However, we will store the most recently loaded peptides in mCachedProteinInfoCount() and
-            // will only reload them if startIndex is different than mCachedProteinInfoStartIndex
+            // will only reload them if startIndex differs from mCachedProteinInfoStartIndex
 
             // Reset the values in proteinUpdated()
             Array.Clear(proteinUpdated, 0, proteinUpdated.Length);
@@ -2131,8 +2131,8 @@ namespace ProteinCoverageSummarizer
                                 var peptideLength = mLeaderSequenceCache.mCachedPeptideSeqInfo[cachedPeptideMatchIndex].PeptideSequence.Length;
 
                                 // Only compare the full sequence to the protein if:
-                                // a) the protein name matches (or mSearchAllProteinsForPeptideSequence = True) and
-                                // b) the peptide sequence doesn't pass the end of the protein
+                                // a. the protein name matches (or mSearchAllProteinsForPeptideSequence = True) and
+                                // b. the peptide sequence doesn't pass the end of the protein
                                 if (testPeptide && proteinSeqCharIndex + peptideLength <= proteinSequence.Length)
                                 {
                                     // See if the full sequence matches the protein
@@ -2346,7 +2346,7 @@ namespace ProteinCoverageSummarizer
             {
                 if (!BooleanArrayContainsTrueEntries(proteinUpdated, proteinCount))
                 {
-                    // All of the entries in proteinUpdated() are False; nothing to update
+                    // Every entry in proteinUpdated() is False; nothing to update
                     return;
                 }
 
@@ -2394,7 +2394,7 @@ namespace ProteinCoverageSummarizer
             {
                 if (!BooleanArrayContainsTrueEntries(proteinUpdated, proteinCount))
                 {
-                    // All of the entries in proteinUpdated() are False; nothing to update
+                    // Every entry in proteinUpdated() is False; nothing to update
                     return;
                 }
 
@@ -2468,7 +2468,7 @@ namespace ProteinCoverageSummarizer
         /// specified Options.PeptideFileFormatCode = PeptideFileColumnOrderingCode.ProteinName_PeptideSequence
         /// If Options.PeptideFileFormatCode is PeptideFileColumnOrderingCode.SequenceOnly, the file isn't even opened
         /// </summary>
-        /// <param name="peptideInputFilePath">Iinput file path</param>
+        /// <param name="peptideInputFilePath">Input file path</param>
         /// <param name="peptideFileFormatCode">Input/Output: file format code</param>
         /// <param name="skipFirstLine">When true, skip the first line</param>
         /// <param name="columnDelimiter">Column delimiter</param>

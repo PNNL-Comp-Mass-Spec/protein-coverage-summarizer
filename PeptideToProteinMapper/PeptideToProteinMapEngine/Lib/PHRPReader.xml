@@ -118,17 +118,17 @@
             Constructor that auto-determines the PeptideHit result type based on the filename
             </summary>
             <param name="inputFilePath">Input file to read</param>
-            <param name="loadModsAndSeqInfo">If True, looks for and auto-loads the modification definitions from the _ModSummary.txt file</param>
-            <param name="loadMSGFResults">If True, looks for and auto-loads the MSGF results from the _msg.txt file</param>
+            <param name="loadModsAndSeqInfo">If True, looks for and autoloads the modification definitions from the _ModSummary.txt file</param>
+            <param name="loadMSGFResults">If True, looks for and autoloads the MSGF results from the _msg.txt file</param>
         </member>
         <member name="M:PHRPReader.clsPHRPReader.#ctor(System.String,System.Boolean,System.Boolean,System.Boolean)">
             <summary>
             Constructor that auto-determines the PeptideHit result type based on the filename
             </summary>
             <param name="inputFilePath">Input file to read</param>
-            <param name="loadModsAndSeqInfo">If True, looks for and auto-loads the modification definitions from the _ModSummary.txt file</param>
-            <param name="loadMSGFResults">If True, looks for and auto-loads the MSGF results from the _msg.txt file</param>
-            <param name="loadScanStats">If True, looks for and auto-loads the MASIC scan stats files (used to determine collision mode and to refine the precursor m/z values)</param>
+            <param name="loadModsAndSeqInfo">If True, looks for and autoloads the modification definitions from the _ModSummary.txt file</param>
+            <param name="loadMSGFResults">If True, looks for and autoloads the MSGF results from the _msg.txt file</param>
+            <param name="loadScanStats">If True, looks for and autoloads the MASIC scan stats files (used to determine collision mode and to refine the precursor m/z values)</param>
         </member>
         <member name="M:PHRPReader.clsPHRPReader.#ctor(System.String,PHRPReader.clsPHRPStartupOptions)">
             <summary>
@@ -143,8 +143,8 @@
             </summary>
             <param name="inputFilePath">Input file to read</param>
             <param name="resultType">Source file PeptideHit result type</param>
-            <param name="loadModsAndSeqInfo">If True, looks for and auto-loads the modification definitions from the _ModSummary.txt file</param>
-            <param name="loadMSGFResults">If True, looks for and auto-loads the MSGF results from the _msg.txt file</param>
+            <param name="loadModsAndSeqInfo">If True, looks for and autoloads the modification definitions from the _ModSummary.txt file</param>
+            <param name="loadMSGFResults">If True, looks for and autoloads the MSGF results from the _msg.txt file</param>
         </member>
         <member name="M:PHRPReader.clsPHRPReader.#ctor(System.String,PHRPReader.PeptideHitResultTypes,System.Boolean,System.Boolean,System.Boolean)">
             <summary>
@@ -152,9 +152,9 @@
             </summary>
             <param name="inputFilePath">Input file to read</param>
             <param name="resultType">Source file PeptideHit result type</param>
-            <param name="loadModsAndSeqInfo">If True, looks for and auto-loads the modification definitions from the _ModSummary.txt file</param>
-            <param name="loadMSGFResults">If True, looks for and auto-loads the MSGF results from the _msg.txt file</param>
-            <param name="loadScanStats">If True, looks for and auto-loads the MASIC scan stats files (used to determine collision mode and to refine the precursor m/z values)</param>
+            <param name="loadModsAndSeqInfo">If True, looks for and autoloads the modification definitions from the _ModSummary.txt file</param>
+            <param name="loadMSGFResults">If True, looks for and autoloads the MSGF results from the _msg.txt file</param>
+            <param name="loadScanStats">If True, looks for and autoloads the MASIC scan stats files (used to determine collision mode and to refine the precursor m/z values)</param>
         </member>
         <member name="M:PHRPReader.clsPHRPReader.#ctor(System.String,PHRPReader.PeptideHitResultTypes,PHRPReader.clsPHRPStartupOptions)">
             <summary>
@@ -3827,7 +3827,7 @@
         </member>
         <member name="M:PHRPReader.Data.PeptideModificationContainer.GetBestIntegerBasedMassCorrectionTag(System.Double)">
             <summary>
-            Looks for the best match in mIntegerMassCorrectionTagLookup for modificationMass (which should be close to a integer value)
+            Looks for the best match in mIntegerMassCorrectionTagLookup for modificationMass (which should be close to an integer value)
             </summary>
             <param name="modificationMass">Modification mass</param>
             <returns>The mass correction tag name if a match, otherwise an empty string</returns>
@@ -3905,7 +3905,7 @@
             <summary>
             Looks for an existing modification with the given modification mass and target residues
             </summary>
-            <remarks>If chTargetResidue is default(char) or AminoAcidModInfo.ResidueTerminusState.None, follows similar matching logic, but skips defined modifications with defined .TargetResidues</remarks>
+            <remarks>If chTargetResidue is '\0' (which is default(char)) or AminoAcidModInfo.ResidueTerminusState.None, follows similar matching logic, but skips defined modifications with defined .TargetResidues</remarks>
             <param name="modificationMass">Modification mass</param>
             <param name="chTargetResidue">
             If defined, returns the first modification with the given mass and containing the residue in .TargetResidues;
@@ -3931,7 +3931,7 @@
             <summary>
             Looks for an existing modification with the given modification mass, modification type, and target residues
             </summary>
-            <remarks>If chTargetResidue is default(char) or AminoAcidModInfo.ResidueTerminusState.None, follows similar matching logic, but skips defined modifications with defined .TargetResidues</remarks>
+            <remarks>If chTargetResidue is '\0' (which is default(char)) or AminoAcidModInfo.ResidueTerminusState.None, follows similar matching logic, but skips defined modifications with defined .TargetResidues</remarks>
             <param name="modificationMass">Modification mass</param>
             <param name="modType">Modification type</param>
             <param name="chTargetResidue">
@@ -6092,17 +6092,17 @@
             Constructor that auto-determines the PeptideHit result type based on the filename
             </summary>
             <param name="inputFilePath">Input file to read</param>
-            <param name="loadModsAndSeqInfo">If True, looks for and auto-loads the modification definitions from the _ModSummary.txt file</param>
-            <param name="loadMSGFResults">If True, looks for and auto-loads the MSGF results from the _msg.txt file</param>
+            <param name="loadModsAndSeqInfo">If True, looks for and autoloads the modification definitions from the _ModSummary.txt file</param>
+            <param name="loadMSGFResults">If True, looks for and autoloads the MSGF results from the _msg.txt file</param>
         </member>
         <member name="M:PHRPReader.ReaderFactory.#ctor(System.String,System.Boolean,System.Boolean,System.Boolean)">
             <summary>
             Constructor that auto-determines the PeptideHit result type based on the filename
             </summary>
             <param name="inputFilePath">Input file to read</param>
-            <param name="loadModsAndSeqInfo">If True, looks for and auto-loads the modification definitions from the _ModSummary.txt file</param>
-            <param name="loadMSGFResults">If True, looks for and auto-loads the MSGF results from the _msg.txt file</param>
-            <param name="loadScanStats">If True, looks for and auto-loads the MASIC scan stats files (used to determine collision mode and to refine the precursor m/z values)</param>
+            <param name="loadModsAndSeqInfo">If True, looks for and autoloads the modification definitions from the _ModSummary.txt file</param>
+            <param name="loadMSGFResults">If True, looks for and autoloads the MSGF results from the _msg.txt file</param>
+            <param name="loadScanStats">If True, looks for and autoloads the MASIC scan stats files (used to determine collision mode and to refine the precursor m/z values)</param>
         </member>
         <member name="M:PHRPReader.ReaderFactory.#ctor(System.String,PHRPReader.StartupOptions)">
             <summary>
@@ -6117,8 +6117,8 @@
             </summary>
             <param name="inputFilePath">Input file to read</param>
             <param name="resultType">Source file PeptideHit result type</param>
-            <param name="loadModsAndSeqInfo">If True, looks for and auto-loads the modification definitions from the _ModSummary.txt file</param>
-            <param name="loadMSGFResults">If True, looks for and auto-loads the MSGF results from the _msg.txt file</param>
+            <param name="loadModsAndSeqInfo">If True, looks for and autoloads the modification definitions from the _ModSummary.txt file</param>
+            <param name="loadMSGFResults">If True, looks for and autoloads the MSGF results from the _msg.txt file</param>
         </member>
         <member name="M:PHRPReader.ReaderFactory.#ctor(System.String,PHRPReader.PeptideHitResultTypes,System.Boolean,System.Boolean,System.Boolean)">
             <summary>
@@ -6126,9 +6126,9 @@
             </summary>
             <param name="inputFilePath">Input file to read</param>
             <param name="resultType">Source file PeptideHit result type</param>
-            <param name="loadModsAndSeqInfo">If True, looks for and auto-loads the modification definitions from the _ModSummary.txt file</param>
-            <param name="loadMSGFResults">If True, looks for and auto-loads the MSGF results from the _msg.txt file</param>
-            <param name="loadScanStats">If True, looks for and auto-loads the MASIC scan stats files (used to determine collision mode and to refine the precursor m/z values)</param>
+            <param name="loadModsAndSeqInfo">If True, looks for and autoloads the modification definitions from the _ModSummary.txt file</param>
+            <param name="loadMSGFResults">If True, looks for and autoloads the MSGF results from the _msg.txt file</param>
+            <param name="loadScanStats">If True, looks for and autoloads the MASIC scan stats files (used to determine collision mode and to refine the precursor m/z values)</param>
         </member>
         <member name="M:PHRPReader.ReaderFactory.#ctor(System.String,PHRPReader.PeptideHitResultTypes,PHRPReader.StartupOptions)">
             <summary>
@@ -6282,7 +6282,7 @@
             </summary>
             <remarks>The original version of this code is in ThermoRawFileReader.FilterTextUtilities.ExtractParentIonMZFromFilterText(string, out double)</remarks>
             <param name="filterText">Thermo scan filter</param>
-            <param name="parentIonMz">Output: parenter ion m/z</param>
+            <param name="parentIonMz">Output: parent ion m/z</param>
             <returns>True if parsing successful</returns>
         </member>
         <member name="M:PHRPReader.ReaderFactory.FinalizeCurrentPSM">
@@ -6460,6 +6460,13 @@
             </summary>
             <param name="inputFilePath">Input file to read</param>
             <param name="resultType">Source file PeptideHit result type</param>
+        </member>
+        <member name="M:PHRPReader.ReaderFactory.IsIsobaricMod(System.String)">
+            <summary>
+            Return true if the modification name is a known isobaric mod
+            </summary>
+            <param name="modName">Modification name</param>
+            <returns>True if isobaric, otherwise false</returns>
         </member>
         <member name="M:PHRPReader.ReaderFactory.IsLetterAtoZ(System.Char)">
             <summary>
@@ -6714,10 +6721,11 @@
             </summary>
             <returns>List of header names</returns>
         </member>
-        <member name="M:PHRPReader.Reader.DiaNNSynFileReader.GetColumnHeaderNamesAndIDs">
+        <member name="M:PHRPReader.Reader.DiaNNSynFileReader.GetColumnHeaderNamesAndIDs(System.Boolean)">
             <summary>
             Header names and enums for the PHRP synopsis file for this tool
             </summary>
+            <param name="excludeColumnsNotInParquetFile">When true, do not include column names that are not in .parquet files (used by DIA-NN 2.x)</param>
             <returns>Dictionary of header names and enum values</returns>
         </member>
         <member name="M:PHRPReader.Reader.DiaNNSynFileReader.GetColumnMapFromHeaderLine(System.Collections.Generic.List{System.String})">
@@ -7207,11 +7215,12 @@
             <param name="datasetName">Dataset name</param>
             <returns>Filename</returns>
         </member>
-        <member name="M:PHRPReader.Reader.MSFraggerSynFileReader.GetPrecursorSearchTolerances(PHRPReader.Data.SearchEngineParameters,System.Double@,System.Double@,System.Boolean@,System.Boolean@)">
+        <member name="M:PHRPReader.Reader.MSFraggerSynFileReader.GetPrecursorSearchTolerances(PHRPReader.Data.SearchEngineParameters,System.String,System.Double@,System.Double@,System.Boolean@,System.Boolean@)">
             <summary>
-            Examine the MSFragger parameters to determine the precursor mass tolerance(s)
+            Examine the MSFragger or FragPipe parameters to determine the precursor mass tolerance(s)
             </summary>
             <param name="searchEngineParams">MSFragger search engine parameters loaded from a Key=Value parameter file</param>
+            <param name="parameterPrefix">Parameter name prefix: empty string for MSFragger, "msfragger." for FragPipe</param>
             <param name="toleranceLower">Output: Tolerance to the left, e.g. -20</param>
             <param name="toleranceUpper">Output: Tolerance to the right, e.g. 20</param>
             <param name="ppmBased">Output: True if ppm-based tolerances</param>
@@ -7222,6 +7231,13 @@
             <summary>
             Search engine name
             </summary>
+        </member>
+        <member name="M:PHRPReader.Reader.MSFraggerSynFileReader.GetSearchEngineParameterPrefix(PHRPReader.Data.SearchEngineParameters)">
+            <summary>
+            Determine if the search engine parameters were loaded from a MSFragger parameter file, or from a FragPipe workflow file
+            </summary>
+            <param name="searchEngineParams">MSFragger or FragPipe parameters</param>
+            <returns>Empty string if MSFragger parameters, "msfragger." if FragPipe workflow parameters</returns>
         </member>
         <member name="M:PHRPReader.Reader.MSFraggerSynFileReader.LoadSearchEngineParameters(System.String,PHRPReader.Data.SearchEngineParameters@)">
             <summary>

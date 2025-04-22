@@ -327,7 +327,7 @@ namespace ProteinCoverageSummarizer
             bool peptideFileSkipFirstLine, char peptideInputFileDelimiter,
             int columnNumWithPeptideSequence)
         {
-            // Define a RegEx to replace all of the non-letter characters
+            // Define a RegEx to replace the non-letter characters
             var reReplaceSymbols = new Regex("[^A-Za-z]", RegexOptions.Compiled);
 
             try

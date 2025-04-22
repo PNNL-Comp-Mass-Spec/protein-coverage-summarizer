@@ -60,10 +60,14 @@ namespace PeptideToProteinMapEngine
         /// </summary>
         private const string FILENAME_SUFFIX_PSM_UNIQUE_PEPTIDES = "_peptides";
 
+        // ReSharper disable once CommentTypo
+
         /// <summary>
         /// Protein column name in the _PepToProtMap.txt file
         /// </summary>
         public const string PEPTIDE_TO_PROTEIN_MAP_FILE_PROTEIN_COLUMN = "Protein";
+
+        // ReSharper disable once CommentTypo
 
         /// <summary>
         /// Peptide column name in the _PepToProtMap.txt file
@@ -174,20 +178,39 @@ namespace PeptideToProteinMapEngine
 
         private clsProteinCoverageSummarizer mProteinCoverageSummarizer;
 
-        // When processing an inspect search result file, if you provide the inspect parameter file name,
-        // then this program will read the parameter file and look for the "mod," lines.  The user-assigned mod
-        // names will be extracted and used when "cleaning" the peptides prior to looking for matching proteins
+        /// <summary>
+        /// Inspect parameter file path
+        /// </summary>
+        /// <remarks>
+        /// When processing an Inspect search result file, if you provide the inspect parameter file name,
+        /// then this program will read the parameter file and look for the "mod," lines.  The user-assigned mod
+        /// names will be extracted and used when "cleaning" the peptides prior to looking for matching proteins
+        /// </remarks>
         private string mInspectParameterFilePath;
 
-        // The following is used when the input file is SEQUEST, X!Tandem, InSpecT, or MS-GF+ results file
-        // Keys are peptide sequences; values are Lists of scan numbers that each peptide was observed in
-        // Keys may have mod symbols in them; those symbols will be removed in PreProcessDataWriteOutPeptides
+        /// <summary>
+        /// Unique peptide list
+        /// </summary>
+        /// <remarks>
+        /// The following is used when the input file is SEQUEST, X!Tandem, InSpecT, or MS-GF+ results file
+        /// Keys are peptide sequences; values are Lists of scan numbers that each peptide was observed in
+        /// Keys may have mod symbols in them; those symbols will be removed in PreProcessDataWriteOutPeptide
+        /// </remarks>
         private SortedList<string, SortedSet<int>> mUniquePeptideList;
 
-        // Mod names must be lowercase, and 4 characters in length (or shorter)
-        // Only used with InSpecT since mods in MS-GF+ are simply numbers, e.g. R.DNFM+15.995SATQAVEYGLVDAVM+15.995TK.R
-        // while mods in SEQUEST and XTandem are symbols (*, #, @)
+        // ReSharper disable CommentTypo
+
+        /// <summary>
+        /// Inspect modification names
+        /// </summary>
+        /// <remarks>
+        /// Mod names must be lowercase, and 4 characters in length (or shorter)
+        /// Only used with InSpecT since mods in MS-GF+ are simply numbers, e.g. R.DNFM+15.995SATQAVEYGLVDAVM+15.995TK.R
+        /// while mods in SEQUEST and XTandem are symbols (*, #, @)
+        /// </remarks>
         private List<string> mInspectModNameList;
+
+        // ReSharper restore CommentTypo
 
         #endregion
 
@@ -614,10 +637,14 @@ namespace PeptideToProteinMapEngine
                         var matchIndex = Array.BinarySearch(proteinMapInfo, cleanSequence, proteinMapPeptideComparer);
                         if (matchIndex < 0)
                         {
+                            // ReSharper disable CommentTypo
+
                             // Match not found; this is unexpected
                             // However, this code will be reached if the peptide is not present in any of the proteins in the protein data file
                             // This code will also be reached for TopPIC results with ambiguous residues, e.g. -.M(NKSE)[16.0017]LIEKIASGADISK
                             writer.WriteLine("{0}\t{1}\t{2}\t{3}", peptideEntry.Key, UNKNOWN_PROTEIN_NAME, 0, 0);
+
+                            // ReSharper restore CommentTypo
                         }
                         else
                         {
@@ -1307,6 +1334,7 @@ namespace PeptideToProteinMapEngine
                         break;
 
                     case PeptideInputFileFormatConstants.PHRPFile:
+                        // ReSharper disable once CommentTypo
                         // MS-GF+, MaxQuant, MSFragger, DIA-NN, etc. PHRP data file; need to pre-process it
                         // Make sure RemoveSymbolCharacters is true
                         Options.RemoveSymbolCharacters = true;
