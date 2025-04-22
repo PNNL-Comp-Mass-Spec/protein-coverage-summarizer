@@ -569,7 +569,7 @@ namespace ProteinCoverageSummarizer
             UpdateProgress("Creating the protein coverage file: " + Path.GetFileName(ResultsFilePath), 0,
                 ProteinCoverageProcessingSteps.WriteProteinCoverageFile);
 
-            using var writer = new StreamWriter(new FileStream(ResultsFilePath, FileMode.Create, FileAccess.Write, FileShare.Read));
+            using var writer = new StreamWriter(new FileStream(ResultsFilePath ?? "Peptide_coverage.txt", FileMode.Create, FileAccess.Write, FileShare.Read));
 
             // Note: If the column ordering is changed, be sure to update OUTPUT_FILE_PROTEIN_DESCRIPTION_COLUMN_NUMBER and OUTPUT_FILE_PROTEIN_SEQUENCE_COLUMN_NUMBER
             var headerNames = new List<string>
@@ -774,7 +774,7 @@ namespace ProteinCoverageSummarizer
         /// Look for the columnToFind in the first non-blank line of the input file
         /// </summary>
         /// <param name="peptideInputFilePath">Input file path</param>
-        /// <param name="columnToFind">Clumn name to find</param>
+        /// <param name="columnToFind">Column name to find</param>
         /// <param name="matchStartIfNotFound">When true, look for a column that starts with columnName if an exact match is not found</param>
         /// <returns>Zero-base column index, or -1 if not found</returns>
         private int FindColumnIndex(string peptideInputFilePath, string columnToFind, bool matchStartIfNotFound = true)
@@ -1027,8 +1027,8 @@ namespace ProteinCoverageSummarizer
             out char suffixResidue,
             bool removeSymbolCharacters)
         {
-            prefixResidue = default;
-            suffixResidue = default;
+            prefixResidue = '\0';
+            suffixResidue = '\0';
             string primarySequence;
 
             if (peptideSequence.Length >= 4 &&
@@ -1516,7 +1516,7 @@ namespace ProteinCoverageSummarizer
                         UpdateProgress("Creating the protein to peptide mapping file: " + Path.GetFileName(ProteinToPeptideMappingFilePath));
 
                         mProteinToPeptideMappingOutputFile = new StreamWriter(
-                            new FileStream(ProteinToPeptideMappingFilePath, FileMode.Create, FileAccess.Write, FileShare.Read))
+                            new FileStream(ProteinToPeptideMappingFilePath ?? "Dataset" + FILENAME_SUFFIX_PROTEIN_TO_PEPTIDE_MAPPING, FileMode.Create, FileAccess.Write, FileShare.Read))
                         {
                             AutoFlush = true
                         };
